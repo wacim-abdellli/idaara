@@ -16,11 +16,26 @@ import {
   ArrowRight,
   Sparkles,
   Search,
-  CheckCircle2,
   Lock,
   Zap,
-  Stamp
 } from 'lucide-react';
+
+// ─── Signature element: CSS rubber stamp ──────────────────────────────────────
+// Runs a single entrance animation (scale + blur dissolve) then rests at 3% opacity.
+// No library, no image file — pure CSS from globals.css `.stamp-watermark`.
+function StampWatermark({ locale }: { locale: string }) {
+  const text =
+    locale === 'ar' ? '✓ مقبول' : '✓ APPROUVÉ';
+
+  return (
+    <div
+      aria-hidden="true"
+      className="absolute inset-0 flex items-center justify-center pointer-events-none overflow-hidden"
+    >
+      <span className="stamp-watermark select-none">{text}</span>
+    </div>
+  );
+}
 
 export default function HomePage() {
   const { t, locale, isRtl } = useLocale();
@@ -29,133 +44,177 @@ export default function HomePage() {
 
   const handleSearchSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (searchQuery.trim()) {
-      router.push(`/copilot?q=${encodeURIComponent(searchQuery)}`);
-    } else {
-      router.push('/copilot');
-    }
+    router.push(searchQuery.trim() ? `/copilot?q=${encodeURIComponent(searchQuery)}` : '/copilot');
   };
 
   const coreFeatures = [
     {
       id: 'voice-copilot',
-      title: locale === 'ar' ? "1. المساعد الصوتي بالدارجة" : locale === 'fr' ? "1. Voice Copilot en Derja" : "1. Derja Voice Copilot",
-      desc: locale === 'ar' ? "تكلّم بالدارجة التونسية بكل تلقائية لمعرفة كل الأوراق والوثائق والتنابر في ثوانٍ." : locale === 'fr' ? "Parlez librement en dialecte tunisien pour obtenir vos démarches, pièces et timbres fiscaux." : "Tkallem bel Derja 🇹🇳 kima te7ki m3a sa7bek. Fasserli, a3tini les timbres, w kol étape fel idara.",
-      href: "/copilot",
+      title: locale === 'ar' ? 'المساعد الصوتي بالدارجة' : locale === 'fr' ? 'Voice Copilot en Derja' : 'Derja Voice Copilot',
+      desc: locale === 'ar'
+        ? 'تكلّم بالدارجة التونسية لمعرفة أوراقك وتنابرك في ثوانٍ.'
+        : locale === 'fr'
+        ? 'Posez vos questions en Derja ou Français, recevez les démarches et timbres.'
+        : 'Tkallem bel Derja, Idaara AI yfahmek w yajibek fel 7in.',
+      href: '/copilot',
       icon: Mic,
-      badge: "Voice AI",
-      color: "from-emerald-500/20 to-teal-500/10 border-emerald-500/30",
+      badge: 'Voice AI',
+      accentClass: 'group-hover:border-emerald-500/50',
+      iconColor: 'text-emerald-400',
     },
     {
       id: 'fasserli-ocr',
-      title: locale === 'ar' ? "2. فسّرلي هالورقة (OCR الذكي)" : locale === 'fr' ? "2. Scanner & Décrypter (OCR)" : "2. Fasserli Hal War9a (OCR)",
-      desc: locale === 'ar' ? "صوّر أي إعلام ضريبي أو استدعاء رسمي للحصول على ملخص بـ 3 نقاط والآجال القانونية." : locale === 'fr' ? "Scannez vos courriers administratifs et obtenez un résumé clair en 3 points avec les délais." : "Soiwer ay wathi9a idariya (Tanbih dhariba, convocation) w khalli l'AI tfassarelk 3 points essentiels.",
-      href: "/fasserli",
+      title: locale === 'ar' ? 'فسّرلي هالورقة (OCR)' : locale === 'fr' ? 'Scanner & Décrypter (OCR)' : 'Fasserli Hal War9a',
+      desc: locale === 'ar'
+        ? 'صوّر أي وثيقة رسمية واحصل على ملخص بـ 3 نقاط والآجال القانونية.'
+        : locale === 'fr'
+        ? 'Scannez un courrier officiel, obtenez un résumé 3-points avec les délais légaux.'
+        : 'Soiwer ay wathi9a idariya — Tanbih, convocation — w Idaara AI yfassarelk 3 points.',
+      href: '/fasserli',
       icon: FileSearch,
-      badge: "Smart OCR",
-      color: "from-indigo-500/20 to-blue-500/10 border-indigo-500/30",
+      badge: 'Smart OCR',
+      accentClass: 'group-hover:border-indigo-500/40',
+      iconColor: 'text-indigo-400',
     },
     {
       id: 'smart-pdf',
-      title: locale === 'ar' ? "3. استخراج الوثائق الرسمية" : locale === 'fr' ? "3. Formulaires PDF Officiels" : "3. Smart PDF Forms",
-      desc: locale === 'ar' ? "استخرج عقود الكراء، التواكل، والتصاريح بالشرف بجودة عالية جاهزة للتعريف بالإمضاء." : locale === 'fr' ? "Générez vos baux de location, procurations et déclarations conformes prêts pour la Baladiya." : "Générez vos contrats de location, procurations, et actes de vente vectoriels prêts pour la Baladiya.",
-      href: "/documents",
+      title: locale === 'ar' ? 'الوثائق الرسمية PDF' : locale === 'fr' ? 'Formulaires PDF Officiels' : 'Smart PDF Forms',
+      desc: locale === 'ar'
+        ? 'استخرج عقود الكراء والتواكل والتصاريح بالشرف جاهزة للتعريف.'
+        : locale === 'fr'
+        ? 'Générez baux de location, procurations, actes de vente — prêts pour la Baladiya.'
+        : 'A3mel contrats location, procurations, déclarations — mriglin lel Baladiya.',
+      href: '/documents',
       icon: FileText,
-      badge: "Vector PDF",
-      color: "from-purple-500/20 to-pink-500/10 border-purple-500/30",
+      badge: 'Vector PDF',
+      accentClass: 'group-hover:border-purple-500/40',
+      iconColor: 'text-purple-400',
     },
     {
       id: 'calculator',
-      title: locale === 'ar' ? "4. حاسبة التنابر والأوراق" : locale === 'fr' ? "4. Calculateur de Timbres" : "4. Timbre & Awra9 Budget",
-      desc: locale === 'ar' ? "احتساب دقيق لمعاليم التنابر الجبائية وقائمة تفاعلية بالوثائق المطلوبة لكل ملف." : locale === 'fr' ? "Estimation exacte des timbres fiscaux (5 DT, 15 DT, 80 DT) et suivi des pièces requises." : "Calculateur exact des timbres fiscaux (5 DT, 15 DT, 80 DT) et checklist interactive.",
-      href: "/calculator",
+      title: locale === 'ar' ? 'حاسبة التنابر والأوراق' : locale === 'fr' ? 'Calculateur de Timbres' : 'Timbre & Awra9 Budget',
+      desc: locale === 'ar'
+        ? 'احتساب دقيق لتنابر 5 د.ت — 15 د.ت — 80 د.ت وقائمة تفاعلية بالوثائق.'
+        : locale === 'fr'
+        ? 'Estimation exacte des timbres (5 DT, 15 DT, 80 DT) et checklist interactive.'
+        : "E7seb el timbres (5 DT, 15 DT, 80 DT) w checklist awra9ek qbel ma tmchi.",
+      href: '/calculator',
       icon: Calculator,
-      badge: "Budget TND",
-      color: "from-amber-500/20 to-orange-500/10 border-amber-500/30",
+      badge: 'Budget TND',
+      accentClass: 'group-hover:border-amber-500/40',
+      iconColor: 'text-amber-400',
     },
     {
       id: 'locator',
-      title: locale === 'ar' ? "5. دليل البلديات والمصالح" : locale === 'fr' ? "5. Annuaire des Municipalités" : "5. Guide des Baladiyas",
-      desc: locale === 'ar' ? "أكثر من 350 بلدية وقباضة بـ 24 ولاية مع توقيت رمضان والحصة الواحدة والمسار GPS." : locale === 'fr' ? "350+ Municipalités et Recettes sur 24 gouvernorats avec horaires Ramadan et séance unique." : "350+ Municipalités, Recettes et CNSS sur les 24 gouvernorats avec horaires Ramadan.",
-      href: "/locator",
+      title: locale === 'ar' ? 'دليل البلديات والمصالح' : locale === 'fr' ? 'Annuaire des Organismes' : 'Guide des Baladiyas',
+      desc: locale === 'ar'
+        ? '350+ بلدية وقباضة بـ 24 ولاية — أوقات رمضان والحصة الواحدة والمسار GPS.'
+        : locale === 'fr'
+        ? '350+ municipalités, Recettes et CNSS — horaires Ramadan, Été et itinéraire GPS.'
+        : '350+ Municipalités w Recettes 3al 24 Wilayas — Ramadan, Sayf, GPS itinéraire.',
+      href: '/locator',
       icon: MapPin,
-      badge: "24 Wilayas",
-      color: "from-emerald-500/20 to-cyan-500/10 border-emerald-500/30",
+      badge: '24 Wilayas',
+      accentClass: 'group-hover:border-cyan-500/40',
+      iconColor: 'text-cyan-400',
     },
     {
       id: 'launchpad',
-      title: locale === 'ar' ? "6. فضاء المستقلين والشركات" : locale === 'fr' ? "6. Freelance & Entreprise" : "6. Freelancer Launchpad",
-      desc: locale === 'ar' ? "دليل المبادر الذاتي بضريبة 1%، فواتير التصدير بالعملة الأجنبية، والتسجيل بـ RNE." : locale === 'fr' ? "Statut Auto-Entrepreneur à 1%, facturation export en EUR/USD conforme BCT et RNE." : "Statut Auto-Entrepreneur à 1%, facturation export internationale en EUR/USD conforme BCT.",
-      href: "/launchpad",
+      title: locale === 'ar' ? 'فضاء المستقل والشركات' : locale === 'fr' ? 'Freelance & Entreprise' : 'Freelancer Launchpad',
+      desc: locale === 'ar'
+        ? 'ضريبة 1% للمبادر الذاتي، الفواتير بالعملة الأجنبية، والتسجيل في RNE.'
+        : locale === 'fr'
+        ? "Statut Auto-Entrepreneur à 1%, facturation export EUR/USD conforme BCT, RNE."
+        : 'Statut Auto-Entrepreneur 0.5%→1%, Facture export EUR/USD, Enregistrement RNE.',
+      href: '/launchpad',
       icon: Rocket,
-      badge: "Freelance 1%",
-      color: "from-rose-500/20 to-amber-500/10 border-rose-500/30",
+      badge: 'Freelance 1%',
+      accentClass: 'group-hover:border-rose-500/40',
+      iconColor: 'text-rose-400',
     },
   ];
 
-  return (
-    <div className="space-y-16 sm:space-y-20 pb-16">
-      {/* Hero Section */}
-      <section className="relative pt-10 sm:pt-16 pb-12 sm:pb-16 px-4 sm:px-6 lg:px-8 max-w-5xl mx-auto text-center">
-        {/* Glow ambient background */}
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-80 sm:w-[480px] h-80 sm:h-[480px] bg-emerald-500/10 rounded-full blur-3xl pointer-events-none" />
+  // Hero headline — split for the display/highlight treatment
+  const heroMain = t('heroHeadline');
+  const heroAccent = t('heroHeadlineHighlight');
 
-        {/* Badge */}
-        <div className="inline-flex items-center space-x-2 rtl:space-x-reverse px-3.5 py-1.5 rounded-full bg-zinc-900/90 border border-emerald-500/30 text-emerald-400 text-xs font-semibold mb-6 shadow-md shadow-emerald-950">
-          <span className="w-2 h-2 rounded-full bg-emerald-400 animate-ping shrink-0" />
+  return (
+    <div className="space-y-20 sm:space-y-24 pb-20">
+
+      {/* ── HERO ────────────────────────────────────────────── */}
+      <section className="relative pt-12 sm:pt-20 pb-14 sm:pb-20 px-4 sm:px-6 lg:px-8 max-w-5xl mx-auto text-center overflow-hidden">
+
+        {/* Signature watermark stamp — ONE bold moment, then quiet */}
+        <StampWatermark locale={locale} />
+
+        {/* Ambient glow */}
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] bg-emerald-500/6 rounded-full blur-3xl pointer-events-none" />
+
+        {/* Eyebrow badge */}
+        <div className="inline-flex items-center space-x-2 rtl:space-x-reverse px-3.5 py-1.5 rounded-full bg-[#111316] border border-emerald-500/25 text-[11px] font-semibold text-emerald-400 mb-8 shadow-lg">
+          <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-ping shrink-0" />
           <span>{t('heroBadge')}</span>
         </div>
 
-        {/* Main Headline */}
-        <h1 className="text-3xl sm:text-5xl lg:text-6xl font-extrabold text-white tracking-tight leading-[1.2] mb-6">
-          {t('heroHeadline')}{' '}
-          <span className="bg-gradient-to-r from-emerald-400 via-teal-300 to-amber-400 bg-clip-text text-transparent underline decoration-emerald-500/30 decoration-4 underline-offset-8">
-            {t('heroHeadlineHighlight')}
+        {/* SIGNATURE TYPOGRAPHY —
+            DM Serif Display for the main line (weight 400, the italic weight is stunning),
+            then the highlight phrase in the brand stamp-green.
+            The unexpected serif in a government-tech product is the distinctive choice. */}
+        <h1 className="relative z-10">
+          <span className="display-heading block text-4xl sm:text-6xl lg:text-7xl text-[#F5F4F0] mb-3">
+            {heroMain}
+          </span>
+          <span className="display-heading block text-4xl sm:text-6xl lg:text-7xl italic"
+            style={{ color: 'var(--stamp-green)' }}>
+            {heroAccent}
           </span>
         </h1>
 
-        {/* Subtitle */}
-        <p className="text-sm sm:text-base text-zinc-300 max-w-2xl mx-auto leading-relaxed mb-8">
+        {/* Subtitle — plain, plain, plain. Does one job: clarify. */}
+        <p className="relative z-10 text-sm sm:text-base text-[#9A9DA6] max-w-xl mx-auto leading-relaxed mt-6 mb-10">
           {t('heroSubheadline')}
         </p>
 
-        {/* Voice Search Hero Bar */}
-        <div className="max-w-2xl mx-auto mb-8">
+        {/* Search bar */}
+        <div className="relative z-10 max-w-xl mx-auto mb-10">
           <form
             onSubmit={handleSearchSubmit}
-            className="glass-panel p-1.5 sm:p-2 rounded-2xl border border-zinc-700/80 shadow-2xl flex items-center space-x-2 rtl:space-x-reverse relative hover:border-emerald-500/50 transition-colors"
+            className="flex items-center bg-[#111316] border border-zinc-800 rounded-2xl p-1.5 shadow-2xl hover:border-emerald-500/40 transition-colors"
           >
-            <div className="px-2 text-zinc-400 shrink-0">
-              <Search className="w-5 h-5 text-emerald-400" />
-            </div>
+            <Search className="w-4 h-4 text-zinc-600 mx-3 shrink-0" />
             <input
               type="text"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               placeholder={t('voiceSearchBarPlaceholder')}
-              className="flex-1 bg-transparent text-xs sm:text-sm text-zinc-100 placeholder-zinc-500 focus:outline-none px-1 py-2"
+              className="flex-1 bg-transparent text-sm text-[#F5F4F0] placeholder-zinc-600 focus:outline-none py-2 min-w-0"
             />
             <Link
               href="/copilot"
-              className="flex items-center space-x-1.5 rtl:space-x-reverse px-3.5 sm:px-4 py-2 sm:py-2.5 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-zinc-950 font-bold text-xs shadow-md shadow-emerald-500/20 transition-all hover:scale-105 shrink-0"
+              className="flex items-center space-x-1.5 rtl:space-x-reverse px-4 py-2.5 rounded-xl font-bold text-xs text-[#0C0D0F] shrink-0 transition-all hover:scale-105"
+              style={{ backgroundColor: 'var(--stamp-green)', boxShadow: '0 4px 20px rgba(0,192,127,0.25)' }}
             >
-              <Mic className="w-4 h-4 animate-pulse" />
+              <Mic className="w-3.5 h-3.5" />
               <span>{locale === 'ar' ? 'تكلّم' : locale === 'fr' ? 'Parler' : 'Tkallem'}</span>
             </Link>
           </form>
 
-          {/* Quick Voice Bar Sub-label */}
-          <div className="mt-2.5 flex items-center justify-center space-x-2 rtl:space-x-reverse text-[11px] text-zinc-500">
-            <span className="w-1.5 h-1.5 rounded-full bg-emerald-500" />
-            <span>Moteur vocal en Derja tunisienne & Arabizi actif</span>
-          </div>
+          <p className="mt-2.5 text-[11px] text-zinc-600 flex items-center justify-center space-x-1.5 rtl:space-x-reverse">
+            <span className="w-1 h-1 rounded-full bg-emerald-500 inline-block" />
+            <span>
+              {locale === 'ar'
+                ? 'يفهم الدارجة التونسية، العربية والفرنسية'
+                : 'Comprend le Derja tunisien, l\'Arabizi et le Français'}
+            </span>
+          </p>
         </div>
 
-        {/* Hero CTAs */}
-        <div className="flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-4">
+        {/* CTAs — primary + secondary, clear verbs */}
+        <div className="relative z-10 flex flex-col sm:flex-row items-center justify-center gap-3">
           <Link
             href="/copilot"
-            className="w-full sm:w-auto px-6 py-3 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-zinc-950 font-bold text-xs sm:text-sm shadow-lg shadow-emerald-500/20 transition-all hover:scale-105 flex items-center justify-center space-x-2 rtl:space-x-reverse"
+            className="w-full sm:w-auto px-7 py-3 rounded-xl font-bold text-sm text-[#0C0D0F] flex items-center justify-center space-x-2 rtl:space-x-reverse transition-all hover:scale-105"
+            style={{ backgroundColor: 'var(--stamp-green)', boxShadow: '0 4px 24px rgba(0,192,127,0.28)' }}
           >
             <Mic className="w-4 h-4" />
             <span>{t('heroCTA')}</span>
@@ -163,46 +222,47 @@ export default function HomePage() {
 
           <Link
             href="/fasserli"
-            className="w-full sm:w-auto px-6 py-3 rounded-xl bg-zinc-900 hover:bg-zinc-800 text-zinc-200 font-semibold text-xs sm:text-sm border border-zinc-700 transition-all flex items-center justify-center space-x-2 rtl:space-x-reverse"
+            className="w-full sm:w-auto px-7 py-3 rounded-xl font-semibold text-sm text-zinc-200 bg-[#111316] border border-zinc-800 hover:border-zinc-600 hover:text-white flex items-center justify-center space-x-2 rtl:space-x-reverse transition-all"
           >
-            <FileSearch className="w-4 h-4 text-emerald-400" />
+            <FileSearch className="w-4 h-4 text-indigo-400" />
             <span>{t('heroSecondaryCTA')}</span>
           </Link>
         </div>
       </section>
 
-      {/* Quick Launch Procedures Bar */}
+      {/* ── QUICK LAUNCH ─────────────────────────────────────── */}
       <section className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="glass-panel rounded-2xl p-5 sm:p-6 border border-zinc-800">
-          <div className="flex items-center justify-between mb-4">
+        <div className="glass-panel rounded-2xl p-5 sm:p-6 border border-zinc-800/80">
+          <div className="flex items-center justify-between mb-5">
             <div className="flex items-center space-x-2 rtl:space-x-reverse">
-              <Sparkles className="w-4 h-4 text-amber-400" />
-              <h3 className="text-xs font-bold uppercase tracking-wider text-zinc-200">
-                {locale === 'ar' ? 'أهم الإجراءات الأكثر طلباً (دخول سريع)' : 'Procédures les plus courantes :'}
-              </h3>
+              <Sparkles className="w-3.5 h-3.5 text-amber-400" />
+              <p className="text-[10px] font-bold uppercase tracking-widest text-zinc-400">
+                {locale === 'ar' ? 'أكثر الإجراءات طلباً' : 'Démarches les plus fréquentes'}
+              </p>
             </div>
             <Link
               href="/procedures"
-              className="text-xs text-emerald-400 hover:text-emerald-300 flex items-center space-x-1 rtl:space-x-reverse font-semibold"
+              className="flex items-center space-x-1 rtl:space-x-reverse text-xs font-semibold text-zinc-500 hover:text-emerald-400 transition-colors"
             >
-              <span>{locale === 'ar' ? 'عرض الكل' : 'Voir tout'} (25+)</span>
+              <span>{locale === 'ar' ? 'الكل' : 'Tout voir'} (25+)</span>
               <ArrowRight className="w-3.5 h-3.5 rtl:rotate-180" />
             </Link>
           </div>
 
-          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3">
+          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-2.5">
             {proceduresData.slice(0, 6).map((proc) => {
               const title = proc.title[locale] || proc.title['derja'];
               return (
                 <Link
                   key={proc.id}
                   href={`/procedures/${proc.id}`}
-                  className="p-3 rounded-xl bg-zinc-900/80 hover:bg-zinc-800/90 border border-zinc-800 hover:border-emerald-500/40 transition-all group text-start"
+                  className="p-3 rounded-xl bg-zinc-900/70 hover:bg-zinc-800/90 border border-zinc-800 hover:border-zinc-700 transition-all group text-start"
                 >
-                  <span className="text-[10px] uppercase font-bold text-emerald-400 block mb-1">
+                  <span className="text-[9px] uppercase font-extrabold tracking-wider block mb-1.5"
+                    style={{ color: 'var(--stamp-green)' }}>
                     {proc.vertical}
                   </span>
-                  <h4 className="text-xs font-semibold text-zinc-200 group-hover:text-white line-clamp-2 leading-tight">
+                  <h4 className="text-[11px] font-semibold text-zinc-300 group-hover:text-white line-clamp-2 leading-tight transition-colors">
                     {title}
                   </h4>
                 </Link>
@@ -212,47 +272,51 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* Core Features Grid */}
+      {/* ── CORE FEATURES GRID ───────────────────────────────── */}
       <section className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="text-center max-w-xl mx-auto mb-10">
-          <h2 className="text-2xl sm:text-3xl font-extrabold text-white tracking-tight">
+        <div className="max-w-lg mx-auto text-center mb-12">
+          <h2 className="display-heading text-3xl sm:text-4xl text-[#F5F4F0] mb-3">
             {t('featuresTitle')}
           </h2>
-          <p className="text-xs sm:text-sm text-zinc-400 mt-2">
+          <p className="text-sm text-zinc-500 leading-relaxed">
             {t('featuresSubtitle')}
           </p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
           {coreFeatures.map((feat) => {
             const Icon = feat.icon;
             return (
               <Link
                 key={feat.id}
                 href={feat.href}
-                className={`glass-panel rounded-2xl p-5 sm:p-6 border transition-all duration-300 hover:scale-[1.01] hover:shadow-2xl flex flex-col justify-between group ${feat.color}`}
+                className={`glass-panel rounded-2xl p-5 sm:p-6 border border-zinc-800/80 transition-all duration-200 hover:shadow-2xl flex flex-col justify-between group ${feat.accentClass}`}
               >
                 <div>
-                  <div className="flex items-center justify-between mb-3.5">
-                    <div className="w-9 h-9 rounded-xl bg-zinc-900 border border-zinc-700 flex items-center justify-center text-emerald-400 group-hover:scale-110 transition-transform">
-                      <Icon className="w-4 h-4" />
+                  {/* Icon row */}
+                  <div className="flex items-center justify-between mb-4">
+                    <div className="w-9 h-9 rounded-xl bg-zinc-900 border border-zinc-800 flex items-center justify-center group-hover:scale-110 transition-transform">
+                      <Icon className={`w-4 h-4 ${feat.iconColor}`} />
                     </div>
-                    <span className="text-[10px] font-bold px-2 py-0.5 rounded bg-zinc-900 text-emerald-400 border border-zinc-700">
+                    <span className="text-[9px] font-extrabold uppercase tracking-widest px-2 py-0.5 rounded-lg bg-zinc-900 border border-zinc-800 text-zinc-500">
                       {feat.badge}
                     </span>
                   </div>
 
-                  <h3 className="text-sm sm:text-base font-bold text-white mb-2 group-hover:text-emerald-300 transition-colors">
+                  {/* Title & description — active voice, plain language */}
+                  <h3 className="text-sm font-bold text-[#F5F4F0] mb-2 group-hover:text-white transition-colors leading-snug">
                     {feat.title}
                   </h3>
-                  <p className="text-xs text-zinc-400 leading-relaxed mb-4">
+                  <p className="text-[12px] text-zinc-500 leading-relaxed">
                     {feat.desc}
                   </p>
                 </div>
 
-                <div className="pt-3.5 border-t border-zinc-800/80 flex items-center justify-between text-xs font-semibold text-emerald-400 group-hover:translate-x-1 rtl:group-hover:-translate-x-1 transition-transform">
-                  <span>{locale === 'ar' ? 'فتح الخدمة' : 'Accéder au service'}</span>
-                  <ArrowRight className="w-3.5 h-3.5 rtl:rotate-180" />
+                {/* CTA row — always the same verb family */}
+                <div className="mt-5 pt-4 border-t border-zinc-800/60 flex items-center justify-between text-xs font-semibold transition-all"
+                  style={{ color: 'var(--stamp-green)' }}>
+                  <span>{locale === 'ar' ? 'فتح الخدمة' : 'Ouvrir'}</span>
+                  <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-1 rtl:rotate-180 rtl:group-hover:-translate-x-1 transition-transform" />
                 </div>
               </Link>
             );
@@ -260,23 +324,21 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* Zero Storage Privacy & Security Banner */}
-      <section className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="glass-panel rounded-3xl p-6 sm:p-8 border border-emerald-500/30 bg-gradient-to-br from-emerald-950/30 via-zinc-950 to-zinc-950 flex flex-col sm:flex-row items-center gap-5">
-          <div className="w-14 h-14 rounded-2xl bg-emerald-500/20 border border-emerald-500/40 flex items-center justify-center text-emerald-400 shrink-0 shadow-lg shadow-emerald-950">
-            <Lock className="w-7 h-7" />
+      {/* ── PRIVACY BANNER ───────────────────────────────────── */}
+      <section className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="glass-panel rounded-3xl p-6 sm:p-8 border flex flex-col sm:flex-row items-center gap-5"
+          style={{ borderColor: 'rgba(0,192,127,0.20)', background: 'linear-gradient(135deg, rgba(0,192,127,0.06), rgba(17,19,22,0.9))' }}>
+          <div className="w-12 h-12 rounded-2xl flex items-center justify-center shrink-0"
+            style={{ background: 'rgba(0,192,127,0.12)', border: '1px solid rgba(0,192,127,0.30)' }}>
+            <Lock className="w-6 h-6" style={{ color: 'var(--stamp-green)' }} />
           </div>
 
           <div className="space-y-1 text-center sm:text-start">
             <div className="flex items-center justify-center sm:justify-start space-x-2 rtl:space-x-reverse">
-              <ShieldCheck className="w-4 h-4 text-emerald-400" />
-              <h3 className="text-base sm:text-lg font-bold text-white">
-                {t('zeroStorageBanner')}
-              </h3>
+              <ShieldCheck className="w-4 h-4 shrink-0" style={{ color: 'var(--stamp-green)' }} />
+              <h3 className="text-sm font-bold text-[#F5F4F0]">{t('zeroStorageBanner')}</h3>
             </div>
-            <p className="text-xs text-zinc-300 leading-relaxed">
-              {t('zeroStorageSub')}
-            </p>
+            <p className="text-xs text-zinc-400 leading-relaxed max-w-xl">{t('zeroStorageSub')}</p>
           </div>
         </div>
       </section>
