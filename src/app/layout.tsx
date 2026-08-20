@@ -4,6 +4,8 @@ import { LocaleProvider } from '../context/LocaleContext';
 import { ChecklistProvider } from '../context/ChecklistContext';
 import { Navbar } from '../components/layout/Navbar';
 import { Footer } from '../components/layout/Footer';
+import { CommandPalette } from '../components/common/CommandPalette';
+import { MobileBottomNav } from '../components/layout/MobileBottomNav';
 
 export const metadata: Metadata = {
   title: "Idaara.tn · إدارة.تونس — Tunisia's First Voice AI Bureaucracy Copilot",
@@ -30,11 +32,13 @@ export default function RootLayout({
           rel="stylesheet"
         />
       </head>
-      <body className="antialiased min-h-screen flex flex-col selection:bg-emerald-500/30 selection:text-emerald-200">
+      <body className="antialiased min-h-screen flex flex-col selection:bg-emerald-500/30 selection:text-emerald-200 pb-16 lg:pb-0">
         <LocaleProvider>
           <ChecklistProvider>
             <Navbar />
+            <CommandPalette />
             <main className="flex-1 w-full relative">{children}</main>
+            <MobileBottomNav />
             <Footer />
           </ChecklistProvider>
         </LocaleProvider>

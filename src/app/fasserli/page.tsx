@@ -97,11 +97,17 @@ export default function FasserliPage() {
   const pageTitle =
     locale === 'ar'
       ? '📄 فسّرلي هالورقة — قارئ الوثائق الذكي'
+      : locale === 'en'
+      ? '📄 Fasserli · Smart OCR Document Decoder'
+      : locale === 'fr'
+      ? '📄 Fasserli · Décrypteur Administratif IA'
       : '📄 Fasserli Hal War9a · فسّرلي هالورقة';
 
   const pageDesc =
     locale === 'ar'
       ? 'صوّر أي وثيقة إدارية (إعلام ضريبي، استدعاء، إشعار CNSS) وسيفسّرها لك المساعد بـ 3 نقاط مع الآجال القانونية وما يجب فعله.'
+      : locale === 'en'
+      ? 'Scan any official notice (tax warning, court summons, CNSS demand) and Idaara AI will summarize it in 3 clear points with legal deadlines and required actions.'
       : locale === 'fr'
       ? "Scannez n'importe quel courrier administratif (avis fiscal, convocation, avis CNSS) et l'IA Idaara vous le résume en 3 points clairs avec les délais légaux."
       : "Soiwer ay wathi9a idariya (Tanbih dhariba, convocation, avis CNSS, 3a9la) w khalli Idaara AI t'fassarlek chnowa fihom b'loughet el mowaten.";

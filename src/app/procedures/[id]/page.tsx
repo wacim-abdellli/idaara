@@ -7,6 +7,7 @@ import { getProcedureById } from '../../../data/procedures';
 import { useLocale } from '../../../context/LocaleContext';
 import { TimbreCostBreakdown } from '../../../components/calculator/TimbreCostBreakdown';
 import { ChecklistTracker } from '../../../components/calculator/ChecklistTracker';
+import { DossierKitExport } from '../../../components/calculator/DossierKitExport';
 import { getLocalized } from '../../../lib/locale-utils';
 import {
   ArrowLeft,
@@ -156,6 +157,7 @@ export default function ProcedureDetailPage({
         <div className="lg:col-span-5 space-y-6">
           <TimbreCostBreakdown procedure={procedure} />
           <ChecklistTracker procedure={procedure} />
+          <DossierKitExport procedure={procedure} />
         </div>
       </div>
     </div>

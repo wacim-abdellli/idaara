@@ -13,7 +13,7 @@ import {
   Stamp,
   Moon,
   Sun,
-  Lightbulb
+  Lightbulb,
 } from 'lucide-react';
 
 interface OfficeCardProps {
@@ -39,6 +39,7 @@ export const OfficeCard: React.FC<OfficeCardProps> = ({ office, activeScheduleMo
   const tips = office.tips ? getLocalized(office.tips, locale) : undefined;
   const cat = categoryConfig[office.category] || { label: office.category, color: 'bg-zinc-800 text-zinc-400 border-zinc-700' };
 
+  // Determine schedule text
   const scheduleInfo = (() => {
     switch (activeScheduleMode) {
       case 'ramadan':
@@ -47,6 +48,7 @@ export const OfficeCard: React.FC<OfficeCardProps> = ({ office, activeScheduleMo
           label: locale === 'ar' ? 'توقيت رمضان' : locale === 'en' ? 'Ramadan Hours' : 'Horaire Ramadan',
           text: `${office.schedule.ramadan.days} : ${office.schedule.ramadan.hours}`,
           bg: 'bg-amber-500/8 border-amber-500/20',
+          badge: locale === 'ar' ? 'توقيت رمضان خاص' : 'Horaire Ramadan',
         };
       case 'summer':
         return {
@@ -54,6 +56,7 @@ export const OfficeCard: React.FC<OfficeCardProps> = ({ office, activeScheduleMo
           label: locale === 'ar' ? 'الحصة الواحدة' : locale === 'en' ? 'Summer Hours' : "Séance Unique (Été)",
           text: `${office.schedule.summer.days} : ${office.schedule.summer.hours}`,
           bg: 'bg-orange-500/8 border-orange-500/20',
+          badge: locale === 'ar' ? 'حصة واحدة صيفية' : 'Séance Unique',
         };
       default:
         return {
@@ -61,6 +64,7 @@ export const OfficeCard: React.FC<OfficeCardProps> = ({ office, activeScheduleMo
           label: locale === 'ar' ? 'التوقيت العادي' : locale === 'en' ? 'Regular Hours' : 'Horaire Normal',
           text: `${office.schedule.regular.days} : ${office.schedule.regular.hours}`,
           bg: 'bg-emerald-500/5 border-zinc-800',
+          badge: locale === 'ar' ? 'توقيت شتوي عادي' : 'Horaire Normal',
         };
     }
   })();
@@ -74,8 +78,8 @@ export const OfficeCard: React.FC<OfficeCardProps> = ({ office, activeScheduleMo
           <span className={`text-[9px] font-extrabold uppercase tracking-wider px-2 py-0.5 rounded-lg border ${cat.color}`}>
             {cat.label}
           </span>
-          <span className="text-[10px] text-zinc-500 font-medium flex items-center space-x-1 rtl:space-x-reverse">
-            <MapPin className="w-3 h-3 text-zinc-600 shrink-0" />
+          <span className="text-[10px] text-zinc-400 font-medium flex items-center space-x-1 rtl:space-x-reverse">
+            <MapPin className="w-3 h-3 text-emerald-400 shrink-0" />
             <span>{office.governorate} · {office.delegation}</span>
           </span>
         </div>
@@ -87,7 +91,7 @@ export const OfficeCard: React.FC<OfficeCardProps> = ({ office, activeScheduleMo
 
         {/* Address & Phone */}
         <div className="space-y-1.5">
-          <div className="flex items-start space-x-2 rtl:space-x-reverse text-[11px] text-zinc-500">
+          <div className="flex items-start space-x-2 rtl:space-x-reverse text-[11px] text-zinc-400">
             <MapPin className="w-3 h-3 text-zinc-600 shrink-0 mt-0.5" />
             <span className="leading-snug">{office.address}</span>
           </div>
@@ -96,7 +100,7 @@ export const OfficeCard: React.FC<OfficeCardProps> = ({ office, activeScheduleMo
               <Phone className="w-3 h-3 text-zinc-600 shrink-0" />
               <a
                 href={`tel:${office.phone}`}
-                className="text-zinc-400 hover:text-emerald-400 transition-colors font-mono tabular-nums"
+                className="text-zinc-300 hover:text-emerald-400 transition-colors font-mono tabular-nums"
               >
                 {office.phone}
               </a>
@@ -106,9 +110,14 @@ export const OfficeCard: React.FC<OfficeCardProps> = ({ office, activeScheduleMo
 
         {/* Schedule Banner */}
         <div className={`p-3 rounded-xl border text-[11px] ${scheduleInfo.bg}`}>
-          <div className="flex items-center space-x-1.5 rtl:space-x-reverse font-bold text-zinc-300 mb-1">
-            {scheduleInfo.icon}
-            <span>{scheduleInfo.label} :</span>
+          <div className="flex items-center justify-between font-bold text-zinc-300 mb-1">
+            <div className="flex items-center space-x-1.5 rtl:space-x-reverse">
+              {scheduleInfo.icon}
+              <span>{scheduleInfo.label} :</span>
+            </div>
+            <span className="text-[9px] px-1.5 py-0.5 rounded bg-zinc-900 text-zinc-400 border border-zinc-800">
+              {scheduleInfo.badge}
+            </span>
           </div>
           <p className="text-zinc-400 leading-relaxed">{scheduleInfo.text}</p>
         </div>

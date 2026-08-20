@@ -10,30 +10,39 @@ import { Send, Sparkles, RefreshCw, MessageSquareQuote, Mic } from 'lucide-react
 
 export default function CopilotPage() {
   const { t, locale } = useLocale();
+
+  const getWelcomeContent = () => {
+    if (locale === 'ar') {
+      return "مرحباً بك في المساعد الصوتي لإدارة.تونس 🇹🇳. يمكنك التحدث أو الكتابة بالدارجة التونسية حول أي إجراء، وثيقة، أو استفسار إداري.";
+    }
+    if (locale === 'en') {
+      return "Welcome to Idaara.tn Voice Copilot 🇹🇳. Speak or type in Tunisian Derja, French, or English to ask about any administrative procedure, legal form, or stamp fees.";
+    }
+    if (locale === 'fr') {
+      return "Bienvenue sur le Voice Copilot Idaara.tn 🇹🇳. Posez toutes vos questions administratives en Derja ou Français (Passeport, Carte Grise, Contrat de bail, Patente...).";
+    }
+    return "3aslema! Mar7ba bik fi Idaara.tn Voice Copilot 🇹🇳. Es'elni bel Derja 3la ay war9a, procédure, walla timbre mte3 l'Idara.";
+  };
+
   const [messages, setMessages] = useState<ChatMessageType[]>([
     {
       id: 'welcome-msg',
       sender: 'assistant',
-      content:
-        locale === 'ar'
-          ? "مرحباً بك في المساعد الصوتي لإدارة.تونس 🇹🇳. يمكنك التحدث أو الكتابة بالدارجة التونسية حول أي إجراء، وثيقة، أو استفسار إداري."
-          : locale === 'fr'
-          ? "Bienvenue sur le Voice Copilot Idaara.tn 🇹🇳. Posez toutes vos questions administratives en Derja ou Français (Passeport, Carte Grise, Contrat de bail, Patente...)."
-          : "3aslema! Mar7ba bik fi Idaara.tn Voice Copilot 🇹🇳. Es'elni bel Derja 3la ay war9a, procédure, walla timbre mte3 l'Idara.",
+      content: getWelcomeContent(),
       timestamp: 'Idaara AI',
       actions: [
         {
-          label: { derja: '🪪 Renouvellement Passeport', fr: 'Renouvellement Passeport', ar: 'تجديد جواز السفر' },
+          label: { derja: '🪪 Renouvellement Passeport', fr: 'Renouvellement Passeport', ar: 'تجديد جواز السفر', en: 'Passport Renewal' },
           type: 'procedure_link',
           payload: '/procedures/passeport-renouvellement',
         },
         {
-          label: { derja: '🚗 Mutation Carte Grise', fr: 'Mutation Carte Grise', ar: 'تحويل ملكية سيارة' },
+          label: { derja: '🚗 Mutation Carte Grise', fr: 'Mutation Carte Grise', ar: 'تحويل ملكية سيارة', en: 'Car Registration Transfer' },
           type: 'procedure_link',
           payload: '/procedures/mutation-carte-grise',
         },
         {
-          label: { derja: '📝 Contrat de Bail PDF', fr: 'Contrat de Bail PDF', ar: 'عقد كراء PDF' },
+          label: { derja: '📝 Contrat de Bail PDF', fr: 'Contrat de Bail PDF', ar: 'عقد كراء PDF', en: 'Rental Contract PDF' },
           type: 'pdf_form',
           payload: '/documents/contrat-location',
         },
@@ -93,7 +102,7 @@ export default function CopilotPage() {
       {
         id: `welcome-${Date.now()}`,
         sender: 'assistant',
-        content: "Bienvenue à nouveau! Posez votre question en Derja 🇹🇳.",
+        content: getWelcomeContent(),
         timestamp: 'Idaara AI',
       },
     ]);
@@ -114,9 +123,11 @@ export default function CopilotPage() {
           <h1 className="text-xl sm:text-3xl font-extrabold text-white tracking-tight leading-tight">
             {locale === 'ar' ? '🎙️ المساعد الصوتي لإدارة.تونس' : '🎙️ Derja-Native Voice Copilot'}
           </h1>
-          <p className="text-xs text-zinc-500 mt-1.5 max-w-xl">
+          <p className="text-xs text-zinc-400 mt-1.5 max-w-xl">
             {locale === 'ar'
               ? 'فسّر، عمّر وخرّج أوراقك القانونية — مساعد إداري وقانوني فوري'
+              : locale === 'en'
+              ? 'Explain, fill and generate your legal papers — Instant civic & administrative AI assistant'
               : locale === 'fr'
               ? "Fasserli, 3abbi w a3tini l'awra9 — Assistant juridique et administratif instantané"
               : "Fasserli, 3abbi w a3tini l'awra9 — Assistant juridique et administratif instantané"}
@@ -128,7 +139,7 @@ export default function CopilotPage() {
           className="flex items-center space-x-1.5 px-3 py-1.5 rounded-xl bg-zinc-900 hover:bg-zinc-800 border border-zinc-700 text-zinc-400 hover:text-zinc-200 text-xs transition-all self-start sm:self-auto shrink-0"
         >
           <RefreshCw className="w-3.5 h-3.5" />
-          <span>{locale === 'ar' ? 'محادثة جديدة' : 'Réinitialiser'}</span>
+          <span>{locale === 'ar' ? 'محادثة جديدة' : locale === 'en' ? 'Reset Chat' : 'Réinitialiser'}</span>
         </button>
       </div>
 
@@ -144,7 +155,7 @@ export default function CopilotPage() {
       <div className="mb-5">
         <div className="flex items-center space-x-1.5 text-[10px] text-zinc-500 mb-2 font-semibold uppercase tracking-wider">
           <Sparkles className="w-3 h-3 text-amber-400" />
-          <span>{locale === 'ar' ? 'أسئلة شائعة' : 'Questions fréquentes :'}</span>
+          <span>{locale === 'ar' ? 'أسئلة شائعة :' : locale === 'en' ? 'Frequent questions:' : 'Questions fréquentes :'}</span>
         </div>
         <div className="flex flex-wrap gap-1.5">
           {suggestedQuestions.map((q, idx) => (
@@ -173,7 +184,7 @@ export default function CopilotPage() {
               <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-bounce" style={{ animationDelay: '300ms' }} />
             </div>
             <span className="text-zinc-500 text-[11px]">
-              {locale === 'ar' ? 'إدارة.تونس AI يحلل طلبك...' : 'Idaara AI en cours d\'analyse...'}
+              {locale === 'ar' ? 'إدارة.تونس AI يحلل طلبك...' : locale === 'en' ? 'Idaara AI analyzing your request...' : "Idaara AI en cours d'analyse..."}
             </span>
           </div>
         )}

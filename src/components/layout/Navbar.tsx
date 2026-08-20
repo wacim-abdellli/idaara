@@ -5,7 +5,7 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useLocale } from '../../context/LocaleContext';
 import { LanguageSwitcher } from './LanguageSwitcher';
-import { Mic, FileSearch, FileText, Calculator, MapPin, Rocket, BookOpen, Menu, X, Zap } from 'lucide-react';
+import { Mic, FileSearch, FileText, Calculator, MapPin, Rocket, BookOpen, Menu, X, Zap, Search } from 'lucide-react';
 
 const NAV_LINKS = [
   { href: '/copilot',    tKey: 'copilotNav',    icon: Mic },
@@ -23,6 +23,12 @@ export const Navbar: React.FC = () => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   const voiceLabel = locale === 'ar' ? 'صوتي' : 'Voice AI';
+
+  const triggerCommandPalette = () => {
+    if (typeof window !== 'undefined') {
+      window.dispatchEvent(new CustomEvent('open-command-palette'));
+    }
+  };
 
   return (
     <header className="sticky top-0 z-50 w-full border-b border-zinc-800/60 bg-zinc-950/95 backdrop-blur-2xl">
@@ -43,8 +49,7 @@ export const Navbar: React.FC = () => {
             </div>
           </Link>
 
-          {/* ── Desktop Navigation — text-only, no icons, whitespace-nowrap ── */}
-          {/* Icons removed from desktop so width is stable across locales */}
+          {/* ── Desktop Navigation — text-only, whitespace-nowrap ── */}
           <nav className="hidden lg:flex items-center flex-1 mx-1 overflow-hidden">
             <div className="flex items-center space-x-px">
               {NAV_LINKS.map(({ href, tKey }) => {
@@ -67,9 +72,22 @@ export const Navbar: React.FC = () => {
             </div>
           </nav>
 
-          {/* ── Right controls — fixed layout, always at end ── */}
+          {/* ── Right controls — fixed layout ── */}
           <div className="flex items-center space-x-2 shrink-0 ml-auto">
-            {/* Language switcher — hidden on tiny mobile, shown from sm */}
+            {/* Ctrl+K Command Palette Trigger Button */}
+            <button
+              onClick={triggerCommandPalette}
+              title="Search (Ctrl + K)"
+              className="flex items-center space-x-1.5 px-2.5 py-1.5 rounded-xl bg-zinc-900 hover:bg-zinc-800 border border-zinc-800 text-zinc-400 hover:text-zinc-200 text-xs transition-colors"
+            >
+              <Search className="w-3.5 h-3.5 text-emerald-400" />
+              <span className="hidden md:inline-block text-[11px] font-medium text-zinc-400">{t('quickSearchPrompt')}</span>
+              <kbd className="hidden md:inline-block px-1.5 py-0.5 text-[9px] font-mono bg-zinc-950 border border-zinc-700 rounded text-zinc-400">
+                ⌘K
+              </kbd>
+            </button>
+
+            {/* Language switcher */}
             <div className="hidden sm:block">
               <LanguageSwitcher />
             </div>
@@ -99,7 +117,8 @@ export const Navbar: React.FC = () => {
       {mobileMenuOpen && (
         <div className="lg:hidden border-b border-zinc-800 bg-zinc-950/98 backdrop-blur-2xl px-4 pt-3 pb-5 space-y-1 animate-fade-in-up">
           {/* Locale switcher inside mobile menu */}
-          <div className="pb-3 mb-2 border-b border-zinc-800/80">
+          <div className="pb-3 mb-2 border-b border-zinc-800/80 flex items-center justify-between">
+            <span className="text-xs text-zinc-400 font-semibold">Langue / اللغة :</span>
             <LanguageSwitcher />
           </div>
 

@@ -4,6 +4,7 @@ import React, { useState } from 'react';
 import { proceduresData, getProcedureById } from '../../data/procedures';
 import { TimbreCostBreakdown } from '../../components/calculator/TimbreCostBreakdown';
 import { ChecklistTracker } from '../../components/calculator/ChecklistTracker';
+import { DossierKitExport } from '../../components/calculator/DossierKitExport';
 import { useLocale } from '../../context/LocaleContext';
 import { getLocalized } from '../../lib/locale-utils';
 import { Calculator, ChevronRight } from 'lucide-react';
@@ -16,10 +17,10 @@ export default function CalculatorPage() {
   const selectedProcedure = getProcedureById(selectedProcId) || proceduresData[0];
 
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-10">
+    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-10 space-y-8">
 
       {/* Header */}
-      <div className="mb-8">
+      <div>
         <div className="inline-flex items-center space-x-2 px-3 py-1 rounded-full bg-amber-500/10 border border-amber-500/20 text-amber-400 text-[11px] font-semibold mb-4">
           <Calculator className="w-3 h-3" />
           <span>
@@ -54,7 +55,7 @@ export default function CalculatorPage() {
       </div>
 
       {/* Procedure Picker Tabs — horizontal scroll with fade */}
-      <div className="mb-8">
+      <div>
         <p className="text-[10px] font-semibold text-zinc-500 uppercase tracking-widest mb-2">
           {locale === 'ar' ? 'اختر الإجراء :' : locale === 'en' ? 'Select procedure:' : 'Choisir la démarche :'}
         </p>
@@ -107,9 +108,10 @@ export default function CalculatorPage() {
           </Link>
         </div>
 
-        {/* Right: Checklist */}
-        <div className="lg:col-span-7">
+        {/* Right: Checklist & Printable Kit */}
+        <div className="lg:col-span-7 space-y-4">
           <ChecklistTracker procedure={selectedProcedure} />
+          <DossierKitExport procedure={selectedProcedure} />
         </div>
       </div>
     </div>
