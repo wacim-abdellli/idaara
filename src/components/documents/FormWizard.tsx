@@ -1,9 +1,10 @@
 'use client';
 
 import React from 'react';
-import { DocumentTemplate, FormFieldSchema } from '../../types/document';
+import { DocumentTemplate } from '../../types/document';
 import { useLocale } from '../../context/LocaleContext';
-import { Sparkles, CheckCircle } from 'lucide-react';
+import { Sparkles } from 'lucide-react';
+import { getLocalized } from '../../lib/locale-utils';
 
 interface FormWizardProps {
   template: DocumentTemplate;
@@ -26,10 +27,14 @@ export const FormWizard: React.FC<FormWizardProps> = ({
       <div className="flex items-center justify-between pb-4 border-b border-zinc-800">
         <div>
           <h3 className="text-base font-bold text-white">
-            Formulaire de Remplissage
+            {locale === 'ar' ? 'استمارة ملء البيانات' : locale === 'en' ? 'Data Entry Form' : 'Formulaire de Remplissage'}
           </h3>
           <p className="text-xs text-zinc-400">
-            3abbi les données mte3ek lena, el PDF yetbaddel en direct
+            {locale === 'ar'
+              ? 'املأ البيانات هنا لتحديث ملف PDF مباشرة'
+              : locale === 'en'
+              ? 'Fill in your details here, PDF updates in real-time'
+              : '3abbi les données mte3ek lena, el PDF yetbaddel en direct'}
           </p>
         </div>
 
@@ -40,7 +45,7 @@ export const FormWizard: React.FC<FormWizardProps> = ({
             className="flex items-center space-x-1.5 px-3 py-1.5 rounded-lg bg-amber-500/15 hover:bg-amber-500/25 border border-amber-500/30 text-amber-300 text-xs font-semibold transition-colors"
           >
             <Sparkles className="w-3.5 h-3.5" />
-            <span>Exemple Réel (Auto-fill)</span>
+            <span>{locale === 'ar' ? 'ملء تجريبي' : locale === 'en' ? 'Sample auto-fill' : 'Exemple Réel (Auto-fill)'}</span>
           </button>
         )}
       </div>
@@ -48,7 +53,7 @@ export const FormWizard: React.FC<FormWizardProps> = ({
       {/* Dynamic Fields by Section */}
       <div className="space-y-6">
         {template.sections.map((section) => {
-          const sectionTitle = section.title[locale] || section.title['derja'];
+          const sectionTitle = getLocalized(section.title, locale);
           const fields = template.fields.filter((f) => f.section === section.id);
 
           return (
@@ -60,9 +65,8 @@ export const FormWizard: React.FC<FormWizardProps> = ({
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 {fields.map((field) => {
-                  const label = field.label[locale] || field.label['derja'];
-                  const placeholder =
-                    field.placeholder?.[locale] || field.placeholder?.['derja'] || '';
+                  const label = getLocalized(field.label, locale);
+                  const placeholder = field.placeholder ? getLocalized(field.placeholder, locale) : '';
                   const value = formData[field.name] ?? '';
 
                   return (
@@ -89,12 +93,12 @@ export const FormWizard: React.FC<FormWizardProps> = ({
                         <select
                           value={value}
                           onChange={(e) => onChangeField(field.name, e.target.value)}
-                          className="w-full bg-zinc-900 border border-zinc-800 focus:border-emerald-500 rounded-xl p-2.5 text-xs text-zinc-100 focus:outline-none focus:ring-1 focus:ring-emerald-500"
+                          className="w-full bg-zinc-900 border border-zinc-800 focus:border-emerald-500 rounded-xl p-2.5 text-xs text-zinc-100 focus:outline-none focus:ring-1 focus:ring-emerald-500 cursor-pointer"
                         >
-                          <option value="">Sélectionner...</option>
+                          <option value="">{locale === 'ar' ? 'اختر...' : locale === 'en' ? 'Select...' : 'Sélectionner...'}</option>
                           {field.options?.map((opt) => (
                             <option key={opt.value} value={opt.value}>
-                              {opt.label[locale] || opt.label['derja']}
+                              {getLocalized(opt.label, locale)}
                             </option>
                           ))}
                         </select>

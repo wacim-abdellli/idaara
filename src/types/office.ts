@@ -1,3 +1,5 @@
+import { LocalizedString } from '../lib/locale-utils';
+
 export type OfficeCategory =
   | 'baladiya'
   | 'recette_finances'
@@ -54,11 +56,7 @@ export interface OfficeSchedule {
 
 export interface PublicOffice {
   id: string;
-  name: {
-    derja: string;
-    fr: string;
-    ar: string;
-  };
+  name: LocalizedString;
   category: OfficeCategory;
   governorate: Governorate;
   delegation: string;
@@ -73,9 +71,5 @@ export interface PublicOffice {
   schedule: OfficeSchedule;
   hasConformeService: boolean;
   hasTimbreVendor: boolean;
-  tips?: {
-    derja: string;
-    fr: string;
-    ar: string;
-  };
+  tips?: LocalizedString;
 }

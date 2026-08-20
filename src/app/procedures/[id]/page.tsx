@@ -7,6 +7,7 @@ import { getProcedureById } from '../../../data/procedures';
 import { useLocale } from '../../../context/LocaleContext';
 import { TimbreCostBreakdown } from '../../../components/calculator/TimbreCostBreakdown';
 import { ChecklistTracker } from '../../../components/calculator/ChecklistTracker';
+import { getLocalized } from '../../../lib/locale-utils';
 import {
   ArrowLeft,
   Clock,
@@ -14,7 +15,6 @@ import {
   Building2,
   FileText,
   CheckCircle2,
-  AlertCircle
 } from 'lucide-react';
 import { formatTND } from '../../../lib/utils';
 
@@ -30,10 +30,10 @@ export default function ProcedureDetailPage({
     notFound();
   }
 
-  const { locale, isRtl } = useLocale();
+  const { locale } = useLocale();
 
-  const title = procedure.title[locale] || procedure.title['derja'];
-  const fullDesc = procedure.fullDescription[locale] || procedure.fullDescription['derja'];
+  const title = getLocalized(procedure.title, locale);
+  const fullDesc = getLocalized(procedure.fullDescription, locale);
 
   return (
     <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
@@ -43,7 +43,7 @@ export default function ProcedureDetailPage({
         className="inline-flex items-center space-x-1.5 rtl:space-x-reverse text-xs text-zinc-400 hover:text-emerald-400 mb-6 transition-colors"
       >
         <ArrowLeft className="w-3.5 h-3.5 rtl:rotate-180" />
-        <span>{locale === 'ar' ? 'الرجوع إلى دليل الإجراءات' : 'Retour à la liste des démarches'}</span>
+        <span>{locale === 'ar' ? 'الرجوع إلى دليل الإجراءات' : locale === 'en' ? 'Back to procedures' : 'Retour à la liste des démarches'}</span>
       </Link>
 
       {/* Hero Header Card */}
@@ -55,13 +55,13 @@ export default function ProcedureDetailPage({
             </span>
             <span className="text-xs text-zinc-400 flex items-center space-x-1 rtl:space-x-reverse">
               <Clock className="w-3.5 h-3.5 text-zinc-500" />
-              <span>{locale === 'ar' ? 'المدة التقديرية :' : 'Délai estimé :'} {procedure.estimatedProcessingTime}</span>
+              <span>{locale === 'ar' ? 'المدة التقديرية :' : locale === 'en' ? 'Est. duration:' : 'Délai estimé :'} {procedure.estimatedProcessingTime}</span>
             </span>
           </div>
 
           <div className="px-3 py-1 rounded-xl bg-zinc-900 border border-zinc-800 text-xs text-zinc-300 flex items-center space-x-1.5 rtl:space-x-reverse">
             <Coins className="w-3.5 h-3.5 text-amber-400" />
-            <span>{locale === 'ar' ? 'معلوم التنابر :' : 'Budget Timbres :'}</span>
+            <span>{locale === 'ar' ? 'معلوم التنابر :' : locale === 'en' ? 'Stamp budget:' : 'Budget Timbres :'}</span>
             <span className="font-mono font-bold text-emerald-400">{formatTND(procedure.estimatedTotalCostTND, locale)}</span>
           </div>
         </div>
@@ -82,7 +82,7 @@ export default function ProcedureDetailPage({
               className="inline-flex items-center space-x-2 rtl:space-x-reverse px-4 py-2 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-zinc-950 font-bold text-xs shadow-md shadow-emerald-500/20 transition-all hover:scale-105"
             >
               <FileText className="w-4 h-4" />
-              <span>{locale === 'ar' ? 'استخراج النموذج وتعميره تلقائياً' : 'Remplir le formulaire officiel en ligne'}</span>
+              <span>{locale === 'ar' ? 'استخراج النموذج وتعميره تلقائياً' : locale === 'en' ? 'Fill official form online' : 'Remplir le formulaire officiel en ligne'}</span>
             </Link>
           </div>
         )}
@@ -95,14 +95,14 @@ export default function ProcedureDetailPage({
           <div className="glass-panel rounded-2xl p-5 sm:p-6 border border-zinc-800 space-y-5">
             <h2 className="text-sm sm:text-base font-bold text-white flex items-center space-x-2 rtl:space-x-reverse pb-3.5 border-b border-zinc-800">
               <CheckCircle2 className="w-4 h-4 text-emerald-400" />
-              <span>{locale === 'ar' ? 'المسار الإجرائي خطوة بخطوة' : 'Étapes et Démarches (Marahal el Idara)'}</span>
+              <span>{locale === 'ar' ? 'المسار الإجرائي خطوة بخطوة' : locale === 'en' ? 'Step-by-step procedure guide' : 'Étapes et Démarches (Marahal el Idara)'}</span>
             </h2>
 
             <div className="space-y-5 relative before:absolute before:inset-0 before:left-3 rtl:before:left-auto rtl:before:right-3 before:w-0.5 before:bg-zinc-800">
               {procedure.steps.map((step) => {
-                const stepTitle = step.title[locale] || step.title['derja'];
-                const stepDesc = step.description[locale] || step.description['derja'];
-                const tips = step.tips?.[locale] || step.tips?.['derja'];
+                const stepTitle = getLocalized(step.title, locale);
+                const stepDesc = getLocalized(step.description, locale);
+                const tips = step.tips ? getLocalized(step.tips, locale) : undefined;
 
                 return (
                   <div key={step.stepNumber} className="relative flex items-start space-x-3.5 rtl:space-x-reverse">
@@ -116,11 +116,11 @@ export default function ProcedureDetailPage({
 
                       <div className="flex flex-wrap items-center gap-2.5 pt-1 text-[11px] text-zinc-500">
                         <span className="flex items-center space-x-1 rtl:space-x-reverse text-emerald-400">
-                          <Building2 className="w-3 h-3" />
+                          <Building2 className="w-3.5 h-3.5" />
                           <span>{step.targetOffice}</span>
                         </span>
                         <span className="flex items-center space-x-1 rtl:space-x-reverse">
-                          <Clock className="w-3 h-3" />
+                          <Clock className="w-3.5 h-3.5" />
                           <span>{step.estimatedDuration}</span>
                         </span>
                       </div>
@@ -140,14 +140,14 @@ export default function ProcedureDetailPage({
           {/* Related Offices Link */}
           <div className="p-4 rounded-xl bg-zinc-900 border border-zinc-800 flex items-center justify-between gap-3">
             <div className="text-xs text-zinc-400">
-              <span className="text-zinc-200 font-semibold block">{locale === 'ar' ? 'هل تبحث عن أقرب مركز أو بلدية؟' : 'Vous cherchez le bureau le plus proche ?'}</span>
-              <span>{locale === 'ar' ? 'اطلع على دليل المصالح والبلديات حسب ولايتك' : 'Consultez les adresses dans votre gouvernorat'}</span>
+              <span className="text-zinc-200 font-semibold block">{locale === 'ar' ? 'هل تبحث عن أقرب مركز أو بلدية؟' : locale === 'en' ? 'Looking for the closest office or municipality?' : 'Vous cherchez le bureau le plus proche ?'}</span>
+              <span>{locale === 'ar' ? 'اطلع على دليل المصالح والبلديات حسب ولايتك' : locale === 'en' ? 'Browse official offices in your governorate' : 'Consultez les adresses dans votre gouvernorat'}</span>
             </div>
             <Link
               href={`/locator`}
               className="px-3 py-1.5 rounded-lg bg-zinc-800 hover:bg-zinc-700 text-zinc-200 text-xs font-semibold transition-colors shrink-0"
             >
-              {locale === 'ar' ? 'دليل المصالح' : 'Annuaire GPS'}
+              {locale === 'ar' ? 'دليل المصالح' : locale === 'en' ? 'Office Locator' : 'Annuaire GPS'}
             </Link>
           </div>
         </div>

@@ -4,6 +4,7 @@ import React, { useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useLocale } from '../context/LocaleContext';
+import { getLocalized } from '../lib/locale-utils';
 import { proceduresData } from '../data/procedures';
 import {
   Mic,
@@ -251,7 +252,7 @@ export default function HomePage() {
 
           <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-2.5">
             {proceduresData.slice(0, 6).map((proc) => {
-              const title = proc.title[locale] || proc.title['derja'];
+              const title = getLocalized(proc.title, locale);
               return (
                 <Link
                   key={proc.id}

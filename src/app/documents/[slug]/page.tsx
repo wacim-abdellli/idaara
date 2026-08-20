@@ -9,6 +9,8 @@ import { PDFPreview } from '../../../components/documents/PDFPreview';
 import { useLocale } from '../../../context/LocaleContext';
 import { ArrowLeft, FileText, Stamp, ShieldCheck } from 'lucide-react';
 
+import { getLocalized } from '../../../lib/locale-utils';
+
 export default function DocumentDetailPage({
   params,
 }: {
@@ -26,8 +28,8 @@ export default function DocumentDetailPage({
     template.sampleData || {}
   );
 
-  const title = template.title[locale] || template.title['derja'];
-  const description = template.description[locale] || template.description['derja'];
+  const title = getLocalized(template.title, locale);
+  const description = getLocalized(template.description, locale);
 
   const handleChangeField = (fieldName: string, value: string | number) => {
     setFormData((prev) => ({

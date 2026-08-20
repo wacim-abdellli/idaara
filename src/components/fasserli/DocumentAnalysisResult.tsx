@@ -14,6 +14,8 @@ import {
 } from 'lucide-react';
 import Link from 'next/link';
 
+import { getLocalized, getLocalizedArray } from '../../lib/locale-utils';
+
 interface DocumentAnalysisResultProps {
   result: OCRAnalysisResult;
 }
@@ -23,11 +25,11 @@ export const DocumentAnalysisResult: React.FC<DocumentAnalysisResultProps> = ({
 }) => {
   const { locale } = useLocale();
 
-  const docType = result.documentType[locale] || result.documentType['derja'];
-  const authority = result.issuingAuthority[locale] || result.issuingAuthority['derja'];
-  const penalty = result.penaltyRisk[locale] || result.penaltyRisk['derja'];
-  const summaryBullets = result.summary[locale] || result.summary['derja'];
-  const legalContext = result.legalContext[locale] || result.legalContext['derja'];
+  const docType = getLocalized(result.documentType, locale);
+  const authority = getLocalized(result.issuingAuthority, locale);
+  const penalty = getLocalized(result.penaltyRisk, locale);
+  const summaryBullets = getLocalizedArray(result.summary, locale);
+  const legalContext = getLocalized(result.legalContext, locale);
 
   const urgencyColors = {
     low: 'bg-blue-500/20 text-blue-400 border-blue-500/40',
@@ -128,8 +130,8 @@ export const DocumentAnalysisResult: React.FC<DocumentAnalysisResultProps> = ({
 
         <div className="space-y-3">
           {result.actionItems.map((item, idx) => {
-            const task = item.task[locale] || item.task['derja'];
-            const office = item.office[locale] || item.office['derja'];
+            const task = getLocalized(item.task, locale);
+            const office = getLocalized(item.office, locale);
 
             return (
               <div

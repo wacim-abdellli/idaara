@@ -5,6 +5,8 @@ import { sampleDocumentsList, SampleDocItem } from '../../data/sampleDocuments';
 import { useLocale } from '../../context/LocaleContext';
 import { FileText, AlertCircle, Sparkles } from 'lucide-react';
 
+import { getLocalized } from '../../lib/locale-utils';
+
 interface SampleDocsPickerProps {
   onSelectSample: (sample: SampleDocItem) => void;
   selectedId?: string;
@@ -26,7 +28,7 @@ export const SampleDocsPicker: React.FC<SampleDocsPickerProps> = ({
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
         {sampleDocumentsList.map((doc) => {
           const isSelected = selectedId === doc.id;
-          const title = doc.title[locale] || doc.title['derja'];
+          const title = getLocalized(doc.title, locale);
 
           return (
             <button

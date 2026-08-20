@@ -1,3 +1,5 @@
+import { LocalizedString } from '../lib/locale-utils';
+
 export type ProcedureVertical =
   | 'identity'
   | 'transport'
@@ -8,16 +10,8 @@ export type ProcedureVertical =
 
 export interface RequiredDocument {
   id: string;
-  name: {
-    derja: string;
-    fr: string;
-    ar: string;
-  };
-  description?: {
-    derja: string;
-    fr: string;
-    ar: string;
-  };
+  name: LocalizedString;
+  description?: LocalizedString;
   copiesConformes?: number;
   originalRequired: boolean;
   notes?: string;
@@ -25,11 +19,7 @@ export interface RequiredDocument {
 
 export interface TimbreCostItem {
   id: string;
-  label: {
-    derja: string;
-    fr: string;
-    ar: string;
-  };
+  label: LocalizedString;
   amountTND: number;
   quantity: number;
   category: 'timbre_fiscal' | 'legalisation' | 'photo' | 'frais_dossier' | 'autre';
@@ -37,44 +27,20 @@ export interface TimbreCostItem {
 
 export interface StepGuide {
   stepNumber: number;
-  title: {
-    derja: string;
-    fr: string;
-    ar: string;
-  };
-  description: {
-    derja: string;
-    fr: string;
-    ar: string;
-  };
+  title: LocalizedString;
+  description: LocalizedString;
   targetOffice: string;
   estimatedDuration: string;
-  tips?: {
-    derja: string;
-    fr: string;
-    ar: string;
-  };
+  tips?: LocalizedString;
 }
 
 export interface Procedure {
   id: string;
   slug: string;
   vertical: ProcedureVertical;
-  title: {
-    derja: string;
-    fr: string;
-    ar: string;
-  };
-  shortDescription: {
-    derja: string;
-    fr: string;
-    ar: string;
-  };
-  fullDescription: {
-    derja: string;
-    fr: string;
-    ar: string;
-  };
+  title: LocalizedString;
+  shortDescription: LocalizedString;
+  fullDescription: LocalizedString;
   iconName: string;
   tags: string[];
   estimatedTotalCostTND: number;
@@ -86,7 +52,7 @@ export interface Procedure {
   relatedOfficeTypes: string[];
   templateSlug?: string;
   faq?: Array<{
-    q: { derja: string; fr: string; ar: string };
-    a: { derja: string; fr: string; ar: string };
+    q: LocalizedString;
+    a: LocalizedString;
   }>;
 }

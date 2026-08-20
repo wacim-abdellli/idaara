@@ -12,32 +12,39 @@ interface LocaleContextType {
 
 const LocaleContext = createContext<LocaleContextType | undefined>(undefined);
 
+const VALID_LOCALES: SupportedLanguage[] = ['derja', 'fr', 'ar', 'en'];
+
 export function LocaleProvider({ children }: { children: React.ReactNode }) {
   const [locale, setLocaleState] = useState<SupportedLanguage>('derja');
 
   useEffect(() => {
     const saved = localStorage.getItem('idaara_locale') as SupportedLanguage;
-    if (saved && (saved === 'derja' || saved === 'fr' || saved === 'ar')) {
+    if (saved && VALID_LOCALES.includes(saved)) {
       setLocaleState(saved);
+      applyDomLocale(saved);
     }
   }, []);
 
-  const setLocale = (newLocale: SupportedLanguage) => {
-    setLocaleState(newLocale);
-    localStorage.setItem('idaara_locale', newLocale);
-    if (newLocale === 'ar') {
+  const applyDomLocale = (l: SupportedLanguage) => {
+    if (l === 'ar') {
       document.documentElement.setAttribute('dir', 'rtl');
       document.documentElement.setAttribute('lang', 'ar');
     } else {
       document.documentElement.setAttribute('dir', 'ltr');
-      document.documentElement.setAttribute('lang', newLocale === 'fr' ? 'fr' : 'ar-TN');
+      document.documentElement.setAttribute('lang', l === 'fr' ? 'fr' : l === 'en' ? 'en' : 'ar-TN');
     }
+  };
+
+  const setLocale = (newLocale: SupportedLanguage) => {
+    setLocaleState(newLocale);
+    localStorage.setItem('idaara_locale', newLocale);
+    applyDomLocale(newLocale);
   };
 
   const isRtl = locale === 'ar';
 
   const t = (key: string): string => {
-    return translations[locale]?.[key] || translations['fr']?.[key] || key;
+    return translations[locale]?.[key] || translations['en']?.[key] || translations['fr']?.[key] || key;
   };
 
   return (

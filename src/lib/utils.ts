@@ -1,12 +1,13 @@
 import { clsx, type ClassValue } from 'clsx';
 import { twMerge } from 'tailwind-merge';
+import { SupportedLanguage } from '../data/translations';
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
 
-export function formatTND(amount: number, locale: 'derja' | 'fr' | 'ar' = 'fr'): string {
-  const formatted = (amount).toFixed(3);
+export function formatTND(amount: number, locale: SupportedLanguage | string = 'fr'): string {
+  const formatted = amount.toFixed(3);
   if (locale === 'ar') {
     return `${formatted} د.ت`;
   }

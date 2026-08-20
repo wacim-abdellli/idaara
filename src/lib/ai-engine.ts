@@ -11,7 +11,9 @@ export interface ReasonerResponse {
   };
 }
 
-export function parseAndReason(prompt: string, locale: 'derja' | 'fr' | 'ar' = 'derja'): ReasonerResponse {
+import { SupportedLanguage } from '../data/translations';
+
+export function parseAndReason(prompt: string, locale: SupportedLanguage | string = 'derja'): ReasonerResponse {
   const query = prompt.toLowerCase().trim();
 
   // Keyword intents mapping

@@ -5,7 +5,8 @@ import { proceduresData, getProcedureById } from '../../data/procedures';
 import { TimbreCostBreakdown } from '../../components/calculator/TimbreCostBreakdown';
 import { ChecklistTracker } from '../../components/calculator/ChecklistTracker';
 import { useLocale } from '../../context/LocaleContext';
-import { Calculator, ArrowRight, ChevronRight } from 'lucide-react';
+import { getLocalized } from '../../lib/locale-utils';
+import { Calculator, ChevronRight } from 'lucide-react';
 import Link from 'next/link';
 
 export default function CalculatorPage() {
@@ -24,6 +25,8 @@ export default function CalculatorPage() {
           <span>
             {locale === 'ar'
               ? 'حاسبة التنابر الجبائية وتتبع ملف الإجراء'
+              : locale === 'en'
+              ? 'Fiscal Stamps Calculator & Checklist Tracker'
               : locale === 'fr'
               ? 'Calculateur de Timbres Fiscaux & Suivi de Pièces'
               : 'E7seb el Timbres w Lawwej 3la Awra9ek'}
@@ -34,14 +37,16 @@ export default function CalculatorPage() {
           <span className="text-2xl sm:text-3xl mr-2">🧮</span>
           {locale === 'ar'
             ? 'حاسبة التنابر والأوراق الإدارية'
-            : locale === 'fr'
-            ? 'Timbre & Awra9 Budget Calculator'
+            : locale === 'en'
+            ? 'Timbre & Papers Budget Calculator'
             : 'Timbre & Awra9 Budget Calculator'}
         </h1>
 
         <p className="text-xs sm:text-sm text-zinc-400 max-w-2xl leading-relaxed">
           {locale === 'ar'
             ? 'احسب المصاريف الدقيقة لأي إجراء إداري (تنابر 5 د.ت، 15 د.ت، 80 د.ت، صور شمسية، نسخ مطابقة) حتى لا تفاجأ عند الشباك.'
+            : locale === 'en'
+            ? 'Calculate the exact budget for any administrative procedure (5 DT, 15 DT, 80 DT stamps, ID photos, certified copies) to avoid surprises at the desk.'
             : locale === 'fr'
             ? "Calculez le budget exact pour chaque démarche (Timbres 5 DT, 15 DT, 80 DT, photos d'identité, copies conformes) pour éviter les mauvaises surprises au guichet."
             : "E7seb el budget exact mte3 ay procédure (Timbres 5 DT, 15 DT, 80 DT, photos d'identité, copies conformes) bech ma yetfaji2ech 3al guichet."}
@@ -51,13 +56,13 @@ export default function CalculatorPage() {
       {/* Procedure Picker Tabs — horizontal scroll with fade */}
       <div className="mb-8">
         <p className="text-[10px] font-semibold text-zinc-500 uppercase tracking-widest mb-2">
-          {locale === 'ar' ? 'اختر الإجراء :' : 'Choisir la démarche :'}
+          {locale === 'ar' ? 'اختر الإجراء :' : locale === 'en' ? 'Select procedure:' : 'Choisir la démarche :'}
         </p>
         <div className="relative scroll-fade-x">
           <div className="flex space-x-2 overflow-x-auto pb-2 scrollbar-none">
             {proceduresData.map((p) => {
               const isSelected = p.id === selectedProcId;
-              const title = p.title[locale] || p.title['derja'];
+              const title = getLocalized(p.title, locale);
 
               return (
                 <button
@@ -89,14 +94,14 @@ export default function CalculatorPage() {
           >
             <div>
               <p className="text-xs font-bold text-zinc-200 group-hover:text-emerald-300 transition-colors">
-                {locale === 'ar' ? 'هل تريد الدليل خطوة بخطوة؟' : 'Besoin du guide étape par étape ?'}
+                {locale === 'ar' ? 'هل تريد الدليل خطوة بخطوة؟' : locale === 'en' ? 'Need the step-by-step guide?' : 'Besoin du guide étape par étape ?'}
               </p>
               <p className="text-[11px] text-zinc-500 mt-0.5">
-                {locale === 'ar' ? 'اطلع على الأجل والمكاتب المعنية' : 'Délais, bureaux et documents requis en détail'}
+                {locale === 'ar' ? 'اطلع على الأجل والمكاتب المعنية' : locale === 'en' ? 'Detailed deadlines, offices, and required documents' : 'Délais, bureaux et documents requis en détail'}
               </p>
             </div>
             <div className="flex items-center space-x-1 text-emerald-400 text-xs font-semibold shrink-0">
-              <span>{locale === 'ar' ? 'الدليل' : 'Voir guide'}</span>
+              <span>{locale === 'ar' ? 'الدليل' : locale === 'en' ? 'View guide' : 'Voir guide'}</span>
               <ChevronRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
             </div>
           </Link>

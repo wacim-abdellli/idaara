@@ -3,6 +3,7 @@
 import React from 'react';
 import { PublicOffice } from '../../types/office';
 import { useLocale } from '../../context/LocaleContext';
+import { getLocalized } from '../../lib/locale-utils';
 import {
   MapPin,
   Phone,
@@ -34,8 +35,8 @@ const categoryConfig: Record<string, { label: string; color: string }> = {
 export const OfficeCard: React.FC<OfficeCardProps> = ({ office, activeScheduleMode }) => {
   const { locale } = useLocale();
 
-  const name = office.name[locale] || office.name['derja'];
-  const tips = office.tips?.[locale] || office.tips?.['derja'];
+  const name = getLocalized(office.name, locale);
+  const tips = office.tips ? getLocalized(office.tips, locale) : undefined;
   const cat = categoryConfig[office.category] || { label: office.category, color: 'bg-zinc-800 text-zinc-400 border-zinc-700' };
 
   const scheduleInfo = (() => {
@@ -43,21 +44,21 @@ export const OfficeCard: React.FC<OfficeCardProps> = ({ office, activeScheduleMo
       case 'ramadan':
         return {
           icon: <Moon className="w-3.5 h-3.5 text-amber-400" />,
-          label: 'Horaire Ramadan',
+          label: locale === 'ar' ? 'توقيت رمضان' : locale === 'en' ? 'Ramadan Hours' : 'Horaire Ramadan',
           text: `${office.schedule.ramadan.days} : ${office.schedule.ramadan.hours}`,
           bg: 'bg-amber-500/8 border-amber-500/20',
         };
       case 'summer':
         return {
           icon: <Sun className="w-3.5 h-3.5 text-orange-400" />,
-          label: "Séance Unique (Été)",
+          label: locale === 'ar' ? 'الحصة الواحدة' : locale === 'en' ? 'Summer Hours' : "Séance Unique (Été)",
           text: `${office.schedule.summer.days} : ${office.schedule.summer.hours}`,
           bg: 'bg-orange-500/8 border-orange-500/20',
         };
       default:
         return {
           icon: <Clock className="w-3.5 h-3.5 text-emerald-400" />,
-          label: 'Horaire Normal',
+          label: locale === 'ar' ? 'التوقيت العادي' : locale === 'en' ? 'Regular Hours' : 'Horaire Normal',
           text: `${office.schedule.regular.days} : ${office.schedule.regular.hours}`,
           bg: 'bg-emerald-500/5 border-zinc-800',
         };
@@ -146,7 +147,7 @@ export const OfficeCard: React.FC<OfficeCardProps> = ({ office, activeScheduleMo
           className="flex items-center justify-center space-x-2 rtl:space-x-reverse w-full px-4 py-2 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-zinc-950 font-bold text-xs shadow-md shadow-emerald-500/20 transition-all hover:scale-[1.02] hover:shadow-emerald-500/30"
         >
           <Navigation2 className="w-3.5 h-3.5" />
-          <span>Itinéraire GPS</span>
+          <span>{locale === 'ar' ? 'الموقع على الخريطة GPS' : locale === 'en' ? 'GPS Directions' : 'Itinéraire GPS'}</span>
         </a>
       </div>
     </div>

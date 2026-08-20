@@ -1,24 +1,14 @@
+import { LocalizedString } from '../lib/locale-utils';
+
 export interface FormFieldSchema {
   id: string;
   name: string;
-  label: {
-    derja: string;
-    fr: string;
-    ar: string;
-  };
-  placeholder?: {
-    derja: string;
-    fr: string;
-    ar: string;
-  };
+  label: LocalizedString;
+  placeholder?: LocalizedString;
   type: 'text' | 'number' | 'date' | 'select' | 'textarea' | 'radio';
-  options?: Array<{ value: string; label: { derja: string; fr: string; ar: string } }>;
+  options?: Array<{ value: string; label: LocalizedString }>;
   required: boolean;
-  helpText?: {
-    derja: string;
-    fr: string;
-    ar: string;
-  };
+  helpText?: LocalizedString;
   section?: string;
   validationRegex?: string;
 }
@@ -27,23 +17,15 @@ export interface DocumentTemplate {
   slug: string;
   id: string;
   category: 'contracts' | 'authorizations' | 'declarations' | 'identity' | 'business';
-  title: {
-    derja: string;
-    fr: string;
-    ar: string;
-  };
-  description: {
-    derja: string;
-    fr: string;
-    ar: string;
-  };
+  title: LocalizedString;
+  description: LocalizedString;
   officialCode?: string;
   legalBasis: string;
   requiresLegalisation: boolean;
   requiredTimbreTND: number;
   sections: Array<{
     id: string;
-    title: { derja: string; fr: string; ar: string };
+    title: LocalizedString;
   }>;
   fields: FormFieldSchema[];
   sampleData?: Record<string, string | number>;

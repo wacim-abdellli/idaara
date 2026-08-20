@@ -4,6 +4,7 @@ import React from 'react';
 import { Procedure, TimbreCostItem } from '../../types/procedure';
 import { useLocale } from '../../context/LocaleContext';
 import { formatTND } from '../../lib/utils';
+import { getLocalized } from '../../lib/locale-utils';
 import { Calculator, Stamp, Camera, FileCheck, Coins, Lightbulb } from 'lucide-react';
 
 interface TimbreCostBreakdownProps {
@@ -43,6 +44,8 @@ export const TimbreCostBreakdown: React.FC<TimbreCostBreakdownProps> = ({ proced
   const tip =
     locale === 'ar'
       ? 'اقتنِ التنابر الجبائية مباشرةً من القباضات المالية الرسمية لتفادي الزيادات غير القانونية.'
+      : locale === 'en'
+      ? 'Buy your fiscal stamps directly at official Recettes des Finances to avoid unauthorized fees.'
       : locale === 'fr'
       ? "N'achetez vos timbres qu'auprès des Recettes des Finances officielles pour éviter les majorations illégales."
       : "Ashtri timbres mte3ek men Recette des Finances rasmiyin bech ma yakhdhoulekch bezzef.";
@@ -59,20 +62,22 @@ export const TimbreCostBreakdown: React.FC<TimbreCostBreakdownProps> = ({ proced
             <h3 className="text-xs font-bold text-white leading-tight">
               {locale === 'ar'
                 ? 'تفاصيل التنابر والمعاليم'
+                : locale === 'en'
+                ? 'Stamps & Fees Breakdown'
                 : locale === 'fr'
                 ? 'Détail des Timbres & Frais'
                 : 'Tafassil el Timbres wel Masarif'}
             </h3>
             <span className="text-[10px] text-zinc-500">
-              {locale === 'ar' ? 'تقدير ميزانية الإجراء' : 'Budget estimatif'}
+              {locale === 'ar' ? 'تقدير ميزانية الإجراء' : locale === 'en' ? 'Budget estimate' : 'Budget estimatif'}
             </span>
           </div>
         </div>
 
-        {/* Total badge — prominent */}
+        {/* Total badge */}
         <div className="flex flex-col items-end">
           <span className="text-[9px] text-zinc-500 mb-0.5">
-            {locale === 'ar' ? 'المجموع' : 'Total'}
+            {locale === 'ar' ? 'المجموع' : locale === 'en' ? 'Total' : 'Total'}
           </span>
           <span className="px-3 py-1 rounded-xl bg-emerald-500 text-zinc-950 font-mono font-extrabold text-sm shadow-md shadow-emerald-500/30">
             {formatTND(total, locale)}
@@ -87,7 +92,7 @@ export const TimbreCostBreakdown: React.FC<TimbreCostBreakdownProps> = ({ proced
       {procedure.costsBreakdown.length > 0 ? (
         <div className="space-y-2">
           {procedure.costsBreakdown.map((item) => {
-            const label = item.label[locale] || item.label['derja'];
+            const label = getLocalized(item.label, locale);
             const subtotal = item.amountTND * item.quantity;
 
             return (
@@ -117,7 +122,7 @@ export const TimbreCostBreakdown: React.FC<TimbreCostBreakdownProps> = ({ proced
         <div className="py-6 rounded-xl bg-emerald-500/5 border border-emerald-500/20 text-center">
           <span className="text-2xl">🎉</span>
           <p className="text-xs text-emerald-400 font-semibold mt-1">
-            {locale === 'ar' ? 'هذا الإجراء مجاني تماماً' : 'Cette démarche est totalement gratuite'}
+            {locale === 'ar' ? 'هذا الإجراء مجاني تماماً' : locale === 'en' ? 'This procedure is completely free' : 'Cette démarche est totalement gratuite'}
           </p>
         </div>
       )}

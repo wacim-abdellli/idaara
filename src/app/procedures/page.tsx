@@ -4,6 +4,7 @@ import React, { useState } from 'react';
 import Link from 'next/link';
 import { proceduresData } from '../../data/procedures';
 import { useLocale } from '../../context/LocaleContext';
+import { getLocalized } from '../../lib/locale-utils';
 import { formatTND } from '../../lib/utils';
 import {
   BookOpen,
@@ -97,8 +98,8 @@ export default function ProceduresPage() {
       {/* Procedures Grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {filteredProcedures.map((proc) => {
-          const title = proc.title[locale] || proc.title['derja'];
-          const desc = proc.shortDescription[locale] || proc.shortDescription['derja'];
+          const title = getLocalized(proc.title, locale);
+          const desc = getLocalized(proc.shortDescription, locale);
 
           return (
             <div

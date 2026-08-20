@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { ChatMessage as ChatMessageType } from '../../types/chat';
 import { Volume2, VolumeX, FileText, ExternalLink, Calculator, MapPin, CheckCircle2 } from 'lucide-react';
 import { useLocale } from '../../context/LocaleContext';
+import { getLocalized } from '../../lib/locale-utils';
 
 interface ChatMessageProps {
   message: ChatMessageType;
@@ -37,7 +38,7 @@ export const ChatMessage: React.FC<ChatMessageProps> = ({ message }) => {
     }
 
     const utterance = new SpeechSynthesisUtterance(message.content);
-    utterance.lang = locale === 'ar' ? 'ar-SA' : locale === 'fr' ? 'fr-FR' : 'ar-TN';
+    utterance.lang = locale === 'ar' ? 'ar-SA' : locale === 'en' ? 'en-US' : locale === 'fr' ? 'fr-FR' : 'ar-TN';
     utterance.rate = 1.0;
     utterance.onend = () => setIsPlayingAudio(false);
     utterance.onerror = () => setIsPlayingAudio(false);
@@ -109,7 +110,7 @@ export const ChatMessage: React.FC<ChatMessageProps> = ({ message }) => {
             {message.actions && message.actions.length > 0 && (
               <div className="mt-3 pt-3 border-t border-zinc-800/80 flex flex-wrap gap-2">
                 {message.actions.map((action, idx) => {
-                  const label = action.label[locale] || action.label['derja'] || 'Voir';
+                  const label = getLocalized(action.label, locale) || 'Voir';
                   return (
                     <Link
                       key={idx}
@@ -141,12 +142,12 @@ export const ChatMessage: React.FC<ChatMessageProps> = ({ message }) => {
                 {isPlayingAudio ? (
                   <>
                     <VolumeX className="w-3 h-3" />
-                    <span>9oss el sout</span>
+                    <span>{locale === 'en' ? 'Stop audio' : '9oss el sout'}</span>
                   </>
                 ) : (
                   <>
                     <Volume2 className="w-3 h-3" />
-                    <span>Isma3 bel Derja</span>
+                    <span>{locale === 'en' ? 'Listen' : 'Isma3 bel Derja'}</span>
                   </>
                 )}
               </button>

@@ -4,8 +4,9 @@ import React from 'react';
 import Link from 'next/link';
 import { DocumentTemplate } from '../../types/document';
 import { useLocale } from '../../context/LocaleContext';
-import { FileText, ArrowRight, ShieldCheck, Stamp } from 'lucide-react';
+import { FileText, ArrowRight, Stamp } from 'lucide-react';
 import { formatTND } from '../../lib/utils';
+import { getLocalized } from '../../lib/locale-utils';
 
 interface DocumentCardProps {
   template: DocumentTemplate;
@@ -14,8 +15,11 @@ interface DocumentCardProps {
 export const DocumentCard: React.FC<DocumentCardProps> = ({ template }) => {
   const { locale } = useLocale();
 
-  const title = template.title[locale] || template.title['derja'];
-  const description = template.description[locale] || template.description['derja'];
+  const title = getLocalized(template.title, locale);
+  const description = getLocalized(template.description, locale);
+
+  const fillBtnText =
+    locale === 'ar' ? 'تعبئة النموذج' : locale === 'en' ? 'Fill PDF' : '3abbi el PDF';
 
   return (
     <div className="glass-panel rounded-2xl p-6 border border-zinc-800 flex flex-col justify-between hover:border-zinc-700 hover:shadow-xl transition-all group">
@@ -47,7 +51,7 @@ export const DocumentCard: React.FC<DocumentCardProps> = ({ template }) => {
 
       <div className="pt-4 border-t border-zinc-800/80 flex items-center justify-between">
         <div className="text-[11px] text-zinc-400">
-          <span className="text-zinc-500">Timbre estimé: </span>
+          <span className="text-zinc-500">{locale === 'ar' ? 'المعلوم :' : 'Timbre :'} </span>
           <span className="font-semibold text-emerald-400">{formatTND(template.requiredTimbreTND, locale)}</span>
         </div>
 
@@ -55,7 +59,7 @@ export const DocumentCard: React.FC<DocumentCardProps> = ({ template }) => {
           href={`/documents/${template.slug}`}
           className="inline-flex items-center space-x-1 px-3 py-1.5 rounded-lg bg-emerald-500 hover:bg-emerald-400 text-zinc-950 font-bold text-xs transition-colors"
         >
-          <span>3abbi el PDF</span>
+          <span>{fillBtnText}</span>
           <ArrowRight className="w-3.5 h-3.5" />
         </Link>
       </div>
