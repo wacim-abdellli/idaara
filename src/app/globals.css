@@ -17,8 +17,9 @@
   --border-subtle: rgba(255, 255, 255, 0.08);
   --border-focus: rgba(16, 185, 129, 0.4);
 
-  --background: var(--bg-primary);
-  --foreground: var(--text-primary);
+  --font-latin: "Plus Jakarta Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-arabic: "Cairo", "Noto Sans Arabic", Tahoma, sans-serif;
+  --font-mono: "JetBrains Mono", monospace;
 }
 
 * {
@@ -29,24 +30,31 @@ body {
   background-color: #09090B;
   color: #F8FAFC;
   min-height: 100vh;
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans Arabic", sans-serif;
+  font-family: var(--font-latin);
   overflow-x: hidden;
   background-image: 
     radial-gradient(ellipse 80% 50% at 50% -20%, rgba(16, 185, 129, 0.08), transparent 70%),
     radial-gradient(ellipse 60% 40% at 80% 60%, rgba(99, 102, 241, 0.05), transparent 60%);
   background-attachment: fixed;
+  letter-spacing: -0.01em;
 }
 
-/* RTL Styles */
-[dir="rtl"] {
-  text-align: right;
-  font-family: "Noto Sans Arabic", "Amiri", -apple-system, BlinkMacSystemFont, "Segoe UI", Tahoma, sans-serif;
+/* RTL Styles & Arabic Typography */
+[dir="rtl"], [dir="rtl"] body {
+  font-family: var(--font-arabic);
+  letter-spacing: 0;
 }
 
-/* Custom Scrollbar */
+[dir="rtl"] .font-mono {
+  font-family: var(--font-mono);
+  direction: ltr;
+  display: inline-block;
+}
+
+/* Custom Sleek Scrollbar */
 ::-webkit-scrollbar {
-  width: 6px;
-  height: 6px;
+  width: 5px;
+  height: 5px;
 }
 
 ::-webkit-scrollbar-track {
@@ -64,16 +72,16 @@ body {
 
 /* Glassmorphism Card Utility */
 .glass-panel {
-  background: rgba(18, 18, 22, 0.7);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
+  background: rgba(18, 18, 22, 0.75);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
   border: 1px solid rgba(255, 255, 255, 0.08);
 }
 
 .glass-panel-hover:hover {
   background: rgba(255, 255, 255, 0.05);
-  border-color: rgba(16, 185, 129, 0.3);
-  box-shadow: 0 0 25px rgba(16, 185, 129, 0.08);
+  border-color: rgba(16, 185, 129, 0.35);
+  box-shadow: 0 0 30px rgba(16, 185, 129, 0.08);
 }
 
 .glow-emerald {

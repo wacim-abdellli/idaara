@@ -28,12 +28,20 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="fr" className="dark">
-      <body className="bg-[#09090B] text-[#F8FAFC] antialiased min-h-screen flex flex-col selection:bg-emerald-500/30 selection:text-emerald-300">
+    <html lang="fr" className="dark scroll-smooth">
+      <head>
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
+        <link
+          href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800;900&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap"
+          rel="stylesheet"
+        />
+      </head>
+      <body className="bg-[#09090B] text-[#F8FAFC] antialiased min-h-screen flex flex-col selection:bg-emerald-500/30 selection:text-emerald-300 font-sans">
         <LocaleProvider>
           <ChecklistProvider>
             <Navbar />
-            <main className="flex-1 w-full">{children}</main>
+            <main className="flex-1 w-full relative">{children}</main>
             <Footer />
           </ChecklistProvider>
         </LocaleProvider>
