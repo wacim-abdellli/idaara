@@ -18,15 +18,11 @@ import {
   Sparkles,
   Search,
   Lock,
-  Zap,
 } from 'lucide-react';
 
-// ─── Signature element: CSS rubber stamp ──────────────────────────────────────
-// Runs a single entrance animation (scale + blur dissolve) then rests at 3% opacity.
-// No library, no image file — pure CSS from globals.css `.stamp-watermark`.
 function StampWatermark({ locale }: { locale: string }) {
   const text =
-    locale === 'ar' ? '✓ مقبول' : '✓ APPROUVÉ';
+    locale === 'ar' ? '✓ مقبول' : locale === 'en' ? '✓ APPROVED' : '✓ APPROUVÉ';
 
   return (
     <div
@@ -39,7 +35,7 @@ function StampWatermark({ locale }: { locale: string }) {
 }
 
 export default function HomePage() {
-  const { t, locale, isRtl } = useLocale();
+  const { t, locale } = useLocale();
   const router = useRouter();
   const [searchQuery, setSearchQuery] = useState('');
 
@@ -51,12 +47,22 @@ export default function HomePage() {
   const coreFeatures = [
     {
       id: 'voice-copilot',
-      title: locale === 'ar' ? 'المساعد الصوتي بالدارجة' : locale === 'fr' ? 'Voice Copilot en Derja' : 'Derja Voice Copilot',
-      desc: locale === 'ar'
-        ? 'تكلّم بالدارجة التونسية لمعرفة أوراقك وتنابرك في ثوانٍ.'
-        : locale === 'fr'
-        ? 'Posez vos questions en Derja ou Français, recevez les démarches et timbres.'
-        : 'Tkallem bel Derja, Idaara AI yfahmek w yajibek fel 7in.',
+      title:
+        locale === 'ar'
+          ? 'المساعد الصوتي بالدارجة'
+          : locale === 'en'
+          ? 'Derja Voice Copilot'
+          : locale === 'fr'
+          ? 'Voice Copilot en Derja'
+          : 'Derja Voice Copilot',
+      desc:
+        locale === 'ar'
+          ? 'تكلّم بالدارجة التونسية لمعرفة أوراقك وتنابرك في ثوانٍ.'
+          : locale === 'en'
+          ? 'Speak in Tunisian Derja, French, or English to get exact papers, stamp fees, and procedures in seconds.'
+          : locale === 'fr'
+          ? 'Posez vos questions en Derja ou Français, recevez les démarches et timbres.'
+          : 'Tkallem bel Derja, Idaara AI yfahmek w yajibek fel 7in.',
       href: '/copilot',
       icon: Mic,
       badge: 'Voice AI',
@@ -65,12 +71,22 @@ export default function HomePage() {
     },
     {
       id: 'fasserli-ocr',
-      title: locale === 'ar' ? 'فسّرلي هالورقة (OCR)' : locale === 'fr' ? 'Scanner & Décrypter (OCR)' : 'Fasserli Hal War9a',
-      desc: locale === 'ar'
-        ? 'صوّر أي وثيقة رسمية واحصل على ملخص بـ 3 نقاط والآجال القانونية.'
-        : locale === 'fr'
-        ? 'Scannez un courrier officiel, obtenez un résumé 3-points avec les délais légaux.'
-        : 'Soiwer ay wathi9a idariya — Tanbih, convocation — w Idaara AI yfassarelk 3 points.',
+      title:
+        locale === 'ar'
+          ? 'فسّرلي هالورقة (OCR)'
+          : locale === 'en'
+          ? 'Notice OCR Decoder (Fasserli)'
+          : locale === 'fr'
+          ? 'Scanner & Décrypter (OCR)'
+          : 'Fasserli Hal War9a',
+      desc:
+        locale === 'ar'
+          ? 'صوّر أي وثيقة رسمية واحصل على ملخص بـ 3 نقاط والآجال القانونية.'
+          : locale === 'en'
+          ? 'Scan any official notice (tax summons, CNSS demand) to get a 3-point plain summary and legal deadlines.'
+          : locale === 'fr'
+          ? 'Scannez un courrier officiel, obtenez un résumé 3-points avec les délais légaux.'
+          : 'Soiwer ay wathi9a idariya — Tanbih, convocation — w Idaara AI yfassarelk 3 points.',
       href: '/fasserli',
       icon: FileSearch,
       badge: 'Smart OCR',
@@ -79,12 +95,22 @@ export default function HomePage() {
     },
     {
       id: 'smart-pdf',
-      title: locale === 'ar' ? 'الوثائق الرسمية PDF' : locale === 'fr' ? 'Formulaires PDF Officiels' : 'Smart PDF Forms',
-      desc: locale === 'ar'
-        ? 'استخرج عقود الكراء والتواكل والتصاريح بالشرف جاهزة للتعريف.'
-        : locale === 'fr'
-        ? 'Générez baux de location, procurations, actes de vente — prêts pour la Baladiya.'
-        : 'A3mel contrats location, procurations, déclarations — mriglin lel Baladiya.',
+      title:
+        locale === 'ar'
+          ? 'الوثائق الرسمية PDF'
+          : locale === 'en'
+          ? 'Smart Legal Forms (PDF)'
+          : locale === 'fr'
+          ? 'Formulaires PDF Officiels'
+          : 'Smart PDF Forms',
+      desc:
+        locale === 'ar'
+          ? 'استخرج عقود الكراء والتواكل والتصاريح بالشرف جاهزة للتعريف.'
+          : locale === 'en'
+          ? 'Generate lease contracts, powers of attorney, and sworn declarations formatted for Baladiya legalization.'
+          : locale === 'fr'
+          ? 'Générez baux de location, procurations, actes de vente — prêts pour la Baladiya.'
+          : 'A3mel contrats location, procurations, déclarations — mriglin lel Baladiya.',
       href: '/documents',
       icon: FileText,
       badge: 'Vector PDF',
@@ -93,12 +119,22 @@ export default function HomePage() {
     },
     {
       id: 'calculator',
-      title: locale === 'ar' ? 'حاسبة التنابر والأوراق' : locale === 'fr' ? 'Calculateur de Timbres' : 'Timbre & Awra9 Budget',
-      desc: locale === 'ar'
-        ? 'احتساب دقيق لتنابر 5 د.ت — 15 د.ت — 80 د.ت وقائمة تفاعلية بالوثائق.'
-        : locale === 'fr'
-        ? 'Estimation exacte des timbres (5 DT, 15 DT, 80 DT) et checklist interactive.'
-        : "E7seb el timbres (5 DT, 15 DT, 80 DT) w checklist awra9ek qbel ma tmchi.",
+      title:
+        locale === 'ar'
+          ? 'حاسبة التنابر والأوراق'
+          : locale === 'en'
+          ? 'Fiscal Stamp & Budget Calculator'
+          : locale === 'fr'
+          ? 'Calculateur de Timbres'
+          : 'Timbre & Awra9 Budget',
+      desc:
+        locale === 'ar'
+          ? 'احتساب دقيق لتنابر 5 د.ت — 15 د.ت — 80 د.ت وقائمة تفاعلية بالوثائق.'
+          : locale === 'en'
+          ? 'Calculate exact statutory stamp costs (5 DT, 15 DT, 80 DT) and track your required dossier checklist.'
+          : locale === 'fr'
+          ? 'Estimation exacte des timbres (5 DT, 15 DT, 80 DT) et checklist interactive.'
+          : "E7seb el timbres (5 DT, 15 DT, 80 DT) w checklist awra9ek qbel ma tmchi.",
       href: '/calculator',
       icon: Calculator,
       badge: 'Budget TND',
@@ -107,12 +143,22 @@ export default function HomePage() {
     },
     {
       id: 'locator',
-      title: locale === 'ar' ? 'دليل البلديات والمصالح' : locale === 'fr' ? 'Annuaire des Organismes' : 'Guide des Baladiyas',
-      desc: locale === 'ar'
-        ? '350+ بلدية وقباضة بـ 24 ولاية — أوقات رمضان والحصة الواحدة والمسار GPS.'
-        : locale === 'fr'
-        ? '350+ municipalités, Recettes et CNSS — horaires Ramadan, Été et itinéraire GPS.'
-        : '350+ Municipalités w Recettes 3al 24 Wilayas — Ramadan, Sayf, GPS itinéraire.',
+      title:
+        locale === 'ar'
+          ? 'دليل البلديات والمصالح'
+          : locale === 'en'
+          ? 'Baladiya & Public Office Locator'
+          : locale === 'fr'
+          ? 'Annuaire des Organismes'
+          : 'Guide des Baladiyas',
+      desc:
+        locale === 'ar'
+          ? '350+ بلدية وقباضة بـ 24 ولاية — أوقات رمضان والحصة الواحدة والمسار GPS.'
+          : locale === 'en'
+          ? '350+ municipal offices, Recettes, and CNSS across 24 governorates with Ramadan/Summer schedules and GPS.'
+          : locale === 'fr'
+          ? '350+ municipalités, Recettes et CNSS — horaires Ramadan, Été et itinéraire GPS.'
+          : '350+ Municipalités w Recettes 3al 24 Wilayas — Ramadan, Sayf, GPS itinéraire.',
       href: '/locator',
       icon: MapPin,
       badge: '24 Wilayas',
@@ -121,12 +167,22 @@ export default function HomePage() {
     },
     {
       id: 'launchpad',
-      title: locale === 'ar' ? 'فضاء المستقل والشركات' : locale === 'fr' ? 'Freelance & Entreprise' : 'Freelancer Launchpad',
-      desc: locale === 'ar'
-        ? 'ضريبة 1% للمبادر الذاتي، الفواتير بالعملة الأجنبية، والتسجيل في RNE.'
-        : locale === 'fr'
-        ? "Statut Auto-Entrepreneur à 1%, facturation export EUR/USD conforme BCT, RNE."
-        : 'Statut Auto-Entrepreneur 0.5%→1%, Facture export EUR/USD, Enregistrement RNE.',
+      title:
+        locale === 'ar'
+          ? 'فضاء المستقل والشركات'
+          : locale === 'en'
+          ? 'Freelancer & Founder Launchpad'
+          : locale === 'fr'
+          ? 'Freelance & Entreprise'
+          : 'Freelancer Launchpad',
+      desc:
+        locale === 'ar'
+          ? 'ضريبة 1% للمبادر الذاتي، الفواتير بالعملة الأجنبية، والتسجيل في RNE.'
+          : locale === 'en'
+          ? 'Auto-Entrepreneur 1% flat tax regime, BCT-compliant FX export invoices (EUR/USD), and RNE incorporation.'
+          : locale === 'fr'
+          ? "Statut Auto-Entrepreneur à 1%, facturation export EUR/USD conforme BCT, RNE."
+          : 'Statut Auto-Entrepreneur 0.5%→1%, Facture export EUR/USD, Enregistrement RNE.',
       href: '/launchpad',
       icon: Rocket,
       badge: 'Freelance 1%',
@@ -135,7 +191,6 @@ export default function HomePage() {
     },
   ];
 
-  // Hero headline — split for the display/highlight treatment
   const heroMain = t('heroHeadline');
   const heroAccent = t('heroHeadlineHighlight');
 
@@ -144,8 +199,7 @@ export default function HomePage() {
 
       {/* ── HERO ────────────────────────────────────────────── */}
       <section className="relative pt-12 sm:pt-20 pb-14 sm:pb-20 px-4 sm:px-6 lg:px-8 max-w-5xl mx-auto text-center overflow-hidden">
-
-        {/* Signature watermark stamp — ONE bold moment, then quiet */}
+        {/* Signature watermark stamp */}
         <StampWatermark locale={locale} />
 
         {/* Ambient glow */}
@@ -157,21 +211,20 @@ export default function HomePage() {
           <span>{t('heroBadge')}</span>
         </div>
 
-        {/* SIGNATURE TYPOGRAPHY —
-            DM Serif Display for the main line (weight 400, the italic weight is stunning),
-            then the highlight phrase in the brand stamp-green.
-            The unexpected serif in a government-tech product is the distinctive choice. */}
+        {/* Headline */}
         <h1 className="relative z-10">
           <span className="display-heading block text-4xl sm:text-6xl lg:text-7xl text-[#F5F4F0] mb-3">
             {heroMain}
           </span>
-          <span className="display-heading block text-4xl sm:text-6xl lg:text-7xl italic"
-            style={{ color: 'var(--stamp-green)' }}>
+          <span
+            className="display-heading block text-4xl sm:text-6xl lg:text-7xl italic"
+            style={{ color: 'var(--stamp-green)' }}
+          >
             {heroAccent}
           </span>
         </h1>
 
-        {/* Subtitle — plain, plain, plain. Does one job: clarify. */}
+        {/* Subtitle */}
         <p className="relative z-10 text-sm sm:text-base text-[#9A9DA6] max-w-xl mx-auto leading-relaxed mt-6 mb-10">
           {t('heroSubheadline')}
         </p>
@@ -196,7 +249,9 @@ export default function HomePage() {
               style={{ backgroundColor: 'var(--stamp-green)', boxShadow: '0 4px 20px rgba(0,192,127,0.25)' }}
             >
               <Mic className="w-3.5 h-3.5" />
-              <span>{locale === 'ar' ? 'تكلّم' : locale === 'fr' ? 'Parler' : 'Tkallem'}</span>
+              <span>
+                {locale === 'ar' ? 'تكلّم' : locale === 'en' ? 'Voice Search' : locale === 'fr' ? 'Parler' : 'Tkallem'}
+              </span>
             </Link>
           </form>
 
@@ -205,12 +260,14 @@ export default function HomePage() {
             <span>
               {locale === 'ar'
                 ? 'يفهم الدارجة التونسية، العربية والفرنسية'
+                : locale === 'en'
+                ? 'Understands Tunisian Derja, Arabizi, French, and English'
                 : 'Comprend le Derja tunisien, l\'Arabizi et le Français'}
             </span>
           </p>
         </div>
 
-        {/* CTAs — primary + secondary, clear verbs */}
+        {/* CTAs */}
         <div className="relative z-10 flex flex-col sm:flex-row items-center justify-center gap-3">
           <Link
             href="/copilot"
@@ -238,14 +295,20 @@ export default function HomePage() {
             <div className="flex items-center space-x-2 rtl:space-x-reverse">
               <Sparkles className="w-3.5 h-3.5 text-amber-400" />
               <p className="text-[10px] font-bold uppercase tracking-widest text-zinc-400">
-                {locale === 'ar' ? 'أكثر الإجراءات طلباً' : 'Démarches les plus fréquentes'}
+                {locale === 'ar'
+                  ? 'أكثر الإجراءات طلباً'
+                  : locale === 'en'
+                  ? 'Most Requested Procedures'
+                  : 'Démarches les plus fréquentes'}
               </p>
             </div>
             <Link
               href="/procedures"
               className="flex items-center space-x-1 rtl:space-x-reverse text-xs font-semibold text-zinc-500 hover:text-emerald-400 transition-colors"
             >
-              <span>{locale === 'ar' ? 'الكل' : 'Tout voir'} (25+)</span>
+              <span>
+                {locale === 'ar' ? 'الكل' : locale === 'en' ? 'View all' : 'Tout voir'} (25+)
+              </span>
               <ArrowRight className="w-3.5 h-3.5 rtl:rotate-180" />
             </Link>
           </div>
@@ -259,8 +322,10 @@ export default function HomePage() {
                   href={`/procedures/${proc.id}`}
                   className="p-3 rounded-xl bg-zinc-900/70 hover:bg-zinc-800/90 border border-zinc-800 hover:border-zinc-700 transition-all group text-start"
                 >
-                  <span className="text-[9px] uppercase font-extrabold tracking-wider block mb-1.5"
-                    style={{ color: 'var(--stamp-green)' }}>
+                  <span
+                    className="text-[9px] uppercase font-extrabold tracking-wider block mb-1.5"
+                    style={{ color: 'var(--stamp-green)' }}
+                  >
                     {proc.vertical}
                   </span>
                   <h4 className="text-[11px] font-semibold text-zinc-300 group-hover:text-white line-clamp-2 leading-tight transition-colors">
@@ -304,7 +369,7 @@ export default function HomePage() {
                     </span>
                   </div>
 
-                  {/* Title & description — active voice, plain language */}
+                  {/* Title & description */}
                   <h3 className="text-sm font-bold text-[#F5F4F0] mb-2 group-hover:text-white transition-colors leading-snug">
                     {feat.title}
                   </h3>
@@ -313,10 +378,14 @@ export default function HomePage() {
                   </p>
                 </div>
 
-                {/* CTA row — always the same verb family */}
-                <div className="mt-5 pt-4 border-t border-zinc-800/60 flex items-center justify-between text-xs font-semibold transition-all"
-                  style={{ color: 'var(--stamp-green)' }}>
-                  <span>{locale === 'ar' ? 'فتح الخدمة' : 'Ouvrir'}</span>
+                {/* CTA row */}
+                <div
+                  className="mt-5 pt-4 border-t border-zinc-800/60 flex items-center justify-between text-xs font-semibold transition-all"
+                  style={{ color: 'var(--stamp-green)' }}
+                >
+                  <span>
+                    {locale === 'ar' ? 'فتح الخدمة' : locale === 'en' ? 'Open Tool' : 'Ouvrir'}
+                  </span>
                   <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-1 rtl:rotate-180 rtl:group-hover:-translate-x-1 transition-transform" />
                 </div>
               </Link>
@@ -327,10 +396,17 @@ export default function HomePage() {
 
       {/* ── PRIVACY BANNER ───────────────────────────────────── */}
       <section className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="glass-panel rounded-3xl p-6 sm:p-8 border flex flex-col sm:flex-row items-center gap-5"
-          style={{ borderColor: 'rgba(0,192,127,0.20)', background: 'linear-gradient(135deg, rgba(0,192,127,0.06), rgba(17,19,22,0.9))' }}>
-          <div className="w-12 h-12 rounded-2xl flex items-center justify-center shrink-0"
-            style={{ background: 'rgba(0,192,127,0.12)', border: '1px solid rgba(0,192,127,0.30)' }}>
+        <div
+          className="glass-panel rounded-3xl p-6 sm:p-8 border flex flex-col sm:flex-row items-center gap-5"
+          style={{
+            borderColor: 'rgba(0,192,127,0.20)',
+            background: 'linear-gradient(135deg, rgba(0,192,127,0.06), rgba(17,19,22,0.9))',
+          }}
+        >
+          <div
+            className="w-12 h-12 rounded-2xl flex items-center justify-center shrink-0"
+            style={{ background: 'rgba(0,192,127,0.12)', border: '1px solid rgba(0,192,127,0.30)' }}
+          >
             <Lock className="w-6 h-6" style={{ color: 'var(--stamp-green)' }} />
           </div>
 

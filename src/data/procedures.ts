@@ -12,6 +12,7 @@ export const proceduresData: Procedure[] = [
       derja: "Renouvellement mte3 Passeport Tounsi",
       fr: "Renouvellement de Passeport Tunisien",
       ar: "تجديد جواز السفر التونسي",
+      en: "Tunisian Passport Renewal"
     },
     shortDescription: {
       derja: "Koll el awra9 wel timbres elli lezmin bech t'baddel el passeport el 9dim walla el wfe.",
@@ -107,6 +108,7 @@ export const proceduresData: Procedure[] = [
       derja: "Istikhraj walla Tajdid Bita9at Ta3rif (CIN)",
       fr: "Obtention / Renouvellement Carte d'Identité (CIN)",
       ar: "استخراج أو تجديد بطاقة التعريف الوطنية",
+      en: "National Identity Card (CIN) Issuance & Renewal"
     },
     shortDescription: {
       derja: "Awra9 el CIN awwel marra walla tabdil el 5edma, el 3onwan, walla fi 7alet el dheya3.",
@@ -201,6 +203,7 @@ export const proceduresData: Procedure[] = [
       derja: "Bita9at el Sawabi9 el 3adliya (Bulletin N°3 / B3)",
       fr: "Casier Judiciaire (Bulletin N°3 - B3)",
       ar: "بطاقة السوابق العدلية (بطاقة عدد 3)",
+      en: "Criminal Record Certificate (Bulletin N°3 / B3)"
     },
     shortDescription: {
       derja: "Istikhraj el B3 en ligne walla fel markez lel concours, 5edma jdid, walla visa.",
@@ -266,6 +269,7 @@ export const proceduresData: Procedure[] = [
       derja: "Tabdil Carte Grise ba3d ma chrit Karhba",
       fr: "Mutation de Carte Grise (Changement de Propriétaire)",
       ar: "تحويل ملكية سيارة وتغيير البطاقة الرمادية",
+      en: "Vehicle Ownership Transfer & Registration (Carte Grise)"
     },
     shortDescription: {
       derja: "Koll el étapes bech tbeddel el carte grise fi esmek ba3d ma tba3et el karhba m3a l'ATTT.",
@@ -362,6 +366,7 @@ export const proceduresData: Procedure[] = [
       derja: "Tajdid Rokhsat el Siyéga (Permis de Conduire)",
       fr: "Renouvellement du Permis de Conduire",
       ar: "تجديد رخصة السياقة التونسية",
+      en: "Driver's License Renewal & Replacement"
     },
     shortDescription: {
       derja: "Tajdid el permis ba3d ma youfa (kol 10 snin) walla fi 7alet el dheya3.",
@@ -446,6 +451,7 @@ export const proceduresData: Procedure[] = [
       derja: "Nidham el Baresth el Fardi (Auto-Entrepreneur Tounsi)",
       fr: "Statut de l'Auto-Entrepreneur en Tunisie",
       ar: "نظام المبادر الذاتي في تونس (Auto-Entrepreneur)",
+      en: "Auto-Entrepreneur & Freelancer Registration"
     },
     shortDescription: {
       derja: "Koll chay 3al plateforme auto-entrepreneur.tn, dhariba 0.5% - 1%, w cnss m5afadh.",
@@ -521,6 +527,7 @@ export const proceduresData: Procedure[] = [
       derja: "Ta2sis Charika fi Tounes (RNE / SUARL / SARL)",
       fr: "Création de Société (RNE / SUARL / SARL)",
       ar: "تأسيس شركة في تونس (السجل الوطني للمؤسسات / ش.ف.م.م)",
+      en: "Company Incorporation & Commercial Registry (RNE / SUARL / SARL)"
     },
     shortDescription: {
       derja: "Koll el étapes men rédation el statuts, 7alan el compte bancaire indisponible, 7atta el RNE.",
@@ -613,6 +620,7 @@ export const proceduresData: Procedure[] = [
       derja: "Contrat de Location Dyar w Ma7allat (3a9d Kré)",
       fr: "Contrat de Bail & Location à Usage d'Habitation",
       ar: "عقد كراء محل سكني أو تجاري (معرّف به ومسجّل)",
+      en: "Residential Lease Agreement & Tax Registration"
     },
     shortDescription: {
       derja: "Générer contrat de bail standardisé mrigel 9anouniyan lel Baladiya wel Recette.",
@@ -684,6 +692,7 @@ export const proceduresData: Procedure[] = [
       derja: "Tarkib Compteur Dhaw w Gaz (STEG)",
       fr: "Demande de Raccordement Électricité & Gaz (STEG)",
       ar: "مطلب ربط بالكهرباء والغاز وتركيب عداد (الشركة التونسية للكهرباء والغاز)",
+      en: "STEG Electricity & Gas Meter Connection"
     },
     shortDescription: {
       derja: "Awra9 w étapes tarkib compteur STEG jdid lel dar walla ma7al khedma.",
@@ -747,6 +756,7 @@ export const proceduresData: Procedure[] = [
       derja: "Istirja3 Masarif el Dwe wel Tebba (CNAM)",
       fr: "Remboursement des Soins & Médicaments (CNAM)",
       ar: "استرجاع مصاريف العلاج والأدوية (الصندوق الوطني للتأمين على المرض - الكنام)",
+      en: "CNAM Healthcare Reimbursement (Filière Privée / Carnet)"
     },
     shortDescription: {
       derja: "Tarikhat el sobben mte3 el bulletins de soins, plafond annuel, w suivi remboursement.",
@@ -797,6 +807,7 @@ export const proceduresData: Procedure[] = [
       derja: "Imtiaz el FCR lel Tounsiya fel Kharej (TRE / Douane)",
       fr: "Régime Privilégié FCR (Franchise Changement de Résidence)",
       ar: "الامتياز الجبائي التقديري FCR للتونسيين بالخارج (الديوانة)",
+      en: "FCR Duty-Free Vehicle Import (Tunisian Expats / TRE)"
     },
     shortDescription: {
       derja: "Koll el chourout bech tdakhel karhba walla a9achek men ghir ma t5allas diwana kemla.",

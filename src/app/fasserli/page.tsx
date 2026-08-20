@@ -165,9 +165,17 @@ export default function FasserliPage() {
       {/* Result Section */}
       {analysisResult && (
         <div className="mt-8">
-          <div className="flex items-center space-x-2 text-xs font-bold text-zinc-400 uppercase tracking-wider mb-4">
+          <div className="flex items-center space-x-2 rtl:space-x-reverse text-xs font-bold text-zinc-400 uppercase tracking-wider mb-4">
             <FileSearch className="w-4 h-4 text-emerald-400" />
-            <span>Taqrir el Tahlil el Idari (Rapport d'analyse du document) :</span>
+            <span>
+              {locale === 'ar'
+                ? 'تقرير التحليل القانوني والإداري للوثيقة :'
+                : locale === 'en'
+                ? 'Administrative OCR Analysis & Legal Report :'
+                : locale === 'fr'
+                ? "Rapport d'analyse administrative du document :"
+                : "Taqrir el Tahlil el Idari (Rapport d'analyse) :"}
+            </span>
           </div>
           <DocumentAnalysisResult result={analysisResult} />
         </div>

@@ -6,8 +6,8 @@ import { useChecklist } from '../../context/ChecklistContext';
 import { useLocale } from '../../context/LocaleContext';
 import { CheckCircle2, Circle, RotateCcw, Sparkles, ListChecks, Copy } from 'lucide-react';
 import { triggerConfetti } from '../../lib/utils';
-
 import { getLocalized } from '../../lib/locale-utils';
+
 interface ChecklistTrackerProps {
   procedure: Procedure;
 }
@@ -29,6 +29,45 @@ export const ChecklistTracker: React.FC<ChecklistTrackerProps> = ({ procedure })
 
   const isDone = progress.percentage === 100;
 
+  const headerTitle =
+    locale === 'ar'
+      ? 'قائمة الوثائق المطلوبة (تفاعلية)'
+      : locale === 'en'
+      ? 'Required Documents Checklist'
+      : locale === 'fr'
+      ? 'Checklist des Documents Requis'
+      : 'Awra9 el Dossier (Checklist)';
+
+  const headerSubtitle =
+    locale === 'ar'
+      ? 'حدّد كل وثيقة قمت بتجهيزها'
+      : locale === 'en'
+      ? 'Check off each document as you prepare it'
+      : locale === 'fr'
+      ? 'Cochez les pièces au fur et à mesure'
+      : 'Markez papier papier kif et3ammarha';
+
+  const resetBtnText =
+    locale === 'ar' ? 'إعادة' : locale === 'en' ? 'Reset' : locale === 'fr' ? 'Réinit.' : '3awed';
+
+  const progressLabel =
+    locale === 'ar'
+      ? `${progress.completed} من أصل ${progress.total} وثائق جاهزة`
+      : locale === 'en'
+      ? `${progress.completed} of ${progress.total} documents ready`
+      : locale === 'fr'
+      ? `${progress.completed} / ${progress.total} documents prêts`
+      : `${progress.completed} / ${progress.total} awra9 7adhra`;
+
+  const doneBannerText =
+    locale === 'ar'
+      ? '🎉 مبروك! ملفك مكتمل وجاهز للإيداع.'
+      : locale === 'en'
+      ? '🎉 Congrats! Your dossier is 100% complete and ready to file.'
+      : locale === 'fr'
+      ? '🎉 Mabrouk! Votre dossier est 100% complet pour le dépôt.'
+      : '🎉 Mabrouk! Dossier mte3ek 7adher 100% lel dépôt.';
+
   return (
     <div className="glass-panel rounded-2xl p-5 border border-zinc-800/80 space-y-4">
 
@@ -40,18 +79,10 @@ export const ChecklistTracker: React.FC<ChecklistTrackerProps> = ({ procedure })
           </div>
           <div>
             <h3 className="text-xs font-bold text-white leading-tight">
-              {locale === 'ar'
-                ? 'Ù‚Ø§Ø¦Ù…Ø© Ø§Ù„ÙˆØ«Ø§Ø¦Ù‚ Ø§Ù„Ù…Ø·Ù„ÙˆØ¨Ø© (ØªÙØ§Ø¹Ù„ÙŠØ©)'
-                : locale === 'fr'
-                ? 'Checklist du Dossier (Awra9)'
-                : 'Awra9 el Dossier (Checklist)'}
+              {headerTitle}
             </h3>
             <p className="text-[10px] text-zinc-500 mt-0.5">
-              {locale === 'ar'
-                ? 'Ø­Ø¯Ù‘Ø¯ ÙƒÙ„ ÙˆØ«ÙŠÙ‚Ø© Ø¬Ù‡Ø²ØªÙ‡Ø§'
-                : locale === 'fr'
-                ? 'Cochez les papiers au fur et Ã  mesure'
-                : 'Markez papier papier kif et3ammarha'}
+              {headerSubtitle}
             </p>
           </div>
         </div>
@@ -61,7 +92,7 @@ export const ChecklistTracker: React.FC<ChecklistTrackerProps> = ({ procedure })
           className="flex items-center space-x-1 rtl:space-x-reverse text-[11px] text-zinc-600 hover:text-zinc-300 transition-colors shrink-0 pt-0.5"
         >
           <RotateCcw className="w-3 h-3" />
-          <span>{locale === 'ar' ? 'Ø¥Ø¹Ø§Ø¯Ø©' : 'RÃ©init.'}</span>
+          <span>{resetBtnText}</span>
         </button>
       </div>
 
@@ -69,9 +100,7 @@ export const ChecklistTracker: React.FC<ChecklistTrackerProps> = ({ procedure })
       <div className="space-y-2">
         <div className="flex items-center justify-between text-xs">
           <span className="text-zinc-400 font-medium">
-            {locale === 'ar'
-              ? `${progress.completed} Ù…Ù† Ø£ØµÙ„ ${progress.total} ÙˆØ«Ø§Ø¦Ù‚ Ø¬Ø§Ù‡Ø²Ø©`
-              : `${progress.completed} / ${progress.total} documents prÃªts`}
+            {progressLabel}
           </span>
           <span
             className={`font-mono font-bold tabular-nums ${
@@ -101,13 +130,7 @@ export const ChecklistTracker: React.FC<ChecklistTrackerProps> = ({ procedure })
           <div className="flex items-center space-x-2 rtl:space-x-reverse p-3 rounded-xl bg-emerald-500/10 border border-emerald-500/30 animate-fade-in-up">
             <Sparkles className="w-4 h-4 text-emerald-400 shrink-0" />
             <span className="text-xs font-bold text-emerald-300">
-              {locale === 'ar'
-                ? '🎉 مبروك! ملفك مكتمل وجاهز للإيداع.'
-                : locale === 'en'
-                ? '🎉 Congrats! Your dossier is 100% complete.'
-                : locale === 'fr'
-                ? '🎉 Mabrouk! Votre dossier est 100% complet.'
-                : '🎉 Mabrouk! Dossier mte3ek 7adher 100% lel dépôt.'}
+              {doneBannerText}
             </span>
           </div>
         )}
@@ -172,5 +195,3 @@ export const ChecklistTracker: React.FC<ChecklistTrackerProps> = ({ procedure })
     </div>
   );
 };
-
-

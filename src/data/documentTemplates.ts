@@ -8,28 +8,67 @@ export const documentTemplatesData: DocumentTemplate[] = [
     title: {
       derja: "Contrat de Location (3a9d Kré Sakani)",
       fr: "Contrat de Bail à Usage d'Habitation",
+      en: "Residential Lease Agreement (Contrat de Bail)",
       ar: "عقد تسويغ محل معد للسكنى (عقد كراء)",
     },
     description: {
       derja: "Contrat rasmi standardisé bilingue mrigel 9anouniyan lel Baladiya wel Recette.",
       fr: "Contrat de bail certifié bilingue conforme au Code des Obligations et des Contrats tunisien.",
+      en: "Certified bilingual lease contract compliant with the Tunisian Code of Obligations and Contracts for municipal legalization.",
       ar: "عقد كراء قانوني ثنائي اللغة مطابق لمجلة الالتزامات والعقود التونسية وجاهز للتعريف بالإمضاء.",
     },
     legalBasis: "Loi n° 76-35 et Code des Obligations et des Contrats (COC)",
     requiresLegalisation: true,
     requiredTimbreTND: 30.0,
     sections: [
-      { id: 'bailleur', title: { derja: "El Kéri (Bailleur)", fr: "Le Bailleur (Propriétaire)", ar: "المسوّغ (صاحب العقار)" } },
-      { id: 'locataire', title: { derja: "El Mektéri (Locataire)", fr: "Le Locataire (Preneur)", ar: "المكتري (المسوّغ له)" } },
-      { id: 'bien', title: { derja: "El Ma7al (Le Bien)", fr: "Description du Local", ar: "وصف المحل المسوّغ" } },
-      { id: 'conditions', title: { derja: "El Chourout wel Soum (Conditions)", fr: "Loyer & Modalités", ar: "معين الكراء والشروط" } }
+      {
+        id: 'bailleur',
+        title: {
+          derja: "El Kéri (Bailleur)",
+          fr: "Le Bailleur (Propriétaire)",
+          en: "The Landlord (Property Owner)",
+          ar: "المسوّغ (صاحب العقار)",
+        },
+      },
+      {
+        id: 'locataire',
+        title: {
+          derja: "El Mektéri (Locataire)",
+          fr: "Le Locataire (Preneur)",
+          en: "The Tenant",
+          ar: "المكتري (المسوّغ له)",
+        },
+      },
+      {
+        id: 'bien',
+        title: {
+          derja: "El Ma7al (Le Bien)",
+          fr: "Description du Local",
+          en: "Property Description",
+          ar: "وصف المحل المسوّغ",
+        },
+      },
+      {
+        id: 'conditions',
+        title: {
+          derja: "El Chourout wel Soum (Conditions)",
+          fr: "Loyer & Modalités",
+          en: "Rent & Terms",
+          ar: "معين الكراء والشروط",
+        },
+      },
     ],
     fields: [
       {
         id: 'bailleur_name',
         name: 'bailleur_name',
-        label: { derja: "Esm w la9ab el Kéri", fr: "Nom & Prénom du Bailleur", ar: "الاسم واللقب للمسوّغ" },
-        placeholder: { derja: "Mohamed Ben Ali", fr: "Mohamed Ben Ali", ar: "محمد بن علي" },
+        label: {
+          derja: "Esm w la9ab el Kéri",
+          fr: "Nom & Prénom du Bailleur",
+          en: "Landlord Full Name",
+          ar: "الاسم واللقب للمسوّغ",
+        },
+        placeholder: { derja: "Mohamed Ben Ali", fr: "Mohamed Ben Ali", en: "Mohamed Ben Ali", ar: "محمد بن علي" },
         type: 'text',
         required: true,
         section: 'bailleur',
@@ -37,8 +76,13 @@ export const documentTemplatesData: DocumentTemplate[] = [
       {
         id: 'bailleur_cin',
         name: 'bailleur_cin',
-        label: { derja: "Numéro CIN el Kéri", fr: "N° CIN du Bailleur", ar: "رقم ب.ت.و للمسوّغ" },
-        placeholder: { derja: "08123456", fr: "08123456", ar: "08123456" },
+        label: {
+          derja: "Numéro CIN el Kéri",
+          fr: "N° CIN du Bailleur",
+          en: "Landlord National ID (CIN)",
+          ar: "رقم ب.ت.و للمسوّغ",
+        },
+        placeholder: { derja: "08123456", fr: "08123456", en: "08123456", ar: "08123456" },
         type: 'text',
         required: true,
         section: 'bailleur',
@@ -47,8 +91,13 @@ export const documentTemplatesData: DocumentTemplate[] = [
       {
         id: 'bailleur_address',
         name: 'bailleur_address',
-        label: { derja: "3onwan el Kéri", fr: "Adresse du Bailleur", ar: "عنوان المسوّغ" },
-        placeholder: { derja: "15 Rue de Carthage, Tunis", fr: "15 Rue de Carthage, Tunis", ar: "15 نهج قرطاج، تونس" },
+        label: {
+          derja: "3onwan el Kéri",
+          fr: "Adresse du Bailleur",
+          en: "Landlord Address",
+          ar: "عنوان المسوّغ",
+        },
+        placeholder: { derja: "15 Rue de Carthage, Tunis", fr: "15 Rue de Carthage, Tunis", en: "15 Rue de Carthage, Tunis", ar: "15 نهج قرطاج، تونس" },
         type: 'text',
         required: true,
         section: 'bailleur',
@@ -56,8 +105,13 @@ export const documentTemplatesData: DocumentTemplate[] = [
       {
         id: 'locataire_name',
         name: 'locataire_name',
-        label: { derja: "Esm w la9ab el Mektéri", fr: "Nom & Prénom du Locataire", ar: "الاسم واللقب للمكتري" },
-        placeholder: { derja: "Amine Trabelsi", fr: "Amine Trabelsi", ar: "أمين الطرابلسي" },
+        label: {
+          derja: "Esm w la9ab el Mektéri",
+          fr: "Nom & Prénom du Locataire",
+          en: "Tenant Full Name",
+          ar: "الاسم واللقب للمكتري",
+        },
+        placeholder: { derja: "Amine Trabelsi", fr: "Amine Trabelsi", en: "Amine Trabelsi", ar: "أمين الطرابلسي" },
         type: 'text',
         required: true,
         section: 'locataire',
@@ -65,8 +119,13 @@ export const documentTemplatesData: DocumentTemplate[] = [
       {
         id: 'locataire_cin',
         name: 'locataire_cin',
-        label: { derja: "Numéro CIN el Mektéri", fr: "N° CIN du Locataire", ar: "رقم ب.ت.و للمكتري" },
-        placeholder: { derja: "09654321", fr: "09654321", ar: "09654321" },
+        label: {
+          derja: "Numéro CIN el Mektéri",
+          fr: "N° CIN du Locataire",
+          en: "Tenant National ID (CIN)",
+          ar: "رقم ب.ت.و للمكتري",
+        },
+        placeholder: { derja: "09654321", fr: "09654321", en: "09654321", ar: "09654321" },
         type: 'text',
         required: true,
         section: 'locataire',
@@ -74,8 +133,13 @@ export const documentTemplatesData: DocumentTemplate[] = [
       {
         id: 'bien_address',
         name: 'bien_address',
-        label: { derja: "3onwan el Ma7al el mekrî", fr: "Adresse complète du bien loué", ar: "العنوان الكامل للمحل موضوع الكراء" },
-        placeholder: { derja: "Appt 4, Résidence Ennasr 2, Ariana", fr: "Appt 4, Résidence Ennasr 2, Ariana", ar: "شقة 4، إقامة النصر 2، أريانة" },
+        label: {
+          derja: "3onwan el Ma7al el mekrî",
+          fr: "Adresse complète du bien loué",
+          en: "Rented Property Full Address",
+          ar: "العنوان الكامل للمحل موضوع الكراء",
+        },
+        placeholder: { derja: "Appt 4, Résidence Ennasr 2, Ariana", fr: "Appt 4, Résidence Ennasr 2, Ariana", en: "Appt 4, Résidence Ennasr 2, Ariana", ar: "شقة 4، إقامة النصر 2، أريانة" },
         type: 'text',
         required: true,
         section: 'bien',
@@ -83,8 +147,13 @@ export const documentTemplatesData: DocumentTemplate[] = [
       {
         id: 'loyer_mensuel',
         name: 'loyer_mensuel',
-        label: { derja: "Soum el Kré bel Chhar (TND)", fr: "Montant du Loyer Mensuel (TND)", ar: "معين الكراء الشهري (د.ت)" },
-        placeholder: { derja: "750", fr: "750", ar: "750" },
+        label: {
+          derja: "Soum el Kré bel Chhar (TND)",
+          fr: "Montant du Loyer Mensuel (TND)",
+          en: "Monthly Rent Amount (TND)",
+          ar: "معين الكراء الشهري (د.ت)",
+        },
+        placeholder: { derja: "750", fr: "750", en: "750", ar: "750" },
         type: 'number',
         required: true,
         section: 'conditions',
@@ -92,8 +161,13 @@ export const documentTemplatesData: DocumentTemplate[] = [
       {
         id: 'caution_garantie',
         name: 'caution_garantie',
-        label: { derja: "Mablagh el Dhamen / Caution (TND)", fr: "Dépôt de Garantie / Caution (TND)", ar: "مبلغ الضمان المالي (د.ت)" },
-        placeholder: { derja: "1500", fr: "1500", ar: "1500" },
+        label: {
+          derja: "Mablagh el Dhamen / Caution (TND)",
+          fr: "Dépôt de Garantie / Caution (TND)",
+          en: "Security Deposit / Caution (TND)",
+          ar: "مبلغ الضمان المالي (د.ت)",
+        },
+        placeholder: { derja: "1500", fr: "1500", en: "1500", ar: "1500" },
         type: 'number',
         required: true,
         section: 'conditions',
@@ -101,7 +175,12 @@ export const documentTemplatesData: DocumentTemplate[] = [
       {
         id: 'date_debut',
         name: 'date_debut',
-        label: { derja: "Date bdeyet el kré", fr: "Date de Prise d'Effet", ar: "تاريخ بداية الكراء" },
+        label: {
+          derja: "Date bdeyet el kré",
+          fr: "Date de Prise d'Effet",
+          en: "Lease Start Date",
+          ar: "تاريخ بداية الكراء",
+        },
         type: 'date',
         required: true,
         section: 'conditions',
@@ -109,12 +188,17 @@ export const documentTemplatesData: DocumentTemplate[] = [
       {
         id: 'duree_mois',
         name: 'duree_mois',
-        label: { derja: "Moddet el 3a9d (Chhour)", fr: "Durée du Bail (Mois)", ar: "مدة العقد (بالأشهر)" },
-        placeholder: { derja: "12", fr: "12", ar: "12" },
+        label: {
+          derja: "Moddet el 3a9d (Chhour)",
+          fr: "Durée du Bail (Mois)",
+          en: "Lease Duration (Months)",
+          ar: "مدة العقد (بالأشهر)",
+        },
+        placeholder: { derja: "12", fr: "12", en: "12", ar: "12" },
         type: 'number',
         required: true,
         section: 'conditions',
-      }
+      },
     ],
     sampleData: {
       bailleur_name: "Youssef Mahjoub",
@@ -127,7 +211,7 @@ export const documentTemplatesData: DocumentTemplate[] = [
       caution_garantie: 1700,
       date_debut: "2026-09-01",
       duree_mois: 12,
-    }
+    },
   },
   {
     slug: 'procuration-officielle',
@@ -136,27 +220,58 @@ export const documentTemplatesData: DocumentTemplate[] = [
     title: {
       derja: "Procuration / Tawkîl Rasmi (توكيل قانوني)",
       fr: "Procuration Générale ou Spéciale (Tawkîl)",
+      en: "Power of Attorney (Procuration / Tawkîl)",
       ar: "توكيل قانوني رسمي (عام أو خاص)",
     },
     description: {
       derja: "Wathi9at tawkîl bech tkaffil chkoun ya9dhi fi blastek fel idarat, banque, walla baladiya.",
       fr: "Acte de délégation de pouvoir et mandat pour représentation légale auprès des administrations et organismes.",
+      en: "Official legal delegation deed empowering an authorized representative before administrative bodies and banks.",
       ar: "عقد توكيل رسمي يخول للوكيل القيام بالإجراءات الإدارية والقانونية نيابة عن الموكّل.",
     },
     legalBasis: "Code des Obligations et des Contrats (Articles 1104 et suivants)",
     requiresLegalisation: true,
     requiredTimbreTND: 5.0,
     sections: [
-      { id: 'mandant', title: { derja: "El Mwakkel (Le Mandant)", fr: "Le Mandant (Donneur d'ordre)", ar: "الموكّل" } },
-      { id: 'mandataire', title: { derja: "El Wakil (Le Mandataire)", fr: "Le Mandataire (Représentant)", ar: "الوكيل المفوض" } },
-      { id: 'pouvoirs', title: { derja: "El Solotat wel Mahem (Les Pouvoirs)", fr: "Objet & Pouvoirs Délégués", ar: "موضوع التوكيل والصلاحيات" } }
+      {
+        id: 'mandant',
+        title: {
+          derja: "El Mwakkel (Le Mandant)",
+          fr: "Le Mandant (Donneur d'ordre)",
+          en: "The Principal (Grantor)",
+          ar: "الموكّل",
+        },
+      },
+      {
+        id: 'mandataire',
+        title: {
+          derja: "El Wakil (Le Mandataire)",
+          fr: "Le Mandataire (Représentant)",
+          en: "The Attorney-in-Fact (Representative)",
+          ar: "الوكيل المفوض",
+        },
+      },
+      {
+        id: 'pouvoirs',
+        title: {
+          derja: "El Solotat wel Mahem (Les Pouvoirs)",
+          fr: "Objet & Pouvoirs Délégués",
+          en: "Scope & Delegated Powers",
+          ar: "موضوع التوكيل والصلاحيات",
+        },
+      },
     ],
     fields: [
       {
         id: 'mandant_name',
         name: 'mandant_name',
-        label: { derja: "Esm el Mwakkel", fr: "Nom & Prénom du Mandant", ar: "الاسم واللقب للموكّل" },
-        placeholder: { derja: "Kamel Gharbi", fr: "Kamel Gharbi", ar: "كامل الغربي" },
+        label: {
+          derja: "Esm el Mwakkel",
+          fr: "Nom & Prénom du Mandant",
+          en: "Principal Full Name",
+          ar: "الاسم واللقب للموكّل",
+        },
+        placeholder: { derja: "Kamel Gharbi", fr: "Kamel Gharbi", en: "Kamel Gharbi", ar: "كامل الغربي" },
         type: 'text',
         required: true,
         section: 'mandant',
@@ -164,7 +279,12 @@ export const documentTemplatesData: DocumentTemplate[] = [
       {
         id: 'mandant_cin',
         name: 'mandant_cin',
-        label: { derja: "CIN el Mwakkel", fr: "N° CIN du Mandant", ar: "رقم ب.ت.و للموكّل" },
+        label: {
+          derja: "CIN el Mwakkel",
+          fr: "N° CIN du Mandant",
+          en: "Principal National ID (CIN)",
+          ar: "رقم ب.ت.و للموكّل",
+        },
         type: 'text',
         required: true,
         section: 'mandant',
@@ -172,8 +292,13 @@ export const documentTemplatesData: DocumentTemplate[] = [
       {
         id: 'mandataire_name',
         name: 'mandataire_name',
-        label: { derja: "Esm el Wakil", fr: "Nom & Prénom du Mandataire", ar: "الاسم واللقب للوكيل" },
-        placeholder: { derja: "Meriem Gharbi", fr: "Meriem Gharbi", ar: "مريم الغربي" },
+        label: {
+          derja: "Esm el Wakil",
+          fr: "Nom & Prénom du Mandataire",
+          en: "Representative Full Name",
+          ar: "الاسم واللقب للوكيل",
+        },
+        placeholder: { derja: "Meriem Gharbi", fr: "Meriem Gharbi", en: "Meriem Gharbi", ar: "مريم الغربي" },
         type: 'text',
         required: true,
         section: 'mandataire',
@@ -181,7 +306,12 @@ export const documentTemplatesData: DocumentTemplate[] = [
       {
         id: 'mandataire_cin',
         name: 'mandataire_cin',
-        label: { derja: "CIN el Wakil", fr: "N° CIN du Mandataire", ar: "رقم ب.ت.و للوكيل" },
+        label: {
+          derja: "CIN el Wakil",
+          fr: "N° CIN du Mandataire",
+          en: "Representative National ID (CIN)",
+          ar: "رقم ب.ت.و للوكيل",
+        },
         type: 'text',
         required: true,
         section: 'mandataire',
@@ -189,20 +319,30 @@ export const documentTemplatesData: DocumentTemplate[] = [
       {
         id: 'objet_procuration',
         name: 'objet_procuration',
-        label: { derja: "Chnowa el mahem elli mweklou 3lihom?", fr: "Objet précis du mandat", ar: "الصلاحيات والإجراءات المفوضة بدقة" },
-        placeholder: { derja: "Istikhraj awra9 idariya w imdha2 b'esmi fi markez el chorta wel baladiya...", fr: "Représentation auprès des services administratifs pour retrait de documents officiels...", ar: "التمثيل لدى المصالح الإدارية والبلدية لاستخراج وثائق رسمية وتوقيع المحاضر..." },
+        label: {
+          derja: "Chnowa el mahem elli mweklou 3lihom?",
+          fr: "Objet précis du mandat",
+          en: "Specific powers & scope of representation",
+          ar: "الصلاحيات والإجراءات المفوضة بدقة",
+        },
+        placeholder: {
+          derja: "Istikhraj awra9 idariya w imdha2 b'esmi fi markez el chorta wel baladiya...",
+          fr: "Représentation auprès des services administratifs pour retrait de documents officiels...",
+          en: "Representation before public bodies to collect official documents and sign notifications...",
+          ar: "التمثيل لدى المصالح الإدارية والبلدية لاستخراج وثائق رسمية وتوقيع المحاضر...",
+        },
         type: 'textarea',
         required: true,
         section: 'pouvoirs',
-      }
+      },
     ],
     sampleData: {
       mandant_name: "Kamel Gharbi",
       mandant_cin: "05432198",
       mandataire_name: "Meriem Gharbi",
       mandataire_cin: "11223344",
-      objet_procuration: "Gestion et suivi des démarches administratives auprès de la municipalité, la STEG et la SONEDE, avec pouvoir de signature et de retrait de tous documents officiels."
-    }
+      objet_procuration: "Gestion et suivi des démarches administratives auprès de la municipalité, la STEG et la SONEDE, avec pouvoir de signature et de retrait de tous documents officiels.",
+    },
   },
   {
     slug: 'declaration-honneur',
@@ -211,25 +351,48 @@ export const documentTemplatesData: DocumentTemplate[] = [
     title: {
       derja: "Déclaration sur l'honneur (Tasrîh bi Charaf)",
       fr: "Déclaration sur l'Honneur (Tasrîh bi Charaf)",
+      en: "Sworn Declaration (Déclaration sur l'Honneur)",
       ar: "تصريح بالشرف (مطبوعة مصادق عليها)",
     },
     description: {
       derja: "Tasrih bi charaf lel bitala, 3adam el 3amal, sekna, walla khedma mou3ayna.",
       fr: "Déclaration sur l'honneur normalisée pour non-activité, prise en charge, célibat ou résidence.",
+      en: "Standardized sworn statement for non-activity/unemployment, financial support, or residence proof.",
       ar: "تصريح بالشرف لإثبات عدم الشغل، الإعالة، العزوبية أو مقر الإقامة جاهز للتعريف بالإمضاء.",
     },
     legalBasis: "Code Pénal Tunisien (Dispositions relatives aux déclarations sous serment)",
     requiresLegalisation: true,
     requiredTimbreTND: 3.0,
     sections: [
-      { id: 'declarant', title: { derja: "El Moussara7 (Le Déclarant)", fr: "Identité du Déclarant", ar: "المصرّح" } },
-      { id: 'contenu', title: { derja: "Mawdhou3 el Tasrih (Déclaration)", fr: "Objet de la Déclaration", ar: "موضوع التصريح" } }
+      {
+        id: 'declarant',
+        title: {
+          derja: "El Moussara7 (Le Déclarant)",
+          fr: "Identité du Déclarant",
+          en: "Declarant Identity",
+          ar: "المصرّح",
+        },
+      },
+      {
+        id: 'contenu',
+        title: {
+          derja: "Mawdhou3 el Tasrih (Déclaration)",
+          fr: "Objet de la Déclaration",
+          en: "Declaration Substance",
+          ar: "موضوع التصريح",
+        },
+      },
     ],
     fields: [
       {
         id: 'declarant_name',
         name: 'declarant_name',
-        label: { derja: "Esm w la9ab", fr: "Nom & Prénom", ar: "الاسم واللقب" },
+        label: {
+          derja: "Esm w la9ab",
+          fr: "Nom & Prénom",
+          en: "Full Name",
+          ar: "الاسم واللقب",
+        },
         type: 'text',
         required: true,
         section: 'declarant',
@@ -237,7 +400,12 @@ export const documentTemplatesData: DocumentTemplate[] = [
       {
         id: 'declarant_cin',
         name: 'declarant_cin',
-        label: { derja: "Numéro CIN", fr: "N° CIN", ar: "رقم ب.ت.و" },
+        label: {
+          derja: "Numéro CIN",
+          fr: "N° CIN",
+          en: "National ID (CIN)",
+          ar: "رقم ب.ت.و",
+        },
         type: 'text',
         required: true,
         section: 'declarant',
@@ -245,13 +413,50 @@ export const documentTemplatesData: DocumentTemplate[] = [
       {
         id: 'type_declaration',
         name: 'type_declaration',
-        label: { derja: "Naw3 el Tasrih", fr: "Type de Déclaration", ar: "نوع التصريح" },
+        label: {
+          derja: "Naw3 el Tasrih",
+          fr: "Type de Déclaration",
+          en: "Declaration Type",
+          ar: "نوع التصريح",
+        },
         type: 'select',
         options: [
-          { value: 'non_emploi', label: { derja: "3adam 3amal (Bitala)", fr: "Non-activité / Chômage", ar: "تصريح بعدم ممارسة أي نشاط مهني (بطالة)" } },
-          { value: 'prise_en_charge', label: { derja: "I3ala (Prise en charge)", fr: "Prise en charge financière", ar: "تصريح بالإعالة والنفقة" } },
-          { value: 'residence', label: { derja: "I9ama (Hébergement)", fr: "Hébergement à titre gratuit", ar: "تصريح بالإيواء المجاني والسكنى" } },
-          { value: 'autre', label: { derja: "Tasrih ekher 3am", fr: "Autre engagement formel", ar: "تصريح والتزام عام" } }
+          {
+            value: 'non_emploi',
+            label: {
+              derja: "3adam 3amal (Bitala)",
+              fr: "Non-activité / Chômage",
+              en: "Unemployment / Non-Activity",
+              ar: "تصريح بعدم ممارسة أي نشاط مهني (بطالة)",
+            },
+          },
+          {
+            value: 'prise_en_charge',
+            label: {
+              derja: "I3ala (Prise en charge)",
+              fr: "Prise en charge financière",
+              en: "Financial Support / Dependent",
+              ar: "تصريح بالإعالة والنفقة",
+            },
+          },
+          {
+            value: 'residence',
+            label: {
+              derja: "I9ama (Hébergement)",
+              fr: "Hébergement à titre gratuit",
+              en: "Free Lodging / Cohabitation",
+              ar: "تصريح بالإيواء المجاني والسكنى",
+            },
+          },
+          {
+            value: 'autre',
+            label: {
+              derja: "Tasrih ekher 3am",
+              fr: "Autre engagement formel",
+              en: "Other formal sworn undertaking",
+              ar: "تصريح والتزام عام",
+            },
+          },
         ],
         required: true,
         section: 'contenu',
@@ -259,18 +464,23 @@ export const documentTemplatesData: DocumentTemplate[] = [
       {
         id: 'details_declaration',
         name: 'details_declaration',
-        label: { derja: "Tafassil el tasrih", fr: "Détails et texte de la déclaration", ar: "تفاصيل ونص التصريح بالشرف" },
+        label: {
+          derja: "Tafassil el tasrih",
+          fr: "Détails et texte de la déclaration",
+          en: "Sworn Statement Body Text",
+          ar: "تفاصيل ونص التصريح بالشرف",
+        },
         type: 'textarea',
         required: true,
         section: 'contenu',
-      }
+      },
     ],
     sampleData: {
       declarant_name: "Fatma Mansouri",
       declarant_cin: "08445566",
       type_declaration: "non_emploi",
-      details_declaration: "Je soussignée Fatma Mansouri, titulaire de la CIN n° 08445566, déclare sur l'honneur ne pas exercer d'activité rémunérée à ce jour et ne bénéficier d'aucun revenu professionnel."
-    }
+      details_declaration: "Je soussignée Fatma Mansouri, titulaire de la CIN n° 08445566, déclare sur l'honneur ne pas exercer d'activité rémunérée à ce jour et ne bénéficier d'aucun revenu professionnel.",
+    },
   },
   {
     slug: 'contrat-vente-vehicule',
@@ -279,27 +489,66 @@ export const documentTemplatesData: DocumentTemplate[] = [
     title: {
       derja: "Contrat de Vente Karhba (3a9d Bay3 Sayara)",
       fr: "Contrat de Vente de Véhicule d'Occasion",
+      en: "Used Vehicle Bill of Sale (Contrat de Vente)",
       ar: "عقد بيع سيارة أو عربة مستعملة",
     },
     description: {
       derja: "3a9d bay3 karhba rasmi standardisé fih les données mte3 el karhba wel carte grise.",
       fr: "Acte de cession et vente de véhicule automobile conforme pour enregistrement et mutation ATTT.",
+      en: "Standardized motor vehicle bill of sale formatted for tax registration and ATTT ownership transfer.",
       ar: "عقد بيع سيارة رسمي مطابق للمعايير القانونية جاهز للتسجيل بالقباضة وتحويل الملكية لدى الوكالة الفنية.",
     },
     legalBasis: "Code de la Route et dispositions du Code des Obligations et des Contrats",
     requiresLegalisation: true,
     requiredTimbreTND: 100.0,
     sections: [
-      { id: 'vendeur', title: { derja: "El Beye3 (Le Vendeur)", fr: "Le Vendeur", ar: "البائع" } },
-      { id: 'acheteur', title: { derja: "El Chari (L'Acheteur)", fr: "L'Acheteur", ar: "المشتري" } },
-      { id: 'vehicule', title: { derja: "El Karhba (Le Véhicule)", fr: "Caractéristiques du Véhicule", ar: "بيانات العربة موضوع البيع" } },
-      { id: 'prix', title: { derja: "El Soum (Prix & Paiement)", fr: "Prix et Modalités", ar: "الثمن وطريقة الدفع" } }
+      {
+        id: 'vendeur',
+        title: {
+          derja: "El Beye3 (Le Vendeur)",
+          fr: "Le Vendeur",
+          en: "The Seller",
+          ar: "البائع",
+        },
+      },
+      {
+        id: 'acheteur',
+        title: {
+          derja: "El Chari (L'Acheteur)",
+          fr: "L'Acheteur",
+          en: "The Buyer",
+          ar: "المشتري",
+        },
+      },
+      {
+        id: 'vehicule',
+        title: {
+          derja: "El Karhba (Le Véhicule)",
+          fr: "Caractéristiques du Véhicule",
+          en: "Vehicle Specifications",
+          ar: "بيانات العربة موضوع البيع",
+        },
+      },
+      {
+        id: 'prix',
+        title: {
+          derja: "El Soum (Prix & Paiement)",
+          fr: "Prix et Modalités",
+          en: "Purchase Price & Payment",
+          ar: "الثمن وطريقة الدفع",
+        },
+      },
     ],
     fields: [
       {
         id: 'vendeur_name',
         name: 'vendeur_name',
-        label: { derja: "Esm el Beye3", fr: "Nom & Prénom du Vendeur", ar: "الاسم واللقب للبائع" },
+        label: {
+          derja: "Esm el Beye3",
+          fr: "Nom & Prénom du Vendeur",
+          en: "Seller Full Name",
+          ar: "الاسم واللقب للبائع",
+        },
         type: 'text',
         required: true,
         section: 'vendeur',
@@ -307,7 +556,12 @@ export const documentTemplatesData: DocumentTemplate[] = [
       {
         id: 'vendeur_cin',
         name: 'vendeur_cin',
-        label: { derja: "CIN el Beye3", fr: "N° CIN du Vendeur", ar: "رقم ب.ت.و للبائع" },
+        label: {
+          derja: "CIN el Beye3",
+          fr: "N° CIN du Vendeur",
+          en: "Seller National ID (CIN)",
+          ar: "رقم ب.ت.و للبائع",
+        },
         type: 'text',
         required: true,
         section: 'vendeur',
@@ -315,7 +569,12 @@ export const documentTemplatesData: DocumentTemplate[] = [
       {
         id: 'acheteur_name',
         name: 'acheteur_name',
-        label: { derja: "Esm el Chari", fr: "Nom & Prénom de l'Acheteur", ar: "الاسم واللقب للمشتري" },
+        label: {
+          derja: "Esm el Chari",
+          fr: "Nom & Prénom de l'Acheteur",
+          en: "Buyer Full Name",
+          ar: "الاسم واللقب للمشتري",
+        },
         type: 'text',
         required: true,
         section: 'acheteur',
@@ -323,7 +582,12 @@ export const documentTemplatesData: DocumentTemplate[] = [
       {
         id: 'acheteur_cin',
         name: 'acheteur_cin',
-        label: { derja: "CIN el Chari", fr: "N° CIN de l'Acheteur", ar: "رقم ب.ت.و للمشتري" },
+        label: {
+          derja: "CIN el Chari",
+          fr: "N° CIN de l'Acheteur",
+          en: "Buyer National ID (CIN)",
+          ar: "رقم ب.ت.و للمشتري",
+        },
         type: 'text',
         required: true,
         section: 'acheteur',
@@ -331,8 +595,13 @@ export const documentTemplatesData: DocumentTemplate[] = [
       {
         id: 'immatriculation',
         name: 'immatriculation',
-        label: { derja: "Matricule el Karhba (Immatriculation)", fr: "Numéro d'Immatriculation (Série TU)", ar: "الرقم المنجمي للعربة (ن.ت)" },
-        placeholder: { derja: "215 TU 1234", fr: "215 TU 1234", ar: "215 تونس 1234" },
+        label: {
+          derja: "Matricule el Karhba (Immatriculation)",
+          fr: "Numéro d'Immatriculation (Série TU)",
+          en: "License Plate Number (Série TU)",
+          ar: "الرقم المنجمي للعربة (ن.ت)",
+        },
+        placeholder: { derja: "215 TU 1234", fr: "215 TU 1234", en: "215 TU 1234", ar: "215 تونس 1234" },
         type: 'text',
         required: true,
         section: 'vehicule',
@@ -340,7 +609,12 @@ export const documentTemplatesData: DocumentTemplate[] = [
       {
         id: 'marque_modele',
         name: 'marque_modele',
-        label: { derja: "Marque w Modèle (ex: Clio 4)", fr: "Marque et Modèle du Véhicule", ar: "نوع وطراز العربة" },
+        label: {
+          derja: "Marque w Modèle (ex: Clio 4)",
+          fr: "Marque et Modèle du Véhicule",
+          en: "Vehicle Make & Model",
+          ar: "نوع وطراز العربة",
+        },
         type: 'text',
         required: true,
         section: 'vehicule',
@@ -348,7 +622,12 @@ export const documentTemplatesData: DocumentTemplate[] = [
       {
         id: 'chassis_num',
         name: 'chassis_num',
-        label: { derja: "Numéro de Châssis (N° de Série)", fr: "Numéro de Châssis (VIN)", ar: "رقم الهيكل التسلسلي" },
+        label: {
+          derja: "Numéro de Châssis (N° de Série)",
+          fr: "Numéro de Châssis (VIN)",
+          en: "Chassis / VIN Number",
+          ar: "رقم الهيكل التسلسلي",
+        },
         type: 'text',
         required: true,
         section: 'vehicule',
@@ -356,11 +635,16 @@ export const documentTemplatesData: DocumentTemplate[] = [
       {
         id: 'prix_vente',
         name: 'prix_vente',
-        label: { derja: "Soum el Bay3 (TND)", fr: "Prix de Vente Total (TND)", ar: "ثمن البيع الجملي (د.ت)" },
+        label: {
+          derja: "Soum el Bay3 (TND)",
+          fr: "Prix de Vente Total (TND)",
+          en: "Total Agreed Price (TND)",
+          ar: "ثمن البيع الجملي (د.ت)",
+        },
         type: 'number',
         required: true,
         section: 'prix',
-      }
+      },
     ],
     sampleData: {
       vendeur_name: "Karim Bouazizi",
@@ -371,8 +655,8 @@ export const documentTemplatesData: DocumentTemplate[] = [
       marque_modele: "Volkswagen Golf 7",
       chassis_num: "WVWZZZAUZHP123456",
       prix_vente: 38500,
-    }
-  }
+    },
+  },
 ];
 
 export function getTemplateBySlug(slug: string): DocumentTemplate | undefined {
