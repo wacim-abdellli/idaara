@@ -6,7 +6,7 @@ import { AudioRecorder } from '../../components/copilot/AudioRecorder';
 import { ChatMessage } from '../../components/copilot/ChatMessage';
 import { ChatMessage as ChatMessageType } from '../../types/chat';
 import { parseAndReason } from '../../lib/ai-engine';
-import { Send, Sparkles, RefreshCw, MessageSquareQuote } from 'lucide-react';
+import { Send, Sparkles, RefreshCw, MessageSquareQuote, Mic } from 'lucide-react';
 
 export default function CopilotPage() {
   const { t, locale } = useLocale();
@@ -23,17 +23,17 @@ export default function CopilotPage() {
       timestamp: 'Idaara AI',
       actions: [
         {
-          label: { derja: '🪪 Passeport Renouvellement', fr: 'Renouvellement Passeport', ar: 'تجديد جواز السفر' },
+          label: { derja: '🪪 Renouvellement Passeport', fr: 'Renouvellement Passeport', ar: 'تجديد جواز السفر' },
           type: 'procedure_link',
           payload: '/procedures/passeport-renouvellement',
         },
         {
-          label: { derja: '🚗 Carte Grise Mutation', fr: 'Mutation Carte Grise', ar: 'تحويل ملكية سيارة' },
+          label: { derja: '🚗 Mutation Carte Grise', fr: 'Mutation Carte Grise', ar: 'تحويل ملكية سيارة' },
           type: 'procedure_link',
           payload: '/procedures/mutation-carte-grise',
         },
         {
-          label: { derja: '📝 Contrat Kré PDF', fr: 'Contrat de Bail PDF', ar: 'عقد كراء PDF' },
+          label: { derja: '📝 Contrat de Bail PDF', fr: 'Contrat de Bail PDF', ar: 'عقد كراء PDF' },
           type: 'pdf_form',
           payload: '/documents/contrat-location',
         },
@@ -100,32 +100,40 @@ export default function CopilotPage() {
   };
 
   return (
-    <div className="max-w-4xl mx-auto px-4 py-8">
-      {/* Top Title & Stats Banner */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6 pb-6 border-b border-zinc-800">
+    <div className="max-w-3xl mx-auto px-4 py-8">
+
+      {/* Header */}
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6 pb-5 border-b border-zinc-800/80">
         <div>
-          <div className="flex items-center space-x-2">
-            <span className="text-2xl">🎙️</span>
-            <h1 className="text-2xl font-extrabold text-white tracking-tight">
-              Derja-Native Voice Copilot
-            </h1>
+          <div className="inline-flex items-center space-x-2 px-3 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-[11px] font-semibold mb-3">
+            <Mic className="w-3 h-3" />
+            <span>
+              {locale === 'ar' ? 'المساعد الصوتي الإداري بالدارجة' : 'Voice AI · Derja-Native Administrative Copilot'}
+            </span>
           </div>
-          <p className="text-xs text-zinc-400 mt-1">
-            Fasserli, 3abbi w a3tini l'awra9 — Assistant juridique et administratif instantané
+          <h1 className="text-xl sm:text-3xl font-extrabold text-white tracking-tight leading-tight">
+            {locale === 'ar' ? '🎙️ المساعد الصوتي لإدارة.تونس' : '🎙️ Derja-Native Voice Copilot'}
+          </h1>
+          <p className="text-xs text-zinc-500 mt-1.5 max-w-xl">
+            {locale === 'ar'
+              ? 'فسّر، عمّر وخرّج أوراقك القانونية — مساعد إداري وقانوني فوري'
+              : locale === 'fr'
+              ? "Fasserli, 3abbi w a3tini l'awra9 — Assistant juridique et administratif instantané"
+              : "Fasserli, 3abbi w a3tini l'awra9 — Assistant juridique et administratif instantané"}
           </p>
         </div>
 
         <button
           onClick={handleResetChat}
-          className="flex items-center space-x-1.5 px-3 py-1.5 rounded-lg bg-zinc-900 hover:bg-zinc-800 border border-zinc-700 text-zinc-400 hover:text-zinc-200 text-xs transition-colors self-start sm:self-auto"
+          className="flex items-center space-x-1.5 px-3 py-1.5 rounded-xl bg-zinc-900 hover:bg-zinc-800 border border-zinc-700 text-zinc-400 hover:text-zinc-200 text-xs transition-all self-start sm:self-auto shrink-0"
         >
           <RefreshCw className="w-3.5 h-3.5" />
-          <span>Nouvelle conversation</span>
+          <span>{locale === 'ar' ? 'محادثة جديدة' : 'Réinitialiser'}</span>
         </button>
       </div>
 
-      {/* Voice Recorder Block */}
-      <div className="mb-8">
+      {/* Voice Recorder */}
+      <div className="mb-6">
         <AudioRecorder
           onTranscript={(text) => handleSendMessage(text)}
           isProcessing={isProcessing}
@@ -133,19 +141,19 @@ export default function CopilotPage() {
       </div>
 
       {/* Suggested Quick Questions */}
-      <div className="mb-6">
-        <div className="flex items-center space-x-1.5 text-xs text-zinc-400 mb-2 font-medium">
-          <Sparkles className="w-3.5 h-3.5 text-amber-400" />
-          <span>As2ila chaye3a (Questions fréquentes) :</span>
+      <div className="mb-5">
+        <div className="flex items-center space-x-1.5 text-[10px] text-zinc-500 mb-2 font-semibold uppercase tracking-wider">
+          <Sparkles className="w-3 h-3 text-amber-400" />
+          <span>{locale === 'ar' ? 'أسئلة شائعة' : 'Questions fréquentes :'}</span>
         </div>
-        <div className="flex flex-wrap gap-2">
+        <div className="flex flex-wrap gap-1.5">
           {suggestedQuestions.map((q, idx) => (
             <button
               key={idx}
               onClick={() => handleSendMessage(q.text)}
-              className="text-xs px-3 py-1.5 rounded-full bg-zinc-900/80 hover:bg-zinc-800 text-zinc-300 hover:text-emerald-300 border border-zinc-800 hover:border-emerald-500/40 transition-all flex items-center space-x-1.5"
+              className="text-[11px] px-2.5 py-1.5 rounded-lg bg-zinc-900/80 hover:bg-zinc-800 text-zinc-400 hover:text-emerald-300 border border-zinc-800 hover:border-emerald-500/30 transition-all flex items-center space-x-1.5 rtl:space-x-reverse"
             >
-              <MessageSquareQuote className="w-3 h-3 text-emerald-400" />
+              <MessageSquareQuote className="w-3 h-3 text-zinc-600 shrink-0" />
               <span>{q.label}</span>
             </button>
           ))}
@@ -153,39 +161,43 @@ export default function CopilotPage() {
       </div>
 
       {/* Chat Messages Stream */}
-      <div className="glass-panel rounded-2xl border border-zinc-800 p-4 sm:p-6 min-h-[360px] max-h-[550px] overflow-y-auto mb-6">
+      <div className="glass-panel rounded-2xl border border-zinc-800/80 p-4 min-h-[380px] max-h-[520px] overflow-y-auto mb-4 space-y-1">
         {messages.map((msg) => (
           <ChatMessage key={msg.id} message={msg} />
         ))}
         {isProcessing && (
-          <div className="flex items-center space-x-2 text-xs text-emerald-400 animate-pulse my-3">
-            <span className="w-2 h-2 rounded-full bg-emerald-400 animate-ping" />
-            <span>Idaara AI en cours d'analyse juridique...</span>
+          <div className="flex items-center space-x-2.5 text-xs text-emerald-400 my-3 px-2">
+            <div className="flex space-x-1">
+              <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-bounce" style={{ animationDelay: '0ms' }} />
+              <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-bounce" style={{ animationDelay: '150ms' }} />
+              <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-bounce" style={{ animationDelay: '300ms' }} />
+            </div>
+            <span className="text-zinc-500 text-[11px]">
+              {locale === 'ar' ? 'إدارة.تونس AI يحلل طلبك...' : 'Idaara AI en cours d\'analyse...'}
+            </span>
           </div>
         )}
         <div ref={chatBottomRef} />
       </div>
 
-      {/* Text Input Box */}
+      {/* Text Input */}
       <form
-        onSubmit={(e) => {
-          e.preventDefault();
-          handleSendMessage(inputVal);
-        }}
-        className="flex items-center space-x-2 relative"
+        onSubmit={(e) => { e.preventDefault(); handleSendMessage(inputVal); }}
+        className="flex items-center gap-2"
       >
-        <input
-          type="text"
-          value={inputVal}
-          onChange={(e) => setInputVal(e.target.value)}
-          placeholder={t('voiceSearchBarPlaceholder')}
-          className="flex-1 bg-zinc-900 border border-zinc-800 focus:border-emerald-500 rounded-xl px-4 py-3 text-sm text-zinc-100 placeholder-zinc-500 focus:outline-none focus:ring-1 focus:ring-emerald-500 transition-all"
-        />
+        <div className="flex-1 relative">
+          <input
+            type="text"
+            value={inputVal}
+            onChange={(e) => setInputVal(e.target.value)}
+            placeholder={t('voiceSearchBarPlaceholder')}
+            className="w-full bg-zinc-900/80 border border-zinc-800 focus:border-emerald-500/60 rounded-xl px-4 py-3 text-sm text-zinc-100 placeholder-zinc-600 focus:outline-none focus:ring-1 focus:ring-emerald-500/40 transition-all"
+          />
+        </div>
         <button
           type="submit"
           disabled={!inputVal.trim() || isProcessing}
-          aria-label="Send message"
-          className="px-5 py-3 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-zinc-950 font-bold transition-all disabled:opacity-40 disabled:cursor-not-allowed shadow-md shadow-emerald-500/20"
+          className="flex items-center justify-center w-11 h-11 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-zinc-950 font-bold transition-all disabled:opacity-30 disabled:cursor-not-allowed shadow-md shadow-emerald-500/20 hover:scale-105"
         >
           <Send className="w-4 h-4" />
         </button>

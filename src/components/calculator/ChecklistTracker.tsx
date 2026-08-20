@@ -4,7 +4,7 @@ import React from 'react';
 import { Procedure } from '../../types/procedure';
 import { useChecklist } from '../../context/ChecklistContext';
 import { useLocale } from '../../context/LocaleContext';
-import { CheckCircle2, Circle, RotateCcw, Sparkles, FileText } from 'lucide-react';
+import { CheckCircle2, Circle, RotateCcw, Sparkles, ListChecks, Copy } from 'lucide-react';
 import { triggerConfetti } from '../../lib/utils';
 
 interface ChecklistTrackerProps {
@@ -12,7 +12,7 @@ interface ChecklistTrackerProps {
 }
 
 export const ChecklistTracker: React.FC<ChecklistTrackerProps> = ({ procedure }) => {
-  const { locale, isRtl } = useLocale();
+  const { locale } = useLocale();
   const { isItemChecked, toggleItem, getProgressForProcedure, resetProcedureChecklist } =
     useChecklist();
 
@@ -26,63 +26,95 @@ export const ChecklistTracker: React.FC<ChecklistTrackerProps> = ({ procedure })
     }
   };
 
+  const isDone = progress.percentage === 100;
+
   return (
-    <div className="glass-panel rounded-2xl p-5 sm:p-6 border border-zinc-800 space-y-5">
-      {/* Header & Progress Bar */}
-      <div className="space-y-3 pb-4 border-b border-zinc-800">
-        <div className="flex items-center justify-between">
+    <div className="glass-panel rounded-2xl p-5 border border-zinc-800/80 space-y-4">
+
+      {/* Header */}
+      <div className="flex items-start justify-between gap-3">
+        <div className="flex items-center space-x-2.5 rtl:space-x-reverse">
+          <div className="w-8 h-8 rounded-xl bg-zinc-800 flex items-center justify-center border border-zinc-700/50 shrink-0">
+            <ListChecks className="w-4 h-4 text-zinc-300" />
+          </div>
           <div>
-            <h3 className="text-sm font-bold text-white flex items-center space-x-2 rtl:space-x-reverse">
-              <FileText className="w-4 h-4 text-emerald-400" />
-              <span>{locale === 'ar' ? 'أوراق وملف الإجراء (قائمة تفاعلية)' : 'Awra9 el Dossier (Checklist)'}</span>
+            <h3 className="text-xs font-bold text-white leading-tight">
+              {locale === 'ar'
+                ? 'قائمة الوثائق المطلوبة (تفاعلية)'
+                : locale === 'fr'
+                ? 'Checklist du Dossier (Awra9)'
+                : 'Awra9 el Dossier (Checklist)'}
             </h3>
-            <p className="text-[11px] text-zinc-400 mt-0.5">
-              {locale === 'ar' ? 'قم بتحديد الوثائق المجهزة تباعاً لتتبع جاهزية الملف' : 'Cochez les papiers au fur et à mesure de leur préparation'}
+            <p className="text-[10px] text-zinc-500 mt-0.5">
+              {locale === 'ar'
+                ? 'حدّد كل وثيقة جهزتها'
+                : locale === 'fr'
+                ? 'Cochez les papiers au fur et à mesure'
+                : 'Markez papier papier kif et3ammarha'}
             </p>
           </div>
+        </div>
 
-          <button
-            onClick={() => resetProcedureChecklist(docIds)}
-            className="flex items-center space-x-1 rtl:space-x-reverse text-xs text-zinc-500 hover:text-zinc-300 transition-colors"
+        <button
+          onClick={() => resetProcedureChecklist(docIds)}
+          className="flex items-center space-x-1 rtl:space-x-reverse text-[11px] text-zinc-600 hover:text-zinc-300 transition-colors shrink-0 pt-0.5"
+        >
+          <RotateCcw className="w-3 h-3" />
+          <span>{locale === 'ar' ? 'إعادة' : 'Réinit.'}</span>
+        </button>
+      </div>
+
+      {/* Progress Section */}
+      <div className="space-y-2">
+        <div className="flex items-center justify-between text-xs">
+          <span className="text-zinc-400 font-medium">
+            {locale === 'ar'
+              ? `${progress.completed} من أصل ${progress.total} وثائق جاهزة`
+              : `${progress.completed} / ${progress.total} documents prêts`}
+          </span>
+          <span
+            className={`font-mono font-bold tabular-nums ${
+              isDone ? 'text-emerald-400' : progress.percentage > 50 ? 'text-amber-400' : 'text-zinc-400'
+            }`}
           >
-            <RotateCcw className="w-3 h-3" />
-            <span>{locale === 'ar' ? 'إعادة ضبط' : 'Réinitialiser'}</span>
-          </button>
+            {progress.percentage}%
+          </span>
         </div>
 
-        {/* Progress Bar */}
-        <div className="space-y-1.5">
-          <div className="flex items-center justify-between text-xs font-semibold">
-            <span className="text-zinc-400">
-              {locale === 'ar' ? `التقدم : ${progress.completed} من ${progress.total} وثائق` : `Avancement : ${progress.completed} / ${progress.total} documents`}
-            </span>
-            <span
-              className={`font-mono ${
-                progress.percentage === 100 ? 'text-emerald-400 font-bold' : 'text-zinc-300'
-              }`}
-            >
-              {progress.percentage}%
-            </span>
-          </div>
-
-          <div className="w-full h-2 bg-zinc-800 rounded-full overflow-hidden">
-            <div
-              className="h-full bg-gradient-to-r from-emerald-500 to-teal-400 transition-all duration-300"
-              style={{ width: `${progress.percentage}%` }}
-            />
-          </div>
+        {/* Progress bar */}
+        <div className="w-full h-2.5 bg-zinc-800/80 rounded-full overflow-hidden">
+          <div
+            className={`h-full rounded-full transition-all duration-500 ${
+              isDone
+                ? 'bg-gradient-to-r from-emerald-500 to-teal-400'
+                : progress.percentage > 50
+                ? 'bg-gradient-to-r from-amber-500 to-emerald-500'
+                : 'bg-zinc-600'
+            }`}
+            style={{ width: `${Math.max(progress.percentage, progress.percentage > 0 ? 4 : 0)}%` }}
+          />
         </div>
 
-        {progress.percentage === 100 && (
-          <div className="p-2.5 rounded-xl bg-emerald-500/15 border border-emerald-500/30 text-xs text-emerald-300 font-semibold flex items-center space-x-2 rtl:space-x-reverse animate-bounce">
-            <Sparkles className="w-4 h-4 text-emerald-400" />
-            <span>{locale === 'ar' ? 'مبروك! ملفك مكتمل وجاهز للإيداع.' : 'Mabrouk! Dossier mte3ek 7adher 100% lel dépôt.'}</span>
+        {/* Done banner */}
+        {isDone && (
+          <div className="flex items-center space-x-2 rtl:space-x-reverse p-3 rounded-xl bg-emerald-500/10 border border-emerald-500/30 animate-fade-in-up">
+            <Sparkles className="w-4 h-4 text-emerald-400 shrink-0" />
+            <span className="text-xs font-bold text-emerald-300">
+              {locale === 'ar'
+                ? '🎉 مبروك! ملفك مكتمل وجاهز للإيداع.'
+                : locale === 'fr'
+                ? '🎉 Mabrouk! Votre dossier est 100% complet.'
+                : '🎉 Mabrouk! Dossier mte3ek 7adher 100% lel dépôt.'}
+            </span>
           </div>
         )}
       </div>
 
-      {/* Required Documents List */}
-      <div className="space-y-2.5">
+      {/* Divider */}
+      <div className="h-px bg-gradient-to-r from-transparent via-zinc-800 to-transparent" />
+
+      {/* Document List */}
+      <div className="space-y-2">
         {procedure.requiredDocuments.map((doc) => {
           const isChecked = isItemChecked(doc.id);
           const name = doc.name[locale] || doc.name['derja'];
@@ -92,41 +124,42 @@ export const ChecklistTracker: React.FC<ChecklistTrackerProps> = ({ procedure })
             <div
               key={doc.id}
               onClick={() => handleToggle(doc.id)}
-              className={`p-3 rounded-xl border cursor-pointer transition-all duration-200 flex items-start space-x-3 rtl:space-x-reverse select-none ${
+              className={`group p-3 rounded-xl border cursor-pointer select-none transition-all duration-200 flex items-start gap-3 ${
                 isChecked
-                  ? 'bg-emerald-950/30 border-emerald-500/50 text-zinc-300'
-                  : 'bg-zinc-900/70 border-zinc-800 hover:border-zinc-700 text-zinc-100'
+                  ? 'bg-emerald-950/25 border-emerald-800/50'
+                  : 'bg-zinc-900/60 border-zinc-800/80 hover:border-zinc-700 hover:bg-zinc-900/80'
               }`}
             >
-              <button
-                type="button"
-                className="mt-0.5 text-emerald-400 shrink-0 focus:outline-none"
-              >
+              {/* Checkbox icon */}
+              <div className="mt-0.5 shrink-0">
                 {isChecked ? (
-                  <CheckCircle2 className="w-4 h-4 fill-emerald-500/20 text-emerald-400" />
+                  <CheckCircle2 className="w-4 h-4 text-emerald-400" />
                 ) : (
-                  <Circle className="w-4 h-4 text-zinc-600" />
+                  <Circle className="w-4 h-4 text-zinc-700 group-hover:text-zinc-500 transition-colors" />
                 )}
-              </button>
+              </div>
 
-              <div className="flex-1">
-                <div className="flex items-center justify-between gap-2">
-                  <h4
-                    className={`text-xs font-semibold ${
-                      isChecked ? 'line-through text-zinc-500' : 'text-zinc-200'
+              {/* Content */}
+              <div className="flex-1 min-w-0">
+                <div className="flex items-start justify-between gap-2">
+                  <p
+                    className={`text-[11px] font-semibold leading-snug ${
+                      isChecked ? 'line-through text-zinc-600' : 'text-zinc-200'
                     }`}
                   >
                     {name}
-                  </h4>
+                  </p>
                   {doc.copiesConformes && (
-                    <span className="text-[10px] px-1.5 py-0.5 rounded bg-zinc-800 text-amber-400 border border-zinc-700 shrink-0">
-                      {doc.copiesConformes} {locale === 'ar' ? 'نسخة مطابقة' : 'Copie(s)'}
+                    <span className="flex items-center space-x-1 rtl:space-x-reverse text-[9px] px-1.5 py-0.5 rounded bg-zinc-800 text-amber-400 border border-zinc-700 font-bold shrink-0 whitespace-nowrap">
+                      <Copy className="w-2.5 h-2.5" />
+                      <span>{doc.copiesConformes}</span>
                     </span>
                   )}
                 </div>
-
                 {desc && (
-                  <p className="text-[11px] text-zinc-400 mt-0.5 leading-relaxed">{desc}</p>
+                  <p className={`text-[10px] mt-0.5 leading-relaxed ${isChecked ? 'text-zinc-700' : 'text-zinc-500'}`}>
+                    {desc}
+                  </p>
                 )}
               </div>
             </div>
