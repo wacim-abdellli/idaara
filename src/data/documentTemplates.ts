@@ -1,0 +1,380 @@
+import { DocumentTemplate } from '../types/document';
+
+export const documentTemplatesData: DocumentTemplate[] = [
+  {
+    slug: 'contrat-location',
+    id: 'contrat-location',
+    category: 'contracts',
+    title: {
+      derja: "Contrat de Location (3a9d Kré Sakani)",
+      fr: "Contrat de Bail à Usage d'Habitation",
+      ar: "عقد تسويغ محل معد للسكنى (عقد كراء)",
+    },
+    description: {
+      derja: "Contrat rasmi standardisé bilingue mrigel 9anouniyan lel Baladiya wel Recette.",
+      fr: "Contrat de bail certifié bilingue conforme au Code des Obligations et des Contrats tunisien.",
+      ar: "عقد كراء قانوني ثنائي اللغة مطابق لمجلة الالتزامات والعقود التونسية وجاهز للتعريف بالإمضاء.",
+    },
+    legalBasis: "Loi n° 76-35 et Code des Obligations et des Contrats (COC)",
+    requiresLegalisation: true,
+    requiredTimbreTND: 30.0,
+    sections: [
+      { id: 'bailleur', title: { derja: "El Kéri (Bailleur)", fr: "Le Bailleur (Propriétaire)", ar: "المسوّغ (صاحب العقار)" } },
+      { id: 'locataire', title: { derja: "El Mektéri (Locataire)", fr: "Le Locataire (Preneur)", ar: "المكتري (المسوّغ له)" } },
+      { id: 'bien', title: { derja: "El Ma7al (Le Bien)", fr: "Description du Local", ar: "وصف المحل المسوّغ" } },
+      { id: 'conditions', title: { derja: "El Chourout wel Soum (Conditions)", fr: "Loyer & Modalités", ar: "معين الكراء والشروط" } }
+    ],
+    fields: [
+      {
+        id: 'bailleur_name',
+        name: 'bailleur_name',
+        label: { derja: "Esm w la9ab el Kéri", fr: "Nom & Prénom du Bailleur", ar: "الاسم واللقب للمسوّغ" },
+        placeholder: { derja: "Mohamed Ben Ali", fr: "Mohamed Ben Ali", ar: "محمد بن علي" },
+        type: 'text',
+        required: true,
+        section: 'bailleur',
+      },
+      {
+        id: 'bailleur_cin',
+        name: 'bailleur_cin',
+        label: { derja: "Numéro CIN el Kéri", fr: "N° CIN du Bailleur", ar: "رقم ب.ت.و للمسوّغ" },
+        placeholder: { derja: "08123456", fr: "08123456", ar: "08123456" },
+        type: 'text',
+        required: true,
+        section: 'bailleur',
+        validationRegex: '^[0-9]{8}$',
+      },
+      {
+        id: 'bailleur_address',
+        name: 'bailleur_address',
+        label: { derja: "3onwan el Kéri", fr: "Adresse du Bailleur", ar: "عنوان المسوّغ" },
+        placeholder: { derja: "15 Rue de Carthage, Tunis", fr: "15 Rue de Carthage, Tunis", ar: "15 نهج قرطاج، تونس" },
+        type: 'text',
+        required: true,
+        section: 'bailleur',
+      },
+      {
+        id: 'locataire_name',
+        name: 'locataire_name',
+        label: { derja: "Esm w la9ab el Mektéri", fr: "Nom & Prénom du Locataire", ar: "الاسم واللقب للمكتري" },
+        placeholder: { derja: "Amine Trabelsi", fr: "Amine Trabelsi", ar: "أمين الطرابلسي" },
+        type: 'text',
+        required: true,
+        section: 'locataire',
+      },
+      {
+        id: 'locataire_cin',
+        name: 'locataire_cin',
+        label: { derja: "Numéro CIN el Mektéri", fr: "N° CIN du Locataire", ar: "رقم ب.ت.و للمكتري" },
+        placeholder: { derja: "09654321", fr: "09654321", ar: "09654321" },
+        type: 'text',
+        required: true,
+        section: 'locataire',
+      },
+      {
+        id: 'bien_address',
+        name: 'bien_address',
+        label: { derja: "3onwan el Ma7al el mekrî", fr: "Adresse complète du bien loué", ar: "العنوان الكامل للمحل موضوع الكراء" },
+        placeholder: { derja: "Appt 4, Résidence Ennasr 2, Ariana", fr: "Appt 4, Résidence Ennasr 2, Ariana", ar: "شقة 4، إقامة النصر 2، أريانة" },
+        type: 'text',
+        required: true,
+        section: 'bien',
+      },
+      {
+        id: 'loyer_mensuel',
+        name: 'loyer_mensuel',
+        label: { derja: "Soum el Kré bel Chhar (TND)", fr: "Montant du Loyer Mensuel (TND)", ar: "معين الكراء الشهري (د.ت)" },
+        placeholder: { derja: "750", fr: "750", ar: "750" },
+        type: 'number',
+        required: true,
+        section: 'conditions',
+      },
+      {
+        id: 'caution_garantie',
+        name: 'caution_garantie',
+        label: { derja: "Mablagh el Dhamen / Caution (TND)", fr: "Dépôt de Garantie / Caution (TND)", ar: "مبلغ الضمان المالي (د.ت)" },
+        placeholder: { derja: "1500", fr: "1500", ar: "1500" },
+        type: 'number',
+        required: true,
+        section: 'conditions',
+      },
+      {
+        id: 'date_debut',
+        name: 'date_debut',
+        label: { derja: "Date bdeyet el kré", fr: "Date de Prise d'Effet", ar: "تاريخ بداية الكراء" },
+        type: 'date',
+        required: true,
+        section: 'conditions',
+      },
+      {
+        id: 'duree_mois',
+        name: 'duree_mois',
+        label: { derja: "Moddet el 3a9d (Chhour)", fr: "Durée du Bail (Mois)", ar: "مدة العقد (بالأشهر)" },
+        placeholder: { derja: "12", fr: "12", ar: "12" },
+        type: 'number',
+        required: true,
+        section: 'conditions',
+      }
+    ],
+    sampleData: {
+      bailleur_name: "Youssef Mahjoub",
+      bailleur_cin: "07894561",
+      bailleur_address: "12 Avenue Habib Bourguiba, Tunis",
+      locataire_name: "Sami Ben Amor",
+      locataire_cin: "09812345",
+      bien_address: "Résidence Les Pins, Bloc B Appt 12, Riadh El Andalous, Ariana",
+      loyer_mensuel: 850,
+      caution_garantie: 1700,
+      date_debut: "2026-09-01",
+      duree_mois: 12,
+    }
+  },
+  {
+    slug: 'procuration-officielle',
+    id: 'procuration-officielle',
+    category: 'authorizations',
+    title: {
+      derja: "Procuration / Tawkîl Rasmi (توكيل قانوني)",
+      fr: "Procuration Générale ou Spéciale (Tawkîl)",
+      ar: "توكيل قانوني رسمي (عام أو خاص)",
+    },
+    description: {
+      derja: "Wathi9at tawkîl bech tkaffil chkoun ya9dhi fi blastek fel idarat, banque, walla baladiya.",
+      fr: "Acte de délégation de pouvoir et mandat pour représentation légale auprès des administrations et organismes.",
+      ar: "عقد توكيل رسمي يخول للوكيل القيام بالإجراءات الإدارية والقانونية نيابة عن الموكّل.",
+    },
+    legalBasis: "Code des Obligations et des Contrats (Articles 1104 et suivants)",
+    requiresLegalisation: true,
+    requiredTimbreTND: 5.0,
+    sections: [
+      { id: 'mandant', title: { derja: "El Mwakkel (Le Mandant)", fr: "Le Mandant (Donneur d'ordre)", ar: "الموكّل" } },
+      { id: 'mandataire', title: { derja: "El Wakil (Le Mandataire)", fr: "Le Mandataire (Représentant)", ar: "الوكيل المفوض" } },
+      { id: 'pouvoirs', title: { derja: "El Solotat wel Mahem (Les Pouvoirs)", fr: "Objet & Pouvoirs Délégués", ar: "موضوع التوكيل والصلاحيات" } }
+    ],
+    fields: [
+      {
+        id: 'mandant_name',
+        name: 'mandant_name',
+        label: { derja: "Esm el Mwakkel", fr: "Nom & Prénom du Mandant", ar: "الاسم واللقب للموكّل" },
+        placeholder: { derja: "Kamel Gharbi", fr: "Kamel Gharbi", ar: "كامل الغربي" },
+        type: 'text',
+        required: true,
+        section: 'mandant',
+      },
+      {
+        id: 'mandant_cin',
+        name: 'mandant_cin',
+        label: { derja: "CIN el Mwakkel", fr: "N° CIN du Mandant", ar: "رقم ب.ت.و للموكّل" },
+        type: 'text',
+        required: true,
+        section: 'mandant',
+      },
+      {
+        id: 'mandataire_name',
+        name: 'mandataire_name',
+        label: { derja: "Esm el Wakil", fr: "Nom & Prénom du Mandataire", ar: "الاسم واللقب للوكيل" },
+        placeholder: { derja: "Meriem Gharbi", fr: "Meriem Gharbi", ar: "مريم الغربي" },
+        type: 'text',
+        required: true,
+        section: 'mandataire',
+      },
+      {
+        id: 'mandataire_cin',
+        name: 'mandataire_cin',
+        label: { derja: "CIN el Wakil", fr: "N° CIN du Mandataire", ar: "رقم ب.ت.و للوكيل" },
+        type: 'text',
+        required: true,
+        section: 'mandataire',
+      },
+      {
+        id: 'objet_procuration',
+        name: 'objet_procuration',
+        label: { derja: "Chnowa el mahem elli mweklou 3lihom?", fr: "Objet précis du mandat", ar: "الصلاحيات والإجراءات المفوضة بدقة" },
+        placeholder: { derja: "Istikhraj awra9 idariya w imdha2 b'esmi fi markez el chorta wel baladiya...", fr: "Représentation auprès des services administratifs pour retrait de documents officiels...", ar: "التمثيل لدى المصالح الإدارية والبلدية لاستخراج وثائق رسمية وتوقيع المحاضر..." },
+        type: 'textarea',
+        required: true,
+        section: 'pouvoirs',
+      }
+    ],
+    sampleData: {
+      mandant_name: "Kamel Gharbi",
+      mandant_cin: "05432198",
+      mandataire_name: "Meriem Gharbi",
+      mandataire_cin: "11223344",
+      objet_procuration: "Gestion et suivi des démarches administratives auprès de la municipalité, la STEG et la SONEDE, avec pouvoir de signature et de retrait de tous documents officiels."
+    }
+  },
+  {
+    slug: 'declaration-honneur',
+    id: 'declaration-honneur',
+    category: 'declarations',
+    title: {
+      derja: "Déclaration sur l'honneur (Tasrîh bi Charaf)",
+      fr: "Déclaration sur l'Honneur (Tasrîh bi Charaf)",
+      ar: "تصريح بالشرف (مطبوعة مصادق عليها)",
+    },
+    description: {
+      derja: "Tasrih bi charaf lel bitala, 3adam el 3amal, sekna, walla khedma mou3ayna.",
+      fr: "Déclaration sur l'honneur normalisée pour non-activité, prise en charge, célibat ou résidence.",
+      ar: "تصريح بالشرف لإثبات عدم الشغل، الإعالة، العزوبية أو مقر الإقامة جاهز للتعريف بالإمضاء.",
+    },
+    legalBasis: "Code Pénal Tunisien (Dispositions relatives aux déclarations sous serment)",
+    requiresLegalisation: true,
+    requiredTimbreTND: 3.0,
+    sections: [
+      { id: 'declarant', title: { derja: "El Moussara7 (Le Déclarant)", fr: "Identité du Déclarant", ar: "المصرّح" } },
+      { id: 'contenu', title: { derja: "Mawdhou3 el Tasrih (Déclaration)", fr: "Objet de la Déclaration", ar: "موضوع التصريح" } }
+    ],
+    fields: [
+      {
+        id: 'declarant_name',
+        name: 'declarant_name',
+        label: { derja: "Esm w la9ab", fr: "Nom & Prénom", ar: "الاسم واللقب" },
+        type: 'text',
+        required: true,
+        section: 'declarant',
+      },
+      {
+        id: 'declarant_cin',
+        name: 'declarant_cin',
+        label: { derja: "Numéro CIN", fr: "N° CIN", ar: "رقم ب.ت.و" },
+        type: 'text',
+        required: true,
+        section: 'declarant',
+      },
+      {
+        id: 'type_declaration',
+        name: 'type_declaration',
+        label: { derja: "Naw3 el Tasrih", fr: "Type de Déclaration", ar: "نوع التصريح" },
+        type: 'select',
+        options: [
+          { value: 'non_emploi', label: { derja: "3adam 3amal (Bitala)", fr: "Non-activité / Chômage", ar: "تصريح بعدم ممارسة أي نشاط مهني (بطالة)" } },
+          { value: 'prise_en_charge', label: { derja: "I3ala (Prise en charge)", fr: "Prise en charge financière", ar: "تصريح بالإعالة والنفقة" } },
+          { value: 'residence', label: { derja: "I9ama (Hébergement)", fr: "Hébergement à titre gratuit", ar: "تصريح بالإيواء المجاني والسكنى" } },
+          { value: 'autre', label: { derja: "Tasrih ekher 3am", fr: "Autre engagement formel", ar: "تصريح والتزام عام" } }
+        ],
+        required: true,
+        section: 'contenu',
+      },
+      {
+        id: 'details_declaration',
+        name: 'details_declaration',
+        label: { derja: "Tafassil el tasrih", fr: "Détails et texte de la déclaration", ar: "تفاصيل ونص التصريح بالشرف" },
+        type: 'textarea',
+        required: true,
+        section: 'contenu',
+      }
+    ],
+    sampleData: {
+      declarant_name: "Fatma Mansouri",
+      declarant_cin: "08445566",
+      type_declaration: "non_emploi",
+      details_declaration: "Je soussignée Fatma Mansouri, titulaire de la CIN n° 08445566, déclare sur l'honneur ne pas exercer d'activité rémunérée à ce jour et ne bénéficier d'aucun revenu professionnel."
+    }
+  },
+  {
+    slug: 'contrat-vente-vehicule',
+    id: 'contrat-vente-vehicule',
+    category: 'contracts',
+    title: {
+      derja: "Contrat de Vente Karhba (3a9d Bay3 Sayara)",
+      fr: "Contrat de Vente de Véhicule d'Occasion",
+      ar: "عقد بيع سيارة أو عربة مستعملة",
+    },
+    description: {
+      derja: "3a9d bay3 karhba rasmi standardisé fih les données mte3 el karhba wel carte grise.",
+      fr: "Acte de cession et vente de véhicule automobile conforme pour enregistrement et mutation ATTT.",
+      ar: "عقد بيع سيارة رسمي مطابق للمعايير القانونية جاهز للتسجيل بالقباضة وتحويل الملكية لدى الوكالة الفنية.",
+    },
+    legalBasis: "Code de la Route et dispositions du Code des Obligations et des Contrats",
+    requiresLegalisation: true,
+    requiredTimbreTND: 100.0,
+    sections: [
+      { id: 'vendeur', title: { derja: "El Beye3 (Le Vendeur)", fr: "Le Vendeur", ar: "البائع" } },
+      { id: 'acheteur', title: { derja: "El Chari (L'Acheteur)", fr: "L'Acheteur", ar: "المشتري" } },
+      { id: 'vehicule', title: { derja: "El Karhba (Le Véhicule)", fr: "Caractéristiques du Véhicule", ar: "بيانات العربة موضوع البيع" } },
+      { id: 'prix', title: { derja: "El Soum (Prix & Paiement)", fr: "Prix et Modalités", ar: "الثمن وطريقة الدفع" } }
+    ],
+    fields: [
+      {
+        id: 'vendeur_name',
+        name: 'vendeur_name',
+        label: { derja: "Esm el Beye3", fr: "Nom & Prénom du Vendeur", ar: "الاسم واللقب للبائع" },
+        type: 'text',
+        required: true,
+        section: 'vendeur',
+      },
+      {
+        id: 'vendeur_cin',
+        name: 'vendeur_cin',
+        label: { derja: "CIN el Beye3", fr: "N° CIN du Vendeur", ar: "رقم ب.ت.و للبائع" },
+        type: 'text',
+        required: true,
+        section: 'vendeur',
+      },
+      {
+        id: 'acheteur_name',
+        name: 'acheteur_name',
+        label: { derja: "Esm el Chari", fr: "Nom & Prénom de l'Acheteur", ar: "الاسم واللقب للمشتري" },
+        type: 'text',
+        required: true,
+        section: 'acheteur',
+      },
+      {
+        id: 'acheteur_cin',
+        name: 'acheteur_cin',
+        label: { derja: "CIN el Chari", fr: "N° CIN de l'Acheteur", ar: "رقم ب.ت.و للمشتري" },
+        type: 'text',
+        required: true,
+        section: 'acheteur',
+      },
+      {
+        id: 'immatriculation',
+        name: 'immatriculation',
+        label: { derja: "Matricule el Karhba (Immatriculation)", fr: "Numéro d'Immatriculation (Série TU)", ar: "الرقم المنجمي للعربة (ن.ت)" },
+        placeholder: { derja: "215 TU 1234", fr: "215 TU 1234", ar: "215 تونس 1234" },
+        type: 'text',
+        required: true,
+        section: 'vehicule',
+      },
+      {
+        id: 'marque_modele',
+        name: 'marque_modele',
+        label: { derja: "Marque w Modèle (ex: Clio 4)", fr: "Marque et Modèle du Véhicule", ar: "نوع وطراز العربة" },
+        type: 'text',
+        required: true,
+        section: 'vehicule',
+      },
+      {
+        id: 'chassis_num',
+        name: 'chassis_num',
+        label: { derja: "Numéro de Châssis (N° de Série)", fr: "Numéro de Châssis (VIN)", ar: "رقم الهيكل التسلسلي" },
+        type: 'text',
+        required: true,
+        section: 'vehicule',
+      },
+      {
+        id: 'prix_vente',
+        name: 'prix_vente',
+        label: { derja: "Soum el Bay3 (TND)", fr: "Prix de Vente Total (TND)", ar: "ثمن البيع الجملي (د.ت)" },
+        type: 'number',
+        required: true,
+        section: 'prix',
+      }
+    ],
+    sampleData: {
+      vendeur_name: "Karim Bouazizi",
+      vendeur_cin: "06778899",
+      acheteur_name: "Anis Khelifi",
+      acheteur_cin: "09332211",
+      immatriculation: "220 TU 7890",
+      marque_modele: "Volkswagen Golf 7",
+      chassis_num: "WVWZZZAUZHP123456",
+      prix_vente: 38500,
+    }
+  }
+];
+
+export function getTemplateBySlug(slug: string): DocumentTemplate | undefined {
+  return documentTemplatesData.find((t) => t.slug === slug || t.id === slug);
+}
