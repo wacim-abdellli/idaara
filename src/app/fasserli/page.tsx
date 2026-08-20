@@ -10,7 +10,7 @@ import { OCRAnalysisResult } from '../../types/chat';
 import { ShieldCheck, Sparkles, FileSearch } from 'lucide-react';
 
 export default function FasserliPage() {
-  const { t } = useLocale();
+  const { t, locale } = useLocale();
   const [isAnalyzing, setIsAnalyzing] = useState(false);
   const [selectedSample, setSelectedSample] = useState<SampleDocItem | null>(null);
   const [analysisResult, setAnalysisResult] = useState<OCRAnalysisResult | null>(
@@ -94,19 +94,35 @@ export default function FasserliPage() {
     }, 1200);
   };
 
+  const pageTitle =
+    locale === 'ar'
+      ? '📄 فسّرلي هالورقة — قارئ الوثائق الذكي'
+      : '📄 Fasserli Hal War9a · فسّرلي هالورقة';
+
+  const pageDesc =
+    locale === 'ar'
+      ? 'صوّر أي وثيقة إدارية (إعلام ضريبي، استدعاء، إشعار CNSS) وسيفسّرها لك المساعد بـ 3 نقاط مع الآجال القانونية وما يجب فعله.'
+      : locale === 'fr'
+      ? "Scannez n'importe quel courrier administratif (avis fiscal, convocation, avis CNSS) et l'IA Idaara vous le résume en 3 points clairs avec les délais légaux."
+      : "Soiwer ay wathi9a idariya (Tanbih dhariba, convocation, avis CNSS, 3a9la) w khalli Idaara AI t'fassarlek chnowa fihom b'loughet el mowaten.";
+
   return (
-    <div className="max-w-5xl mx-auto px-4 py-8">
+    <div className="max-w-5xl mx-auto px-4 py-8 sm:py-10">
       {/* Title & Header */}
       <div className="mb-8">
-        <div className="inline-flex items-center space-x-2 px-3 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 text-xs font-semibold mb-3">
-          <Sparkles className="w-3.5 h-3.5" />
-          <span>Smart OCR & Administrative Document Decoder</span>
+        <div className="inline-flex items-center space-x-2 px-3 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-[11px] font-semibold mb-4">
+          <Sparkles className="w-3 h-3" />
+          <span>
+            {locale === 'ar'
+              ? 'قارئ الوثائق الإدارية بالذكاء الاصطناعي'
+              : 'Smart OCR · Décrypteur Administratif IA'}
+          </span>
         </div>
-        <h1 className="text-3xl font-extrabold text-white tracking-tight">
-          📄 Fasserli Hal War9a · فسّرلي هالورقة
+        <h1 className="text-2xl sm:text-4xl font-extrabold text-white tracking-tight leading-tight mb-3">
+          {pageTitle}
         </h1>
-        <p className="text-sm text-zinc-400 mt-2 max-w-2xl">
-          Soiwer ay wathi9a idariya (Tanbih dhariba, convocation, avis cnss, 3a9la) w khalli Idaara AI t'fassarlek chnowa fihom b'loughet el mowaten w chnowa lezmek ta3mel.
+        <p className="text-xs sm:text-sm text-zinc-400 max-w-2xl leading-relaxed">
+          {pageDesc}
         </p>
       </div>
 
