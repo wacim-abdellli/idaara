@@ -7,11 +7,10 @@ import { ChatMessage as ChatMessageType } from '../../types/chat';
 import { BrandIcon } from '../../components/layout/BrandLogo';
 import {
   Send,
-  RefreshCw,
+  Plus,
   Mic,
   MicOff,
   Sparkles,
-  Key,
   Settings,
   X,
   FileCheck2,
@@ -21,8 +20,10 @@ import {
   ShieldCheck,
   Plane,
   ArrowUp,
-  Radio,
   SlidersHorizontal,
+  ChevronDown,
+  Info,
+  Check,
 } from 'lucide-react';
 
 export default function CopilotPage() {
@@ -50,7 +51,7 @@ export default function CopilotPage() {
   const [showSettingsModal, setShowSettingsModal] = useState<boolean>(false);
   const [providerBadge, setProviderBadge] = useState<string>('Gemini 1.5 Flash · Free');
 
-  const chatBottomRef = useRef<HTMLDivElement | null>(null);
+  const messagesContainerRef = useRef<HTMLDivElement | null>(null);
   const textareaRef = useRef<HTMLTextAreaElement | null>(null);
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const speechRecognitionRef = useRef<any>(null);
@@ -63,6 +64,9 @@ export default function CopilotPage() {
       setCustomApiKey(savedKey);
       setActiveProvider(savedProvider);
 
+      if (savedProvider === 'gemini') setProviderBadge('Google Gemini 1.5');
+      else if (savedProvider === 'groq') setProviderBadge('Groq Llama 3.3 70B');
+
       // Check URL query parameters (e.g. /copilot?q=...)
       const urlParams = new URLSearchParams(window.location.search);
       const q = urlParams.get('q');
@@ -72,9 +76,14 @@ export default function CopilotPage() {
     }
   }, []);
 
-  // Auto-scroll on new messages
+  // Smooth internal scroll ONLY inside the chat container (never scrolls the window)
   useEffect(() => {
-    chatBottomRef.current?.scrollIntoView({ behavior: 'smooth' });
+    if (messagesContainerRef.current) {
+      messagesContainerRef.current.scrollTo({
+        top: messagesContainerRef.current.scrollHeight,
+        behavior: 'smooth',
+      });
+    }
   }, [messages, isProcessing]);
 
   // Suggested topic cards for empty state
@@ -123,6 +132,14 @@ export default function CopilotPage() {
     },
   ];
 
+  // Quick prompt chips above the prompt bar
+  const quickPillQueries = [
+    { label: '🪪 ' + (locale === 'ar' ? 'جواز السفر 80د' : locale === 'en' ? 'Passport 80 DT' : 'Passeport 80 DT'), q: 'Passeport tunisien renouvellement et timbres fiscaux' },
+    { label: '🚗 ' + (locale === 'ar' ? 'البطاقة الرمادية 145د' : locale === 'en' ? 'Carte Grise 145 DT' : 'Carte Grise 145 DT'), q: 'Mutation carte grise véhicule occasion Tunisie' },
+    { label: '💼 ' + (locale === 'ar' ? 'المبادر الذاتي 1%' : locale === 'en' ? 'Auto-Entrepreneur 1%' : 'Auto-Entrepreneur 1%'), q: 'Statut auto-entrepreneur freelance impôt 1% Tunisie' },
+    { label: '📄 ' + (locale === 'ar' ? 'عقد الكراء COC' : locale === 'en' ? 'Lease Contract COC' : 'Contrat Bail COC'), q: 'Contrat de bail résidentiel Baladiya Recette' },
+  ];
+
   const handleSendMessage = async (textToSend?: string) => {
     const query = (textToSend || inputVal).trim();
     if (!query || isProcessing) return;
@@ -138,7 +155,6 @@ export default function CopilotPage() {
     setInputVal('');
     setIsProcessing(true);
 
-    // Reset textarea height
     if (textareaRef.current) {
       textareaRef.current.style.height = 'auto';
     }
@@ -275,31 +291,38 @@ export default function CopilotPage() {
   const handleTextareaInput = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     setInputVal(e.target.value);
     e.target.style.height = 'auto';
-    e.target.style.height = `${Math.min(e.target.scrollHeight, 160)}px`;
+    e.target.style.height = `${Math.min(e.target.scrollHeight, 140)}px`;
   };
 
   const saveSettings = () => {
     localStorage.setItem('idaara_custom_api_key', customApiKey.trim());
     localStorage.setItem('idaara_ai_provider', activeProvider);
+    if (activeProvider === 'gemini') setProviderBadge('Google Gemini 1.5');
+    else if (activeProvider === 'groq') setProviderBadge('Groq Llama 3.3 70B');
+    else setProviderBadge('Auto-Smart Engine');
     setShowSettingsModal(false);
   };
 
   return (
-    <div className="flex flex-col h-[calc(100vh-4rem)] max-w-5xl mx-auto px-3 sm:px-6 relative">
+    <div className="h-[calc(100vh-4rem)] flex flex-col max-w-4xl mx-auto px-3 sm:px-6 overflow-hidden relative">
       
-      {/* ── Top Floating Header Bar (Claude / ChatGPT style) ── */}
-      <header className="flex items-center justify-between py-3 border-b border-zinc-800/80 bg-zinc-950/40 backdrop-blur-md sticky top-0 z-20">
+      {/* ── Top Pinned Header Bar (Claude / ChatGPT style) ── */}
+      <header className="flex items-center justify-between py-3 border-b border-zinc-800/80 bg-zinc-950/80 backdrop-blur-xl z-20 shrink-0">
         <div className="flex items-center gap-3">
-          <BrandIcon size={32} />
+          <BrandIcon size={30} />
           <div>
             <div className="flex items-center gap-2">
               <h1 className="text-sm sm:text-base font-bold text-white tracking-tight">
                 Idaara Copilot
               </h1>
-              <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-emerald-500/10 border border-emerald-500/30 text-[10px] font-mono text-emerald-400">
+              <button
+                onClick={() => setShowSettingsModal(true)}
+                className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-emerald-500/10 hover:bg-emerald-500/20 border border-emerald-500/30 text-[10px] font-mono text-emerald-400 transition-colors cursor-pointer"
+              >
                 <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
                 <span>{providerBadge}</span>
-              </span>
+                <ChevronDown className="w-2.5 h-2.5 opacity-60" />
+              </button>
             </div>
             <p className="text-[11px] text-zinc-500 hidden sm:block">
               {locale === 'ar'
@@ -325,18 +348,20 @@ export default function CopilotPage() {
             className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-zinc-900/90 hover:bg-zinc-800 border border-zinc-800 hover:border-zinc-700 text-zinc-400 hover:text-zinc-200 text-xs font-medium transition-all cursor-pointer shadow-sm"
             title="New Conversation"
           >
-            <RefreshCw className="w-3.5 h-3.5" />
+            <Plus className="w-3.5 h-3.5" />
             <span className="hidden sm:inline">{locale === 'ar' ? 'محادثة جديدة' : 'New Chat'}</span>
           </button>
         </div>
       </header>
 
-      {/* ── Main Chat Stream Container ── */}
-      <main className="flex-1 overflow-y-auto py-6 space-y-4">
-        
+      {/* ── Dedicated Scrollable Messages Stream (No whole-page jumping) ── */}
+      <div
+        ref={messagesContainerRef}
+        className="flex-1 overflow-y-auto py-6 space-y-4 pr-1 scroll-smooth"
+      >
         {/* Empty / Welcome State (Inspiring Claude/ChatGPT style) */}
         {messages.length === 0 && (
-          <div className="max-w-3xl mx-auto py-8 sm:py-12 space-y-8 text-center animate-fade-in-up">
+          <div className="max-w-2xl mx-auto py-8 sm:py-12 space-y-8 text-center animate-fade-in-up">
             
             {/* Monumental Greeting */}
             <div className="space-y-3">
@@ -400,9 +425,9 @@ export default function CopilotPage() {
 
         {/* AI Typing / Thinking State Indicator */}
         {isProcessing && (
-          <div className="w-full py-4 animate-fade-in">
-            <div className="max-w-3xl mx-auto flex items-center gap-3 px-4 text-xs text-emerald-400">
-              <BrandIcon size={32} />
+          <div className="w-full py-3 animate-fade-in">
+            <div className="flex items-center gap-3 text-xs text-emerald-400">
+              <BrandIcon size={30} />
               <div className="flex items-center gap-2 px-4 py-2.5 rounded-2xl bg-zinc-900/90 border border-zinc-800 shadow-md">
                 <div className="flex items-center gap-1.5">
                   <span className="w-2 h-2 rounded-full bg-emerald-400 animate-bounce" style={{ animationDelay: '0ms' }} />
@@ -416,76 +441,88 @@ export default function CopilotPage() {
             </div>
           </div>
         )}
+      </div>
 
-        <div ref={chatBottomRef} />
-      </main>
-
-      {/* ── Bottom Pinned Input Console (ChatGPT / Claude Floating Pill) ── */}
-      <footer className="sticky bottom-0 pb-4 pt-2 bg-gradient-to-t from-zinc-950 via-zinc-950/95 to-transparent z-20">
-        <div className="max-w-3xl mx-auto space-y-2">
-          
-          {/* Main Input Box */}
-          <div className="relative glass-panel rounded-3xl p-2 sm:p-2.5 border border-zinc-800 focus-within:border-emerald-500/50 focus-within:ring-2 focus-within:ring-emerald-500/20 shadow-2xl transition-all bg-zinc-950/90">
-            <div className="flex items-end gap-2 px-2">
-              
-              {/* Auto-growing Textarea */}
-              <textarea
-                ref={textareaRef}
-                rows={1}
-                value={inputVal}
-                onChange={handleTextareaInput}
-                onKeyDown={handleKeyDown}
-                placeholder={
-                  isRecording
-                    ? (locale === 'ar' ? 'تحدث الآن... جار الاستماع...' : 'Listening to your voice...')
-                    : (locale === 'ar'
-                    ? 'اكتب سؤالك بالدارجة، الفرنسية، أو العربية... (Enter للإرسال)'
-                    : 'Ask anything in Derja, French, or English... (Press Enter to send)')
-                }
-                className="flex-1 bg-transparent py-2 px-1 text-sm sm:text-base text-zinc-100 placeholder-zinc-500 focus:outline-none resize-none max-h-40 overflow-y-auto leading-relaxed"
-              />
-
-              {/* Action Buttons Toolbar */}
-              <div className="flex items-center gap-1.5 pb-1 shrink-0">
-                
-                {/* Voice Dictation Button */}
-                <button
-                  type="button"
-                  onClick={toggleVoiceRecording}
-                  disabled={isProcessing}
-                  title="Voice Dictation"
-                  className={`p-2.5 rounded-xl transition-all cursor-pointer ${
-                    isRecording
-                      ? 'bg-red-500 text-white animate-pulse shadow-lg shadow-red-500/40 ring-2 ring-red-500/30'
-                      : 'bg-zinc-900 hover:bg-zinc-800 text-zinc-400 hover:text-emerald-400 border border-zinc-800'
-                  }`}
-                >
-                  {isRecording ? <MicOff className="w-4 h-4" /> : <Mic className="w-4 h-4" />}
-                </button>
-
-                {/* Send Button */}
-                <button
-                  type="button"
-                  onClick={() => handleSendMessage()}
-                  disabled={!inputVal.trim() || isProcessing}
-                  title="Send Message"
-                  className="p-2.5 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-zinc-950 font-bold transition-all disabled:opacity-30 disabled:cursor-not-allowed shadow-md shadow-emerald-500/30 hover:scale-105 cursor-pointer"
-                >
-                  <ArrowUp className="w-4 h-4 stroke-[3]" />
-                </button>
-              </div>
-
-            </div>
+      {/* ── Bottom Pinned Input Console (ChatGPT / Claude style) ── */}
+      <footer className="shrink-0 pb-3 pt-1.5 bg-gradient-to-t from-zinc-950 via-zinc-950/95 to-transparent z-20 space-y-2">
+        
+        {/* Quick Topic Chips (when conversation is active) */}
+        {messages.length > 0 && (
+          <div className="flex items-center gap-1.5 overflow-x-auto pb-1 no-scrollbar text-xs">
+            {quickPillQueries.map((pill, idx) => (
+              <button
+                key={idx}
+                onClick={() => handleSendMessage(pill.q)}
+                disabled={isProcessing}
+                className="px-2.5 py-1 rounded-full bg-zinc-900/90 hover:bg-zinc-800 border border-zinc-800 text-zinc-400 hover:text-emerald-300 text-[11px] whitespace-nowrap transition-colors cursor-pointer shrink-0"
+              >
+                {pill.label}
+              </button>
+            ))}
           </div>
+        )}
 
-          {/* Micro Legal & AI Disclaimer */}
-          <p className="text-center text-[10px] font-mono text-zinc-600">
-            {locale === 'ar'
-              ? 'إدارة.تونس AI يقدم معلومات إرشادية. يرجى التثبت من النصوص القانونية بالرائد الرسمي (JORT).'
-              : 'Idaara AI provides official guidance. Always verify certified documents with local authorities.'}
-          </p>
+        {/* Main Input Box */}
+        <div className="relative glass-panel rounded-3xl p-1.5 sm:p-2 border border-zinc-800 focus-within:border-emerald-500/50 focus-within:ring-2 focus-within:ring-emerald-500/20 shadow-2xl transition-all bg-zinc-950/90">
+          <div className="flex items-end gap-2 px-2">
+            
+            {/* Auto-growing Textarea */}
+            <textarea
+              ref={textareaRef}
+              rows={1}
+              value={inputVal}
+              onChange={handleTextareaInput}
+              onKeyDown={handleKeyDown}
+              placeholder={
+                isRecording
+                  ? (locale === 'ar' ? 'تحدث الآن... جار الاستماع...' : 'Listening to your voice...')
+                  : (locale === 'ar'
+                  ? 'اكتب سؤالك بالدارجة، الفرنسية، أو العربية... (Enter للإرسال)'
+                  : 'Ask anything in Derja, French, or English... (Press Enter to send)')
+              }
+              className="flex-1 bg-transparent py-2 px-1 text-sm sm:text-[15px] text-zinc-100 placeholder-zinc-500 focus:outline-none resize-none max-h-36 overflow-y-auto leading-relaxed"
+            />
 
+            {/* Action Buttons Toolbar */}
+            <div className="flex items-center gap-1.5 pb-1 shrink-0">
+              
+              {/* Voice Dictation Button */}
+              <button
+                type="button"
+                onClick={toggleVoiceRecording}
+                disabled={isProcessing}
+                title="Voice Dictation"
+                className={`p-2.5 rounded-xl transition-all cursor-pointer ${
+                  isRecording
+                    ? 'bg-red-500 text-white animate-pulse shadow-lg shadow-red-500/40 ring-2 ring-red-500/30'
+                    : 'bg-zinc-900 hover:bg-zinc-800 text-zinc-400 hover:text-emerald-400 border border-zinc-800'
+                }`}
+              >
+                {isRecording ? <MicOff className="w-4 h-4" /> : <Mic className="w-4 h-4" />}
+              </button>
+
+              {/* Send Button */}
+              <button
+                type="button"
+                onClick={() => handleSendMessage()}
+                disabled={!inputVal.trim() || isProcessing}
+                title="Send Message"
+                className="p-2.5 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-zinc-950 font-bold transition-all disabled:opacity-30 disabled:cursor-not-allowed shadow-md shadow-emerald-500/30 hover:scale-105 cursor-pointer"
+              >
+                <ArrowUp className="w-4 h-4 stroke-[3]" />
+              </button>
+            </div>
+
+          </div>
         </div>
+
+        {/* Micro Legal & AI Disclaimer */}
+        <p className="text-center text-[10px] font-mono text-zinc-600">
+          {locale === 'ar'
+            ? 'إدارة.تونس AI يقدم معلومات إرشادية. يرجى التثبت من النصوص بالرائد الرسمي (JORT).'
+            : 'Idaara AI provides official guidance. Always verify certified documents with local authorities.'}
+        </p>
+
       </footer>
 
       {/* ── AI Model & API Key Settings Modal ── */}
@@ -516,7 +553,7 @@ export default function CopilotPage() {
 
             {/* Provider Selector */}
             <div className="space-y-2">
-              <label className="text-xs font-semibold text-zinc-300">Choose AI Provider</label>
+              <label className="text-xs font-semibold text-zinc-300">Choose AI Model</label>
               <div className="grid grid-cols-2 gap-2">
                 <button
                   type="button"
@@ -527,8 +564,11 @@ export default function CopilotPage() {
                       : 'bg-zinc-900/60 border-zinc-800 text-zinc-400 hover:text-white'
                   }`}
                 >
-                  <span className="block">⚡ Auto-Smart</span>
-                  <span className="text-[10px] text-zinc-500 font-normal">Gemini / Groq / Local</span>
+                  <span className="flex items-center justify-between">
+                    <span>⚡ Auto-Smart</span>
+                    {activeProvider === 'auto' && <Check className="w-3.5 h-3.5 text-emerald-400" />}
+                  </span>
+                  <span className="text-[10px] text-zinc-500 font-normal mt-1 block">Gemini / Groq / Local</span>
                 </button>
 
                 <button
@@ -540,8 +580,43 @@ export default function CopilotPage() {
                       : 'bg-zinc-900/60 border-zinc-800 text-zinc-400 hover:text-white'
                   }`}
                 >
-                  <span className="block">✨ Gemini 1.5 Flash</span>
-                  <span className="text-[10px] text-zinc-500 font-normal">Google Free Tier</span>
+                  <span className="flex items-center justify-between">
+                    <span>✨ Gemini 1.5 Flash</span>
+                    {activeProvider === 'gemini' && <Check className="w-3.5 h-3.5 text-emerald-400" />}
+                  </span>
+                  <span className="text-[10px] text-zinc-500 font-normal mt-1 block">Google Free Tier</span>
+                </button>
+
+                <button
+                  type="button"
+                  onClick={() => setActiveProvider('groq')}
+                  className={`p-3 rounded-xl border text-xs font-bold text-left transition-all ${
+                    activeProvider === 'groq'
+                      ? 'bg-emerald-500/10 border-emerald-500/40 text-emerald-300'
+                      : 'bg-zinc-900/60 border-zinc-800 text-zinc-400 hover:text-white'
+                  }`}
+                >
+                  <span className="flex items-center justify-between">
+                    <span>🚀 Groq Llama 3.3</span>
+                    {activeProvider === 'groq' && <Check className="w-3.5 h-3.5 text-emerald-400" />}
+                  </span>
+                  <span className="text-[10px] text-zinc-500 font-normal mt-1 block">Fast 70B Model</span>
+                </button>
+
+                <button
+                  type="button"
+                  onClick={() => setActiveProvider('local')}
+                  className={`p-3 rounded-xl border text-xs font-bold text-left transition-all ${
+                    activeProvider === 'local'
+                      ? 'bg-emerald-500/10 border-emerald-500/40 text-emerald-300'
+                      : 'bg-zinc-900/60 border-zinc-800 text-zinc-400 hover:text-white'
+                  }`}
+                >
+                  <span className="flex items-center justify-between">
+                    <span>🏛️ Idaara Civic Engine</span>
+                    {activeProvider === 'local' && <Check className="w-3.5 h-3.5 text-emerald-400" />}
+                  </span>
+                  <span className="text-[10px] text-zinc-500 font-normal mt-1 block">Zero API Key Needed</span>
                 </button>
               </div>
             </div>
@@ -568,8 +643,8 @@ export default function CopilotPage() {
                   className="w-full bg-zinc-900 border border-zinc-800 rounded-xl px-3 py-2.5 text-xs font-mono text-zinc-100 placeholder-zinc-600 focus:outline-none focus:border-emerald-500/60"
                 />
               </div>
-              <p className="text-[10px] text-zinc-500">
-                You can get a 100% free Gemini key with no credit card at Google AI Studio. It will be stored securely in your local browser storage.
+              <p className="text-[10px] text-zinc-500 leading-relaxed">
+                Free keys are available with 0 credit card needed at Google AI Studio or Groq Console. Your key is stored only in your browser storage.
               </p>
             </div>
 
