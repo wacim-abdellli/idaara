@@ -52,7 +52,8 @@ export default function CopilotPage() {
 
   const [inputVal, setInputVal] = useState('');
   const [isProcessing, setIsProcessing] = useState(false);
-  const chatBottomRef = useRef<HTMLDivElement | null>(null);
+  const chatContainerRef = useRef<HTMLDivElement | null>(null);
+  const isFirstRender = useRef(true);
 
   const suggestedQuestions = [
     { text: "Chnouwa lezemni bech n'badal el passeport mte3i?", label: "Passeport Tounsi" },
@@ -64,7 +65,16 @@ export default function CopilotPage() {
   ];
 
   useEffect(() => {
-    chatBottomRef.current?.scrollIntoView({ behavior: 'smooth' });
+    if (isFirstRender.current) {
+      isFirstRender.current = false;
+      return;
+    }
+    if (chatContainerRef.current) {
+      chatContainerRef.current.scrollTo({
+        top: chatContainerRef.current.scrollHeight,
+        behavior: 'smooth',
+      });
+    }
   }, [messages, isProcessing]);
 
   const handleSendMessage = (text: string) => {
@@ -172,7 +182,10 @@ export default function CopilotPage() {
       </div>
 
       {/* Chat Messages Stream */}
-      <div className="glass-panel rounded-2xl border border-zinc-800/80 p-4 min-h-[380px] max-h-[520px] overflow-y-auto mb-4 space-y-1">
+      <div
+        ref={chatContainerRef}
+        className="glass-panel rounded-2xl border border-zinc-800/80 p-4 min-h-[380px] max-h-[520px] overflow-y-auto mb-4 space-y-1"
+      >
         {messages.map((msg) => (
           <ChatMessage key={msg.id} message={msg} />
         ))}
@@ -188,7 +201,6 @@ export default function CopilotPage() {
             </span>
           </div>
         )}
-        <div ref={chatBottomRef} />
       </div>
 
       {/* Text Input */}
@@ -208,7 +220,7 @@ export default function CopilotPage() {
         <button
           type="submit"
           disabled={!inputVal.trim() || isProcessing}
-          className="flex items-center justify-center w-11 h-11 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-zinc-950 font-bold transition-all disabled:opacity-30 disabled:cursor-not-allowed shadow-md shadow-emerald-500/20 hover:scale-105"
+          className="flex items-center justify-center w-11 h-11 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-zinc-950 font-bold transition-all disabled:opacity-30 disabled:cursor-not-allowed shadow-md shadow-emerald-500/20 hover:scale-105 cursor-pointer"
         >
           <Send className="w-4 h-4" />
         </button>
