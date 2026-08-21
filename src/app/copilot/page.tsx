@@ -4,43 +4,26 @@ import React, { useState, useRef, useEffect } from 'react';
 import { useLocale } from '../../context/LocaleContext';
 import { ChatMessage } from '../../components/copilot/ChatMessage';
 import { ChatMessage as ChatMessageType } from '../../types/chat';
-import { BrandIcon } from '../../components/layout/BrandLogo';
 import {
-  Send,
-  Plus,
   Mic,
   MicOff,
-  Sparkles,
+  ArrowUp,
+  RotateCcw,
   Settings,
   X,
-  FileCheck2,
+  Check,
+  ChevronDown,
+  SlidersHorizontal,
+  FileSearch,
   Car,
-  FileText,
-  Briefcase,
+  TrendingUp,
+  Home,
   ShieldCheck,
   Plane,
-  ArrowUp,
-  SlidersHorizontal,
-  ChevronDown,
-  Info,
-  Check,
 } from 'lucide-react';
 
 export default function CopilotPage() {
   const { locale } = useLocale();
-
-  const getInitialGreeting = () => {
-    if (locale === 'ar') {
-      return "مرحباً بك في المساعد الذكي لإدارة.تونس 🇹🇳. يمكنك سؤالي بالدارجة التونسية، العربية، الفرنسية أو الإنجليزية عن أي إجراء إداري، وثيقة، أو معلوم جبائي.";
-    }
-    if (locale === 'en') {
-      return "Welcome to Idaara.tn Copilot 🇹🇳. Ask me in English, French, or Tunisian Derja about any administrative procedure, required paperwork, or statutory fiscal stamp fees.";
-    }
-    if (locale === 'fr') {
-      return "Bienvenue sur le Copilot Idaara.tn 🇹🇳. Posez toutes vos questions en Français ou en Derja concernant vos démarches administratives, dossiers et timbres fiscaux.";
-    }
-    return "3aslema! Mar7ba bik fi Idaara Copilot 🇹🇳. Es'elni bel Derja 3la ay war9a, procédure, walla timbre mte3 l'Idara — n9ollek chnowa lezmek bedhabbt.";
-  };
 
   const [messages, setMessages] = useState<ChatMessageType[]>([]);
   const [inputVal, setInputVal] = useState('');
@@ -49,34 +32,30 @@ export default function CopilotPage() {
   const [activeProvider, setActiveProvider] = useState<string>('auto');
   const [customApiKey, setCustomApiKey] = useState<string>('');
   const [showSettingsModal, setShowSettingsModal] = useState<boolean>(false);
-  const [providerBadge, setProviderBadge] = useState<string>('Gemini 1.5 Flash · Free');
+  const [providerBadge, setProviderBadge] = useState<string>('Gemini 1.5 Flash');
 
   const messagesContainerRef = useRef<HTMLDivElement | null>(null);
   const textareaRef = useRef<HTMLTextAreaElement | null>(null);
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const speechRecognitionRef = useRef<any>(null);
 
-  // Load custom key and provider preference on mount
   useEffect(() => {
     if (typeof window !== 'undefined') {
       const savedKey = localStorage.getItem('idaara_custom_api_key') || '';
       const savedProvider = localStorage.getItem('idaara_ai_provider') || 'auto';
       setCustomApiKey(savedKey);
       setActiveProvider(savedProvider);
+      if (savedProvider === 'gemini') setProviderBadge('Gemini 1.5 Flash');
+      else if (savedProvider === 'groq') setProviderBadge('Groq Llama 3.3');
+      else if (savedProvider === 'local') setProviderBadge('Civic Engine');
 
-      if (savedProvider === 'gemini') setProviderBadge('Google Gemini 1.5');
-      else if (savedProvider === 'groq') setProviderBadge('Groq Llama 3.3 70B');
-
-      // Check URL query parameters (e.g. /copilot?q=...)
       const urlParams = new URLSearchParams(window.location.search);
       const q = urlParams.get('q');
-      if (q && q.trim()) {
-        handleSendMessage(q.trim());
-      }
+      if (q && q.trim()) handleSendMessage(q.trim());
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  // Smooth internal scroll ONLY inside the chat container (never scrolls the window)
   useEffect(() => {
     if (messagesContainerRef.current) {
       messagesContainerRef.current.scrollTo({
@@ -86,62 +65,62 @@ export default function CopilotPage() {
     }
   }, [messages, isProcessing]);
 
-  // Suggested topic cards for empty state
   const topicCards = [
     {
-      title: locale === 'ar' ? 'تجديد جواز السفر' : locale === 'en' ? 'Passport Renewal' : 'Renouvellement Passeport',
-      desc: locale === 'ar' ? 'الأوراق، تنبر 80د، ومركز الشرطة' : locale === 'en' ? 'Papers, 80 DT timbre, Police station' : 'Dossier, timbre 80 DT, poste de police',
-      query: locale === 'ar' ? 'شنوة يلزمني باش نجدد جواز السفر التونسي؟' : locale === 'en' ? 'What documents and fees are needed to renew a Tunisian passport?' : 'Quels sont les documents et frais pour renouveler un passeport tunisien ?',
-      icon: FileCheck2,
-      accent: 'text-emerald-400 border-emerald-500/20 bg-emerald-500/5',
+      icon: FileSearch,
+      label: locale === 'ar' ? 'جواز السفر' : locale === 'en' ? 'Passport' : 'Passeport',
+      desc: locale === 'ar' ? 'تجديد جواز السفر — وثائق ومعاليم 80 دت' : locale === 'en' ? 'Renewal — papers & 80 DT timbre' : 'Renouvellement — dossier & timbre 80 DT',
+      q: locale === 'ar' ? 'شنوة يلزمني باش نجدد جواز السفر التونسي؟' : locale === 'en' ? 'What documents and fees do I need to renew my Tunisian passport?' : 'Quels sont les documents et frais pour renouveler un passeport tunisien ?',
+      color: 'emerald',
     },
     {
-      title: locale === 'ar' ? 'البطاقة الرمادية للسيارة' : locale === 'en' ? 'Car Registration Transfer' : 'Mutation Carte Grise',
-      desc: locale === 'ar' ? 'عقد بيع، فحص فني ATTT، والمعاليم' : locale === 'en' ? 'Bill of sale, ATTT inspection, taxes' : 'Acte de vente, visite ATTT, quittances',
-      query: locale === 'ar' ? 'شريت كرهبة مستعملة، كيفاش نبدل البطاقة الرمادية؟' : locale === 'en' ? 'How to transfer car registration (carte grise) after buying a used vehicle?' : 'Comment faire la mutation de carte grise après achat d’un véhicule ?',
       icon: Car,
-      accent: 'text-blue-400 border-blue-500/20 bg-blue-500/5',
+      label: locale === 'ar' ? 'البطاقة الرمادية' : locale === 'en' ? 'Carte Grise' : 'Carte Grise',
+      desc: locale === 'ar' ? 'نقل ملكية السيارة — عقد بيع + ATTT' : locale === 'en' ? 'Car transfer — bill of sale & ATTT' : 'Mutation — acte de vente & visite ATTT',
+      q: locale === 'ar' ? 'شريت كرهبة مستعملة، كيفاش نبدل البطاقة الرمادية؟' : locale === 'en' ? 'How do I transfer a car registration after buying a used vehicle?' : "Comment faire la mutation de carte grise après achat d'un véhicule ?",
+      color: 'blue',
     },
     {
-      title: locale === 'ar' ? 'المبادر الذاتي 1% و الفريلانس' : locale === 'en' ? 'Auto-Entrepreneur 1% Tax' : 'Statut Auto-Entrepreneur',
-      desc: locale === 'ar' ? 'ضريبة 1%، فواتير بالعملة الصعبة BCT' : locale === 'en' ? '1% flat tax rate, legal USD/EUR export' : 'Impôt 1%, facturation devises et BCT',
-      query: locale === 'ar' ? 'كيفاش نسجل في المبادر الذاتي وشنوة الامتيازات الجبائية 1%؟' : locale === 'en' ? 'How to register for the 1% Auto-Entrepreneur regime in Tunisia?' : 'Comment fonctionne le régime Auto-Entrepreneur 1% pour les freelances ?',
-      icon: Briefcase,
-      accent: 'text-amber-400 border-amber-500/20 bg-amber-500/5',
+      icon: TrendingUp,
+      label: locale === 'ar' ? 'مبادر ذاتي' : locale === 'en' ? 'Auto-Entrepreneur' : 'Auto-Entrepreneur',
+      desc: locale === 'ar' ? 'ضريبة 1% وفواتير بالعملة الصعبة' : locale === 'en' ? '1% flat rate & legal foreign invoicing' : 'Impôt 1% & facturation devises BCT',
+      q: locale === 'ar' ? 'كيفاش نسجل في المبادر الذاتي وشنوة الامتيازات الجبائية 1%؟' : locale === 'en' ? 'How to register as an Auto-Entrepreneur with 1% tax in Tunisia?' : 'Comment fonctionne le régime auto-entrepreneur 1% pour freelances ?',
+      color: 'amber',
     },
     {
-      title: locale === 'ar' ? 'عقد الكراء السكني (COC)' : locale === 'en' ? 'Residential Lease Contract' : 'Contrat de Bail Résidentiel',
-      desc: locale === 'ar' ? 'تعريف بالإمضاء بالبلدية وتسجيل بالقباضة' : locale === 'en' ? 'Baladiya legalization & Recette registration' : 'Légalisation Baladiya et Recette des finances',
-      query: locale === 'ar' ? 'كيفاش نعمل عقد كراء سكني قانوني مطابق لمجلة الالتزامات والعقود؟' : locale === 'en' ? 'How to create a legal residential lease contract in Tunisia?' : 'Quelles sont les démarches pour un contrat de bail conforme en Tunisie ?',
-      icon: FileText,
-      accent: 'text-purple-400 border-purple-500/20 bg-purple-500/5',
+      icon: Home,
+      label: locale === 'ar' ? 'عقد كراء' : locale === 'en' ? 'Lease Contract' : 'Contrat de Bail',
+      desc: locale === 'ar' ? 'عقد كراء سكني قانوني وفق مجلة الالتزامات' : locale === 'en' ? 'Legal lease — Baladiya & Recette' : 'Bail légal — Baladiya & Recette des finances',
+      q: locale === 'ar' ? 'كيفاش نعمل عقد كراء سكني قانوني؟' : locale === 'en' ? 'How to create a legal residential lease contract in Tunisia?' : 'Comment rédiger un contrat de bail résidentiel conforme en Tunisie ?',
+      color: 'violet',
     },
     {
-      title: locale === 'ar' ? 'بطاقة السوابق العدلية (B3)' : locale === 'en' ? 'Criminal Record (B3)' : 'Bulletin N°3 (B3)',
-      desc: locale === 'ar' ? 'تنبر 7.500د والتسجيل عبر الإنترنت' : locale === 'en' ? '7.5 DT stamp, online or in-person' : 'Timbre 7.500 DT, demande en ligne',
-      query: locale === 'ar' ? 'كيفاش نتحصل على بطاقة السوابق العدلية ب3 عبر الإنترنت؟' : locale === 'en' ? 'How to get the Criminal Record B3 certificate online in Tunisia?' : 'Comment obtenir le Bulletin N°3 (casier judiciaire) en ligne ?',
       icon: ShieldCheck,
-      accent: 'text-rose-400 border-rose-500/20 bg-rose-500/5',
+      label: locale === 'ar' ? 'بطاقة ب3' : locale === 'en' ? 'Bulletin B3' : 'Bulletin B3',
+      desc: locale === 'ar' ? 'السوابق العدلية — عبر الإنترنت أو مركز الشرطة' : locale === 'en' ? 'Criminal record — online or police' : 'Casier judiciaire — en ligne ou commissariat',
+      q: locale === 'ar' ? 'كيفاش نتحصل على بطاقة السوابق العدلية ب3؟' : locale === 'en' ? 'How to get the B3 criminal record certificate in Tunisia?' : 'Comment obtenir le bulletin N°3 (casier judiciaire) en Tunisie ?',
+      color: 'rose',
     },
     {
-      title: locale === 'ar' ? 'امتياز التوريد ن.ت.د (FCR)' : locale === 'en' ? 'FCR Customs Privilege' : 'Régime Douanier FCR',
-      desc: locale === 'ar' ? 'للتونسيين بالخارج وتوريد السيارات' : locale === 'en' ? 'Diaspora duty-free car import' : 'Avantages retour définitif et véhicules',
-      query: locale === 'ar' ? 'شنوة شروط امتياز FCR لتوريد سيارة للتونسيين المقيمين بالخارج؟' : locale === 'en' ? 'What are the criteria and steps for the FCR customs privilege in Tunisia?' : 'Quelles sont les conditions pour bénéficier du régime FCR en Tunisie ?',
       icon: Plane,
-      accent: 'text-teal-400 border-teal-500/20 bg-teal-500/5',
+      label: locale === 'ar' ? 'امتياز FCR' : locale === 'en' ? 'FCR Regime' : 'Régime FCR',
+      desc: locale === 'ar' ? 'توريد سيارات — للتونسيين بالخارج' : locale === 'en' ? 'Diaspora car import privilege' : 'Import véhicule — avantages diaspora',
+      q: locale === 'ar' ? 'شنوة شروط امتياز FCR لتوريد سيارة للتونسيين بالخارج؟' : locale === 'en' ? 'What are the FCR customs privilege conditions for Tunisian diaspora?' : 'Quelles sont les conditions pour bénéficier du régime FCR en Tunisie ?',
+      color: 'sky',
     },
   ];
 
-  // Quick prompt chips above the prompt bar
-  const quickPillQueries = [
-    { label: '🪪 ' + (locale === 'ar' ? 'جواز السفر 80د' : locale === 'en' ? 'Passport 80 DT' : 'Passeport 80 DT'), q: 'Passeport tunisien renouvellement et timbres fiscaux' },
-    { label: '🚗 ' + (locale === 'ar' ? 'البطاقة الرمادية 145د' : locale === 'en' ? 'Carte Grise 145 DT' : 'Carte Grise 145 DT'), q: 'Mutation carte grise véhicule occasion Tunisie' },
-    { label: '💼 ' + (locale === 'ar' ? 'المبادر الذاتي 1%' : locale === 'en' ? 'Auto-Entrepreneur 1%' : 'Auto-Entrepreneur 1%'), q: 'Statut auto-entrepreneur freelance impôt 1% Tunisie' },
-    { label: '📄 ' + (locale === 'ar' ? 'عقد الكراء COC' : locale === 'en' ? 'Lease Contract COC' : 'Contrat Bail COC'), q: 'Contrat de bail résidentiel Baladiya Recette' },
-  ];
+  const colorMap: Record<string, { icon: string; border: string; bg: string }> = {
+    emerald: { icon: 'text-emerald-400', border: 'border-emerald-500/30', bg: 'bg-emerald-500/10' },
+    blue:    { icon: 'text-blue-400',    border: 'border-blue-500/30',    bg: 'bg-blue-500/10'    },
+    amber:   { icon: 'text-amber-400',   border: 'border-amber-500/30',   bg: 'bg-amber-500/10'   },
+    violet:  { icon: 'text-violet-400',  border: 'border-violet-500/30',  bg: 'bg-violet-500/10'  },
+    rose:    { icon: 'text-rose-400',    border: 'border-rose-500/30',    bg: 'bg-rose-500/10'    },
+    sky:     { icon: 'text-sky-400',     border: 'border-sky-500/30',     bg: 'bg-sky-500/10'     },
+  };
 
   const handleSendMessage = async (textToSend?: string) => {
-    const query = (textToSend || inputVal).trim();
+    const query = (textToSend ?? inputVal).trim();
     if (!query || isProcessing) return;
 
     const userMsg: ChatMessageType = {
@@ -154,10 +133,7 @@ export default function CopilotPage() {
     setMessages((prev) => [...prev, userMsg]);
     setInputVal('');
     setIsProcessing(true);
-
-    if (textareaRef.current) {
-      textareaRef.current.style.height = 'auto';
-    }
+    if (textareaRef.current) textareaRef.current.style.height = 'auto';
 
     try {
       const history = messages.slice(-10).map((m) => ({
@@ -168,247 +144,189 @@ export default function CopilotPage() {
       const res = await fetch('/api/copilot', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          prompt: query,
-          locale,
-          history,
-          userApiKey: customApiKey,
-          provider: activeProvider,
-        }),
+        body: JSON.stringify({ prompt: query, locale, history, userApiKey: customApiKey, provider: activeProvider }),
       });
 
       const data = await res.json();
       const response = data.result || {};
+      if (response.providerName) setProviderBadge(response.providerName);
 
-      if (response.providerName) {
-        setProviderBadge(response.providerName);
-      }
-
-      const aiMsg: ChatMessageType = {
-        id: `ai-${Date.now()}`,
-        sender: 'assistant',
-        content: response.content || getInitialGreeting(),
-        timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
-        actions: response.actions,
-        timbreBreakdown: response.timbreBreakdown,
-      };
-
-      setMessages((prev) => [...prev, aiMsg]);
+      setMessages((prev) => [
+        ...prev,
+        {
+          id: `ai-${Date.now()}`,
+          sender: 'assistant',
+          content: response.content || '',
+          timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+          actions: response.actions,
+          timbreBreakdown: response.timbreBreakdown,
+        },
+      ]);
     } catch {
-      const aiMsg: ChatMessageType = {
-        id: `ai-${Date.now()}`,
-        sender: 'assistant',
-        content:
-          locale === 'ar'
-            ? 'حدث خطأ في معالجة طلبك. يرجى المحاولة مرة أخرى أو التأكد من إعدادات الاتصال.'
-            : locale === 'fr'
-            ? 'Une erreur est survenue. Veuillez réessayer votre requête.'
-            : 'An error occurred while processing your request. Please try again.',
-        timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
-      };
-      setMessages((prev) => [...prev, aiMsg]);
+      setMessages((prev) => [
+        ...prev,
+        {
+          id: `ai-err-${Date.now()}`,
+          sender: 'assistant',
+          content: locale === 'fr' ? 'Erreur de connexion. Réessayez.' : locale === 'ar' ? 'خطأ في الاتصال. أعد المحاولة.' : 'Connection error. Please try again.',
+          timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+        },
+      ]);
     } finally {
       setIsProcessing(false);
     }
   };
 
-  const handleResetChat = () => {
-    setMessages([]);
-    setInputVal('');
-    if (textareaRef.current) {
-      textareaRef.current.focus();
-    }
-  };
-
-  const toggleVoiceRecording = () => {
+  const toggleVoice = () => {
     if (isRecording) {
-      if (speechRecognitionRef.current) {
-        try {
-          speechRecognitionRef.current.stop();
-        } catch {}
-      }
+      try { speechRecognitionRef.current?.stop(); } catch {}
       setIsRecording(false);
       return;
     }
 
-    const SpeechRecognition =
-      (window as unknown as { SpeechRecognition?: unknown; webkitSpeechRecognition?: unknown })
-        .SpeechRecognition ||
-      (window as unknown as { SpeechRecognition?: unknown; webkitSpeechRecognition?: unknown })
-        .webkitSpeechRecognition;
+    const SR = (window as unknown as { SpeechRecognition?: unknown; webkitSpeechRecognition?: unknown }).SpeechRecognition
+            || (window as unknown as { SpeechRecognition?: unknown; webkitSpeechRecognition?: unknown }).webkitSpeechRecognition;
+    if (!SR) return;
 
-    if (!SpeechRecognition) {
-      alert(locale === 'ar' ? 'المتصفح لا يدعم التعرف الصوتي.' : 'Voice recognition is not supported in this browser.');
-      return;
-    }
-
-    try {
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      const recognition = new (SpeechRecognition as any)();
-      speechRecognitionRef.current = recognition;
-      recognition.continuous = false;
-      recognition.interimResults = true;
-      recognition.lang = locale === 'ar' ? 'ar-TN' : locale === 'fr' ? 'fr-FR' : 'en-US';
-
-      recognition.onstart = () => {
-        setIsRecording(true);
-      };
-
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      recognition.onresult = (event: any) => {
-        let transcript = '';
-        for (let i = 0; i < event.results.length; i++) {
-          transcript += event.results[i][0].transcript;
-        }
-        setInputVal(transcript);
-        if (event.results[event.results.length - 1].isFinal && transcript.trim()) {
-          setIsRecording(false);
-          handleSendMessage(transcript.trim());
-        }
-      };
-
-      recognition.onerror = () => {
-        setIsRecording(false);
-      };
-
-      recognition.onend = () => {
-        setIsRecording(false);
-      };
-
-      recognition.start();
-    } catch {
-      setIsRecording(false);
-    }
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const rec = new (SR as any)();
+    speechRecognitionRef.current = rec;
+    rec.lang = locale === 'ar' ? 'ar-TN' : locale === 'fr' ? 'fr-FR' : 'en-US';
+    rec.interimResults = true;
+    rec.onstart = () => setIsRecording(true);
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    rec.onresult = (e: any) => {
+      let t = '';
+      for (let i = 0; i < e.results.length; i++) t += e.results[i][0].transcript;
+      setInputVal(t);
+      if (e.results[e.results.length - 1].isFinal && t.trim()) { setIsRecording(false); handleSendMessage(t.trim()); }
+    };
+    rec.onerror = () => setIsRecording(false);
+    rec.onend = () => setIsRecording(false);
+    rec.start();
   };
 
-  const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
-    if (e.key === 'Enter' && !e.shiftKey) {
-      e.preventDefault();
-      handleSendMessage();
-    }
-  };
-
-  const handleTextareaInput = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+  const onTextareaChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     setInputVal(e.target.value);
     e.target.style.height = 'auto';
-    e.target.style.height = `${Math.min(e.target.scrollHeight, 140)}px`;
+    e.target.style.height = `${Math.min(e.target.scrollHeight, 130)}px`;
+  };
+
+  const onKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
+    if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); handleSendMessage(); }
   };
 
   const saveSettings = () => {
     localStorage.setItem('idaara_custom_api_key', customApiKey.trim());
     localStorage.setItem('idaara_ai_provider', activeProvider);
-    if (activeProvider === 'gemini') setProviderBadge('Google Gemini 1.5');
-    else if (activeProvider === 'groq') setProviderBadge('Groq Llama 3.3 70B');
-    else setProviderBadge('Auto-Smart Engine');
+    const map: Record<string, string> = { auto: 'Auto-Smart', gemini: 'Gemini 1.5 Flash', groq: 'Groq Llama 3.3', local: 'Civic Engine' };
+    setProviderBadge(map[activeProvider] || 'Auto-Smart');
     setShowSettingsModal(false);
   };
 
+  const greetLine = locale === 'ar'
+    ? 'فاش نجم نعاونك اليوم؟'
+    : locale === 'en'
+    ? 'How can I help with your paperwork today?'
+    : 'Comment puis-je vous aider dans vos démarches ?';
+
+  const subLine = locale === 'ar'
+    ? 'اسأل بالدارجة أو الفرنسية أو العربية — جواز سفر، بطاقة رمادية، عقد، تنابر...'
+    : locale === 'en'
+    ? 'Ask in Derja, French, or English — passport, car registration, stamp fees, and more'
+    : 'Posez vos questions en Derja ou Français — passeport, carte grise, timbres fiscaux...';
+
+  const placeholder = isRecording
+    ? (locale === 'ar' ? 'جار الاستماع...' : 'Listening...')
+    : (locale === 'ar'
+      ? 'اكتب سؤالك هنا... (Enter للإرسال، Shift+Enter لسطر جديد)'
+      : locale === 'fr'
+      ? 'Tapez votre question... (Entrée pour envoyer)'
+      : 'Ask anything... (Enter to send, Shift+Enter for new line)');
+
   return (
-    <div className="h-[calc(100vh-4rem)] flex flex-col max-w-4xl mx-auto px-3 sm:px-6 overflow-hidden relative">
-      
-      {/* ── Top Pinned Header Bar (Claude / ChatGPT style) ── */}
-      <header className="flex items-center justify-between py-3 border-b border-zinc-800/80 bg-zinc-950/80 backdrop-blur-xl z-20 shrink-0">
-        <div className="flex items-center gap-3">
-          <BrandIcon size={30} />
-          <div>
-            <div className="flex items-center gap-2">
-              <h1 className="text-sm sm:text-base font-bold text-white tracking-tight">
-                Idaara Copilot
-              </h1>
-              <button
-                onClick={() => setShowSettingsModal(true)}
-                className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-emerald-500/10 hover:bg-emerald-500/20 border border-emerald-500/30 text-[10px] font-mono text-emerald-400 transition-colors cursor-pointer"
-              >
-                <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
-                <span>{providerBadge}</span>
-                <ChevronDown className="w-2.5 h-2.5 opacity-60" />
-              </button>
-            </div>
-            <p className="text-[11px] text-zinc-500 hidden sm:block">
-              {locale === 'ar'
-                ? 'مساعد إداري بالذكاء الاصطناعي · عربي، دارجة، فرنسية، إنجليزية'
-                : 'Tunisian Civic AI · Derja, Arabic, French & English'}
-            </p>
+    <div className="h-[calc(100vh-56px)] flex flex-col overflow-hidden bg-zinc-950">
+
+      {/* ─── Sticky Header ─── */}
+      <div className="shrink-0 border-b border-zinc-800/60 px-4 sm:px-8 py-2.5 flex items-center justify-between bg-zinc-950/90 backdrop-blur-xl">
+        <div className="flex items-center gap-2.5">
+          <div className="w-7 h-7 rounded-lg bg-[#0c0d0f] border border-emerald-500 flex items-center justify-center shadow-md shadow-emerald-950/80">
+            <svg viewBox="0 0 32 32" className="w-4 h-4" fill="none">
+              <path d="M10 8.5h10M15 8.5v15M10 23.5h10" stroke="#FFF" strokeWidth="3.2" strokeLinecap="round" strokeLinejoin="round"/>
+              <circle cx="23" cy="22" r="2.8" fill="#10b981"/>
+            </svg>
           </div>
+          <span className="text-sm font-bold text-white">Idaara Copilot</span>
+          <button
+            onClick={() => setShowSettingsModal(true)}
+            className="flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-mono bg-zinc-900 border border-zinc-800 text-zinc-400 hover:border-emerald-500/40 hover:text-emerald-400 transition-all cursor-pointer"
+          >
+            <span className="w-1 h-1 rounded-full bg-emerald-400 animate-pulse inline-block" />
+            <span>{providerBadge}</span>
+            <ChevronDown className="w-2.5 h-2.5 opacity-50" />
+          </button>
         </div>
 
-        {/* Action Controls */}
         <div className="flex items-center gap-2">
           <button
             onClick={() => setShowSettingsModal(true)}
-            className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-zinc-900/90 hover:bg-zinc-800 border border-zinc-800 hover:border-zinc-700 text-zinc-400 hover:text-zinc-200 text-xs font-medium transition-all cursor-pointer shadow-sm"
-            title="AI Model & Key Settings"
+            className="p-1.5 rounded-lg text-zinc-500 hover:text-zinc-200 hover:bg-zinc-800 transition-colors cursor-pointer"
+            title="Settings"
           >
-            <Settings className="w-3.5 h-3.5" />
-            <span className="hidden sm:inline">{locale === 'ar' ? 'الإعدادات' : 'Model'}</span>
+            <Settings className="w-4 h-4" />
           </button>
-
-          <button
-            onClick={handleResetChat}
-            className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-zinc-900/90 hover:bg-zinc-800 border border-zinc-800 hover:border-zinc-700 text-zinc-400 hover:text-zinc-200 text-xs font-medium transition-all cursor-pointer shadow-sm"
-            title="New Conversation"
-          >
-            <Plus className="w-3.5 h-3.5" />
-            <span className="hidden sm:inline">{locale === 'ar' ? 'محادثة جديدة' : 'New Chat'}</span>
-          </button>
+          {messages.length > 0 && (
+            <button
+              onClick={() => setMessages([])}
+              className="p-1.5 rounded-lg text-zinc-500 hover:text-zinc-200 hover:bg-zinc-800 transition-colors cursor-pointer"
+              title="New chat"
+            >
+              <RotateCcw className="w-4 h-4" />
+            </button>
+          )}
         </div>
-      </header>
+      </div>
 
-      {/* ── Dedicated Scrollable Messages Stream (No whole-page jumping) ── */}
+      {/* ─── Messages Stream (own scroll zone) ─── */}
       <div
         ref={messagesContainerRef}
-        className="flex-1 overflow-y-auto py-6 space-y-4 pr-1 scroll-smooth"
+        className="flex-1 overflow-y-auto"
       >
-        {/* Empty / Welcome State (Inspiring Claude/ChatGPT style) */}
-        {messages.length === 0 && (
-          <div className="max-w-2xl mx-auto py-8 sm:py-12 space-y-8 text-center animate-fade-in-up">
-            
-            {/* Monumental Greeting */}
-            <div className="space-y-3">
-              <div className="w-14 h-14 mx-auto rounded-3xl bg-gradient-to-br from-emerald-500/20 via-zinc-900 to-zinc-950 border border-emerald-500/30 flex items-center justify-center shadow-2xl shadow-emerald-500/10">
-                <Sparkles className="w-7 h-7 text-emerald-400" />
-              </div>
-              <h2 className="text-2xl sm:text-4xl font-extrabold text-white tracking-tight">
-                {locale === 'ar'
-                  ? 'فاش نجم نعاونك اليوم في أوراقك وإجراءاتك؟'
-                  : locale === 'en'
-                  ? 'What administrative paperwork can I help you with?'
-                  : 'Comment puis-je vous aider dans vos démarches administratives ?'}
+        {/* ─── Welcome / Empty State ─── */}
+        {messages.length === 0 && !isProcessing && (
+          <div className="max-w-2xl mx-auto px-4 sm:px-6 pt-10 sm:pt-14 pb-4">
+
+            {/* Greeting */}
+            <div className="text-center mb-8">
+              <h2 className="text-2xl sm:text-3xl font-extrabold text-white mb-2 tracking-tight leading-tight">
+                {greetLine}
               </h2>
-              <p className="text-xs sm:text-sm text-zinc-400 max-w-lg mx-auto leading-relaxed">
-                {locale === 'ar'
-                  ? 'اسأل بالدارجة التونسية أو الفرنسية حول أي وثيقة (جواز سفر، بطاقة رمادية، عقد كراء، مبادر ذاتي، أو تنابر).'
-                  : locale === 'en'
-                  ? 'Ask anything about official Tunisian paperwork, required documents, statutory stamp fees, and public offices.'
-                  : 'Posez vos questions sur les passeports, cartes grises, baux, statut auto-entrepreneur ou barèmes des timbres.'}
+              <p className="text-sm text-zinc-400 leading-relaxed max-w-sm mx-auto">
+                {subLine}
               </p>
             </div>
 
-            {/* Quick Topic Starter Cards Grid */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 text-left rtl:text-right pt-2">
+            {/* Topic Cards 2-column grid */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
               {topicCards.map((card, idx) => {
                 const Icon = card.icon;
+                const c = colorMap[card.color];
                 return (
                   <button
                     key={idx}
-                    onClick={() => handleSendMessage(card.query)}
-                    className="p-4 rounded-2xl bg-zinc-900/60 hover:bg-zinc-900/90 border border-zinc-800 hover:border-emerald-500/40 transition-all duration-200 text-left rtl:text-right group cursor-pointer flex flex-col justify-between space-y-3 shadow-md hover:shadow-xl hover:shadow-emerald-950/30 hover:-translate-y-0.5"
+                    onClick={() => handleSendMessage(card.q)}
+                    className="flex items-start gap-3 text-left p-3.5 rounded-xl bg-zinc-900/60 hover:bg-zinc-900 border border-zinc-800/80 hover:border-zinc-700 transition-all group cursor-pointer"
                   >
-                    <div className="flex items-center justify-between">
-                      <div className={`w-8 h-8 rounded-xl border flex items-center justify-center ${card.accent}`}>
-                        <Icon className="w-4 h-4" />
-                      </div>
-                      <span className="text-[10px] font-mono text-zinc-600 group-hover:text-emerald-400 transition-colors">
-                        →
-                      </span>
+                    <div className={`w-8 h-8 rounded-lg ${c.bg} ${c.border} border flex items-center justify-center shrink-0 mt-0.5`}>
+                      <Icon className={`w-4 h-4 ${c.icon}`} />
                     </div>
-                    <div>
-                      <h3 className="text-xs sm:text-sm font-bold text-white group-hover:text-emerald-300 transition-colors">
-                        {card.title}
-                      </h3>
-                      <p className="text-[11px] text-zinc-400 mt-1 line-clamp-2">
+                    <div className="min-w-0">
+                      <div className="text-sm font-semibold text-zinc-100 group-hover:text-white mb-0.5">
+                        {card.label}
+                      </div>
+                      <div className="text-xs text-zinc-500 leading-snug">
                         {card.desc}
-                      </p>
+                      </div>
                     </div>
                   </button>
                 );
@@ -418,254 +336,153 @@ export default function CopilotPage() {
           </div>
         )}
 
-        {/* Active Conversation Messages */}
-        {messages.map((msg) => (
-          <ChatMessage key={msg.id} message={msg} onSelectPrompt={(p) => handleSendMessage(p)} />
-        ))}
+        {/* ─── Active Messages ─── */}
+        {messages.length > 0 && (
+          <div className="max-w-2xl mx-auto px-4 sm:px-6 py-6 space-y-6">
+            {messages.map((msg) => (
+              <ChatMessage key={msg.id} message={msg} />
+            ))}
 
-        {/* AI Typing / Thinking State Indicator */}
-        {isProcessing && (
-          <div className="w-full py-3 animate-fade-in">
-            <div className="flex items-center gap-3 text-xs text-emerald-400">
-              <BrandIcon size={30} />
-              <div className="flex items-center gap-2 px-4 py-2.5 rounded-2xl bg-zinc-900/90 border border-zinc-800 shadow-md">
-                <div className="flex items-center gap-1.5">
+            {/* Typing Indicator */}
+            {isProcessing && (
+              <div className="flex items-start gap-3 animate-fade-in">
+                <div className="w-7 h-7 rounded-lg bg-[#0c0d0f] border border-emerald-500/60 flex items-center justify-center shrink-0 shadow-md">
+                  <svg viewBox="0 0 32 32" className="w-4 h-4" fill="none">
+                    <path d="M10 8.5h10M15 8.5v15M10 23.5h10" stroke="#FFF" strokeWidth="3.2" strokeLinecap="round" strokeLinejoin="round"/>
+                    <circle cx="23" cy="22" r="2.8" fill="#10b981"/>
+                  </svg>
+                </div>
+                <div className="flex items-center gap-1.5 px-4 py-3 rounded-2xl rounded-tl-sm bg-zinc-900 border border-zinc-800 shadow-md">
                   <span className="w-2 h-2 rounded-full bg-emerald-400 animate-bounce" style={{ animationDelay: '0ms' }} />
                   <span className="w-2 h-2 rounded-full bg-emerald-400 animate-bounce" style={{ animationDelay: '150ms' }} />
                   <span className="w-2 h-2 rounded-full bg-emerald-400 animate-bounce" style={{ animationDelay: '300ms' }} />
                 </div>
-                <span className="text-zinc-400 font-mono text-[11px]">
-                  {locale === 'ar' ? 'إدارة.تونس AI يحلل الإجراء...' : 'Idaara AI synthesizing civic answer...'}
-                </span>
               </div>
-            </div>
+            )}
           </div>
         )}
       </div>
 
-      {/* ── Bottom Pinned Input Console (ChatGPT / Claude style) ── */}
-      <footer className="shrink-0 pb-3 pt-1.5 bg-gradient-to-t from-zinc-950 via-zinc-950/95 to-transparent z-20 space-y-2">
-        
-        {/* Quick Topic Chips (when conversation is active) */}
-        {messages.length > 0 && (
-          <div className="flex items-center gap-1.5 overflow-x-auto pb-1 no-scrollbar text-xs">
-            {quickPillQueries.map((pill, idx) => (
-              <button
-                key={idx}
-                onClick={() => handleSendMessage(pill.q)}
-                disabled={isProcessing}
-                className="px-2.5 py-1 rounded-full bg-zinc-900/90 hover:bg-zinc-800 border border-zinc-800 text-zinc-400 hover:text-emerald-300 text-[11px] whitespace-nowrap transition-colors cursor-pointer shrink-0"
-              >
-                {pill.label}
-              </button>
-            ))}
-          </div>
-        )}
+      {/* ─── Pinned Footer / Input ─── */}
+      <div className="shrink-0 border-t border-zinc-800/50 px-4 sm:px-8 py-3 bg-zinc-950">
+        <div className="max-w-2xl mx-auto">
 
-        {/* Main Input Box */}
-        <div className="relative glass-panel rounded-3xl p-1.5 sm:p-2 border border-zinc-800 focus-within:border-emerald-500/50 focus-within:ring-2 focus-within:ring-emerald-500/20 shadow-2xl transition-all bg-zinc-950/90">
-          <div className="flex items-end gap-2 px-2">
-            
-            {/* Auto-growing Textarea */}
+          {/* Input box */}
+          <div className="flex items-end gap-2 bg-zinc-900/80 border border-zinc-800 focus-within:border-zinc-700 focus-within:ring-1 focus-within:ring-emerald-500/20 rounded-2xl px-3 py-2 transition-all shadow-lg">
             <textarea
               ref={textareaRef}
               rows={1}
               value={inputVal}
-              onChange={handleTextareaInput}
-              onKeyDown={handleKeyDown}
-              placeholder={
-                isRecording
-                  ? (locale === 'ar' ? 'تحدث الآن... جار الاستماع...' : 'Listening to your voice...')
-                  : (locale === 'ar'
-                  ? 'اكتب سؤالك بالدارجة، الفرنسية، أو العربية... (Enter للإرسال)'
-                  : 'Ask anything in Derja, French, or English... (Press Enter to send)')
-              }
-              className="flex-1 bg-transparent py-2 px-1 text-sm sm:text-[15px] text-zinc-100 placeholder-zinc-500 focus:outline-none resize-none max-h-36 overflow-y-auto leading-relaxed"
+              onChange={onTextareaChange}
+              onKeyDown={onKeyDown}
+              placeholder={placeholder}
+              className="flex-1 bg-transparent py-1.5 text-sm text-zinc-100 placeholder-zinc-500 focus:outline-none resize-none max-h-32 leading-relaxed"
             />
-
-            {/* Action Buttons Toolbar */}
-            <div className="flex items-center gap-1.5 pb-1 shrink-0">
-              
-              {/* Voice Dictation Button */}
+            <div className="flex items-center gap-1.5 pb-0.5 shrink-0">
               <button
-                type="button"
-                onClick={toggleVoiceRecording}
+                onClick={toggleVoice}
                 disabled={isProcessing}
-                title="Voice Dictation"
-                className={`p-2.5 rounded-xl transition-all cursor-pointer ${
+                className={`p-2 rounded-xl transition-all cursor-pointer ${
                   isRecording
-                    ? 'bg-red-500 text-white animate-pulse shadow-lg shadow-red-500/40 ring-2 ring-red-500/30'
-                    : 'bg-zinc-900 hover:bg-zinc-800 text-zinc-400 hover:text-emerald-400 border border-zinc-800'
+                    ? 'bg-red-500 text-white ring-2 ring-red-500/30'
+                    : 'text-zinc-500 hover:text-zinc-300 hover:bg-zinc-800'
                 }`}
               >
                 {isRecording ? <MicOff className="w-4 h-4" /> : <Mic className="w-4 h-4" />}
               </button>
-
-              {/* Send Button */}
               <button
-                type="button"
                 onClick={() => handleSendMessage()}
                 disabled={!inputVal.trim() || isProcessing}
-                title="Send Message"
-                className="p-2.5 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-zinc-950 font-bold transition-all disabled:opacity-30 disabled:cursor-not-allowed shadow-md shadow-emerald-500/30 hover:scale-105 cursor-pointer"
+                className="p-2 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-zinc-950 font-bold transition-all disabled:opacity-30 disabled:cursor-not-allowed shadow-md cursor-pointer"
               >
-                <ArrowUp className="w-4 h-4 stroke-[3]" />
+                <ArrowUp className="w-4 h-4 stroke-[2.5]" />
               </button>
             </div>
-
           </div>
+
+          {/* Disclaimer */}
+          <p className="text-center text-[10px] text-zinc-600 mt-2">
+            {locale === 'ar'
+              ? 'إدارة.تونس AI للإرشاد فقط — تحقق دائماً من النصوص الرسمية في الرائد الرسمي.'
+              : 'Idaara AI is for guidance only — always verify with official sources (JORT).'}
+          </p>
+
         </div>
+      </div>
 
-        {/* Micro Legal & AI Disclaimer */}
-        <p className="text-center text-[10px] font-mono text-zinc-600">
-          {locale === 'ar'
-            ? 'إدارة.تونس AI يقدم معلومات إرشادية. يرجى التثبت من النصوص بالرائد الرسمي (JORT).'
-            : 'Idaara AI provides official guidance. Always verify certified documents with local authorities.'}
-        </p>
-
-      </footer>
-
-      {/* ── AI Model & API Key Settings Modal ── */}
+      {/* ─── Settings Modal ─── */}
       {showSettingsModal && (
         <div
-          role="dialog"
-          aria-modal="true"
-          className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm animate-fade-in"
+          className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-md"
           onClick={() => setShowSettingsModal(false)}
         >
           <div
-            className="relative w-full max-w-md bg-zinc-950 border border-zinc-800 rounded-3xl p-6 shadow-2xl space-y-5 glass-panel"
+            className="w-full max-w-md bg-zinc-950 border border-zinc-800 rounded-2xl p-5 shadow-2xl space-y-4"
             onClick={(e) => e.stopPropagation()}
           >
-            {/* Header */}
-            <div className="flex items-center justify-between pb-3 border-b border-zinc-800">
+            <div className="flex items-center justify-between">
               <div className="flex items-center gap-2">
-                <SlidersHorizontal className="w-5 h-5 text-emerald-400" />
-                <h3 className="text-base font-bold text-white">AI Engine & Model Settings</h3>
+                <SlidersHorizontal className="w-4 h-4 text-emerald-400" />
+                <h3 className="text-sm font-bold text-white">AI Engine Settings</h3>
               </div>
-              <button
-                onClick={() => setShowSettingsModal(false)}
-                className="p-1 rounded-lg text-zinc-400 hover:text-white hover:bg-zinc-800"
-              >
+              <button onClick={() => setShowSettingsModal(false)} className="p-1 rounded-lg text-zinc-500 hover:text-white hover:bg-zinc-800 cursor-pointer">
                 <X className="w-4 h-4" />
               </button>
             </div>
 
-            {/* Provider Selector */}
             <div className="space-y-2">
-              <label className="text-xs font-semibold text-zinc-300">Choose AI Model</label>
+              <p className="text-xs text-zinc-400 font-semibold">Choose AI Model</p>
               <div className="grid grid-cols-2 gap-2">
-                <button
-                  type="button"
-                  onClick={() => setActiveProvider('auto')}
-                  className={`p-3 rounded-xl border text-xs font-bold text-left transition-all ${
-                    activeProvider === 'auto'
-                      ? 'bg-emerald-500/10 border-emerald-500/40 text-emerald-300'
-                      : 'bg-zinc-900/60 border-zinc-800 text-zinc-400 hover:text-white'
-                  }`}
-                >
-                  <span className="flex items-center justify-between">
-                    <span>⚡ Auto-Smart</span>
-                    {activeProvider === 'auto' && <Check className="w-3.5 h-3.5 text-emerald-400" />}
-                  </span>
-                  <span className="text-[10px] text-zinc-500 font-normal mt-1 block">Gemini / Groq / Local</span>
-                </button>
-
-                <button
-                  type="button"
-                  onClick={() => setActiveProvider('gemini')}
-                  className={`p-3 rounded-xl border text-xs font-bold text-left transition-all ${
-                    activeProvider === 'gemini'
-                      ? 'bg-emerald-500/10 border-emerald-500/40 text-emerald-300'
-                      : 'bg-zinc-900/60 border-zinc-800 text-zinc-400 hover:text-white'
-                  }`}
-                >
-                  <span className="flex items-center justify-between">
-                    <span>✨ Gemini 1.5 Flash</span>
-                    {activeProvider === 'gemini' && <Check className="w-3.5 h-3.5 text-emerald-400" />}
-                  </span>
-                  <span className="text-[10px] text-zinc-500 font-normal mt-1 block">Google Free Tier</span>
-                </button>
-
-                <button
-                  type="button"
-                  onClick={() => setActiveProvider('groq')}
-                  className={`p-3 rounded-xl border text-xs font-bold text-left transition-all ${
-                    activeProvider === 'groq'
-                      ? 'bg-emerald-500/10 border-emerald-500/40 text-emerald-300'
-                      : 'bg-zinc-900/60 border-zinc-800 text-zinc-400 hover:text-white'
-                  }`}
-                >
-                  <span className="flex items-center justify-between">
-                    <span>🚀 Groq Llama 3.3</span>
-                    {activeProvider === 'groq' && <Check className="w-3.5 h-3.5 text-emerald-400" />}
-                  </span>
-                  <span className="text-[10px] text-zinc-500 font-normal mt-1 block">Fast 70B Model</span>
-                </button>
-
-                <button
-                  type="button"
-                  onClick={() => setActiveProvider('local')}
-                  className={`p-3 rounded-xl border text-xs font-bold text-left transition-all ${
-                    activeProvider === 'local'
-                      ? 'bg-emerald-500/10 border-emerald-500/40 text-emerald-300'
-                      : 'bg-zinc-900/60 border-zinc-800 text-zinc-400 hover:text-white'
-                  }`}
-                >
-                  <span className="flex items-center justify-between">
-                    <span>🏛️ Idaara Civic Engine</span>
-                    {activeProvider === 'local' && <Check className="w-3.5 h-3.5 text-emerald-400" />}
-                  </span>
-                  <span className="text-[10px] text-zinc-500 font-normal mt-1 block">Zero API Key Needed</span>
-                </button>
+                {[
+                  { id: 'auto',   label: '⚡ Auto-Smart',        sub: 'Best available'      },
+                  { id: 'gemini', label: '✨ Gemini 1.5 Flash',  sub: 'Google free tier'    },
+                  { id: 'groq',   label: '🚀 Groq Llama 3.3',   sub: 'Ultra-fast 70B'      },
+                  { id: 'local',  label: '🏛️ Civic Engine',     sub: 'No key needed'       },
+                ].map(({ id, label, sub }) => (
+                  <button
+                    key={id}
+                    onClick={() => setActiveProvider(id)}
+                    className={`p-3 rounded-xl border text-left text-xs transition-all cursor-pointer ${
+                      activeProvider === id
+                        ? 'bg-emerald-500/10 border-emerald-500/40 text-emerald-300'
+                        : 'bg-zinc-900 border-zinc-800 text-zinc-400 hover:text-white'
+                    }`}
+                  >
+                    <div className="flex items-center justify-between font-semibold">
+                      <span>{label}</span>
+                      {activeProvider === id && <Check className="w-3 h-3 text-emerald-400" />}
+                    </div>
+                    <div className="text-[10px] text-zinc-500 mt-0.5">{sub}</div>
+                  </button>
+                ))}
               </div>
             </div>
 
-            {/* Custom API Key Input */}
-            <div className="space-y-2">
-              <label className="text-xs font-semibold text-zinc-300 flex items-center justify-between">
-                <span>Free API Key (Optional)</span>
-                <a
-                  href="https://aistudio.google.com/app/apikey"
-                  target="_blank"
-                  rel="noreferrer"
-                  className="text-[11px] text-emerald-400 hover:underline"
-                >
-                  Get free key ↗
+            <div className="space-y-1.5">
+              <div className="flex items-center justify-between">
+                <p className="text-xs text-zinc-400 font-semibold">API Key (Optional)</p>
+                <a href="https://aistudio.google.com/app/apikey" target="_blank" rel="noreferrer" className="text-[11px] text-emerald-400 hover:underline">
+                  Get free key →
                 </a>
-              </label>
-              <div className="relative">
-                <input
-                  type="password"
-                  value={customApiKey}
-                  onChange={(e) => setCustomApiKey(e.target.value)}
-                  placeholder="AIzaSy... (Gemini) or gsk_... (Groq)"
-                  className="w-full bg-zinc-900 border border-zinc-800 rounded-xl px-3 py-2.5 text-xs font-mono text-zinc-100 placeholder-zinc-600 focus:outline-none focus:border-emerald-500/60"
-                />
               </div>
-              <p className="text-[10px] text-zinc-500 leading-relaxed">
-                Free keys are available with 0 credit card needed at Google AI Studio or Groq Console. Your key is stored only in your browser storage.
-              </p>
+              <input
+                type="password"
+                value={customApiKey}
+                onChange={(e) => setCustomApiKey(e.target.value)}
+                placeholder="AIzaSy... (Gemini)  or  gsk_... (Groq)"
+                className="w-full bg-zinc-900 border border-zinc-800 rounded-xl px-3 py-2 text-xs font-mono text-zinc-100 placeholder-zinc-600 focus:outline-none focus:border-emerald-500/50"
+              />
+              <p className="text-[10px] text-zinc-600">Stored only in your browser. Never sent to our servers.</p>
             </div>
 
-            {/* Save Button */}
-            <div className="pt-2 flex justify-end gap-2">
-              <button
-                type="button"
-                onClick={() => setShowSettingsModal(false)}
-                className="px-4 py-2 rounded-xl text-xs font-semibold text-zinc-400 hover:text-white"
-              >
+            <div className="flex justify-end gap-2 pt-1">
+              <button onClick={() => setShowSettingsModal(false)} className="px-4 py-2 rounded-xl text-xs text-zinc-400 hover:text-white cursor-pointer">
                 Cancel
               </button>
-              <button
-                type="button"
-                onClick={saveSettings}
-                className="px-4 py-2 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-zinc-950 font-bold text-xs shadow-md shadow-emerald-500/20"
-              >
-                Save & Apply
+              <button onClick={saveSettings} className="px-4 py-2 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-zinc-950 font-bold text-xs cursor-pointer shadow-md shadow-emerald-500/20">
+                Save
               </button>
             </div>
-
           </div>
         </div>
       )}
