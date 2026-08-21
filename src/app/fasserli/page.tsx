@@ -7,7 +7,7 @@ import { SampleDocsPicker } from '../../components/fasserli/SampleDocsPicker';
 import { DocumentAnalysisResult } from '../../components/fasserli/DocumentAnalysisResult';
 import { SampleDocItem, sampleDocumentsList } from '../../data/sampleDocuments';
 import { OCRAnalysisResult } from '../../types/chat';
-import { ShieldCheck, FileSearch, Sparkles } from 'lucide-react';
+import { ShieldCheck, FileSearch, Sparkles, FileText, Lock, CheckCircle2 } from 'lucide-react';
 
 export default function FasserliPage() {
   const { t, locale } = useLocale();
@@ -125,36 +125,81 @@ export default function FasserliPage() {
       ? 'Scan any official notice (tax adjustment, police summons, CNSS demand) and Idaara AI will summarize it in 3 points with strict statutory deadlines.'
       : "Scannez n'importe quel courrier officiel (redressement fiscal, convocation, mise en demeure CNSS) et obtenez une synthèse juridique en 3 points.";
 
-  return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12 space-y-10">
+  const supportedTypes = [
+    { name: locale === 'en' ? 'Tax Audit & Adjustments' : 'Avis Fiscaux & Contrôle', tag: 'DGI / Recette' },
+    { name: locale === 'en' ? 'CNSS Social Demands' : 'Mises en Demeure CNSS', tag: 'Daman Ijtima3i' },
+    { name: locale === 'en' ? 'Police & Court Summons' : 'Convocations & Justice', tag: 'Tribunal / Police' },
+    { name: locale === 'en' ? 'Bailiff Formal Notices' : "Actes d'Huissier Notaire", tag: '3adoul Iched' },
+  ];
 
-      {/* ── Editorial Header ── */}
-      <div className="max-w-3xl space-y-3">
-        <div className="inline-flex items-center space-x-2 rtl:space-x-reverse px-3 py-1 rounded-full bg-zinc-900 border border-zinc-800 text-[11px] font-semibold text-emerald-400">
-          <Sparkles className="w-3.5 h-3.5" />
-          <span>OCR Juridique Tunisien · Confidentialité 100% Locale</span>
+  return (
+    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-10 space-y-10">
+
+      {/* ── 2-Column Hero Header (Balances Left & Right space) ── */}
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center pb-4 border-b border-zinc-800/80">
+        {/* Left: Titles & Context */}
+        <div className="lg:col-span-7 space-y-3">
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-zinc-900 border border-zinc-800 text-[11px] font-semibold text-emerald-400">
+            <Sparkles className="w-3.5 h-3.5" />
+            <span>OCR Juridique Tunisien · Confidentialité 100% Locale</span>
+          </div>
+
+          <h1 className="leading-tight">
+            <span className="display-heading block text-3xl sm:text-5xl text-[#F5F4F0]">
+              {headlineMain}
+            </span>
+            <span
+              className="display-heading block text-3xl sm:text-5xl italic"
+              style={{ color: 'var(--stamp-green)' }}
+            >
+              {headlineAccent}
+            </span>
+          </h1>
+
+          <p className="text-xs sm:text-sm text-zinc-400 leading-relaxed max-w-xl pt-1">
+            {subtitle}
+          </p>
         </div>
 
-        <h1 className="leading-tight">
-          <span className="display-heading block text-3xl sm:text-5xl text-[#F5F4F0]">
-            {headlineMain}
-          </span>
-          <span
-            className="display-heading block text-3xl sm:text-5xl italic"
-            style={{ color: 'var(--stamp-green)' }}
-          >
-            {headlineAccent}
-          </span>
-        </h1>
+        {/* Right: Supported Document Categories Radar (Fills the empty space) */}
+        <div className="lg:col-span-5">
+          <div className="glass-panel rounded-3xl p-4 sm:p-5 border border-zinc-800/90 bg-gradient-to-br from-zinc-900/80 via-zinc-900/50 to-zinc-950 shadow-xl space-y-3">
+            <div className="flex items-center justify-between text-xs pb-2.5 border-b border-zinc-800">
+              <span className="font-bold uppercase tracking-wider text-[10px] text-zinc-400 flex items-center gap-1.5">
+                <FileText className="w-3.5 h-3.5 text-emerald-400" />
+                <span>{locale === 'en' ? 'Supported Notice Formats' : 'Courriers & Actes Reconnus'}</span>
+              </span>
+              <span className="text-[10px] font-mono text-emerald-400 bg-emerald-950/60 border border-emerald-800/50 px-2 py-0.5 rounded-full flex items-center gap-1">
+                <Lock className="w-2.5 h-2.5" />
+                <span>Zero-Storage</span>
+              </span>
+            </div>
 
-        <p className="text-xs sm:text-sm text-zinc-400 leading-relaxed max-w-2xl pt-1">
-          {subtitle}
-        </p>
+            <div className="grid grid-cols-2 gap-2">
+              {supportedTypes.map((type, idx) => (
+                <div
+                  key={idx}
+                  className="p-2.5 rounded-xl bg-zinc-950/60 border border-zinc-800/80 flex flex-col justify-between"
+                >
+                  <div className="flex items-center gap-1 text-emerald-400 mb-1">
+                    <CheckCircle2 className="w-3 h-3 shrink-0" />
+                    <span className="text-[9px] font-mono font-bold text-zinc-500 uppercase tracking-wider">
+                      {type.tag}
+                    </span>
+                  </div>
+                  <span className="text-[10px] text-zinc-200 font-semibold line-clamp-1">
+                    {type.name}
+                  </span>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
       </div>
 
       {/* ── Zero Storage Privacy Guarantee ── */}
       <div className="p-4 rounded-2xl glass-panel border border-emerald-500/20 flex items-center justify-between bg-emerald-950/20">
-        <div className="flex items-center space-x-3 rtl:space-x-reverse text-xs text-zinc-300">
+        <div className="flex items-center gap-3 text-xs text-zinc-300">
           <ShieldCheck className="w-5 h-5 text-emerald-400 shrink-0" />
           <div>
             <span className="font-semibold text-zinc-100">{t('zeroStorageBanner')} : </span>
@@ -185,7 +230,7 @@ export default function FasserliPage() {
       {/* ── Result Section ── */}
       {analysisResult && (
         <div className="pt-6 border-t border-zinc-800/80">
-          <div className="flex items-center space-x-2 rtl:space-x-reverse text-xs font-bold text-zinc-400 uppercase tracking-wider mb-4">
+          <div className="flex items-center gap-2 text-xs font-bold text-zinc-400 uppercase tracking-wider mb-4">
             <FileSearch className="w-4 h-4 text-emerald-400" />
             <span>
               {locale === 'ar'

@@ -4,7 +4,7 @@ import React, { useState } from 'react';
 import { publicOfficesData, GOVERNORATES_LIST } from '../../data/offices';
 import { OfficeCard } from '../../components/locator/OfficeCard';
 import { useLocale } from '../../context/LocaleContext';
-import { MapPin, Search, Moon, Sun, Clock, Building2, Navigation2 } from 'lucide-react';
+import { MapPin, Search, Moon, Sun, Clock, Building2, Navigation2, PhoneCall } from 'lucide-react';
 
 const REGIONS = [
   { id: 'all', label: 'Toutes les Régions (24)' },
@@ -125,37 +125,83 @@ export default function LocatorPage() {
       ? 'Locate exact GPS coordinates, phone numbers, and official opening hours (including Ramadan & summer single-shift schedules) for over 350 public offices across all 24 governorates.'
       : "Retrouvez adresses, numéros de téléphone et horaires réels (Ramadan & Séance Unique d'été) de plus de 350 municipalités et guichets sur les 24 gouvernorats.";
 
-  return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12 space-y-10">
+  const coverageSpecs = [
+    { title: '350+ Organismes', desc: 'Baladiyas & Recettes', tag: '24 Wilayas' },
+    { title: 'GPS Précis', desc: 'Navigation Waze & Maps', tag: 'Direct Link' },
+    { title: 'Séances Saisons', desc: 'Ramadan & Été synchro', tag: 'Temps réel' },
+    { title: 'Appel Direct', desc: 'Standards téléphoniques', tag: 'Vérifiés' },
+  ];
 
-      {/* ── Editorial Header ── */}
-      <div className="max-w-3xl space-y-3">
-        <div className="inline-flex items-center space-x-2 rtl:space-x-reverse px-3 py-1 rounded-full bg-zinc-900 border border-zinc-800 text-[11px] font-semibold text-emerald-400">
-          <MapPin className="w-3.5 h-3.5" />
-          <span>24 Gouvernorats · 350+ Guichets Géolocalisés</span>
+  return (
+    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-10 space-y-10">
+
+      {/* ── 2-Column Hero Header (Balances Left & Right space) ── */}
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center pb-4 border-b border-zinc-800/80">
+        {/* Left: Titles & Context */}
+        <div className="lg:col-span-7 space-y-3">
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-zinc-900 border border-zinc-800 text-[11px] font-semibold text-emerald-400">
+            <MapPin className="w-3.5 h-3.5" />
+            <span>24 Gouvernorats · 350+ Guichets Géolocalisés</span>
+          </div>
+
+          <h1 className="leading-tight">
+            <span className="display-heading block text-3xl sm:text-5xl text-[#F5F4F0]">
+              {headlineMain}
+            </span>
+            <span
+              className="display-heading block text-3xl sm:text-5xl italic"
+              style={{ color: 'var(--stamp-green)' }}
+            >
+              {headlineAccent}
+            </span>
+          </h1>
+
+          <p className="text-xs sm:text-sm text-zinc-400 leading-relaxed max-w-xl pt-1">
+            {subtitle}
+          </p>
         </div>
 
-        <h1 className="leading-tight">
-          <span className="display-heading block text-3xl sm:text-5xl text-[#F5F4F0]">
-            {headlineMain}
-          </span>
-          <span
-            className="display-heading block text-3xl sm:text-5xl italic"
-            style={{ color: 'var(--stamp-green)' }}
-          >
-            {headlineAccent}
-          </span>
-        </h1>
+        {/* Right: Coverage & Radar Hub Widget (Fills empty space) */}
+        <div className="lg:col-span-5">
+          <div className="glass-panel rounded-3xl p-4 sm:p-5 border border-zinc-800/90 bg-gradient-to-br from-zinc-900/80 via-zinc-900/50 to-zinc-950 shadow-xl space-y-3">
+            <div className="flex items-center justify-between text-xs pb-2.5 border-b border-zinc-800">
+              <span className="font-bold uppercase tracking-wider text-[10px] text-zinc-400 flex items-center gap-1.5">
+                <Navigation2 className="w-3.5 h-3.5 text-emerald-400" />
+                <span>{locale === 'en' ? 'Territorial Civic Radar' : 'Réseau Administratif National'}</span>
+              </span>
+              <span className="text-[10px] font-mono text-emerald-400 bg-emerald-950/60 border border-emerald-800/50 px-2 py-0.5 rounded-full">
+                24 Wilayas
+              </span>
+            </div>
 
-        <p className="text-xs sm:text-sm text-zinc-400 leading-relaxed max-w-2xl pt-1">
-          {subtitle}
-        </p>
+            <div className="grid grid-cols-2 gap-2">
+              {coverageSpecs.map((spec, idx) => (
+                <div
+                  key={idx}
+                  className="p-2.5 rounded-xl bg-zinc-950/60 border border-zinc-800/80 flex flex-col justify-between"
+                >
+                  <div className="flex items-center justify-between mb-1">
+                    <span className="font-bold text-xs text-white truncate">
+                      {spec.title}
+                    </span>
+                    <span className="text-[9px] font-mono text-emerald-400">
+                      {spec.tag}
+                    </span>
+                  </div>
+                  <span className="text-[9px] text-zinc-500 line-clamp-1">
+                    {spec.desc}
+                  </span>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
       </div>
 
       {/* ── Schedule Season Control Banner ── */}
       <div className="p-4 sm:p-5 rounded-2xl glass-panel border border-zinc-800/80 flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div className="space-y-0.5">
-          <div className="flex items-center space-x-2 rtl:space-x-reverse text-xs font-bold text-zinc-200">
+          <div className="flex items-center gap-2 text-xs font-bold text-zinc-200">
             <Clock className="w-3.5 h-3.5 text-emerald-400" />
             <span>
               {locale === 'ar'
@@ -172,12 +218,12 @@ export default function LocatorPage() {
           </p>
         </div>
 
-        <div className="flex items-center space-x-1.5 rtl:space-x-reverse bg-zinc-950 p-1.5 rounded-2xl border border-zinc-800">
+        <div className="flex items-center gap-1.5 bg-zinc-950 p-1.5 rounded-2xl border border-zinc-800">
           {scheduleButtons.map(({ id, icon, label, active, idle }) => (
             <button
               key={id}
               onClick={() => setScheduleMode(id)}
-              className={`px-3.5 py-1.5 rounded-xl text-xs font-semibold flex items-center space-x-1.5 rtl:space-x-reverse transition-all cursor-pointer ${
+              className={`px-3.5 py-1.5 rounded-xl text-xs font-semibold flex items-center gap-1.5 transition-all cursor-pointer ${
                 scheduleMode === id ? active : idle
               }`}
             >
@@ -189,7 +235,7 @@ export default function LocatorPage() {
       </div>
 
       {/* ── Quick Regions Bar ── */}
-      <div className="flex items-center space-x-2 overflow-x-auto pb-1 scrollbar-none">
+      <div className="flex items-center gap-2 overflow-x-auto pb-1 scrollbar-none">
         {REGIONS.map((r) => {
           const isSelected = (r.id === 'all' && selectedGovernorate === 'all') || selectedGovernorate === r.id;
           return (

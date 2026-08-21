@@ -20,6 +20,8 @@ import {
   FileCheck2,
   Sparkles,
   ChevronRight,
+  ShieldCheck,
+  Building2,
 } from 'lucide-react';
 
 export default function ProceduresPage() {
@@ -138,37 +140,83 @@ export default function ProceduresPage() {
       ? 'Comprehensive citizen guide with exact fiscal stamp calculations, document checklists, and target public desks across Tunisia.'
       : 'Liste exhaustive des pièces requises, calcul des timbres fiscaux au millime près, délais légaux et guichets compétents.';
 
-  return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12 space-y-10">
+  const civicStats = [
+    { label: locale === 'en' ? 'Verified Dossiers' : 'Démarches Certifiées', val: '11 Procédures', desc: 'JORT & Décrets' },
+    { label: locale === 'en' ? 'Fiscal Stamp Accuracy' : 'Précision Timbres', val: '100% Exact', desc: 'Barème Officiel' },
+    { label: locale === 'en' ? 'Average Step Count' : 'Étapes Moyennes', val: '3 - 4 Étapes', desc: 'Circuit optimisé' },
+    { label: locale === 'en' ? 'Competent Desks' : 'Guichets & Baladiyas', val: '24 Wilayas', desc: 'Couverture nationale' },
+  ];
 
-      {/* ── Editorial Header ── */}
-      <div className="max-w-3xl space-y-3">
-        <div className="inline-flex items-center space-x-2 rtl:space-x-reverse px-3 py-1 rounded-full bg-zinc-900 border border-zinc-800 text-[11px] font-semibold text-zinc-400">
-          <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 shrink-0" />
-          <span>JORT & Code Administratif Tunisien</span>
+  return (
+    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-10 space-y-10">
+
+      {/* ── 2-Column Hero Header (Balances Left & Right space) ── */}
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center pb-4 border-b border-zinc-800/80">
+        {/* Left: Titles & Context */}
+        <div className="lg:col-span-7 space-y-3">
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-zinc-900 border border-zinc-800 text-[11px] font-semibold text-zinc-400">
+            <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 shrink-0" />
+            <span>JORT & Code Administratif Tunisien</span>
+          </div>
+
+          <h1 className="leading-tight">
+            <span className="display-heading block text-3xl sm:text-5xl text-[#F5F4F0]">
+              {headlineMain}
+            </span>
+            <span
+              className="display-heading block text-3xl sm:text-5xl italic"
+              style={{ color: 'var(--stamp-green)' }}
+            >
+              {headlineAccent}
+            </span>
+          </h1>
+
+          <p className="text-xs sm:text-sm text-zinc-400 leading-relaxed max-w-xl pt-1">
+            {subtitle}
+          </p>
         </div>
 
-        <h1 className="leading-tight">
-          <span className="display-heading block text-3xl sm:text-5xl text-[#F5F4F0]">
-            {headlineMain}
-          </span>
-          <span
-            className="display-heading block text-3xl sm:text-5xl italic"
-            style={{ color: 'var(--stamp-green)' }}
-          >
-            {headlineAccent}
-          </span>
-        </h1>
+        {/* Right: Civic Standards Hub Widget (Fills empty space) */}
+        <div className="lg:col-span-5">
+          <div className="glass-panel rounded-3xl p-4 sm:p-5 border border-zinc-800/90 bg-gradient-to-br from-zinc-900/80 via-zinc-900/50 to-zinc-950 shadow-xl space-y-3">
+            <div className="flex items-center justify-between text-xs pb-2.5 border-b border-zinc-800">
+              <span className="font-bold uppercase tracking-wider text-[10px] text-zinc-400 flex items-center gap-1.5">
+                <Building2 className="w-3.5 h-3.5 text-emerald-400" />
+                <span>{locale === 'en' ? 'Public Service Framework' : 'Garanties Civiques'}</span>
+              </span>
+              <span className="text-[10px] font-mono text-emerald-400 bg-emerald-950/60 border border-emerald-800/50 px-2 py-0.5 rounded-full">
+                Mise à jour 2026
+              </span>
+            </div>
 
-        <p className="text-xs sm:text-sm text-zinc-400 leading-relaxed max-w-2xl pt-1">
-          {subtitle}
-        </p>
+            <div className="grid grid-cols-2 gap-2">
+              {civicStats.map((stat, idx) => (
+                <div
+                  key={idx}
+                  className="p-2.5 rounded-xl bg-zinc-950/60 border border-zinc-800/80 flex flex-col justify-between"
+                >
+                  <div className="flex items-center justify-between mb-1">
+                    <span className="font-mono font-bold text-xs text-white">
+                      {stat.val}
+                    </span>
+                    <span className="text-[9px] text-zinc-500">
+                      {stat.desc}
+                    </span>
+                  </div>
+                  <span className="text-[10px] text-zinc-400 font-medium line-clamp-1">
+                    {stat.label}
+                  </span>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
       </div>
 
       {/* ── Fast-Track Quick Access Cards ── */}
       <div>
         <div className="flex items-center justify-between mb-3 text-xs">
-          <span className="text-[11px] font-bold uppercase tracking-wider text-zinc-500 flex items-center space-x-1.5 rtl:space-x-reverse">
+          <span className="text-[11px] font-bold uppercase tracking-wider text-zinc-500 flex items-center gap-1.5">
             <Sparkles className="w-3.5 h-3.5 text-amber-400" />
             <span>
               {locale === 'ar' ? 'أكثر الإجراءات طلباً' : locale === 'en' ? 'Fast-Track Citizen Demands' : 'Démarches Populaires'}
@@ -256,7 +304,7 @@ export default function ProceduresPage() {
                       : 'text-zinc-400 hover:text-zinc-200 hover:bg-zinc-800/50'
                   }`}
                 >
-                  <div className="flex items-center space-x-2.5 rtl:space-x-reverse min-w-0">
+                  <div className="flex items-center gap-2.5 min-w-0">
                     <Icon className={`w-4 h-4 shrink-0 ${isSelected ? 'text-zinc-950' : 'text-zinc-500'}`} />
                     <span className="truncate">{v.label}</span>
                   </div>
@@ -296,12 +344,12 @@ export default function ProceduresPage() {
                 >
                   <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3.5 border-b border-zinc-800/80">
                     <div className="space-y-1">
-                      <div className="flex items-center space-x-2 rtl:space-x-reverse">
+                      <div className="flex items-center gap-2">
                         <span className="text-[9px] font-extrabold uppercase tracking-wider px-2 py-0.5 rounded-md bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
                           {proc.vertical}
                         </span>
                         <span className="text-zinc-600 text-xs">·</span>
-                        <span className="font-mono text-[11px] text-zinc-400 flex items-center space-x-1 rtl:space-x-reverse">
+                        <span className="font-mono text-[11px] text-zinc-400 flex items-center gap-1">
                           <Clock className="w-3 h-3 text-zinc-500" />
                           <span>{proc.estimatedProcessingTime}</span>
                         </span>
@@ -311,7 +359,7 @@ export default function ProceduresPage() {
                       </h3>
                     </div>
 
-                    <div className="flex items-center space-x-3 rtl:space-x-reverse shrink-0">
+                    <div className="flex items-center gap-3 shrink-0">
                       <div className="text-right rtl:text-left">
                         <span className="text-[10px] text-zinc-500 uppercase font-bold block">
                           {locale === 'ar' ? 'المصاريف' : 'Budget'}
@@ -321,7 +369,7 @@ export default function ProceduresPage() {
                         </span>
                       </div>
                       <div className="w-8 h-8 rounded-xl bg-zinc-800/80 border border-zinc-700 flex items-center justify-center text-zinc-300 group-hover:bg-emerald-500 group-hover:text-zinc-950 group-hover:border-emerald-400 transition-all">
-                        <ArrowRight className="w-4 h-4 rtl:rotate-180" />
+                        <ArrowRight className="w-4 h-4" />
                       </div>
                     </div>
                   </div>
@@ -331,7 +379,7 @@ export default function ProceduresPage() {
                       {shortDesc}
                     </p>
 
-                    <div className="flex items-center space-x-2 rtl:space-x-reverse text-[11px] text-zinc-500 font-mono shrink-0">
+                    <div className="flex items-center gap-2 text-[11px] text-zinc-500 font-mono shrink-0">
                       <span className="px-2 py-0.5 rounded bg-zinc-900 border border-zinc-800">
                         {proc.steps.length} {locale === 'ar' ? 'مراحل' : 'étapes'}
                       </span>

@@ -5,7 +5,7 @@ import { documentTemplatesData } from '../../data/documentTemplates';
 import { DocumentCard } from '../../components/documents/DocumentCard';
 import { useLocale } from '../../context/LocaleContext';
 import { getLocalized } from '../../lib/locale-utils';
-import { FileText, Search, ShieldCheck } from 'lucide-react';
+import { FileText, Search, ShieldCheck, CheckCircle2, Download, Stamp, Sparkles } from 'lucide-react';
 
 export default function DocumentsPage() {
   const { locale } = useLocale();
@@ -84,36 +84,80 @@ export default function DocumentsPage() {
       ? 'Generate certified lease contracts, powers of attorney, and sworn declarations formatted with exact fiscal stamp slots and legalization zones.'
       : "Générez en quelques clics vos contrats de location, procurations, déclarations sur l'honneur au format officiel conforme avec emplacements timbres fiscaux.";
 
-  return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12 space-y-10">
+  const legalSpecs = [
+    { title: locale === 'en' ? 'COC Compliance' : 'Conformité Code COC', desc: locale === 'en' ? 'Valid before Tunisian courts & banks' : 'Articles 1104 & suivants' },
+    { title: locale === 'en' ? 'Stamp Pre-alignment' : 'Cadres Timbres Fiscaux', desc: locale === 'en' ? 'Slots for 3 DT / 5 DT / 30 DT' : 'Réservés pour la recette' },
+    { title: locale === 'en' ? 'Baladiya Legalization' : 'Mention Ta3rif bel Imdha2', desc: locale === 'en' ? 'Formatted for municipal stamps' : 'Espace légalisation officiel' },
+    { title: locale === 'en' ? 'Instant Vector PDF' : 'Export PDF Vectoriel A4', desc: locale === 'en' ? 'Print ready, 0 sign-up needed' : 'Prêt à imprimer immédiatement' },
+  ];
 
-      {/* ── Editorial Header ── */}
-      <div className="max-w-3xl space-y-3">
-        <div className="inline-flex items-center space-x-2 rtl:space-x-reverse px-3 py-1 rounded-full bg-zinc-900 border border-zinc-800 text-[11px] font-semibold text-emerald-400">
-          <ShieldCheck className="w-3.5 h-3.5" />
-          <span>Code des Obligations et des Contrats (COC)</span>
+  return (
+    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-10 space-y-10">
+
+      {/* ── 2-Column Hero Header (Balances Left & Right space) ── */}
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center pb-4 border-b border-zinc-800/80">
+        {/* Left: Titles & Context */}
+        <div className="lg:col-span-7 space-y-3">
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-zinc-900 border border-zinc-800 text-[11px] font-semibold text-emerald-400">
+            <ShieldCheck className="w-3.5 h-3.5" />
+            <span>Code des Obligations et des Contrats (COC)</span>
+          </div>
+
+          <h1 className="leading-tight">
+            <span className="display-heading block text-3xl sm:text-5xl text-[#F5F4F0]">
+              {headlineMain}
+            </span>
+            <span
+              className="display-heading block text-3xl sm:text-5xl italic"
+              style={{ color: 'var(--stamp-green)' }}
+            >
+              {headlineAccent}
+            </span>
+          </h1>
+
+          <p className="text-xs sm:text-sm text-zinc-400 leading-relaxed max-w-xl pt-1">
+            {subtitle}
+          </p>
         </div>
 
-        <h1 className="leading-tight">
-          <span className="display-heading block text-3xl sm:text-5xl text-[#F5F4F0]">
-            {headlineMain}
-          </span>
-          <span
-            className="display-heading block text-3xl sm:text-5xl italic"
-            style={{ color: 'var(--stamp-green)' }}
-          >
-            {headlineAccent}
-          </span>
-        </h1>
+        {/* Right: Official Legalization & Standards Hub */}
+        <div className="lg:col-span-5">
+          <div className="glass-panel rounded-3xl p-4 sm:p-5 border border-zinc-800/90 bg-gradient-to-br from-zinc-900/80 via-zinc-900/50 to-zinc-950 shadow-xl space-y-3">
+            <div className="flex items-center justify-between text-xs pb-2.5 border-b border-zinc-800">
+              <span className="font-bold uppercase tracking-wider text-[10px] text-zinc-400 flex items-center gap-1.5">
+                <Stamp className="w-3.5 h-3.5 text-amber-400" />
+                <span>{locale === 'en' ? 'Legal Form Specifications' : 'Normes Administratives'}</span>
+              </span>
+              <span className="text-[10px] font-mono text-emerald-400 bg-emerald-950/60 border border-emerald-800/50 px-2 py-0.5 rounded-full">
+                100% Conforme
+              </span>
+            </div>
 
-        <p className="text-xs sm:text-sm text-zinc-400 leading-relaxed max-w-2xl pt-1">
-          {subtitle}
-        </p>
+            <div className="grid grid-cols-2 gap-2">
+              {legalSpecs.map((spec, idx) => (
+                <div
+                  key={idx}
+                  className="p-2.5 rounded-xl bg-zinc-950/60 border border-zinc-800/80 flex flex-col justify-between"
+                >
+                  <div className="flex items-center gap-1.5 text-emerald-400 mb-1">
+                    <CheckCircle2 className="w-3 h-3 shrink-0" />
+                    <span className="text-[10px] font-bold text-zinc-200 truncate">
+                      {spec.title}
+                    </span>
+                  </div>
+                  <span className="text-[9px] text-zinc-500 line-clamp-1">
+                    {spec.desc}
+                  </span>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
       </div>
 
       {/* ── Search & Filter Controls ── */}
       <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
-        <div className="flex items-center space-x-2 overflow-x-auto w-full sm:w-auto pb-2 sm:pb-0 scrollbar-none">
+        <div className="flex items-center gap-2 overflow-x-auto w-full sm:w-auto pb-2 sm:pb-0 scrollbar-none">
           {categories.map((cat) => (
             <button
               key={cat.id}

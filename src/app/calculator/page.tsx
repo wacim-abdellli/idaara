@@ -7,7 +7,7 @@ import { ChecklistTracker } from '../../components/calculator/ChecklistTracker';
 import { DossierKitExport } from '../../components/calculator/DossierKitExport';
 import { useLocale } from '../../context/LocaleContext';
 import { getLocalized } from '../../lib/locale-utils';
-import { ChevronRight, Stamp, ArrowRight } from 'lucide-react';
+import { Stamp, ArrowRight, ShieldCheck, Receipt } from 'lucide-react';
 import Link from 'next/link';
 
 export default function CalculatorPage() {
@@ -37,31 +37,77 @@ export default function CalculatorPage() {
       ? 'Calculate the exact statutory fiscal stamps, photo fees, and copy costs for any Tunisian administrative procedure before heading to the counter.'
       : "Calculez le montant exact des timbres fiscaux (3 DT, 5 DT, 15 DT, 80 DT), photos d'identité et copies conformes pour éviter tout imprévu au guichet.";
 
-  return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12 space-y-10">
+  const officialTariffs = [
+    { amount: '3.000 DT', label: locale === 'en' ? 'Municipal Signature (Légalisation)' : 'Ta3rif bel Imdha2 Baladiya', desc: 'Tarif unitaire' },
+    { amount: '5.000 DT', label: locale === 'en' ? 'Civil Status & Mandates' : 'Tawkîl & 7alet Madaniya', desc: 'Recette des Finances' },
+    { amount: '15.000 DT', label: locale === 'en' ? 'Commercial Deeds & Bail' : '3a9d Kré & Bita9a B3', desc: 'Recette / Enregistrement' },
+    { amount: '80.000 DT', label: locale === 'en' ? 'Ordinary Passport Stamp' : 'Timbre Passeport Tounsi', desc: 'Tarif officiel' },
+  ];
 
-      {/* ── Editorial Header ── */}
-      <div className="max-w-3xl space-y-3">
-        <div className="inline-flex items-center space-x-2 rtl:space-x-reverse px-3 py-1 rounded-full bg-zinc-900 border border-zinc-800 text-[11px] font-semibold text-amber-400">
-          <Stamp className="w-3.5 h-3.5" />
-          <span>Barème Officiel · Recette des Finances & Baladiya</span>
+  return (
+    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-10 space-y-10">
+
+      {/* ── 2-Column Hero Header (Balances Left & Right space perfectly) ── */}
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center pb-4 border-b border-zinc-800/80">
+        {/* Left: Titles & Context */}
+        <div className="lg:col-span-7 space-y-3">
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-zinc-900 border border-zinc-800 text-[11px] font-semibold text-amber-400">
+            <Stamp className="w-3.5 h-3.5" />
+            <span>Barème Officiel · Recette des Finances & Baladiya</span>
+          </div>
+
+          <h1 className="leading-tight">
+            <span className="display-heading block text-3xl sm:text-5xl text-[#F5F4F0]">
+              {headlineMain}
+            </span>
+            <span
+              className="display-heading block text-3xl sm:text-5xl italic"
+              style={{ color: 'var(--stamp-green)' }}
+            >
+              {headlineAccent}
+            </span>
+          </h1>
+
+          <p className="text-xs sm:text-sm text-zinc-400 leading-relaxed max-w-xl pt-1">
+            {subtitle}
+          </p>
         </div>
 
-        <h1 className="leading-tight">
-          <span className="display-heading block text-3xl sm:text-5xl text-[#F5F4F0]">
-            {headlineMain}
-          </span>
-          <span
-            className="display-heading block text-3xl sm:text-5xl italic"
-            style={{ color: 'var(--stamp-green)' }}
-          >
-            {headlineAccent}
-          </span>
-        </h1>
+        {/* Right: Live Official Fiscal Tariff Hub (Fills the empty space) */}
+        <div className="lg:col-span-5">
+          <div className="glass-panel rounded-3xl p-4 sm:p-5 border border-zinc-800/90 bg-gradient-to-br from-zinc-900/80 via-zinc-900/50 to-zinc-950 shadow-xl space-y-3">
+            <div className="flex items-center justify-between text-xs pb-2.5 border-b border-zinc-800">
+              <span className="font-bold uppercase tracking-wider text-[10px] text-zinc-400 flex items-center gap-1.5">
+                <Receipt className="w-3.5 h-3.5 text-emerald-400" />
+                <span>{locale === 'en' ? 'Statutory Stamp Tariffs' : 'Timbres Fiscaux en Vigueur'}</span>
+              </span>
+              <span className="text-[10px] font-mono text-emerald-400 bg-emerald-950/60 border border-emerald-800/50 px-2 py-0.5 rounded-full">
+                JORT 2026
+              </span>
+            </div>
 
-        <p className="text-xs sm:text-sm text-zinc-400 leading-relaxed max-w-2xl pt-1">
-          {subtitle}
-        </p>
+            <div className="grid grid-cols-2 gap-2">
+              {officialTariffs.map((tariff, idx) => (
+                <div
+                  key={idx}
+                  className="p-2.5 rounded-xl bg-zinc-950/60 border border-zinc-800/80 flex flex-col justify-between"
+                >
+                  <div className="flex items-center justify-between mb-1">
+                    <span className="font-mono font-bold text-xs text-amber-400">
+                      {tariff.amount}
+                    </span>
+                    <span className="text-[9px] text-zinc-500">
+                      {tariff.desc}
+                    </span>
+                  </div>
+                  <span className="text-[10px] text-zinc-300 font-medium line-clamp-1">
+                    {tariff.label}
+                  </span>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
       </div>
 
       {/* ── Procedure Picker Grid with visual badges ── */}
@@ -125,9 +171,9 @@ export default function CalculatorPage() {
                 {locale === 'ar' ? 'اطلع على الأجل والمكاتب المعنية' : locale === 'en' ? 'Detailed deadlines, offices, and required documents' : 'Délais, bureaux et documents requis en détail'}
               </p>
             </div>
-            <div className="flex items-center space-x-1 rtl:space-x-reverse text-emerald-400 text-xs font-semibold shrink-0">
+            <div className="flex items-center gap-1 text-emerald-400 text-xs font-semibold shrink-0">
               <span>{locale === 'ar' ? 'الدليل' : locale === 'en' ? 'View guide' : 'Voir guide'}</span>
-              <ArrowRight className="w-4 h-4 rtl:rotate-180 group-hover:translate-x-1 rtl:group-hover:-translate-x-1 transition-transform" />
+              <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
             </div>
           </Link>
         </div>

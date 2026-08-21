@@ -5,7 +5,7 @@ import { StatusComparator } from '../../components/launchpad/StatusComparator';
 import { TaxCalculator } from '../../components/launchpad/TaxCalculator';
 import { ExportInvoiceGen } from '../../components/launchpad/ExportInvoiceGen';
 import { useLocale } from '../../context/LocaleContext';
-import { ExternalLink, Sparkles, Scale, Calculator, FileSpreadsheet } from 'lucide-react';
+import { ExternalLink, Sparkles, Scale, Calculator, FileSpreadsheet, BadgePercent, ShieldCheck } from 'lucide-react';
 
 export default function LaunchpadPage() {
   const { locale } = useLocale();
@@ -65,6 +65,13 @@ export default function LaunchpadPage() {
     },
   ];
 
+  const frameworkSpecs = [
+    { title: '1% Impôt Unique', desc: 'Prestations de services & devs', tag: 'Loi de Finances' },
+    { title: '~50 DT / Trimestre', desc: 'Couverture santé CNSS', tag: 'Forfaitaire' },
+    { title: '0% TVA Export', desc: 'Devises EUR / USD rapatriées', tag: 'Non assujetti' },
+    { title: 'BCT Conforme', desc: 'Factures export homologuées', tag: 'Banque Centrale' },
+  ];
+
   const registrationTitle =
     locale === 'ar'
       ? 'هل أنت مستعد للتسجيل كمبادر ذاتي؟'
@@ -85,30 +92,69 @@ export default function LaunchpadPage() {
     'Portail National (autoentrepreneur.tn)';
 
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12 space-y-10">
+    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-10 space-y-10">
 
-      {/* ── Editorial Header ── */}
-      <div className="max-w-3xl space-y-3">
-        <div className="inline-flex items-center space-x-2 rtl:space-x-reverse px-3 py-1 rounded-full bg-zinc-900 border border-zinc-800 text-[11px] font-semibold text-emerald-400">
-          <Sparkles className="w-3.5 h-3.5" />
-          <span>Loi de Finances · Régime Auto-Entrepreneur 1% & BCT Export</span>
+      {/* ── 2-Column Hero Header (Balances Left & Right space) ── */}
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center pb-4 border-b border-zinc-800/80">
+        {/* Left: Titles & Context */}
+        <div className="lg:col-span-7 space-y-3">
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-zinc-900 border border-zinc-800 text-[11px] font-semibold text-emerald-400">
+            <Sparkles className="w-3.5 h-3.5" />
+            <span>Loi de Finances · Régime Auto-Entrepreneur 1% & BCT Export</span>
+          </div>
+
+          <h1 className="leading-tight">
+            <span className="display-heading block text-3xl sm:text-5xl text-[#F5F4F0]">
+              {headlineMain}
+            </span>
+            <span
+              className="display-heading block text-3xl sm:text-5xl italic"
+              style={{ color: 'var(--stamp-green)' }}
+            >
+              {headlineAccent}
+            </span>
+          </h1>
+
+          <p className="text-xs sm:text-sm text-zinc-400 leading-relaxed max-w-xl pt-1">
+            {subtitle}
+          </p>
         </div>
 
-        <h1 className="leading-tight">
-          <span className="display-heading block text-3xl sm:text-5xl text-[#F5F4F0]">
-            {headlineMain}
-          </span>
-          <span
-            className="display-heading block text-3xl sm:text-5xl italic"
-            style={{ color: 'var(--stamp-green)' }}
-          >
-            {headlineAccent}
-          </span>
-        </h1>
+        {/* Right: National Tax & BCT Hub Widget (Fills empty space) */}
+        <div className="lg:col-span-5">
+          <div className="glass-panel rounded-3xl p-4 sm:p-5 border border-zinc-800/90 bg-gradient-to-br from-zinc-900/80 via-zinc-900/50 to-zinc-950 shadow-xl space-y-3">
+            <div className="flex items-center justify-between text-xs pb-2.5 border-b border-zinc-800">
+              <span className="font-bold uppercase tracking-wider text-[10px] text-zinc-400 flex items-center gap-1.5">
+                <BadgePercent className="w-3.5 h-3.5 text-emerald-400" />
+                <span>{locale === 'en' ? 'Tax Regime Parameters' : 'Régime Fiscal & Avantages'}</span>
+              </span>
+              <span className="text-[10px] font-mono text-emerald-400 bg-emerald-950/60 border border-emerald-800/50 px-2 py-0.5 rounded-full">
+                Loi 2020-33
+              </span>
+            </div>
 
-        <p className="text-xs sm:text-sm text-zinc-400 leading-relaxed max-w-2xl pt-1">
-          {subtitle}
-        </p>
+            <div className="grid grid-cols-2 gap-2">
+              {frameworkSpecs.map((spec, idx) => (
+                <div
+                  key={idx}
+                  className="p-2.5 rounded-xl bg-zinc-950/60 border border-zinc-800/80 flex flex-col justify-between"
+                >
+                  <div className="flex items-center justify-between mb-1">
+                    <span className="font-bold text-xs text-white truncate">
+                      {spec.title}
+                    </span>
+                    <span className="text-[9px] font-mono text-emerald-400">
+                      {spec.tag}
+                    </span>
+                  </div>
+                  <span className="text-[9px] text-zinc-500 line-clamp-1">
+                    {spec.desc}
+                  </span>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
       </div>
 
       {/* ── Segmented Navigation Tabs ── */}
@@ -122,7 +168,7 @@ export default function LaunchpadPage() {
               <button
                 key={tab.id}
                 onClick={() => setActiveTab(tab.id)}
-                className={`py-3.5 px-4 text-xs font-semibold rounded-t-2xl transition-all whitespace-nowrap cursor-pointer flex items-center space-x-2 rtl:space-x-reverse border-b-2 ${
+                className={`py-3.5 px-4 text-xs font-semibold rounded-t-2xl transition-all whitespace-nowrap cursor-pointer flex items-center gap-2 border-b-2 ${
                   isActive
                     ? 'border-emerald-400 text-emerald-300 bg-zinc-900/70 font-bold shadow-sm'
                     : 'border-transparent text-zinc-400 hover:text-zinc-200 hover:bg-zinc-900/30'
@@ -155,7 +201,7 @@ export default function LaunchpadPage() {
           href="https://autoentrepreneur.tn"
           target="_blank"
           rel="noopener noreferrer"
-          className="flex items-center space-x-2 rtl:space-x-reverse px-5 py-2.5 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-zinc-950 font-bold text-xs shadow-lg shadow-emerald-500/25 transition-all hover:scale-105 shrink-0"
+          className="flex items-center gap-2 px-5 py-2.5 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-zinc-950 font-bold text-xs shadow-lg shadow-emerald-500/25 transition-all hover:scale-105 shrink-0"
         >
           <span>{registrationBtn}</span>
           <ExternalLink className="w-3.5 h-3.5" />
