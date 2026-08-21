@@ -23,6 +23,8 @@ import {
   ChevronRight,
   Sliders,
   Activity,
+  Scale,
+  FileCheck2,
 } from 'lucide-react';
 import { formatTND } from '../lib/utils';
 
@@ -340,22 +342,39 @@ export default function HomePage() {
             {/* Interactive Document Switcher Tabs */}
             <div className="flex items-center gap-2 mb-3">
               {[
-                { id: 'passport' as const, label: locale === 'ar' ? '🪪 جواز السفر' : locale === 'en' ? '🪪 Passport' : '🪪 Passeport' },
-                { id: 'tax' as const, label: locale === 'ar' ? '📄 الضريبة البلدية' : locale === 'en' ? '📄 Tax Notice' : '📄 Avis Fiscal' },
-                { id: 'lease' as const, label: locale === 'ar' ? '⚖️ عقد الكراء' : locale === 'en' ? '⚖️ Lease Contract' : '⚖️ Contrat Bail' },
-              ].map((tab) => (
-                <button
-                  key={tab.id}
-                  onClick={() => setActiveInspectorDoc(tab.id)}
-                  className={`px-3.5 py-1.5 rounded-xl text-xs font-bold transition-all cursor-pointer flex items-center gap-1.5 border ${
-                    activeInspectorDoc === tab.id
-                      ? 'bg-emerald-500 text-zinc-950 border-emerald-400 shadow-lg shadow-emerald-500/20'
-                      : 'bg-zinc-900/80 text-zinc-400 hover:text-white border-zinc-800'
-                  }`}
-                >
-                  <span>{tab.label}</span>
-                </button>
-              ))}
+                {
+                  id: 'passport' as const,
+                  label: locale === 'ar' ? 'جواز السفر' : locale === 'en' ? 'Passport' : 'Passeport',
+                  icon: FileCheck2,
+                },
+                {
+                  id: 'tax' as const,
+                  label: locale === 'ar' ? 'الضريبة البلدية' : locale === 'en' ? 'Tax Notice' : 'Avis Fiscal',
+                  icon: FileText,
+                },
+                {
+                  id: 'lease' as const,
+                  label: locale === 'ar' ? 'عقد الكراء' : locale === 'en' ? 'Lease Contract' : 'Contrat Bail',
+                  icon: Scale,
+                },
+              ].map((tab) => {
+                const Icon = tab.icon;
+                const isActive = activeInspectorDoc === tab.id;
+                return (
+                  <button
+                    key={tab.id}
+                    onClick={() => setActiveInspectorDoc(tab.id)}
+                    className={`px-3.5 py-1.5 rounded-xl text-xs font-bold transition-all cursor-pointer flex items-center gap-2 border ${
+                      isActive
+                        ? 'bg-emerald-500 text-zinc-950 border-emerald-400 shadow-lg shadow-emerald-500/20'
+                        : 'bg-zinc-900/80 text-zinc-400 hover:text-white border-zinc-800'
+                    }`}
+                  >
+                    <Icon className={`w-3.5 h-3.5 ${isActive ? 'text-zinc-950' : 'text-zinc-500'}`} />
+                    <span>{tab.label}</span>
+                  </button>
+                );
+              })}
             </div>
 
             {/* The Document Visual Card with Sweeping Laser Scan Line */}
@@ -408,8 +427,9 @@ export default function HomePage() {
               {/* Document Footer Bar */}
               <div className="pt-4 border-t border-zinc-800/80 flex items-center justify-between relative z-10 text-xs font-mono">
                 <div className="flex items-center gap-2">
-                  <span className="px-2 py-0.5 rounded bg-zinc-900 border border-zinc-800 text-zinc-400 text-[11px]">
-                    ⏱ {currentDoc.time}
+                  <span className="px-2 py-0.5 rounded bg-zinc-900 border border-zinc-800 text-zinc-400 text-[11px] flex items-center gap-1">
+                    <Clock className="w-3 h-3 text-zinc-500" />
+                    <span>{currentDoc.time}</span>
                   </span>
                   <span className="px-2 py-0.5 rounded bg-zinc-900 border border-zinc-800 text-emerald-400 text-[11px]">
                     {currentDoc.stamp}

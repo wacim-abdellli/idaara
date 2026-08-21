@@ -26,8 +26,8 @@
   --text-3: #5A5D66;
 
   /* Fonts */
-  --font-display: "DM Serif Display", Georgia, serif;
-  --font-body:    "Inter", system-ui, -apple-system, sans-serif;
+  --font-display: "Instrument Serif", Georgia, serif;
+  --font-body:    "Plus Jakarta Sans", system-ui, -apple-system, sans-serif;
   --font-arabic:  "Cairo", "Noto Sans Arabic", Tahoma, sans-serif;
   --font-mono:    "JetBrains Mono", monospace;
 }
