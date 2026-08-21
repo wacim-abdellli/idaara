@@ -518,14 +518,14 @@ export default function ProceduresPage() {
             <p className="text-[11px] text-zinc-400 leading-relaxed">
               {locale === 'en'
                 ? 'Speak in Derja or French and Idaara AI will identify the exact documents and stamp fees.'
-                : 'Posez votre question en Derja ou Français au Voice Copilot pour obtenir les étapes en direct.'}
+                : 'Posez votre question en Derja ou Français à l’IA Vocale pour obtenir les étapes en direct.'}
             </p>
             <motion.div whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.97 }}>
               <Link
                 href="/copilot"
                 className="inline-flex items-center gap-1.5 text-xs font-bold text-emerald-300 hover:text-emerald-200 hover:underline pt-1"
               >
-                <span>{locale === 'en' ? 'Launch Voice Copilot' : 'Ouvrir le Voice Copilot'}</span>
+                <span>{locale === 'en' ? 'Launch Voice AI' : 'Ouvrir Voice AI'}</span>
                 <ArrowRight className="w-3.5 h-3.5 rtl:rotate-180" />
               </Link>
             </motion.div>

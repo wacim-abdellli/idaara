@@ -375,7 +375,7 @@ export default function CopilotPage() {
     locale === 'ar'
       ? 'المساعد الإداري الرسمي'
       : locale === 'derja'
-      ? 'Copilot Idari Tounsi'
+      ? 'Assistant Idari Tounsi'
       : locale === 'fr'
       ? 'IA Civique Officielle'
       : 'Official Civic AI';
@@ -532,7 +532,7 @@ export default function CopilotPage() {
             {/* Model Badge */}
             <div className="flex items-center gap-2 px-2 py-1 text-zinc-200 font-semibold text-sm">
               <div className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse shadow-sm shadow-emerald-400/50" />
-              <span className="tracking-tight">{locale === 'ar' ? 'المساعد الإداري' : locale === 'derja' ? 'Copilot Idari' : 'Copilot Civique'}</span>
+              <span className="tracking-tight">{locale === 'ar' ? 'المساعد الإداري الذكي' : locale === 'derja' ? 'Idaara AI' : 'Idaara AI (Assistant Civique)'}</span>
             </div>
           </div>
 
@@ -717,7 +717,7 @@ export default function CopilotPage() {
                       {locale === 'ar'
                         ? 'تحدث بالدارجة التونسية أو الفرنسية مع نموذج الصوت الذكي'
                         : locale === 'derja'
-                        ? 'Tkellem bel Derja m3a el Copilot el Idari el thaki'
+                        ? 'Tkellem bel Derja m3a l’assistant el idari el thaki'
                         : 'Discutez en Derja tunisienne avec notre modèle vocal civique'}
                     </div>
                   </div>

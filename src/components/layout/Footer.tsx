@@ -49,10 +49,10 @@ export const Footer: React.FC = () => {
         locale === 'ar'
           ? 'المساعد الصوتي بالدارجة'
           : locale === 'derja'
-          ? 'Voice Copilot bel Derja'
+          ? 'Voice AI bel Derja'
           : locale === 'en'
-          ? 'Voice Copilot (Derja AI)'
-          : 'Voice Copilot (Derja AI)',
+          ? 'Voice AI (Derja AI)'
+          : 'Voice AI (Derja AI)',
     },
     {
       href: '/fasserli',

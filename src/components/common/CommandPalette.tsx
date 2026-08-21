@@ -82,10 +82,10 @@ export const CommandPalette: React.FC = () => {
           locale === 'ar'
             ? 'المساعد الذكي بالدارجة'
             : locale === 'derja'
-            ? 'Voice Copilot bel Derja'
+            ? 'Voice AI bel Derja'
             : locale === 'en'
-            ? 'Voice Copilot (Derja AI)'
-            : 'Copilot Vocal en Derja',
+            ? 'Voice AI (Derja AI)'
+            : 'Assistant Vocal en Derja',
         subtitle:
           locale === 'ar'
             ? 'تحدث بالصوت حول أي إجراء'
