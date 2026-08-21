@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useLocale } from '../../context/LocaleContext';
 import { LanguageSwitcher } from './LanguageSwitcher';
+import { BrandLogo } from './BrandLogo';
 import { Mic, FileSearch, FileText, Calculator, MapPin, Rocket, BookOpen, Menu, X, Zap, Search } from 'lucide-react';
 
 const NAV_LINKS = [
@@ -38,11 +39,7 @@ export const Navbar: React.FC = () => {
           {/* Left: Brand Logo & Desktop Navigation */}
           <div className="flex items-center gap-4 lg:gap-6 min-w-0">
             {/* Brand logo */}
-            <Link href="/" className="flex items-center group shrink-0">
-              <span className="font-extrabold text-base sm:text-lg text-white tracking-tight group-hover:opacity-90 transition-opacity">
-                Idaara<span className="text-emerald-400">.tn</span>
-              </span>
-            </Link>
+            <BrandLogo />
 
             {/* Desktop Navigation */}
             <nav className="hidden lg:flex items-center gap-1">

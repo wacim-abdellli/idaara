@@ -3,6 +3,7 @@
 import React from 'react';
 import Link from 'next/link';
 import { useLocale } from '../../context/LocaleContext';
+import { BrandLogo } from './BrandLogo';
 import { ShieldCheck, ExternalLink } from 'lucide-react';
 
 export const Footer: React.FC = () => {
@@ -104,9 +105,7 @@ export const Footer: React.FC = () => {
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8 mb-12">
           {/* Col 1: Brand & Mission */}
           <div className="space-y-4 md:col-span-1">
-            <Link href="/" className="flex items-center">
-              <span className="font-extrabold text-base text-white tracking-tight">Idaara<span className="text-emerald-400">.tn</span></span>
-            </Link>
+            <BrandLogo />
             <p className="text-zinc-500 text-xs leading-relaxed">
               {t('heroSubheadline')}
             </p>
