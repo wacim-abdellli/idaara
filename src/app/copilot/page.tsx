@@ -5,6 +5,7 @@ import { useLocale } from '../../context/LocaleContext';
 import { ChatMessage } from '../../components/copilot/ChatMessage';
 import { ChatMessage as ChatMessageType } from '../../types/chat';
 import {
+  Plus,
   Mic,
   MicOff,
   ArrowUp,
@@ -14,12 +15,13 @@ import {
   Check,
   ChevronDown,
   SlidersHorizontal,
-  FileSearch,
+  FileCheck2,
   Car,
-  TrendingUp,
-  Home,
+  Briefcase,
+  FileText,
   ShieldCheck,
   Plane,
+  Sparkles,
 } from 'lucide-react';
 
 export default function CopilotPage() {
@@ -32,6 +34,8 @@ export default function CopilotPage() {
   const [activeProvider, setActiveProvider] = useState<string>('auto');
   const [customApiKey, setCustomApiKey] = useState<string>('');
   const [showSettingsModal, setShowSettingsModal] = useState<boolean>(false);
+  const [showPlusMenu, setShowPlusMenu] = useState<boolean>(false);
+  const [showModelDropdown, setShowModelDropdown] = useState<boolean>(false);
   const [providerBadge, setProviderBadge] = useState<string>('Gemini 1.5 Flash');
 
   const messagesContainerRef = useRef<HTMLDivElement | null>(null);
@@ -65,59 +69,14 @@ export default function CopilotPage() {
     }
   }, [messages, isProcessing]);
 
-  const topicCards = [
-    {
-      icon: FileSearch,
-      label: locale === 'ar' ? 'جواز السفر' : locale === 'en' ? 'Passport' : 'Passeport',
-      desc: locale === 'ar' ? 'تجديد جواز السفر — وثائق ومعاليم 80 دت' : locale === 'en' ? 'Renewal — papers & 80 DT timbre' : 'Renouvellement — dossier & timbre 80 DT',
-      q: locale === 'ar' ? 'شنوة يلزمني باش نجدد جواز السفر التونسي؟' : locale === 'en' ? 'What documents and fees do I need to renew my Tunisian passport?' : 'Quels sont les documents et frais pour renouveler un passeport tunisien ?',
-      color: 'emerald',
-    },
-    {
-      icon: Car,
-      label: locale === 'ar' ? 'البطاقة الرمادية' : locale === 'en' ? 'Carte Grise' : 'Carte Grise',
-      desc: locale === 'ar' ? 'نقل ملكية السيارة — عقد بيع + ATTT' : locale === 'en' ? 'Car transfer — bill of sale & ATTT' : 'Mutation — acte de vente & visite ATTT',
-      q: locale === 'ar' ? 'شريت كرهبة مستعملة، كيفاش نبدل البطاقة الرمادية؟' : locale === 'en' ? 'How do I transfer a car registration after buying a used vehicle?' : "Comment faire la mutation de carte grise après achat d'un véhicule ?",
-      color: 'blue',
-    },
-    {
-      icon: TrendingUp,
-      label: locale === 'ar' ? 'مبادر ذاتي' : locale === 'en' ? 'Auto-Entrepreneur' : 'Auto-Entrepreneur',
-      desc: locale === 'ar' ? 'ضريبة 1% وفواتير بالعملة الصعبة' : locale === 'en' ? '1% flat rate & legal foreign invoicing' : 'Impôt 1% & facturation devises BCT',
-      q: locale === 'ar' ? 'كيفاش نسجل في المبادر الذاتي وشنوة الامتيازات الجبائية 1%؟' : locale === 'en' ? 'How to register as an Auto-Entrepreneur with 1% tax in Tunisia?' : 'Comment fonctionne le régime auto-entrepreneur 1% pour freelances ?',
-      color: 'amber',
-    },
-    {
-      icon: Home,
-      label: locale === 'ar' ? 'عقد كراء' : locale === 'en' ? 'Lease Contract' : 'Contrat de Bail',
-      desc: locale === 'ar' ? 'عقد كراء سكني قانوني وفق مجلة الالتزامات' : locale === 'en' ? 'Legal lease — Baladiya & Recette' : 'Bail légal — Baladiya & Recette des finances',
-      q: locale === 'ar' ? 'كيفاش نعمل عقد كراء سكني قانوني؟' : locale === 'en' ? 'How to create a legal residential lease contract in Tunisia?' : 'Comment rédiger un contrat de bail résidentiel conforme en Tunisie ?',
-      color: 'violet',
-    },
-    {
-      icon: ShieldCheck,
-      label: locale === 'ar' ? 'بطاقة ب3' : locale === 'en' ? 'Bulletin B3' : 'Bulletin B3',
-      desc: locale === 'ar' ? 'السوابق العدلية — عبر الإنترنت أو مركز الشرطة' : locale === 'en' ? 'Criminal record — online or police' : 'Casier judiciaire — en ligne ou commissariat',
-      q: locale === 'ar' ? 'كيفاش نتحصل على بطاقة السوابق العدلية ب3؟' : locale === 'en' ? 'How to get the B3 criminal record certificate in Tunisia?' : 'Comment obtenir le bulletin N°3 (casier judiciaire) en Tunisie ?',
-      color: 'rose',
-    },
-    {
-      icon: Plane,
-      label: locale === 'ar' ? 'امتياز FCR' : locale === 'en' ? 'FCR Regime' : 'Régime FCR',
-      desc: locale === 'ar' ? 'توريد سيارات — للتونسيين بالخارج' : locale === 'en' ? 'Diaspora car import privilege' : 'Import véhicule — avantages diaspora',
-      q: locale === 'ar' ? 'شنوة شروط امتياز FCR لتوريد سيارة للتونسيين بالخارج؟' : locale === 'en' ? 'What are the FCR customs privilege conditions for Tunisian diaspora?' : 'Quelles sont les conditions pour bénéficier du régime FCR en Tunisie ?',
-      color: 'sky',
-    },
+  const quickTopics = [
+    { label: locale === 'ar' ? 'تجديد جواز السفر 80د' : locale === 'en' ? 'Renew Passport (80 DT)' : 'Renouveler Passeport (80 DT)', q: 'Quels sont les documents et timbres fiscaux pour renouveler mon passeport tunisien ?', icon: FileCheck2 },
+    { label: locale === 'ar' ? 'البطاقة الرمادية للسيارة 145د' : locale === 'en' ? 'Car Registration Transfer' : 'Mutation Carte Grise (145 DT)', q: "Comment faire la mutation de carte grise après achat d'un véhicule d'occasion en Tunisie ?", icon: Car },
+    { label: locale === 'ar' ? 'المبادر الذاتي 1% فريلانس' : locale === 'en' ? 'Auto-Entrepreneur 1% Tax' : 'Statut Auto-Entrepreneur 1%', q: 'Comment fonctionne le régime Auto-Entrepreneur 1% et la facturation en devises en Tunisie ?', icon: Briefcase },
+    { label: locale === 'ar' ? 'عقد كراء سكني قانوني' : locale === 'en' ? 'Legal Lease Contract (COC)' : 'Contrat de Bail Conforme', q: 'Quelles sont les démarches pour un contrat de bail résidentiel légalisé en Tunisie ?', icon: FileText },
+    { label: locale === 'ar' ? 'بطاقة السوابق ب3 عبر الإنترنت' : locale === 'en' ? 'Criminal Record (B3) 7.5 DT' : 'Bulletin N°3 (B3) en ligne', q: 'Comment obtenir le bulletin N°3 (casier judiciaire) en ligne en Tunisie ?', icon: ShieldCheck },
+    { label: locale === 'ar' ? 'امتياز التوريد ن.ت.د (FCR)' : locale === 'en' ? 'FCR Customs Privilege' : 'Régime Douanier FCR', q: 'Quelles sont les conditions pour bénéficier du régime FCR pour les Tunisiens à l’étranger ?', icon: Plane },
   ];
-
-  const colorMap: Record<string, { icon: string; border: string; bg: string }> = {
-    emerald: { icon: 'text-emerald-400', border: 'border-emerald-500/30', bg: 'bg-emerald-500/10' },
-    blue:    { icon: 'text-blue-400',    border: 'border-blue-500/30',    bg: 'bg-blue-500/10'    },
-    amber:   { icon: 'text-amber-400',   border: 'border-amber-500/30',   bg: 'bg-amber-500/10'   },
-    violet:  { icon: 'text-violet-400',  border: 'border-violet-500/30',  bg: 'bg-violet-500/10'  },
-    rose:    { icon: 'text-rose-400',    border: 'border-rose-500/30',    bg: 'bg-rose-500/10'    },
-    sky:     { icon: 'text-sky-400',     border: 'border-sky-500/30',     bg: 'bg-sky-500/10'     },
-  };
 
   const handleSendMessage = async (textToSend?: string) => {
     const query = (textToSend ?? inputVal).trim();
@@ -132,6 +91,7 @@ export default function CopilotPage() {
 
     setMessages((prev) => [...prev, userMsg]);
     setInputVal('');
+    setShowPlusMenu(false);
     setIsProcessing(true);
     if (textareaRef.current) textareaRef.current.style.height = 'auto';
 
@@ -209,11 +169,14 @@ export default function CopilotPage() {
   const onTextareaChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     setInputVal(e.target.value);
     e.target.style.height = 'auto';
-    e.target.style.height = `${Math.min(e.target.scrollHeight, 130)}px`;
+    e.target.style.height = `${Math.min(e.target.scrollHeight, 140)}px`;
   };
 
   const onKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
-    if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); handleSendMessage(); }
+    if (e.key === 'Enter' && !e.shiftKey) {
+      e.preventDefault();
+      handleSendMessage();
+    }
   };
 
   const saveSettings = () => {
@@ -222,210 +185,331 @@ export default function CopilotPage() {
     const map: Record<string, string> = { auto: 'Auto-Smart', gemini: 'Gemini 1.5 Flash', groq: 'Groq Llama 3.3', local: 'Civic Engine' };
     setProviderBadge(map[activeProvider] || 'Auto-Smart');
     setShowSettingsModal(false);
+    setShowModelDropdown(false);
   };
 
-  const greetLine = locale === 'ar'
-    ? 'فاش نجم نعاونك اليوم؟'
+  const centerHeadline = locale === 'ar'
+    ? "فاش نجم نعاونك اليوم؟"
     : locale === 'en'
-    ? 'How can I help with your paperwork today?'
-    : 'Comment puis-je vous aider dans vos démarches ?';
-
-  const subLine = locale === 'ar'
-    ? 'اسأل بالدارجة أو الفرنسية أو العربية — جواز سفر، بطاقة رمادية، عقد، تنابر...'
-    : locale === 'en'
-    ? 'Ask in Derja, French, or English — passport, car registration, stamp fees, and more'
-    : 'Posez vos questions en Derja ou Français — passeport, carte grise, timbres fiscaux...';
+    ? "What's on the agenda today?"
+    : "Qu'avez-vous à l'ordre du jour aujourd'hui ?";
 
   const placeholder = isRecording
     ? (locale === 'ar' ? 'جار الاستماع...' : 'Listening...')
-    : (locale === 'ar'
-      ? 'اكتب سؤالك هنا... (Enter للإرسال، Shift+Enter لسطر جديد)'
-      : locale === 'fr'
-      ? 'Tapez votre question... (Entrée pour envoyer)'
-      : 'Ask anything... (Enter to send, Shift+Enter for new line)');
+    : (locale === 'ar' ? 'اسأل عن أي إجراء أو وثيقة...' : 'Ask anything');
 
   return (
-    <div className="h-[calc(100vh-56px)] flex flex-col overflow-hidden bg-zinc-950">
+    <div className="h-[calc(100vh-3.5rem)] flex flex-col bg-[#09090b] text-white overflow-hidden relative">
 
-      {/* ─── Sticky Header ─── */}
-      <div className="shrink-0 border-b border-zinc-800/60 px-4 sm:px-8 py-2.5 flex items-center justify-between bg-zinc-950/90 backdrop-blur-xl">
-        <div className="flex items-center gap-2.5">
-          <div className="w-7 h-7 rounded-lg bg-[#0c0d0f] border border-emerald-500 flex items-center justify-center shadow-md shadow-emerald-950/80">
-            <svg viewBox="0 0 32 32" className="w-4 h-4" fill="none">
-              <path d="M10 8.5h10M15 8.5v15M10 23.5h10" stroke="#FFF" strokeWidth="3.2" strokeLinecap="round" strokeLinejoin="round"/>
-              <circle cx="23" cy="22" r="2.8" fill="#10b981"/>
-            </svg>
-          </div>
-          <span className="text-sm font-bold text-white">Idaara Copilot</span>
+      {/* ─── Top Bar (Exact ChatGPT style) ─── */}
+      <header className="shrink-0 h-13 px-4 sm:px-6 flex items-center justify-between border-b border-white/5 bg-[#09090b]/80 backdrop-blur-xl z-20">
+        
+        {/* Model Selector Dropdown on Left */}
+        <div className="relative">
           <button
-            onClick={() => setShowSettingsModal(true)}
-            className="flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-mono bg-zinc-900 border border-zinc-800 text-zinc-400 hover:border-emerald-500/40 hover:text-emerald-400 transition-all cursor-pointer"
+            onClick={() => setShowModelDropdown((p) => !p)}
+            className="flex items-center gap-2 px-3 py-1.5 rounded-xl hover:bg-white/10 text-zinc-200 font-semibold text-sm transition-colors cursor-pointer"
           >
-            <span className="w-1 h-1 rounded-full bg-emerald-400 animate-pulse inline-block" />
-            <span>{providerBadge}</span>
-            <ChevronDown className="w-2.5 h-2.5 opacity-50" />
+            <span>Idaara Copilot</span>
+            <span className="text-[11px] font-mono text-zinc-400 font-normal">({providerBadge})</span>
+            <ChevronDown className="w-3.5 h-3.5 text-zinc-400" />
           </button>
+
+          {/* Model Dropdown Menu */}
+          {showModelDropdown && (
+            <div className="absolute top-full left-0 mt-1.5 w-64 rounded-2xl bg-[#1e1e1e] border border-white/10 shadow-2xl p-2 z-50 animate-fade-in space-y-1">
+              {[
+                { id: 'auto', name: 'Auto-Smart', desc: 'Best available model' },
+                { id: 'gemini', name: 'Gemini 1.5 Flash', desc: 'Google Free Tier' },
+                { id: 'groq', name: 'Groq Llama 3.3', desc: 'Ultra-fast 70B' },
+                { id: 'local', name: 'Civic Engine', desc: 'Built-in JORT data' },
+              ].map((m) => (
+                <button
+                  key={m.id}
+                  onClick={() => {
+                    setActiveProvider(m.id);
+                    localStorage.setItem('idaara_ai_provider', m.id);
+                    setProviderBadge(m.name);
+                    setShowModelDropdown(false);
+                  }}
+                  className={`w-full flex items-center justify-between px-3 py-2 rounded-xl text-left text-xs transition-colors cursor-pointer ${
+                    activeProvider === m.id ? 'bg-white/10 text-white font-semibold' : 'text-zinc-300 hover:bg-white/5'
+                  }`}
+                >
+                  <div>
+                    <div className="text-sm">{m.name}</div>
+                    <div className="text-[10px] text-zinc-400">{m.desc}</div>
+                  </div>
+                  {activeProvider === m.id && <Check className="w-4 h-4 text-emerald-400" />}
+                </button>
+              ))}
+
+              <div className="pt-1.5 mt-1 border-t border-white/10">
+                <button
+                  onClick={() => {
+                    setShowModelDropdown(false);
+                    setShowSettingsModal(true);
+                  }}
+                  className="w-full flex items-center gap-2 px-3 py-2 rounded-xl text-xs text-zinc-400 hover:text-white hover:bg-white/5 transition-colors cursor-pointer"
+                >
+                  <Settings className="w-3.5 h-3.5" />
+                  <span>Configure API Key...</span>
+                </button>
+              </div>
+            </div>
+          )}
         </div>
 
-        <div className="flex items-center gap-2">
+        {/* Right Actions */}
+        <div className="flex items-center gap-1.5">
+          {messages.length > 0 && (
+            <button
+              onClick={() => setMessages([])}
+              className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl hover:bg-white/10 text-zinc-300 hover:text-white text-xs transition-colors cursor-pointer"
+              title="New Chat"
+            >
+              <RotateCcw className="w-3.5 h-3.5" />
+              <span className="hidden sm:inline">New Chat</span>
+            </button>
+          )}
+
           <button
             onClick={() => setShowSettingsModal(true)}
-            className="p-1.5 rounded-lg text-zinc-500 hover:text-zinc-200 hover:bg-zinc-800 transition-colors cursor-pointer"
+            className="p-2 rounded-xl hover:bg-white/10 text-zinc-400 hover:text-white transition-colors cursor-pointer"
             title="Settings"
           >
             <Settings className="w-4 h-4" />
           </button>
-          {messages.length > 0 && (
-            <button
-              onClick={() => setMessages([])}
-              className="p-1.5 rounded-lg text-zinc-500 hover:text-zinc-200 hover:bg-zinc-800 transition-colors cursor-pointer"
-              title="New chat"
-            >
-              <RotateCcw className="w-4 h-4" />
-            </button>
-          )}
         </div>
-      </div>
+      </header>
 
-      {/* ─── Messages Stream (own scroll zone) ─── */}
-      <div
-        ref={messagesContainerRef}
-        className="flex-1 overflow-y-auto"
-      >
-        {/* ─── Welcome / Empty State ─── */}
-        {messages.length === 0 && !isProcessing && (
-          <div className="max-w-2xl mx-auto px-4 sm:px-6 pt-10 sm:pt-14 pb-4">
+      {/* ─── Empty State (Exact ChatGPT style centered headline & bar) ─── */}
+      {messages.length === 0 && !isProcessing && (
+        <div className="flex-1 flex flex-col items-center justify-center px-4 sm:px-6 max-w-2xl mx-auto w-full -mt-12">
+          
+          {/* Centered Headline */}
+          <h1 className="text-2xl sm:text-4xl font-semibold text-white tracking-tight mb-8 text-center">
+            {centerHeadline}
+          </h1>
 
-            {/* Greeting */}
-            <div className="text-center mb-8">
-              <h2 className="text-2xl sm:text-3xl font-extrabold text-white mb-2 tracking-tight leading-tight">
-                {greetLine}
-              </h2>
-              <p className="text-sm text-zinc-400 leading-relaxed max-w-sm mx-auto">
-                {subLine}
-              </p>
+          {/* Centered Floating Prompt Input Bar */}
+          <div className="w-full relative">
+            <div className="flex items-center gap-2 bg-[#212121] hover:bg-[#262626] focus-within:bg-[#212121] border border-white/10 focus-within:border-white/20 rounded-full px-4 py-2.5 shadow-2xl transition-all">
+              
+              {/* Plus Button with Quick Topics Dropdown */}
+              <div className="relative shrink-0">
+                <button
+                  type="button"
+                  onClick={() => setShowPlusMenu((p) => !p)}
+                  className="p-1.5 rounded-full hover:bg-white/10 text-zinc-400 hover:text-white transition-colors cursor-pointer"
+                  title="Quick Topics"
+                >
+                  <Plus className="w-4 h-4" />
+                </button>
+
+                {showPlusMenu && (
+                  <div className="absolute bottom-full left-0 mb-3 w-72 rounded-2xl bg-[#1e1e1e] border border-white/10 shadow-2xl p-2 z-50 animate-fade-in space-y-1">
+                    <div className="px-3 py-1 text-[10px] uppercase font-bold tracking-wider text-zinc-400">
+                      Popular Inquiries
+                    </div>
+                    {quickTopics.map((item, idx) => {
+                      const Icon = item.icon;
+                      return (
+                        <button
+                          key={idx}
+                          onClick={() => handleSendMessage(item.q)}
+                          className="w-full flex items-center gap-2.5 px-3 py-2 rounded-xl text-left hover:bg-white/10 text-xs text-zinc-200 transition-colors cursor-pointer"
+                        >
+                          <Icon className="w-3.5 h-3.5 text-emerald-400 shrink-0" />
+                          <span className="truncate">{item.label}</span>
+                        </button>
+                      );
+                    })}
+                  </div>
+                )}
+              </div>
+
+              {/* Text Input */}
+              <input
+                autoFocus
+                type="text"
+                value={inputVal}
+                onChange={(e) => setInputVal(e.target.value)}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter') {
+                    e.preventDefault();
+                    handleSendMessage();
+                  }
+                }}
+                placeholder={placeholder}
+                className="flex-1 bg-transparent py-1 text-sm sm:text-base text-zinc-100 placeholder-zinc-500 focus:outline-none"
+              />
+
+              {/* Right Action Icons (Mic + Voice/Send) */}
+              <div className="flex items-center gap-1 shrink-0">
+                <button
+                  type="button"
+                  onClick={toggleVoice}
+                  className={`p-2 rounded-full transition-colors cursor-pointer ${
+                    isRecording ? 'bg-red-500 text-white animate-pulse' : 'text-zinc-400 hover:text-white hover:bg-white/10'
+                  }`}
+                  title="Dictate"
+                >
+                  {isRecording ? <MicOff className="w-4 h-4" /> : <Mic className="w-4 h-4" />}
+                </button>
+
+                <button
+                  type="button"
+                  onClick={() => handleSendMessage()}
+                  disabled={!inputVal.trim()}
+                  className="w-8 h-8 rounded-full bg-white text-black flex items-center justify-center transition-all disabled:opacity-20 disabled:cursor-not-allowed hover:opacity-90 cursor-pointer shadow-md"
+                  title="Send"
+                >
+                  <ArrowUp className="w-4 h-4 stroke-[3]" />
+                </button>
+              </div>
+
             </div>
 
-            {/* Topic Cards 2-column grid */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
-              {topicCards.map((card, idx) => {
-                const Icon = card.icon;
-                const c = colorMap[card.color];
-                return (
-                  <button
-                    key={idx}
-                    onClick={() => handleSendMessage(card.q)}
-                    className="flex items-start gap-3 text-left p-3.5 rounded-xl bg-zinc-900/60 hover:bg-zinc-900 border border-zinc-800/80 hover:border-zinc-700 transition-all group cursor-pointer"
-                  >
-                    <div className={`w-8 h-8 rounded-lg ${c.bg} ${c.border} border flex items-center justify-center shrink-0 mt-0.5`}>
-                      <Icon className={`w-4 h-4 ${c.icon}`} />
-                    </div>
-                    <div className="min-w-0">
-                      <div className="text-sm font-semibold text-zinc-100 group-hover:text-white mb-0.5">
-                        {card.label}
-                      </div>
-                      <div className="text-xs text-zinc-500 leading-snug">
-                        {card.desc}
-                      </div>
-                    </div>
-                  </button>
-                );
-              })}
-            </div>
-
+            {/* Micro disclaimer */}
+            <p className="text-center text-[11px] text-zinc-600 mt-3 font-normal">
+              {locale === 'ar'
+                ? 'إدارة.تونس AI يقدم معلومات إرشادية. يرجى التثبت من النصوص بالرائد الرسمي.'
+                : 'Idaara AI is AI and can make mistakes. Verify official texts with JORT.'}
+            </p>
           </div>
-        )}
 
-        {/* ─── Active Messages ─── */}
-        {messages.length > 0 && (
-          <div className="max-w-2xl mx-auto px-4 sm:px-6 py-6 space-y-6">
-            {messages.map((msg) => (
-              <ChatMessage key={msg.id} message={msg} />
-            ))}
+        </div>
+      )}
 
-            {/* Typing Indicator */}
-            {isProcessing && (
-              <div className="flex items-start gap-3 animate-fade-in">
-                <div className="w-7 h-7 rounded-lg bg-[#0c0d0f] border border-emerald-500/60 flex items-center justify-center shrink-0 shadow-md">
-                  <svg viewBox="0 0 32 32" className="w-4 h-4" fill="none">
-                    <path d="M10 8.5h10M15 8.5v15M10 23.5h10" stroke="#FFF" strokeWidth="3.2" strokeLinecap="round" strokeLinejoin="round"/>
-                    <circle cx="23" cy="22" r="2.8" fill="#10b981"/>
-                  </svg>
-                </div>
-                <div className="flex items-center gap-1.5 px-4 py-3 rounded-2xl rounded-tl-sm bg-zinc-900 border border-zinc-800 shadow-md">
+      {/* ─── Active Chat Messages Stream ─── */}
+      {(messages.length > 0 || isProcessing) && (
+        <>
+          <div
+            ref={messagesContainerRef}
+            className="flex-1 overflow-y-auto px-4 sm:px-6 py-6 scroll-smooth"
+          >
+            <div className="max-w-3xl mx-auto space-y-4">
+              {messages.map((msg) => (
+                <ChatMessage key={msg.id} message={msg} onSelectPrompt={(p) => handleSendMessage(p)} />
+              ))}
+
+              {/* Typing / Thinking Animation */}
+              {isProcessing && (
+                <div className="w-full py-2 animate-fade-in flex items-center gap-2 text-zinc-400 text-sm">
                   <span className="w-2 h-2 rounded-full bg-emerald-400 animate-bounce" style={{ animationDelay: '0ms' }} />
                   <span className="w-2 h-2 rounded-full bg-emerald-400 animate-bounce" style={{ animationDelay: '150ms' }} />
                   <span className="w-2 h-2 rounded-full bg-emerald-400 animate-bounce" style={{ animationDelay: '300ms' }} />
                 </div>
-              </div>
-            )}
-          </div>
-        )}
-      </div>
-
-      {/* ─── Pinned Footer / Input ─── */}
-      <div className="shrink-0 border-t border-zinc-800/50 px-4 sm:px-8 py-3 bg-zinc-950">
-        <div className="max-w-2xl mx-auto">
-
-          {/* Input box */}
-          <div className="flex items-end gap-2 bg-zinc-900/80 border border-zinc-800 focus-within:border-zinc-700 focus-within:ring-1 focus-within:ring-emerald-500/20 rounded-2xl px-3 py-2 transition-all shadow-lg">
-            <textarea
-              ref={textareaRef}
-              rows={1}
-              value={inputVal}
-              onChange={onTextareaChange}
-              onKeyDown={onKeyDown}
-              placeholder={placeholder}
-              className="flex-1 bg-transparent py-1.5 text-sm text-zinc-100 placeholder-zinc-500 focus:outline-none resize-none max-h-32 leading-relaxed"
-            />
-            <div className="flex items-center gap-1.5 pb-0.5 shrink-0">
-              <button
-                onClick={toggleVoice}
-                disabled={isProcessing}
-                className={`p-2 rounded-xl transition-all cursor-pointer ${
-                  isRecording
-                    ? 'bg-red-500 text-white ring-2 ring-red-500/30'
-                    : 'text-zinc-500 hover:text-zinc-300 hover:bg-zinc-800'
-                }`}
-              >
-                {isRecording ? <MicOff className="w-4 h-4" /> : <Mic className="w-4 h-4" />}
-              </button>
-              <button
-                onClick={() => handleSendMessage()}
-                disabled={!inputVal.trim() || isProcessing}
-                className="p-2 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-zinc-950 font-bold transition-all disabled:opacity-30 disabled:cursor-not-allowed shadow-md cursor-pointer"
-              >
-                <ArrowUp className="w-4 h-4 stroke-[2.5]" />
-              </button>
+              )}
             </div>
           </div>
 
-          {/* Disclaimer */}
-          <p className="text-center text-[10px] text-zinc-600 mt-2">
-            {locale === 'ar'
-              ? 'إدارة.تونس AI للإرشاد فقط — تحقق دائماً من النصوص الرسمية في الرائد الرسمي.'
-              : 'Idaara AI is for guidance only — always verify with official sources (JORT).'}
-          </p>
+          {/* ─── Pinned Bottom Prompt Bar (Active Chat) ─── */}
+          <footer className="shrink-0 pb-4 pt-2 bg-gradient-to-t from-[#09090b] via-[#09090b]/95 to-transparent z-20 px-4 sm:px-6">
+            <div className="max-w-3xl mx-auto space-y-2">
+              
+              {/* Bottom Pill Input */}
+              <div className="flex items-end gap-2 bg-[#212121] border border-white/10 focus-within:border-white/25 rounded-3xl px-3 py-2 transition-all shadow-2xl">
+                
+                {/* Plus Topic Button */}
+                <div className="relative pb-1">
+                  <button
+                    type="button"
+                    onClick={() => setShowPlusMenu((p) => !p)}
+                    className="p-1.5 rounded-full hover:bg-white/10 text-zinc-400 hover:text-white transition-colors cursor-pointer"
+                    title="Quick Topics"
+                  >
+                    <Plus className="w-4 h-4" />
+                  </button>
 
-        </div>
-      </div>
+                  {showPlusMenu && (
+                    <div className="absolute bottom-full left-0 mb-3 w-72 rounded-2xl bg-[#1e1e1e] border border-white/10 shadow-2xl p-2 z-50 animate-fade-in space-y-1">
+                      <div className="px-3 py-1 text-[10px] uppercase font-bold tracking-wider text-zinc-400">
+                        Popular Inquiries
+                      </div>
+                      {quickTopics.map((item, idx) => {
+                        const Icon = item.icon;
+                        return (
+                          <button
+                            key={idx}
+                            onClick={() => handleSendMessage(item.q)}
+                            className="w-full flex items-center gap-2.5 px-3 py-2 rounded-xl text-left hover:bg-white/10 text-xs text-zinc-200 transition-colors cursor-pointer"
+                          >
+                            <Icon className="w-3.5 h-3.5 text-emerald-400 shrink-0" />
+                            <span className="truncate">{item.label}</span>
+                          </button>
+                        );
+                      })}
+                    </div>
+                  )}
+                </div>
 
-      {/* ─── Settings Modal ─── */}
+                {/* Auto-growing Textarea */}
+                <textarea
+                  ref={textareaRef}
+                  rows={1}
+                  value={inputVal}
+                  onChange={onTextareaChange}
+                  onKeyDown={onKeyDown}
+                  placeholder={placeholder}
+                  className="flex-1 bg-transparent py-1 text-sm sm:text-base text-zinc-100 placeholder-zinc-500 focus:outline-none resize-none max-h-36 leading-relaxed"
+                />
+
+                {/* Mic & Send Buttons */}
+                <div className="flex items-center gap-1 pb-0.5 shrink-0">
+                  <button
+                    type="button"
+                    onClick={toggleVoice}
+                    className={`p-2 rounded-full transition-colors cursor-pointer ${
+                      isRecording ? 'bg-red-500 text-white animate-pulse' : 'text-zinc-400 hover:text-white hover:bg-white/10'
+                    }`}
+                    title="Dictate"
+                  >
+                    {isRecording ? <MicOff className="w-4 h-4" /> : <Mic className="w-4 h-4" />}
+                  </button>
+
+                  <button
+                    type="button"
+                    onClick={() => handleSendMessage()}
+                    disabled={!inputVal.trim() || isProcessing}
+                    className="w-8 h-8 rounded-full bg-white text-black flex items-center justify-center transition-all disabled:opacity-20 disabled:cursor-not-allowed hover:opacity-90 cursor-pointer shadow-md"
+                    title="Send"
+                  >
+                    <ArrowUp className="w-4 h-4 stroke-[3]" />
+                  </button>
+                </div>
+
+              </div>
+
+              {/* Disclaimer */}
+              <p className="text-center text-[11px] text-zinc-600">
+                {locale === 'ar'
+                  ? 'إدارة.تونس AI يقدم معلومات إرشادية. يرجى التثبت من النصوص بالرائد الرسمي.'
+                  : 'Idaara AI is AI and can make mistakes. Verify official texts with JORT.'}
+              </p>
+
+            </div>
+          </footer>
+        </>
+      )}
+
+      {/* ─── Model & API Key Settings Modal ─── */}
       {showSettingsModal && (
         <div
-          className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-md"
+          className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/75 backdrop-blur-md"
           onClick={() => setShowSettingsModal(false)}
         >
           <div
-            className="w-full max-w-md bg-zinc-950 border border-zinc-800 rounded-2xl p-5 shadow-2xl space-y-4"
+            className="w-full max-w-md bg-[#1e1e1e] border border-white/10 rounded-2xl p-6 shadow-2xl space-y-4 text-white"
             onClick={(e) => e.stopPropagation()}
           >
-            <div className="flex items-center justify-between">
+            <div className="flex items-center justify-between border-b border-white/10 pb-3">
               <div className="flex items-center gap-2">
                 <SlidersHorizontal className="w-4 h-4 text-emerald-400" />
-                <h3 className="text-sm font-bold text-white">AI Engine Settings</h3>
+                <h3 className="text-sm font-bold">AI Engine Settings</h3>
               </div>
-              <button onClick={() => setShowSettingsModal(false)} className="p-1 rounded-lg text-zinc-500 hover:text-white hover:bg-zinc-800 cursor-pointer">
+              <button onClick={() => setShowSettingsModal(false)} className="p-1 rounded-lg text-zinc-400 hover:text-white hover:bg-white/10 cursor-pointer">
                 <X className="w-4 h-4" />
               </button>
             </div>
@@ -444,15 +528,15 @@ export default function CopilotPage() {
                     onClick={() => setActiveProvider(id)}
                     className={`p-3 rounded-xl border text-left text-xs transition-all cursor-pointer ${
                       activeProvider === id
-                        ? 'bg-emerald-500/10 border-emerald-500/40 text-emerald-300'
-                        : 'bg-zinc-900 border-zinc-800 text-zinc-400 hover:text-white'
+                        ? 'bg-white/10 border-white/30 text-white font-semibold'
+                        : 'bg-black/20 border-white/5 text-zinc-400 hover:text-white hover:bg-white/5'
                     }`}
                   >
-                    <div className="flex items-center justify-between font-semibold">
+                    <div className="flex items-center justify-between">
                       <span>{label}</span>
-                      {activeProvider === id && <Check className="w-3 h-3 text-emerald-400" />}
+                      {activeProvider === id && <Check className="w-3.5 h-3.5 text-emerald-400" />}
                     </div>
-                    <div className="text-[10px] text-zinc-500 mt-0.5">{sub}</div>
+                    <div className="text-[10px] text-zinc-400 mt-0.5">{sub}</div>
                   </button>
                 ))}
               </div>
@@ -470,16 +554,16 @@ export default function CopilotPage() {
                 value={customApiKey}
                 onChange={(e) => setCustomApiKey(e.target.value)}
                 placeholder="AIzaSy... (Gemini)  or  gsk_... (Groq)"
-                className="w-full bg-zinc-900 border border-zinc-800 rounded-xl px-3 py-2 text-xs font-mono text-zinc-100 placeholder-zinc-600 focus:outline-none focus:border-emerald-500/50"
+                className="w-full bg-black/40 border border-white/10 rounded-xl px-3 py-2.5 text-xs font-mono text-white placeholder-zinc-600 focus:outline-none focus:border-white/30"
               />
-              <p className="text-[10px] text-zinc-600">Stored only in your browser. Never sent to our servers.</p>
+              <p className="text-[10px] text-zinc-400">Stored locally in your browser storage.</p>
             </div>
 
-            <div className="flex justify-end gap-2 pt-1">
+            <div className="flex justify-end gap-2 pt-2">
               <button onClick={() => setShowSettingsModal(false)} className="px-4 py-2 rounded-xl text-xs text-zinc-400 hover:text-white cursor-pointer">
                 Cancel
               </button>
-              <button onClick={saveSettings} className="px-4 py-2 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-zinc-950 font-bold text-xs cursor-pointer shadow-md shadow-emerald-500/20">
+              <button onClick={saveSettings} className="px-4 py-2 rounded-xl bg-white hover:bg-zinc-200 text-black font-bold text-xs cursor-pointer shadow-md">
                 Save
               </button>
             </div>

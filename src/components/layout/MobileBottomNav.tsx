@@ -18,6 +18,10 @@ export const MobileBottomNav: React.FC = () => {
     { href: '/locator', label: locale === 'ar' ? 'بلديات' : locale === 'en' ? 'Offices' : 'Guichets', icon: MapPin },
   ];
 
+  if (pathname === '/copilot') {
+    return null;
+  }
+
   return (
     <div className="lg:hidden fixed bottom-0 left-0 right-0 z-40 bg-zinc-950/95 backdrop-blur-2xl border-t border-zinc-800/80 px-2 py-1.5 shadow-2xl safe-bottom">
       <nav className="flex items-center justify-around">

@@ -2,12 +2,18 @@
 
 import React from 'react';
 import Link from 'next/link';
+import { usePathname } from 'next/navigation';
 import { useLocale } from '../../context/LocaleContext';
 import { BrandLogo } from './BrandLogo';
 import { ShieldCheck, ExternalLink } from 'lucide-react';
 
 export const Footer: React.FC = () => {
   const { t, locale } = useLocale();
+  const pathname = usePathname();
+
+  if (pathname === '/copilot') {
+    return null;
+  }
 
   const servicesTitle =
     locale === 'ar'
