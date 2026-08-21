@@ -399,13 +399,21 @@ export default function CopilotPage() {
                 className="flex items-center gap-2 px-3 py-1.5 rounded-xl bg-white/[0.06] hover:bg-white/[0.1] text-zinc-100 text-xs font-semibold transition-all cursor-pointer border border-white/10 shadow-sm"
               >
                 <PenSquare className="w-3.5 h-3.5 text-emerald-400" />
-                <span>{locale === 'ar' ? 'محادثة جديدة' : locale === 'derja' ? 'M7adtha Jdida' : 'Nouveau chat'}</span>
+                <span>
+                  {locale === 'ar'
+                    ? 'محادثة جديدة'
+                    : locale === 'en'
+                    ? 'New Chat'
+                    : locale === 'derja'
+                    ? 'M7adtha Jdida'
+                    : 'Nouveau chat'}
+                </span>
               </button>
 
               <button
                 onClick={() => setSidebarOpen(false)}
                 className="p-1.5 rounded-lg hover:bg-white/10 text-zinc-400 hover:text-white transition-colors cursor-pointer border-0 outline-none"
-                title="Collapse sidebar"
+                title={locale === 'ar' ? 'إغلاق القائمة' : locale === 'en' ? 'Close sidebar' : 'Fermer le menu'}
               >
                 <PanelLeftClose className="w-4 h-4" />
               </button>
@@ -420,47 +428,114 @@ export default function CopilotPage() {
                   className="flex items-center gap-3 px-3 py-2 rounded-xl text-zinc-300 hover:text-white hover:bg-white/5 text-xs font-medium transition-colors"
                 >
                   <ScanText className="w-4 h-4 text-emerald-400" />
-                  <span>{locale === 'ar' ? 'فصّرلي بالذكاء الاصطناعي (OCR)' : 'Fasserli OCR'}</span>
+                  <span>
+                    {locale === 'ar'
+                      ? 'فسّرلي هالورقة (OCR)'
+                      : locale === 'en'
+                      ? 'Scanner OCR'
+                      : locale === 'derja'
+                      ? 'Fasserli OCR'
+                      : 'Scanner OCR'}
+                  </span>
                 </Link>
                 <Link
                   href="/documents"
                   className="flex items-center gap-3 px-3 py-2 rounded-xl text-zinc-300 hover:text-white hover:bg-white/5 text-xs font-medium transition-colors"
                 >
                   <FileCode2 className="w-4 h-4 text-blue-400" />
-                  <span>{locale === 'ar' ? 'نماذج العقود الذكية' : 'Modèles & Contrats'}</span>
+                  <span>
+                    {locale === 'ar'
+                      ? 'نماذج العقود والاستمارات'
+                      : locale === 'en'
+                      ? 'Templates & Forms'
+                      : locale === 'derja'
+                      ? 'Modélet & 39oud'
+                      : 'Modèles & Contrats'}
+                  </span>
                 </Link>
                 <Link
                   href="/calculator"
                   className="flex items-center gap-3 px-3 py-2 rounded-xl text-zinc-300 hover:text-white hover:bg-white/5 text-xs font-medium transition-colors"
                 >
                   <Stamp className="w-4 h-4 text-amber-400" />
-                  <span>{locale === 'ar' ? 'حاسبة التنابر والضرائب' : 'Calculateur Timbres'}</span>
+                  <span>
+                    {locale === 'ar'
+                      ? 'حاسبة التنابر والرسوم'
+                      : locale === 'en'
+                      ? 'Stamp Calculator'
+                      : locale === 'derja'
+                      ? 'Calculateur Timbres'
+                      : 'Calculateur de Timbres'}
+                  </span>
+                </Link>
+                <Link
+                  href="/concours"
+                  className="flex items-center gap-3 px-3 py-2 rounded-xl text-zinc-300 hover:text-white hover:bg-white/5 text-xs font-medium transition-colors"
+                >
+                  <Briefcase className="w-4 h-4 text-teal-400" />
+                  <span>
+                    {locale === 'ar'
+                      ? 'المناظرات الوطنية'
+                      : locale === 'en'
+                      ? 'Public Concours'
+                      : locale === 'derja'
+                      ? 'Radar el Concourat'
+                      : 'Concours Nationaux'}
+                  </span>
                 </Link>
                 <Link
                   href="/locator"
                   className="flex items-center gap-3 px-3 py-2 rounded-xl text-zinc-300 hover:text-white hover:bg-white/5 text-xs font-medium transition-colors"
                 >
                   <Building2 className="w-4 h-4 text-indigo-400" />
-                  <span>{locale === 'ar' ? 'دليل البلديات والقباضات' : 'Baladiyas & Recettes'}</span>
+                  <span>
+                    {locale === 'ar'
+                      ? 'دليل البلديات والقباضات'
+                      : locale === 'en'
+                      ? 'Offices & Baladiyas'
+                      : locale === 'derja'
+                      ? 'Baladiyas & 9badhat'
+                      : 'Baladiyas & Recettes'}
+                  </span>
                 </Link>
                 <Link
                   href="/procedures"
                   className="flex items-center gap-3 px-3 py-2 rounded-xl text-zinc-300 hover:text-white hover:bg-white/5 text-xs font-medium transition-colors"
                 >
                   <Landmark className="w-4 h-4 text-purple-400" />
-                  <span>{locale === 'ar' ? 'دليل الإجراءات الرسمية' : 'Guide des Démarches'}</span>
+                  <span>
+                    {locale === 'ar'
+                      ? 'دليل الإجراءات الرسمية'
+                      : locale === 'en'
+                      ? 'Procedures Guide'
+                      : locale === 'derja'
+                      ? 'Dalil el Démarches'
+                      : 'Guide des Démarches'}
+                  </span>
                 </Link>
               </nav>
 
               {/* Recents Section */}
               <div className="pt-2">
                 <div className="px-3 pb-1.5 text-[11px] font-semibold text-zinc-500 uppercase tracking-wider">
-                  {locale === 'ar' ? 'المحادثات السابقة' : locale === 'derja' ? 'M7adhathat 9dima' : 'Historique récent'}
+                  {locale === 'ar'
+                    ? 'المحادثات السابقة'
+                    : locale === 'en'
+                    ? 'Recent History'
+                    : locale === 'derja'
+                    ? 'M7adhathat 9dima'
+                    : 'Historique Récent'}
                 </div>
                 <div className="space-y-0.5">
                   {sessions.length === 0 ? (
                     <div className="px-3 py-2 text-xs text-zinc-500 italic">
-                      {locale === 'ar' ? 'لا توجد محادثات سابقة' : 'Aucune discussion récente'}
+                      {locale === 'ar'
+                        ? 'لا توجد محادثات سابقة'
+                        : locale === 'en'
+                        ? 'No recent discussions'
+                        : locale === 'derja'
+                        ? '7atta m7adtha 9dima'
+                        : 'Aucune discussion récente'}
                     </div>
                   ) : (
                     sessions.map((sess) => (
@@ -477,7 +552,7 @@ export default function CopilotPage() {
                         <button
                           onClick={(e) => promptDeleteSession(e, sess)}
                           className="opacity-0 group-hover:opacity-100 p-1 hover:text-red-400 text-zinc-400 transition-opacity cursor-pointer border-0 outline-none"
-                          title={locale === 'ar' ? 'حذف المحادثة' : 'Supprimer la discussion'}
+                          title={locale === 'ar' ? 'حذف المحادثة' : locale === 'en' ? 'Delete chat' : 'Supprimer la discussion'}
                         >
                           <Trash2 className="w-3 h-3" />
                         </button>
@@ -496,7 +571,9 @@ export default function CopilotPage() {
                 TN
               </div>
               <div className="leading-tight">
-                <div className="text-xs font-semibold text-zinc-200">Citoyen</div>
+                <div className="text-xs font-semibold text-zinc-200">
+                  {locale === 'ar' ? 'مواطن' : locale === 'en' ? 'Citizen' : locale === 'derja' ? 'Mowaten' : 'Citoyen'}
+                </div>
                 <div className="text-[10px] text-emerald-400 font-medium">Idaara Free</div>
               </div>
             </div>
@@ -505,7 +582,7 @@ export default function CopilotPage() {
               href="/launchpad"
               className="px-2.5 py-1 rounded-lg bg-emerald-500/10 hover:bg-emerald-500/20 border border-emerald-500/30 text-[11px] font-semibold text-emerald-300 transition-colors"
             >
-              Freelance
+              {locale === 'ar' ? 'المستقل' : 'Freelance'}
             </Link>
           </div>
         </aside>
@@ -523,7 +600,7 @@ export default function CopilotPage() {
               <button
                 onClick={() => setSidebarOpen(true)}
                 className="p-1.5 rounded-lg hover:bg-white/10 text-zinc-400 hover:text-white transition-colors cursor-pointer border-0 outline-none"
-                title="Open sidebar"
+                title={locale === 'ar' ? 'فتح القائمة' : locale === 'en' ? 'Open sidebar' : 'Ouvrir le menu'}
               >
                 <PanelLeft className="w-4 h-4" />
               </button>
@@ -532,7 +609,15 @@ export default function CopilotPage() {
             {/* Model Badge */}
             <div className="flex items-center gap-2 px-2 py-1 text-zinc-200 font-semibold text-sm">
               <div className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse shadow-sm shadow-emerald-400/50" />
-              <span className="tracking-tight">{locale === 'ar' ? 'المساعد الإداري الذكي' : locale === 'derja' ? 'Idaara AI' : 'Idaara AI (Assistant Civique)'}</span>
+              <span className="tracking-tight">
+                {locale === 'ar'
+                  ? 'المساعد الإداري الذكي'
+                  : locale === 'en'
+                  ? 'Idaara AI (Civic Assistant)'
+                  : locale === 'derja'
+                  ? 'Idaara AI'
+                  : 'Idaara AI (Assistant Civique)'}
+              </span>
             </div>
           </div>
 
@@ -543,7 +628,9 @@ export default function CopilotPage() {
                 className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl hover:bg-white/10 text-zinc-300 hover:text-white text-xs font-semibold transition-colors cursor-pointer border-0 outline-none"
               >
                 <RotateCcw className="w-3.5 h-3.5" />
-                <span>{locale === 'ar' ? 'جديد' : 'Nouveau'}</span>
+                <span>
+                  {locale === 'ar' ? 'جديد' : locale === 'en' ? 'New' : locale === 'derja' ? 'Jdid' : 'Nouveau'}
+                </span>
               </button>
             )}
           </div>
@@ -860,6 +947,10 @@ export default function CopilotPage() {
                 <p className="text-center text-[11px] text-zinc-600">
                   {locale === 'ar'
                     ? 'إدارة.تونس AI يقدم معلومات إرشادية. يرجى التثبت من النصوص بالرائد الرسمي.'
+                    : locale === 'derja'
+                    ? 'Idaara AI ya3tik ma3loumet te9ribiya. Thabbet dima fel JORT.'
+                    : locale === 'fr'
+                    ? 'Idaara AI fournit des indications citoyennes. Vérifiez les textes officiels au JORT.'
                     : 'Idaara AI can make mistakes. Verify official texts with JORT.'}
                 </p>
 
@@ -876,7 +967,13 @@ export default function CopilotPage() {
           <div className="w-full max-w-md rounded-2xl bg-[#1c1c1f] border border-white/10 p-6 shadow-2xl space-y-4">
             <div className="flex items-center justify-between">
               <h3 className="text-base font-bold text-white">
-                {locale === 'ar' ? 'حذف المحادثة؟' : locale === 'derja' ? 'T7eb tfasa5 el m7adtha?' : 'Supprimer la discussion ?'}
+                {locale === 'ar'
+                  ? 'حذف المحادثة؟'
+                  : locale === 'en'
+                  ? 'Delete conversation?'
+                  : locale === 'derja'
+                  ? 'T7eb tfasa5 el m7adtha?'
+                  : 'Supprimer la discussion ?'}
               </h3>
               <button
                 onClick={() => setSessionToDelete(null)}
@@ -889,6 +986,8 @@ export default function CopilotPage() {
             <p className="text-sm text-zinc-300 leading-relaxed">
               {locale === 'ar'
                 ? `سيتم حذف "${sessionToDelete.title}". لا يمكن التراجع عن هذا الإجراء.`
+                : locale === 'en'
+                ? `This will permanently delete "${sessionToDelete.title}". This action cannot be undone.`
                 : locale === 'derja'
                 ? `El m7adtha "${sessionToDelete.title}" bech tetfasa5 dima. Ma3adech tnejjem trajja3ha.`
                 : `Cette action supprimera définitivement "${sessionToDelete.title}". Vous ne pourrez pas annuler cette action.`}
@@ -899,14 +998,28 @@ export default function CopilotPage() {
                 onClick={() => setSessionToDelete(null)}
                 className="px-4 py-2 rounded-xl text-xs font-semibold text-zinc-300 hover:text-white hover:bg-white/10 transition-colors cursor-pointer border-0 outline-none"
               >
-                {locale === 'ar' ? 'إلغاء' : locale === 'derja' ? 'Battalt' : 'Annuler'}
+                {locale === 'ar'
+                  ? 'إلغاء'
+                  : locale === 'en'
+                  ? 'Cancel'
+                  : locale === 'derja'
+                  ? 'Battalt'
+                  : 'Annuler'}
               </button>
               <button
                 onClick={confirmDeleteSession}
                 className="flex items-center gap-1.5 px-4 py-2 rounded-xl bg-red-600 hover:bg-red-500 text-white text-xs font-semibold transition-colors cursor-pointer border-0 outline-none shadow-md shadow-red-900/40"
               >
                 <Trash2 className="w-3.5 h-3.5" />
-                <span>{locale === 'ar' ? 'حذف نهائياً' : locale === 'derja' ? 'Fasa5 tawa' : 'Supprimer'}</span>
+                <span>
+                  {locale === 'ar'
+                    ? 'حذف نهائياً'
+                    : locale === 'en'
+                    ? 'Delete permanently'
+                    : locale === 'derja'
+                    ? 'Fasa5 tawa'
+                    : 'Supprimer'}
+                </span>
               </button>
             </div>
           </div>
