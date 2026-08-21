@@ -6,7 +6,7 @@ import { AudioRecorder } from '../../components/copilot/AudioRecorder';
 import { ChatMessage } from '../../components/copilot/ChatMessage';
 import { ChatMessage as ChatMessageType } from '../../types/chat';
 import { parseAndReason } from '../../lib/ai-engine';
-import { Send, RefreshCw, Mic, Sparkles } from 'lucide-react';
+import { Send, RefreshCw, Mic, Sparkles, MessageSquare } from 'lucide-react';
 
 export default function CopilotPage() {
   const { t, locale } = useLocale();
@@ -136,123 +136,132 @@ export default function CopilotPage() {
       ? 'Civic Copilot.'
       : 'en Derja Tunisienne.';
 
-  const subtitle =
-    locale === 'ar'
-      ? 'تحدث أو اكتب بالدارجة أو الفرنسية للاستفسار عن أي إجراء أو وثيقة أو مصاريف التنابر الجبائية في ثوانٍ.'
-      : locale === 'en'
-      ? 'Speak or write in Tunisian Derja, French, or English to get instant civic procedures, required documents, and exact stamp fees.'
-      : "Posez vos questions administratives à la voix ou à l'écrit en Derja ou Français pour obtenir démarches, pièces et timbres fiscaux.";
-
   return (
-    <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12 space-y-8">
+    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 space-y-6">
 
-      {/* ── Editorial Header ── */}
-      <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 pb-6 border-b border-zinc-800/80">
-        <div className="space-y-2">
-          <div className="inline-flex items-center space-x-2 rtl:space-x-reverse px-3 py-1 rounded-full bg-zinc-900 border border-zinc-800 text-[11px] font-semibold text-emerald-400">
-            <Mic className="w-3.5 h-3.5" />
-            <span>Derja-Native Voice Engine · Fast Inference</span>
+      {/* ── Compact Header Bar ── */}
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-4 border-b border-zinc-800/80">
+        <div className="flex items-center gap-3">
+          <div className="w-10 h-10 rounded-2xl bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center text-emerald-400 shrink-0 shadow-md shadow-emerald-950">
+            <Mic className="w-5 h-5" />
+          </div>
+          <div>
+            <h1 className="text-lg sm:text-xl font-extrabold text-white flex items-center gap-2">
+              <span>{headlineMain}</span>
+              <span className="text-emerald-400 italic font-serif">{headlineAccent}</span>
+            </h1>
+            <p className="text-xs text-zinc-400">
+              {locale === 'en'
+                ? 'Tunisian civic AI · Ask anything about paperwork, stamps, or procedures'
+                : locale === 'ar'
+                ? 'مساعد إداري بالذكاء الاصطناعي · اسأل عن أي وثيقة أو معلوم جبائي'
+                : "Assistant civique IA · Posez vos questions en Derja ou Français"}
+            </p>
+          </div>
+        </div>
+
+        <div className="flex items-center gap-2 self-start sm:self-auto shrink-0">
+          <div className="hidden md:flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-zinc-900/80 border border-zinc-800 text-[11px] text-zinc-400">
+            <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
+            <span className="font-mono">Inference Active</span>
           </div>
 
-          <h1 className="leading-tight">
-            <span className="display-heading block text-3xl sm:text-5xl text-[#F5F4F0]">
-              {headlineMain}
-            </span>
-            <span
-              className="display-heading block text-3xl sm:text-5xl italic"
-              style={{ color: 'var(--stamp-green)' }}
-            >
-              {headlineAccent}
-            </span>
-          </h1>
-
-          <p className="text-xs sm:text-sm text-zinc-400 max-w-xl pt-1">
-            {subtitle}
-          </p>
-        </div>
-
-        <button
-          onClick={handleResetChat}
-          className="flex items-center space-x-1.5 rtl:space-x-reverse px-3.5 py-2 rounded-xl bg-zinc-900 hover:bg-zinc-800 border border-zinc-700 text-zinc-400 hover:text-zinc-200 text-xs transition-all self-start sm:self-auto shrink-0 cursor-pointer"
-        >
-          <RefreshCw className="w-3.5 h-3.5" />
-          <span>{locale === 'ar' ? 'محادثة جديدة' : locale === 'en' ? 'Reset Chat' : 'Réinitialiser'}</span>
-        </button>
-      </div>
-
-      {/* ── Acoustic Studio Recording Station ── */}
-      <div>
-        <AudioRecorder
-          onTranscript={(text) => handleSendMessage(text)}
-          isProcessing={isProcessing}
-        />
-      </div>
-
-      {/* ── Question Prompts Bar (No emoji clutter) ── */}
-      <div className="space-y-2">
-        <div className="flex items-center justify-between text-xs text-zinc-500">
-          <span className="text-[10px] font-bold uppercase tracking-wider text-zinc-400">
-            {locale === 'ar' ? 'استفسارات شائعة :' : locale === 'en' ? 'Frequent Questions:' : 'Questions fréquentes :'}
-          </span>
-        </div>
-
-        <div className="flex flex-wrap gap-2">
-          {suggestedQuestions.map((q, idx) => (
-            <button
-              key={idx}
-              onClick={() => handleSendMessage(q.text)}
-              className="text-xs px-3 py-1.5 rounded-xl bg-zinc-900/80 hover:bg-zinc-800 text-zinc-300 hover:text-emerald-300 border border-zinc-800 hover:border-emerald-500/40 transition-all cursor-pointer"
-            >
-              {q.label}
-            </button>
-          ))}
+          <button
+            onClick={handleResetChat}
+            className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-zinc-900 hover:bg-zinc-800 border border-zinc-700 text-zinc-400 hover:text-zinc-200 text-xs transition-all cursor-pointer"
+          >
+            <RefreshCw className="w-3.5 h-3.5" />
+            <span>{locale === 'ar' ? 'محادثة جديدة' : locale === 'en' ? 'Reset' : 'Réinitialiser'}</span>
+          </button>
         </div>
       </div>
 
-      {/* ── Chat Messages Console ── */}
-      <div
-        ref={chatContainerRef}
-        className="glass-panel rounded-3xl border border-zinc-800/80 p-5 min-h-[380px] max-h-[520px] overflow-y-auto space-y-1"
-      >
-        {messages.map((msg) => (
-          <ChatMessage key={msg.id} message={msg} />
-        ))}
-        {isProcessing && (
-          <div className="flex items-center space-x-2.5 rtl:space-x-reverse text-xs text-emerald-400 my-3 px-2">
-            <div className="flex space-x-1">
-              <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-bounce" style={{ animationDelay: '0ms' }} />
-              <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-bounce" style={{ animationDelay: '150ms' }} />
-              <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-bounce" style={{ animationDelay: '300ms' }} />
-            </div>
-            <span className="text-zinc-500 text-[11px]">
-              {locale === 'ar' ? 'إدارة.تونس AI يحلل طلبك...' : locale === 'en' ? 'Idaara AI analyzing your request...' : "Idaara AI en cours d'analyse..."}
-            </span>
-          </div>
-        )}
-      </div>
+      {/* ── 2-Column Split Workspace (Desktop) ── */}
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
 
-      {/* ── Text Input Bar ── */}
-      <form
-        onSubmit={(e) => { e.preventDefault(); handleSendMessage(inputVal); }}
-        className="flex items-center gap-2"
-      >
-        <div className="flex-1 relative">
-          <input
-            type="text"
-            value={inputVal}
-            onChange={(e) => setInputVal(e.target.value)}
-            placeholder={t('voiceSearchBarPlaceholder')}
-            className="w-full bg-zinc-900/90 border border-zinc-800 focus:border-emerald-500/60 rounded-2xl px-4 py-3.5 text-xs sm:text-sm text-zinc-100 placeholder-zinc-600 focus:outline-none focus:ring-1 focus:ring-emerald-500/40 transition-all"
+        {/* Left Column (5 Cols): Voice Station & Quick Questions */}
+        <div className="lg:col-span-5 space-y-4">
+          <AudioRecorder
+            onTranscript={(text) => handleSendMessage(text)}
+            isProcessing={isProcessing}
           />
+
+          {/* Quick Prompts Panel */}
+          <div className="glass-panel rounded-3xl p-4 sm:p-5 border border-zinc-800/80 space-y-3">
+            <div className="flex items-center gap-1.5 text-xs text-zinc-400 font-bold uppercase tracking-wider">
+              <Sparkles className="w-3.5 h-3.5 text-amber-400" />
+              <span>{locale === 'ar' ? 'أسئلة شائعة' : locale === 'en' ? 'Quick Topics' : 'Questions Fréquentes'}</span>
+            </div>
+
+            <div className="grid grid-cols-2 gap-2">
+              {suggestedQuestions.map((q, idx) => (
+                <button
+                  key={idx}
+                  onClick={() => handleSendMessage(q.text)}
+                  className="p-2.5 rounded-xl bg-zinc-900/80 hover:bg-zinc-800/90 text-left rtl:text-right border border-zinc-800 hover:border-emerald-500/30 transition-all cursor-pointer group flex flex-col justify-between"
+                >
+                  <span className="text-xs font-semibold text-zinc-300 group-hover:text-emerald-300 transition-colors line-clamp-1">
+                    {q.label}
+                  </span>
+                  <span className="text-[10px] text-zinc-500 truncate mt-1">
+                    {q.text}
+                  </span>
+                </button>
+              ))}
+            </div>
+          </div>
         </div>
-        <button
-          type="submit"
-          disabled={!inputVal.trim() || isProcessing}
-          className="flex items-center justify-center w-12 h-12 rounded-2xl bg-emerald-500 hover:bg-emerald-400 text-zinc-950 font-bold transition-all disabled:opacity-30 disabled:cursor-not-allowed shadow-md shadow-emerald-500/20 hover:scale-105 cursor-pointer shrink-0"
-        >
-          <Send className="w-4 h-4" />
-        </button>
-      </form>
+
+        {/* Right Column (7 Cols): Active Conversation & Input Bar */}
+        <div className="lg:col-span-7 flex flex-col h-full space-y-3">
+
+          {/* Chat Stream Box */}
+          <div
+            ref={chatContainerRef}
+            className="glass-panel rounded-3xl border border-zinc-800/80 p-4 sm:p-5 h-[480px] sm:h-[520px] overflow-y-auto space-y-1 shadow-inner"
+          >
+            {messages.map((msg) => (
+              <ChatMessage key={msg.id} message={msg} />
+            ))}
+
+            {isProcessing && (
+              <div className="flex items-center gap-2 text-xs text-emerald-400 my-3 px-2">
+                <div className="flex gap-1">
+                  <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-bounce" style={{ animationDelay: '0ms' }} />
+                  <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-bounce" style={{ animationDelay: '150ms' }} />
+                  <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-bounce" style={{ animationDelay: '300ms' }} />
+                </div>
+                <span className="text-zinc-500 text-[11px]">
+                  {locale === 'ar' ? 'إدارة.تونس AI يحلل طلبك...' : locale === 'en' ? 'Idaara AI analyzing your request...' : "Idaara AI en cours d'analyse..."}
+                </span>
+              </div>
+            )}
+          </div>
+
+          {/* Sticky Bottom Input Bar */}
+          <form
+            onSubmit={(e) => { e.preventDefault(); handleSendMessage(inputVal); }}
+            className="flex items-center gap-2 glass-panel p-2 rounded-2xl border border-zinc-800"
+          >
+            <div className="flex-1 relative">
+              <input
+                type="text"
+                value={inputVal}
+                onChange={(e) => setInputVal(e.target.value)}
+                placeholder={t('voiceSearchBarPlaceholder')}
+                className="w-full bg-transparent px-3 py-2 text-xs sm:text-sm text-zinc-100 placeholder-zinc-500 focus:outline-none"
+              />
+            </div>
+            <button
+              type="submit"
+              disabled={!inputVal.trim() || isProcessing}
+              className="flex items-center justify-center w-10 h-10 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-zinc-950 font-bold transition-all disabled:opacity-30 disabled:cursor-not-allowed shadow-md shadow-emerald-500/20 hover:scale-105 cursor-pointer shrink-0"
+            >
+              <Send className="w-4 h-4" />
+            </button>
+          </form>
+        </div>
+      </div>
     </div>
   );
 }

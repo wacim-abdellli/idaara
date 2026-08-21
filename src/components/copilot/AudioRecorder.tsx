@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
-import { Mic, MicOff, Loader2, Radio } from 'lucide-react';
+import { Mic, MicOff, Loader2, Radio, Volume2 } from 'lucide-react';
 import { VoiceVisualizer } from './VoiceVisualizer';
 import { useLocale } from '../../context/LocaleContext';
 
@@ -114,7 +114,7 @@ export const AudioRecorder: React.FC<AudioRecorderProps> = ({
       : locale === 'ar'
       ? 'اضغط على الميكروفون وتكلم بالدارجة أو الفرنسية'
       : locale === 'en'
-      ? 'Tap the microphone and speak naturally in Derja or English'
+      ? 'Tap microphone & speak in Derja or English'
       : 'Appuyez sur le micro et parlez en Derja ou Français';
 
   const actionHint =
@@ -123,77 +123,84 @@ export const AudioRecorder: React.FC<AudioRecorderProps> = ({
       : locale === 'ar' ? 'تحدث مباشرة بالدارجة التونسية' : locale === 'en' ? 'Speak directly in Tunisian Derja' : 'Parlez directement en Derja tunisienne';
 
   return (
-    <div className="glass-panel rounded-3xl p-6 sm:p-8 border border-zinc-800/80 relative overflow-hidden flex flex-col items-center justify-center text-center group">
-      {/* Ambient background aura */}
+    <div className="glass-panel rounded-3xl p-5 sm:p-6 border border-zinc-800/80 relative overflow-hidden flex flex-col items-center justify-between text-center group h-full min-h-[300px]">
+      {/* Ambient background glow */}
       <div
         className={`absolute inset-0 transition-opacity duration-700 pointer-events-none ${
           isRecording
-            ? 'bg-gradient-to-b from-red-500/10 via-emerald-500/5 to-transparent opacity-100'
+            ? 'bg-gradient-to-b from-red-500/15 via-red-950/20 to-transparent opacity-100'
             : isProcessing
-            ? 'bg-gradient-to-b from-emerald-500/10 via-zinc-900/50 to-transparent opacity-100'
+            ? 'bg-gradient-to-b from-emerald-500/10 via-zinc-900/40 to-transparent opacity-100'
             : 'bg-gradient-to-b from-emerald-500/5 to-transparent opacity-40'
         }`}
       />
 
-      {/* Top Status Pill */}
-      <div className="inline-flex items-center space-x-1.5 rtl:space-x-reverse px-3 py-1 rounded-full bg-zinc-950/80 border border-zinc-800 text-[11px] font-mono text-zinc-400 mb-6 z-10">
-        <Radio className={`w-3 h-3 ${isRecording ? 'text-red-400 animate-pulse' : 'text-emerald-400'}`} />
-        <span>{isRecording ? 'LIVE AUDIO' : 'SPEECH-TO-TEXT'}</span>
+      {/* Top Header Badge */}
+      <div className="w-full flex items-center justify-between z-10 mb-3">
+        <div className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-zinc-950/90 border border-zinc-800 text-[10px] font-mono font-bold text-zinc-400">
+          <Radio className={`w-3 h-3 ${isRecording ? 'text-red-400 animate-pulse' : 'text-emerald-400'}`} />
+          <span>{isRecording ? 'LIVE AUDIO' : 'SPEECH-TO-TEXT'}</span>
+        </div>
+
+        <span className="text-[10px] font-mono text-zinc-500">
+          TN / FR / EN
+        </span>
       </div>
 
-      {/* Dynamic Waveform Visualizer */}
-      <div className="w-full max-w-md mb-6 z-10">
+      {/* Waveform Visualizer */}
+      <div className="w-full my-2 z-10">
         <VoiceVisualizer
           isActive={isRecording || isProcessing}
           color={isRecording ? '#EF4444' : '#00C07F'}
+          height={38}
         />
       </div>
 
-      {/* Speech Transcript or Prompt */}
-      <div className="min-h-[36px] max-w-md mb-6 flex items-center justify-center px-4 z-10">
+      {/* Dynamic Transcript / Listening Prompt */}
+      <div className="min-h-[36px] w-full my-2 flex items-center justify-center px-2 z-10">
         {isRecording && interimText ? (
-          <p className="text-emerald-300 font-semibold text-sm animate-pulse tracking-wide">
+          <p className="text-emerald-300 font-bold text-xs sm:text-sm animate-pulse tracking-wide line-clamp-2">
             "{interimText}"
           </p>
         ) : isProcessing ? (
-          <div className="flex items-center space-x-2 rtl:space-x-reverse text-emerald-400 text-xs font-semibold">
-            <Loader2 className="w-4 h-4 animate-spin shrink-0" />
+          <div className="flex items-center gap-2 text-emerald-400 text-xs font-semibold">
+            <Loader2 className="w-3.5 h-3.5 animate-spin shrink-0" />
             <span>{promptText}</span>
           </div>
         ) : (
-          <p className="text-zinc-400 text-xs leading-relaxed font-medium">
+          <p className="text-zinc-400 text-xs font-medium line-clamp-2">
             {promptText}
           </p>
         )}
       </div>
 
-      {/* Tactical Center Microphone Trigger */}
-      <div className="relative z-10">
+      {/* Tactile Microphone Trigger Button */}
+      <div className="my-3 relative z-10">
         {isRecording && (
-          <div className="absolute inset-0 rounded-full bg-red-500/20 animate-ping pointer-events-none" />
+          <div className="absolute -inset-2 rounded-full bg-red-500/25 animate-ping pointer-events-none" />
         )}
 
         <button
           onClick={toggleRecording}
           disabled={isProcessing}
           aria-label="Toggle voice recording"
-          className={`relative flex items-center justify-center w-18 h-18 sm:w-20 sm:h-20 rounded-full transition-all duration-300 shadow-2xl cursor-pointer ${
+          className={`relative flex items-center justify-center w-16 h-16 sm:w-18 sm:h-18 rounded-full transition-all duration-300 shadow-2xl cursor-pointer ${
             isRecording
               ? 'bg-red-500 hover:bg-red-600 text-white shadow-red-500/40 scale-105 ring-4 ring-red-500/30'
               : 'bg-emerald-500 hover:bg-emerald-400 text-zinc-950 hover:scale-105 shadow-emerald-500/30 ring-4 ring-emerald-500/20'
           } ${isProcessing ? 'opacity-40 cursor-not-allowed' : ''}`}
         >
           {isRecording ? (
-            <MicOff className="w-8 h-8" />
+            <MicOff className="w-7 h-7" />
           ) : isProcessing ? (
-            <Loader2 className="w-8 h-8 animate-spin" />
+            <Loader2 className="w-7 h-7 animate-spin" />
           ) : (
-            <Mic className="w-8 h-8" />
+            <Mic className="w-7 h-7" />
           )}
         </button>
       </div>
 
-      <span className="text-[11px] text-zinc-500 font-medium mt-4 z-10">
+      <span className="text-[11px] text-zinc-500 font-medium z-10">
         {actionHint}
       </span>
     </div>
