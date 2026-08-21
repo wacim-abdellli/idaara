@@ -22,7 +22,7 @@ export const DocumentCard: React.FC<DocumentCardProps> = ({ template }) => {
     locale === 'ar' ? 'تعبئة النموذج' : locale === 'en' ? 'Fill PDF' : 'Remplir le PDF';
 
   return (
-    <div className="glass-panel rounded-2xl p-5 sm:p-6 border border-zinc-800/80 flex flex-col justify-between hover:border-zinc-700 hover:shadow-2xl transition-all duration-200 group relative overflow-hidden">
+    <div className="rounded-2xl p-5 sm:p-6 bg-[#0d0e12] border border-white/[0.08] hover:border-white/[0.18] flex flex-col justify-between hover:shadow-2xl transition-all duration-200 group relative overflow-hidden">
       {/* Decorative top accent line */}
       <div className="absolute top-0 left-0 right-0 h-0.5 bg-gradient-to-r from-transparent via-emerald-500/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
 

@@ -8,21 +8,21 @@
    ───────────────────────────────────────────── */
 
 :root {
-  /* Core palette */
-  --ink:         #0C0D0F;   /* Deeper than black — ink on paper */
-  --fog:         #111316;   /* Card/surface — bureaucratic grey */
-  --fog-mid:     #1A1D22;   /* Slightly lifted surface */
-  --border:      rgba(255,255,255,0.07);
-  --border-em:   rgba(0,192,127,0.30);
+  /* Core palette - Deep Sleek Dark */
+  --ink:         #08090b;   /* Deeper pitch dark — premium ink */
+  --fog:         #0e1013;   /* Card/surface */
+  --fog-mid:     #14171c;   /* Slightly lifted surface */
+  --border:      rgba(255,255,255,0.06);
+  --border-em:   rgba(0,192,127,0.25);
 
   /* Brand */
-  --stamp-green: #00C07F;   /* Approved stamp — more saturated than emerald-500 */
-  --stamp-glow:  rgba(0,192,127,0.14);
+  --stamp-green: #00C07F;   /* Approved stamp */
+  --stamp-glow:  rgba(0,192,127,0.12);
   --seal-gold:   #C8960C;   /* Official wax / fiscal stamp */
   --queue-red:   #E04040;   /* Rejection / error stamp */
 
   /* Text */
-  --text-1: #F5F4F0;        /* Warm off-white — like paper */
+  --text-1: #F5F4F0;        /* Warm off-white */
   --text-2: #9A9DA6;
   --text-3: #5A5D66;
 
@@ -48,11 +48,10 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 
-  /* Subtle warm paper texture underneath the dark — not purely tech-black */
+  /* Deep subtle paper grain without high brightness */
   background-image:
-    radial-gradient(ellipse 70% 40% at 50% -10%, rgba(0,192,127,0.07) 0%, transparent 65%),
-    radial-gradient(ellipse 50% 30% at 85% 70%, rgba(99,102,241,0.04) 0%, transparent 55%),
-    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23n)' opacity='0.015'/%3E%3C/svg%3E");
+    radial-gradient(ellipse 60% 25% at 50% -5%, rgba(0,192,127,0.025) 0%, transparent 60%),
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23n)' opacity='0.012'/%3E%3C/svg%3E");
   background-attachment: fixed;
   background-size: auto, auto, 300px 300px;
 }

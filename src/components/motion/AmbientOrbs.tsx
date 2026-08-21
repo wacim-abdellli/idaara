@@ -16,24 +16,24 @@ export const AmbientOrbs: React.FC<AmbientOrbsProps> = ({
     switch (variant) {
       case 'amber':
         return {
-          orb1: 'bg-amber-500/10',
-          orb2: 'bg-orange-500/5',
+          orb1: 'bg-amber-500/[0.03]',
+          orb2: 'bg-orange-500/[0.02]',
         };
       case 'cyan':
         return {
-          orb1: 'bg-cyan-500/10',
-          orb2: 'bg-teal-500/5',
+          orb1: 'bg-cyan-500/[0.03]',
+          orb2: 'bg-teal-500/[0.02]',
         };
       case 'mixed':
         return {
-          orb1: 'bg-emerald-500/10',
-          orb2: 'bg-indigo-500/8',
+          orb1: 'bg-emerald-500/[0.03]',
+          orb2: 'bg-indigo-500/[0.02]',
         };
       case 'emerald':
       default:
         return {
-          orb1: 'bg-emerald-500/10',
-          orb2: 'bg-teal-500/5',
+          orb1: 'bg-emerald-500/[0.035]',
+          orb2: 'bg-teal-500/[0.02]',
         };
     }
   };
@@ -45,31 +45,31 @@ export const AmbientOrbs: React.FC<AmbientOrbsProps> = ({
       {/* Primary Floating Glowing Orb */}
       <motion.div
         animate={{
-          x: [0, 40, -30, 0],
-          y: [0, -30, 20, 0],
-          scale: [1, 1.15, 0.95, 1],
+          x: [0, 30, -25, 0],
+          y: [0, -20, 15, 0],
+          scale: [1, 1.08, 0.96, 1],
         }}
         transition={{
-          duration: 16,
+          duration: 18,
           repeat: Infinity,
           ease: 'easeInOut',
         }}
-        className={`absolute -top-20 left-1/4 w-[550px] h-[550px] rounded-full ${colors.orb1} blur-[140px]`}
+        className={`absolute -top-32 left-1/4 w-[480px] h-[480px] rounded-full ${colors.orb1} blur-[160px]`}
       />
 
       {/* Secondary Counter-Drifting Orb */}
       <motion.div
         animate={{
-          x: [0, -50, 35, 0],
-          y: [0, 40, -25, 0],
-          scale: [1, 0.9, 1.1, 1],
+          x: [0, -35, 25, 0],
+          y: [0, 30, -20, 0],
+          scale: [1, 0.94, 1.06, 1],
         }}
         transition={{
-          duration: 20,
+          duration: 22,
           repeat: Infinity,
           ease: 'easeInOut',
         }}
-        className={`absolute top-1/3 right-10 w-[450px] h-[450px] rounded-full ${colors.orb2} blur-[130px]`}
+        className={`absolute top-1/3 -right-24 w-[420px] h-[420px] rounded-full ${colors.orb2} blur-[160px]`}
       />
     </div>
   );

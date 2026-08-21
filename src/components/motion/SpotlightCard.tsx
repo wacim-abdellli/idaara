@@ -7,15 +7,13 @@ interface SpotlightCardProps extends React.HTMLAttributes<HTMLDivElement> {
   children: React.ReactNode;
   className?: string;
   spotlightColor?: string;
-  glowColor?: string;
   tilt?: boolean;
 }
 
 export const SpotlightCard: React.FC<SpotlightCardProps> = ({
   children,
   className = '',
-  spotlightColor = 'rgba(0, 192, 127, 0.14)',
-  glowColor = 'rgba(0, 192, 127, 0.35)',
+  spotlightColor = 'rgba(255, 255, 255, 0.04)',
   tilt = false,
   ...props
 }) => {
@@ -27,11 +25,11 @@ export const SpotlightCard: React.FC<SpotlightCardProps> = ({
   const mouseY = useMotionValue(0);
 
   // Smooth springs for 3D tilt
-  const rotateX = useSpring(useTransform(mouseY, [-150, 150], [3, -3]), {
+  const rotateX = useSpring(useTransform(mouseY, [-150, 150], [2, -2]), {
     stiffness: 300,
     damping: 30,
   });
-  const rotateY = useSpring(useTransform(mouseX, [-150, 150], [-3, 3]), {
+  const rotateY = useSpring(useTransform(mouseX, [-150, 150], [-2, 2]), {
     stiffness: 300,
     damping: 30,
   });
@@ -60,26 +58,17 @@ export const SpotlightCard: React.FC<SpotlightCardProps> = ({
         rotateY: tilt ? rotateY : 0,
         transformStyle: 'preserve-3d',
       }}
-      whileHover={{ y: -3, scale: 1.006 }}
-      transition={{ type: 'spring', stiffness: 400, damping: 25 }}
-      className={`relative overflow-hidden rounded-3xl border border-zinc-800/80 bg-gradient-to-br from-zinc-950 via-zinc-900/70 to-zinc-950 transition-colors ${className}`}
+      whileHover={{ y: -2 }}
+      transition={{ duration: 0.2, ease: 'easeOut' }}
+      className={`relative overflow-hidden rounded-3xl border border-white/[0.08] hover:border-white/[0.16] bg-[#0d0e12] transition-colors duration-300 ${className}`}
       {...(props as any)}
     >
-      {/* Dynamic Cursor Spotlight Radial Glow */}
+      {/* Subtle Dynamic Cursor Spotlight Radial Glow */}
       <motion.div
         className="pointer-events-none absolute -inset-px rounded-3xl opacity-0 transition-opacity duration-300"
         style={{
           opacity: isHovered ? 1 : 0,
-          background: `radial-gradient(400px circle at calc(50% + ${mouseX.get()}px) calc(50% + ${mouseY.get()}px), ${spotlightColor}, transparent 70%)`,
-        }}
-      />
-
-      {/* Dynamic Border Glow */}
-      <motion.div
-        className="pointer-events-none absolute inset-0 rounded-3xl opacity-0 transition-opacity duration-300"
-        style={{
-          opacity: isHovered ? 1 : 0,
-          boxShadow: `inset 0 0 0 1px ${glowColor}`,
+          background: `radial-gradient(350px circle at calc(50% + ${mouseX.get()}px) calc(50% + ${mouseY.get()}px), ${spotlightColor}, transparent 65%)`,
         }}
       />
 

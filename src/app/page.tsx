@@ -843,38 +843,38 @@ export default function HomePage() {
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <SpotlightCard className="p-5 sm:p-6 border-zinc-800 space-y-2">
+          <SpotlightCard className="p-5 sm:p-6 space-y-2">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-2 text-xs font-bold text-white">
                 <Building2 className="w-4 h-4 text-cyan-400" />
                 <span>{ui.baladiyaCardTitle(selectedWilaya)}</span>
               </div>
-              <span className="text-[10px] font-mono text-emerald-400 bg-emerald-950/60 border border-emerald-800/40 px-2 py-0.5 rounded-full">
+              <span className="text-[10px] font-mono text-emerald-400 bg-emerald-950/60 border border-emerald-800/40 px-2 py-0.5 rounded-full font-bold">
                 {ui.openStatus}
               </span>
             </div>
             <p className="text-xs font-mono text-cyan-300">
               {wilayaData[selectedWilaya].baladiya}
             </p>
-            <p className="text-[11px] text-zinc-500 pt-1">
+            <p className="text-[11px] text-zinc-400 pt-1">
               {ui.baladiyaCardSub}
             </p>
           </SpotlightCard>
 
-          <SpotlightCard className="p-5 sm:p-6 border-zinc-800 space-y-2">
+          <SpotlightCard className="p-5 sm:p-6 space-y-2">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-2 text-xs font-bold text-white">
                 <Stamp className="w-4 h-4 text-amber-400" />
                 <span>{ui.recetteCardTitle(selectedWilaya)}</span>
               </div>
-              <span className="text-[10px] font-mono text-emerald-400 bg-emerald-950/60 border border-emerald-800/40 px-2 py-0.5 rounded-full">
+              <span className="text-[10px] font-mono text-emerald-400 bg-emerald-950/60 border border-emerald-800/40 px-2 py-0.5 rounded-full font-bold">
                 {ui.openStatus}
               </span>
             </div>
             <p className="text-xs font-mono text-amber-300">
               {wilayaData[selectedWilaya].recette}
             </p>
-            <p className="text-[11px] text-zinc-500 pt-1">
+            <p className="text-[11px] text-zinc-400 pt-1">
               {ui.recetteCardSub}
             </p>
           </SpotlightCard>
@@ -883,30 +883,32 @@ export default function HomePage() {
 
       {/* ── 4. ZERO-STORAGE PRIVACY PROTOCOL ── */}
       <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <SpotlightCard className="p-6 sm:p-8 border-emerald-500/20 bg-gradient-to-br from-emerald-950/20 via-zinc-900/90 to-zinc-950 flex flex-col md:flex-row items-center justify-between gap-6 shadow-2xl">
-          <div className="flex items-center gap-4 text-left rtl:text-right">
-            <div className="w-12 h-12 rounded-2xl bg-emerald-500/10 border border-emerald-500/30 flex items-center justify-center text-emerald-400 shrink-0 shadow-lg shadow-emerald-950">
-              <ShieldCheck className="w-6 h-6" />
+        <SpotlightCard className="p-6 sm:p-7 border-emerald-500/30 bg-gradient-to-r from-emerald-950/20 via-[#0d0e12] to-[#0d0e12] flex flex-col sm:flex-row items-start sm:items-center justify-between gap-5 shadow-2xl">
+          <div className="flex items-start sm:items-center gap-4 text-left rtl:text-right">
+            <div className="w-11 h-11 rounded-2xl bg-emerald-500/10 border border-emerald-500/30 flex items-center justify-center text-emerald-400 shrink-0 shadow-lg shadow-emerald-950/80 mt-0.5 sm:mt-0">
+              <ShieldCheck className="w-5 h-5 text-emerald-400" />
             </div>
             <div className="space-y-1">
-              <h4 className="text-sm sm:text-base font-bold text-white flex items-center gap-2">
-                <span>{t('zeroStorageBanner')}</span>
-                <span className="text-[10px] font-mono text-emerald-400 px-2 py-0.5 rounded-full bg-emerald-950 border border-emerald-800/50">
+              <div className="flex flex-wrap items-center gap-2">
+                <h4 className="text-sm sm:text-base font-bold text-white tracking-tight">
+                  {t('zeroStorageBanner')}
+                </h4>
+                <span className="text-[10px] font-mono font-bold text-emerald-400 px-2.5 py-0.5 rounded-full bg-emerald-950/80 border border-emerald-700/50">
                   100% Client-Side
                 </span>
-              </h4>
+              </div>
               <p className="text-xs text-zinc-400 max-w-2xl leading-relaxed">
                 {t('zeroStorageSub')}
               </p>
             </div>
           </div>
 
-          <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+          <motion.div whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.97 }} className="shrink-0 w-full sm:w-auto">
             <Link
               href="/fasserli"
-              className="flex items-center gap-2 px-5 py-2.5 rounded-xl bg-zinc-900 hover:bg-zinc-800 border border-zinc-700 text-zinc-200 font-bold text-xs transition-all shrink-0 cursor-pointer shadow-md"
+              className="w-full sm:w-auto flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-zinc-950 font-bold text-xs shadow-lg shadow-emerald-500/25 transition-all cursor-pointer"
             >
-              <Lock className="w-3.5 h-3.5 text-emerald-400" />
+              <Lock className="w-3.5 h-3.5" />
               <span>
                 {locale === 'ar'
                   ? 'تجربة الفحص الآمن'
