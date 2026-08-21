@@ -16,7 +16,10 @@ import {
   FileText,
   ShieldCheck,
   Plane,
+  Loader2,
 } from 'lucide-react';
+
+const STORAGE_KEY = 'idaara_copilot_chat_history';
 
 export default function CopilotPage() {
   const { locale } = useLocale();
@@ -25,15 +28,31 @@ export default function CopilotPage() {
   const [inputVal, setInputVal] = useState('');
   const [isProcessing, setIsProcessing] = useState(false);
   const [isRecording, setIsRecording] = useState(false);
+  const [isTranscribing, setIsTranscribing] = useState(false);
   const [showPlusMenu, setShowPlusMenu] = useState<boolean>(false);
+  const [isInitialized, setIsInitialized] = useState(false);
 
   const messagesContainerRef = useRef<HTMLDivElement | null>(null);
   const textareaRef = useRef<HTMLTextAreaElement | null>(null);
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const speechRecognitionRef = useRef<any>(null);
+  const mediaRecorderRef = useRef<MediaRecorder | null>(null);
+  const audioChunksRef = useRef<Blob[]>([]);
 
+  // ── 1. Load Chat History from LocalStorage ──
   useEffect(() => {
     if (typeof window !== 'undefined') {
+      try {
+        const saved = localStorage.getItem(STORAGE_KEY);
+        if (saved) {
+          const parsed = JSON.parse(saved);
+          if (Array.isArray(parsed) && parsed.length > 0) {
+            setMessages(parsed);
+          }
+        }
+      } catch (err) {
+        console.warn('Failed to load chat history from storage:', err);
+      }
+      setIsInitialized(true);
+
       const urlParams = new URLSearchParams(window.location.search);
       const q = urlParams.get('q');
       if (q && q.trim()) handleSendMessage(q.trim());
@@ -41,6 +60,21 @@ export default function CopilotPage() {
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+  // ── 2. Persist Chat History to LocalStorage ──
+  useEffect(() => {
+    if (!isInitialized || typeof window === 'undefined') return;
+    try {
+      if (messages.length > 0) {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(messages));
+      } else {
+        localStorage.removeItem(STORAGE_KEY);
+      }
+    } catch (err) {
+      console.warn('Failed to persist chat history:', err);
+    }
+  }, [messages, isInitialized]);
+
+  // ── 3. Smooth Scroll to Bottom ──
   useEffect(() => {
     if (messagesContainerRef.current) {
       messagesContainerRef.current.scrollTo({
@@ -141,75 +175,86 @@ export default function CopilotPage() {
     }
   };
 
-  const toggleVoice = () => {
+  const handleNewChat = () => {
+    setMessages([]);
+    localStorage.removeItem(STORAGE_KEY);
+  };
+
+  // ── Robust Voice Dictation via MediaRecorder + Groq Whisper Engine ──
+  const toggleVoice = async () => {
+    // If currently recording, stop it and transcribe
     if (isRecording) {
-      try { speechRecognitionRef.current?.stop(); } catch {}
+      if (mediaRecorderRef.current && mediaRecorderRef.current.state !== 'inactive') {
+        mediaRecorderRef.current.stop();
+      }
       setIsRecording(false);
       return;
     }
 
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const windowObj = typeof window !== 'undefined' ? (window as any) : null;
-    if (!windowObj) return;
+    try {
+      // 1. Request microphone access
+      const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+      audioChunksRef.current = [];
 
-    const SpeechRec = windowObj.SpeechRecognition || windowObj.webkitSpeechRecognition;
-    if (!SpeechRec) {
+      const mimeType = MediaRecorder.isTypeSupported('audio/webm')
+        ? 'audio/webm'
+        : MediaRecorder.isTypeSupported('audio/mp4')
+        ? 'audio/mp4'
+        : '';
+
+      const recorder = mimeType ? new MediaRecorder(stream, { mimeType }) : new MediaRecorder(stream);
+      mediaRecorderRef.current = recorder;
+
+      recorder.ondataavailable = (event) => {
+        if (event.data && event.data.size > 0) {
+          audioChunksRef.current.push(event.data);
+        }
+      };
+
+      recorder.onstop = async () => {
+        // Stop all audio tracks to turn off the microphone light
+        stream.getTracks().forEach((track) => track.stop());
+
+        if (audioChunksRef.current.length === 0) return;
+
+        const audioBlob = new Blob(audioChunksRef.current, { type: recorder.mimeType || 'audio/webm' });
+        setIsTranscribing(true);
+
+        try {
+          const formData = new FormData();
+          formData.append('file', audioBlob, 'voice.webm');
+
+          const res = await fetch('/api/transcribe', {
+            method: 'POST',
+            body: formData,
+          });
+
+          const data = await res.json();
+          if (data.success && data.text && data.text.trim()) {
+            const transcribed = data.text.trim();
+            setInputVal(transcribed);
+            handleSendMessage(transcribed);
+          }
+        } catch (err) {
+          console.error('Transcription error:', err);
+        } finally {
+          setIsTranscribing(false);
+        }
+      };
+
+      recorder.start();
+      setIsRecording(true);
+    } catch (err) {
+      console.warn('Microphone permission error or browser not supported:', err);
       alert(
         locale === 'ar'
-          ? 'المتصفح لا يدعم التسجيل الصوتي المباشر. يرجى استخدام متصفح Chrome أو Edge.'
+          ? 'يرجى السماح بالوصول إلى الميكروفون لاستخدام التسجيل الصوتي.'
           : locale === 'fr'
-          ? 'La reconnaissance vocale n’est pas supportée sur ce navigateur. Veuillez utiliser Chrome ou Edge.'
+          ? 'Veuillez autoriser l’accès au microphone pour utiliser la dictée vocale.'
           : locale === 'derja'
-          ? 'El micro ma yemchich 3al browser hedha. Jarreb Chrome walla Edge.'
-          : 'Voice recognition is not supported on this browser. Please use Chrome or Edge.'
+          ? 'A3ti el permi lel micro bech tnajjem tetkellem bel sout.'
+          : 'Please allow microphone access to use voice dictation.'
       );
-      return;
-    }
-
-    try {
-      const rec = new SpeechRec();
-      speechRecognitionRef.current = rec;
-      rec.continuous = false;
-      rec.interimResults = true;
-
-      // Set speech recognition dialect: ar-TN for Tunisian Derja/Arabic, fr-FR for French, en-US for English
-      if (locale === 'ar' || locale === 'derja') {
-        rec.lang = 'ar-TN';
-      } else if (locale === 'fr') {
-        rec.lang = 'fr-FR';
-      } else {
-        rec.lang = 'en-US';
-      }
-
-      rec.onstart = () => setIsRecording(true);
-
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      rec.onresult = (e: any) => {
-        let interim = '';
-        for (let i = 0; i < e.results.length; i++) {
-          interim += e.results[i][0].transcript;
-        }
-        setInputVal(interim);
-        if (e.results[e.results.length - 1].isFinal && interim.trim()) {
-          setIsRecording(false);
-          handleSendMessage(interim.trim());
-        }
-      };
-
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      rec.onerror = (e: any) => {
-        console.warn('Speech recognition status/error:', e);
-        setIsRecording(false);
-        // Fallback to standard Arabic if ar-TN locale voice pack is missing on the client OS
-        if (rec.lang === 'ar-TN') {
-          rec.lang = 'ar-SA';
-        }
-      };
-
-      rec.onend = () => setIsRecording(false);
-      rec.start();
-    } catch (err) {
-      console.error('Failed to initialize speech recognition:', err);
       setIsRecording(false);
     }
   };
@@ -244,6 +289,14 @@ export default function CopilotPage() {
         : locale === 'fr'
         ? 'Écoute en cours... Parlez maintenant'
         : 'Listening... Speak now')
+    : isTranscribing
+    ? (locale === 'ar'
+        ? 'جارٍ معالجة الصوت...'
+        : locale === 'derja'
+        ? '9a3ed ntarjem fel sout...'
+        : locale === 'fr'
+        ? 'Transcription en cours...'
+        : 'Transcribing voice...')
     : (locale === 'ar'
       ? 'اسأل عن أي إجراء، وثيقة، أو معلوم جبائي...'
       : locale === 'derja'
@@ -298,7 +351,7 @@ export default function CopilotPage() {
         <div>
           {messages.length > 0 && (
             <button
-              onClick={() => setMessages([])}
+              onClick={handleNewChat}
               className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl hover:bg-white/10 text-zinc-300 hover:text-white text-xs transition-colors cursor-pointer border-0 outline-none"
               title={newChatText}
             >
@@ -368,6 +421,7 @@ export default function CopilotPage() {
                   }
                 }}
                 placeholder={placeholder}
+                disabled={isTranscribing}
                 className="flex-1 bg-transparent py-1 text-sm sm:text-base text-zinc-100 placeholder-zinc-500 border-0 outline-none ring-0 focus:border-0 focus:outline-none focus:ring-0 focus-visible:border-0 focus-visible:outline-none focus-visible:ring-0 shadow-none"
               />
 
@@ -376,18 +430,29 @@ export default function CopilotPage() {
                 <button
                   type="button"
                   onClick={toggleVoice}
+                  disabled={isTranscribing}
                   className={`p-2 rounded-full transition-colors cursor-pointer border-0 outline-none ${
-                    isRecording ? 'bg-red-500 text-white animate-pulse' : 'text-zinc-400 hover:text-white hover:bg-white/10'
+                    isRecording
+                      ? 'bg-red-500 text-white animate-pulse'
+                      : isTranscribing
+                      ? 'text-emerald-400'
+                      : 'text-zinc-400 hover:text-white hover:bg-white/10'
                   }`}
                   title={locale === 'ar' ? 'تسجيل صوتي' : locale === 'fr' ? 'Dicter' : 'Voice Dictate'}
                 >
-                  {isRecording ? <MicOff className="w-4 h-4" /> : <Mic className="w-4 h-4" />}
+                  {isTranscribing ? (
+                    <Loader2 className="w-4 h-4 animate-spin" />
+                  ) : isRecording ? (
+                    <MicOff className="w-4 h-4" />
+                  ) : (
+                    <Mic className="w-4 h-4" />
+                  )}
                 </button>
 
                 <button
                   type="button"
                   onClick={() => handleSendMessage()}
-                  disabled={!inputVal.trim()}
+                  disabled={!inputVal.trim() || isTranscribing}
                   className="w-8 h-8 rounded-full bg-white text-black flex items-center justify-center transition-all disabled:opacity-20 disabled:cursor-not-allowed hover:opacity-90 cursor-pointer shadow-md border-0 outline-none"
                   title={locale === 'ar' ? 'إرسال' : locale === 'fr' ? 'Envoyer' : 'Send'}
                 >
@@ -477,6 +542,7 @@ export default function CopilotPage() {
                   onChange={onTextareaChange}
                   onKeyDown={onKeyDown}
                   placeholder={placeholder}
+                  disabled={isTranscribing}
                   className="flex-1 bg-transparent py-1 text-sm sm:text-base text-zinc-100 placeholder-zinc-500 border-0 outline-none ring-0 focus:border-0 focus:outline-none focus:ring-0 focus-visible:border-0 focus-visible:outline-none focus-visible:ring-0 shadow-none resize-none max-h-36 leading-relaxed"
                 />
 
@@ -485,18 +551,29 @@ export default function CopilotPage() {
                   <button
                     type="button"
                     onClick={toggleVoice}
+                    disabled={isTranscribing}
                     className={`p-2 rounded-full transition-colors cursor-pointer border-0 outline-none ${
-                      isRecording ? 'bg-red-500 text-white animate-pulse' : 'text-zinc-400 hover:text-white hover:bg-white/10'
+                      isRecording
+                        ? 'bg-red-500 text-white animate-pulse'
+                        : isTranscribing
+                        ? 'text-emerald-400'
+                        : 'text-zinc-400 hover:text-white hover:bg-white/10'
                     }`}
                     title={locale === 'ar' ? 'تسجيل صوتي' : locale === 'fr' ? 'Dicter' : 'Voice Dictate'}
                   >
-                    {isRecording ? <MicOff className="w-4 h-4" /> : <Mic className="w-4 h-4" />}
+                    {isTranscribing ? (
+                      <Loader2 className="w-4 h-4 animate-spin" />
+                    ) : isRecording ? (
+                      <MicOff className="w-4 h-4" />
+                    ) : (
+                      <Mic className="w-4 h-4" />
+                    )}
                   </button>
 
                   <button
                     type="button"
                     onClick={() => handleSendMessage()}
-                    disabled={!inputVal.trim() || isProcessing}
+                    disabled={!inputVal.trim() || isProcessing || isTranscribing}
                     className="w-8 h-8 rounded-full bg-white text-black flex items-center justify-center transition-all disabled:opacity-20 disabled:cursor-not-allowed hover:opacity-90 cursor-pointer shadow-md border-0 outline-none"
                     title={locale === 'ar' ? 'إرسال' : locale === 'fr' ? 'Envoyer' : 'Send'}
                   >
