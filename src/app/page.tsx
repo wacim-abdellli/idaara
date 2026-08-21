@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useLocale } from '../context/LocaleContext';
@@ -21,11 +21,7 @@ import {
   Stamp,
   Building2,
   ChevronRight,
-  Eye,
   Sliders,
-  FileCode2,
-  Terminal,
-  Zap,
   Activity,
 } from 'lucide-react';
 import { formatTND } from '../lib/utils';
@@ -39,7 +35,6 @@ export default function HomePage() {
   const [activeInspectorDoc, setActiveInspectorDoc] = useState<'passport' | 'tax' | 'lease'>('passport');
   const [interactiveBudget, setInteractiveBudget] = useState<number>(35000);
   const [selectedWilaya, setSelectedWilaya] = useState('Tunis');
-  const [activeVoiceWave, setActiveVoiceWave] = useState(true);
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
@@ -50,63 +45,201 @@ export default function HomePage() {
     }
   };
 
-  // Inspector Documents Data
+  // Localized Inspector Documents Data
   const inspectorDocs = {
     passport: {
-      type: locale === 'en' ? 'National Passport Renewal' : 'Renouvellement Passeport Tunisien',
-      authority: 'Ministère de l’Intérieur (Poste de Police / Garde)',
+      type:
+        locale === 'ar'
+          ? 'تجديد جواز السفر التونسي'
+          : locale === 'en'
+          ? 'Tunisian Passport Renewal'
+          : 'Renouvellement Passeport Tunisien',
+      authority:
+        locale === 'ar'
+          ? 'وزارة الداخلية (مركز الشرطة أو الحرس الوطني)'
+          : locale === 'en'
+          ? 'Ministry of Interior (Police / National Guard Desk)'
+          : 'Ministère de l’Intérieur (Poste de Police / Garde)',
       fee: '86.000 DT',
-      time: '7 - 15 jours',
-      stamp: '80.000 DT (Tarif Ordinaire)',
-      status: 'Dossier Conforme',
+      time: locale === 'ar' ? '7 - 15 يوماً' : locale === 'en' ? '7 - 15 days' : '7 - 15 jours',
+      stamp:
+        locale === 'ar'
+          ? 'طابع جبائي 80 د.ت (تعريفة عادية)'
+          : locale === 'en'
+          ? '80 DT Fiscal Stamp'
+          : '80.000 DT (Tarif Ordinaire)',
       points: [
-        locale === 'en' ? 'Requires 80 DT fiscal stamp from Recette' : 'Timbre fiscal 80 DT obligatoire de la Recette',
-        locale === 'en' ? '4 official white-background photos' : '4 photos d’identité récentes sur fond blanc',
-        locale === 'en' ? 'Surrender of expiring passport' : 'Restitution de l’ancien passeport',
+        locale === 'ar'
+          ? 'شراء طابع جبائي بقيمة 80 د.ت من القباضة المالية'
+          : locale === 'en'
+          ? 'Mandatory 80 DT fiscal stamp from Recette des Finances'
+          : 'Timbre fiscal 80 DT obligatoire de la Recette',
+        locale === 'ar'
+          ? '4 صور شمسية حديثة بخلفية بيضاء'
+          : locale === 'en'
+          ? '4 recent passport photos on white background'
+          : '4 photos d’identité récentes sur fond blanc',
+        locale === 'ar'
+          ? 'تسليم جواز السفر القديم المنتهي الصلاحية'
+          : locale === 'en'
+          ? 'Surrender of expiring / old passport'
+          : 'Restitution de l’ancien passeport',
       ],
     },
     tax: {
-      type: locale === 'en' ? 'Municipal Property Tax Assessment' : 'Avis d’Imposition Fiscale (Zebla w Khrouba)',
-      authority: 'Direction Générale des Impôts & Baladiya',
+      type:
+        locale === 'ar'
+          ? 'إعلام بالضريبة على العقارات المبنية (زبلة وخروبة)'
+          : locale === 'en'
+          ? 'Municipal Property Tax Notice (Zebla w Khrouba)'
+          : 'Avis d’Imposition Fiscale (Zebla w Khrouba)',
+      authority:
+        locale === 'ar'
+          ? 'الإدارة العامة للأداءات والبلدية'
+          : locale === 'en'
+          ? 'General Directorate of Taxes & Municipality'
+          : 'Direction Générale des Impôts & Baladiya',
       fee: '85.000 DT',
-      time: 'Avant le 31 Décembre',
-      stamp: 'Taxe Forfaitaire Bâtie',
-      status: 'Échéance en cours',
+      time: locale === 'ar' ? 'قبل 31 ديسمبر' : locale === 'en' ? 'Before Dec 31st' : 'Avant le 31 Décembre',
+      stamp:
+        locale === 'ar'
+          ? 'معلوم موظف على العقار'
+          : locale === 'en'
+          ? 'Statutory Municipal Assessment'
+          : 'Taxe Forfaitaire Bâtie',
       points: [
-        locale === 'en' ? 'Statutory annual sanitation tax' : 'Taxe municipale annuelle sur les immeubles bâtis',
-        locale === 'en' ? 'Payable at local Recette Municipale' : 'Paiement à la Recette Municipale ou par carte',
-        locale === 'en' ? '0.75% monthly late penalty risk' : 'Pénalité de 0.75% par mois en cas de retard',
+        locale === 'ar'
+          ? 'معلوم بلدي سنوي إجباري على العقارات والمحلات المبنية'
+          : locale === 'en'
+          ? 'Statutory annual municipal tax on built residential properties'
+          : 'Taxe municipale annuelle sur les immeubles bâtis',
+        locale === 'ar'
+          ? 'الخلاص بالقباضة البلدية أو عن بعد'
+          : locale === 'en'
+          ? 'Payable at municipal tax collector or via online portal'
+          : 'Paiement à la Recette Municipale ou par carte',
+        locale === 'ar'
+          ? 'خطية تأخير بنسبة 0.75% شهرياً في صورة عدم الدفع'
+          : locale === 'en'
+          ? '0.75% monthly late interest penalty applies after deadline'
+          : 'Pénalité de 0.75% par mois en cas de retard',
       ],
     },
     lease: {
-      type: locale === 'en' ? 'Residential Lease Agreement' : 'Contrat de Location Résidentiel (3a9d Kré)',
-      authority: 'Municipalité (Baladiya Ta3rif bel Imdha2)',
+      type:
+        locale === 'ar'
+          ? 'عقد كراء سكني مصادق (التعريف بالإمضاء)'
+          : locale === 'en'
+          ? 'Certified Residential Lease Agreement'
+          : 'Contrat de Location Résidentiel (3a9d Kré)',
+      authority:
+        locale === 'ar'
+          ? 'البلدية (مصلحة التعريف بالإمضاء)'
+          : locale === 'en'
+          ? 'Municipality (Signature Legalization Desk)'
+          : 'Municipalité (Baladiya Ta3rif bel Imdha2)',
       fee: '35.000 DT',
-      time: 'Immédiat au guichet',
-      stamp: '30 DT Enregistrement + 5 DT Baladiya',
-      status: 'Homologué COC',
+      time: locale === 'ar' ? 'فوري بالبلدية' : locale === 'en' ? 'Immediate at counter' : 'Immédiat au guichet',
+      stamp:
+        locale === 'ar'
+          ? '30 د.ت تسجيل + 5 د.ت طابع بلدي'
+          : locale === 'en'
+          ? '30 DT Registration + 5 DT Municipal'
+          : '30 DT Enregistrement + 5 DT Baladiya',
       points: [
-        locale === 'en' ? 'Code of Obligations (COC) compliant' : 'Conforme aux articles 1104 du Code des Contrats',
-        locale === 'en' ? 'Mandatory in-person signature legalization' : 'Légalisation des signatures en présence physique',
-        locale === 'en' ? 'Registration at Recette des Finances' : 'Enregistrement obligatoire à la Recette',
+        locale === 'ar'
+          ? 'مطابق للفصل 1104 من مجلة الالتزامات والعقود (م.ا.ع)'
+          : locale === 'en'
+          ? 'Code of Obligations & Contracts (COC) compliant'
+          : 'Conforme aux articles 1104 du Code des Contrats',
+        locale === 'ar'
+          ? 'حضور المؤجر والمكتري شخصياً مع بطاقة التعريف'
+          : locale === 'en'
+          ? 'Physical in-person presence of lessor and lessee required'
+          : 'Légalisation des signatures en présence physique',
+        locale === 'ar'
+          ? 'تسجيل العقد وجوباً بالقباضة المالية خلال 60 يوماً'
+          : locale === 'en'
+          ? 'Mandatory formal registration at tax office within 60 days'
+          : 'Enregistrement obligatoire à la Recette dans les 60 jours',
       ],
     },
   };
 
   const currentDoc = inspectorDocs[activeInspectorDoc];
 
-  // Dynamic calculation for the interactive tax & timbre slider
+  // Dynamic calculations for the 1% tax simulator
   const simulatedTax = interactiveBudget * 0.01;
   const simulatedCnss = 200; // ~50 DT / quarter
   const simulatedNet = interactiveBudget - simulatedTax - simulatedCnss;
 
-  const wilayaData: Record<string, { baladiya: string; recette: string; status: string }> = {
-    Tunis: { baladiya: 'Kasbah / Bab Bhar (08:30 - 16:30)', recette: 'Beb Souika & Kasbah (08:00 - 15:30)', status: 'Ouvert' },
-    Ariana: { baladiya: 'Ariana Ville / Menzah 6 (08:30 - 16:30)', recette: 'Ariana Centre (08:00 - 15:30)', status: 'Ouvert' },
-    Sousse: { baladiya: 'Bouhsina / Khezama (08:30 - 16:30)', recette: 'Sousse Médina (08:00 - 15:30)', status: 'Ouvert' },
-    Sfax: { baladiya: 'Sfax Ville / Sakiet Ezzit (08:30 - 16:30)', recette: 'Sfax Port & Centre (08:00 - 15:30)', status: 'Ouvert' },
-    Nabeul: { baladiya: 'Nabeul / Hammamet (08:30 - 16:30)', recette: 'Nabeul Centre (08:00 - 15:30)', status: 'Ouvert' },
-    Bizerte: { baladiya: 'Bizerte Ville / Menzel B. (08:30 - 16:30)', recette: 'Bizerte Port (08:00 - 15:30)', status: 'Ouvert' },
+  const wilayaData: Record<string, { baladiya: string; recette: string }> = {
+    Tunis: {
+      baladiya: locale === 'ar' ? 'القصبة / باب بحر (08:30 - 16:30)' : 'Kasbah / Bab Bhar (08:30 - 16:30)',
+      recette: locale === 'ar' ? 'باب سويقة والقصبة (08:00 - 15:30)' : 'Beb Souika & Kasbah (08:00 - 15:30)',
+    },
+    Ariana: {
+      baladiya: locale === 'ar' ? 'أريانة المدينة / المنزه 6 (08:30 - 16:30)' : 'Ariana Ville / Menzah 6 (08:30 - 16:30)',
+      recette: locale === 'ar' ? 'أريانة المركز (08:00 - 15:30)' : 'Ariana Centre (08:00 - 15:30)',
+    },
+    Sousse: {
+      baladiya: locale === 'ar' ? 'بوحسينة / خزامة (08:30 - 16:30)' : 'Bouhsina / Khezama (08:30 - 16:30)',
+      recette: locale === 'ar' ? 'سوسة المدينة (08:00 - 15:30)' : 'Sousse Médina (08:00 - 15:30)',
+    },
+    Sfax: {
+      baladiya: locale === 'ar' ? 'صفاقس المدينة / ساقية الزيت (08:30 - 16:30)' : 'Sfax Ville / Sakiet Ezzit (08:30 - 16:30)',
+      recette: locale === 'ar' ? 'صفاقس الميناء والمركز (08:00 - 15:30)' : 'Sfax Port & Centre (08:00 - 15:30)',
+    },
+    Nabeul: {
+      baladiya: locale === 'ar' ? 'نابل / الحمامات (08:30 - 16:30)' : 'Nabeul / Hammamet (08:30 - 16:30)',
+      recette: locale === 'ar' ? 'نابل المركز (08:00 - 15:30)' : 'Nabeul Centre (08:00 - 15:30)',
+    },
+    Bizerte: {
+      baladiya: locale === 'ar' ? 'بنزرت المدينة / منزل بورقيبة (08:30 - 16:30)' : 'Bizerte Ville / Menzel B. (08:30 - 16:30)',
+      recette: locale === 'ar' ? 'بنزرت الميناء (08:00 - 15:30)' : 'Bizerte Port (08:00 - 15:30)',
+    },
+  };
+
+  // Localized UI Labels
+  const ui = {
+    nationalPlatform: locale === 'ar' ? 'إدارة.تونس · المنظومة الإدارية الذكية' : locale === 'en' ? 'IDAARA AI · NATIONAL CIVIC PLATFORM' : 'IDAARA AI · RÉSEAU CITOYEN NATIONAL',
+    jort2026: 'JORT 2026',
+    directAccess: locale === 'ar' ? 'روابط مباشرة :' : locale === 'en' ? 'Direct Access:' : 'Accès Direct :',
+    officialDoc: locale === 'ar' ? 'وثيقة رسمية' : locale === 'en' ? 'OFFICIAL DOCUMENT' : 'DOCUMENT OFFICIEL',
+    repTun: locale === 'ar' ? 'الجمهورية التونسية' : locale === 'en' ? 'REP. OF TUNISIA' : 'RÉP. TUNISIENNE',
+    totalEst: locale === 'ar' ? 'المجموع التقديري' : locale === 'en' ? 'Estimated Total' : 'Total Estimé',
+    legalSummary: locale === 'ar' ? 'الملخص القانوني والشروط :' : locale === 'en' ? 'LEGAL SUMMARY & REQUIREMENTS:' : 'SYNTHÈSE JURIDIQUE & EXIGENCES :',
+    fullDossier: locale === 'ar' ? 'الملف الكامل' : locale === 'en' ? 'Full Dossier' : 'Dossier Complet',
+    openStatus: locale === 'ar' ? 'مفتوح' : locale === 'en' ? 'Open' : 'Ouvert',
+    simulatorEyebrow: locale === 'ar' ? 'حاسبة المحاكاة الجبائية المباشرة' : locale === 'en' ? 'REALTIME TAX & STAMP SIMULATOR' : 'SIMULATEUR INTERACTIF EN DIRECT',
+    simulatorTitle: locale === 'ar' ? 'حاسبة الضرائب وصافي الدخل للمبادر الذاتي' : locale === 'en' ? 'Live Auto-Entrepreneur Tax & Net Calculator' : 'Calculateur Budgétaire & Fiscal en Direct',
+    simulatorDesc:
+      locale === 'ar'
+        ? 'حرّك المؤشر حسب رقم معاملاتك التقديري لمعرفة الضريبة 1% ومساهمة الضمان الاجتماعي وصافي دخلك السنوي.'
+        : locale === 'en'
+        ? 'Adjust the revenue slider to simulate in real-time your 1% flat income tax, CNSS coverage, and net earnings.'
+        : 'Ajustez le curseur de chiffre d’affaires pour simuler en temps réel vos impôts au forfait de 1% et vos cotisations CNSS.',
+    revSliderLabel: locale === 'ar' ? 'رقم المعاملات السنوي التقديري (د.ت) :' : locale === 'en' ? 'Estimated Annual Turnover (TND):' : 'Chiffre d’Affaires Annuel Estimé (TND) :',
+    legalCeiling: locale === 'ar' ? 'السقف القانوني : 75 ألف د.ت / سنوياً' : locale === 'en' ? 'Statutory Ceiling: 75,000 DT / yr' : 'Plafond Légal : 75 000 DT / an',
+    decreeBadge: locale === 'ar' ? 'امتياز قانون المبادر الذاتي (مرسوم 2020-33) :' : locale === 'en' ? 'Auto-Entrepreneur Statutory Advantage (Decree 2020-33):' : 'Avantage Loi Auto-Entrepreneur (Décret 2020-33) :',
+    decreeText:
+      locale === 'ar'
+        ? 'نسبة ضريبية وحيدة 1% لمهن الخدمات والمطورين والمصممين. إعفاء كامل من الأداء على القيمة المضافة (TVA) عند التصدير مع ترخيص بالعملة الصعبة من البنك المركزي.'
+        : locale === 'en'
+        ? 'Single 1% flat tax rate for service providers, developers, and freelancers. 0% VAT on export services with BCT foreign currency repatriation compliance.'
+        : 'Taux unique libératoire de 1% pour les prestations de services et développeurs. Exonération totale de TVA à l’exportation avec rapatriement de devises (EUR / USD) homologué Banque Centrale.',
+    taxCardTitle: locale === 'ar' ? '1. الضريبة 1% (الخدمات)' : locale === 'en' ? '1. 1% Tax (Services)' : '1. Impôt 1% (Services)',
+    taxCardSub: locale === 'ar' ? 'سنوي جزافي' : locale === 'en' ? 'Annual Flat Tax' : 'Annuel forfaitaire',
+    cnssCardTitle: locale === 'ar' ? '2. التغطية الاجتماعية CNSS' : locale === 'en' ? '2. CNSS Health Coverage' : '2. CNSS Santé',
+    cnssCardSub: locale === 'ar' ? 'حوالي 50 د.ت / ثلاثية' : locale === 'en' ? '~50 DT / quarter' : '~50 DT / trimestre',
+    netCardTitle: locale === 'ar' ? '3. صافي الدخل' : locale === 'en' ? '3. Net Income' : '3. Revenu Net',
+    netCardSub: locale === 'ar' ? 'في جيبك' : locale === 'en' ? 'Take-home amount' : 'Dans votre poche',
+    radarEyebrow: locale === 'ar' ? 'الشبكة الإدارية المباشرة' : locale === 'en' ? 'TERRITORIAL PUBLIC DESK RADAR' : 'RÉSEAU TERRITORIAL EN DIRECT',
+    radarTitle: locale === 'ar' ? 'مواعيد العمل الرسمية حسب الولاية' : locale === 'en' ? 'Open Desks & Working Hours by Governorate' : 'Horaires et Guichets Ouverts par Wilaya',
+    baladiyaCardTitle: (w: string) => locale === 'ar' ? `البلديات والدوائر (${w})` : locale === 'en' ? `Municipalities & Baladiyas (${w})` : `Municipalités & Baladiyas (${w})`,
+    baladiyaCardSub: locale === 'ar' ? 'التعريف بالإمضاء (Ta3rif bel Imdha2) واستخراج مضامين الحالة المدنية.' : locale === 'en' ? 'Signature legalization & civil status certificates.' : 'Légalisation de signature (Ta3rif bel Imdha2) & Extraits d’état civil.',
+    recetteCardTitle: (w: string) => locale === 'ar' ? `القباضات المالية (${w})` : locale === 'en' ? `Tax Collection Desks (${w})` : `Recettes des Finances (${w})`,
+    recetteCardSub: locale === 'ar' ? 'شراء التنابر الجبائية (80 د.ت، 15 د.ت، 5 د.ت) وتسجيل العقود.' : locale === 'en' ? 'Fiscal stamp purchase (80 DT, 15 DT, 5 DT, 3 DT) & contract registration.' : 'Vente des timbres fiscaux (80 DT, 15 DT, 5 DT, 3 DT) et enregistrement des contrats.',
   };
 
   return (
@@ -130,9 +263,9 @@ export default function HomePage() {
                 <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75" />
                 <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500" />
               </span>
-              <span>IDAARA AI · NATIONAL CIVIC PLATFORM</span>
+              <span>{ui.nationalPlatform}</span>
               <span className="text-zinc-600">·</span>
-              <span className="text-zinc-400 font-normal">JORT 2026</span>
+              <span className="text-zinc-400 font-normal">{ui.jort2026}</span>
             </div>
 
             {/* Monumental Editorial Headline */}
@@ -172,20 +305,20 @@ export default function HomePage() {
                   className="flex items-center gap-2 px-5 py-2.5 rounded-xl font-bold text-xs bg-emerald-500 hover:bg-emerald-400 text-zinc-950 shrink-0 shadow-lg shadow-emerald-500/30 transition-all hover:scale-105 cursor-pointer"
                 >
                   <Mic className="w-3.5 h-3.5" />
-                  <span>{locale === 'ar' ? 'المساعد الصوتي' : 'Voice Copilot'}</span>
+                  <span>{locale === 'ar' ? 'المساعد الصوتي' : locale === 'en' ? 'Voice AI' : 'Voice Copilot'}</span>
                 </Link>
               </form>
 
               {/* Direct Procedure Pills */}
               <div className="flex flex-wrap items-center gap-2 pt-1">
                 <span className="text-[10px] font-mono uppercase tracking-wider text-zinc-500">
-                  {locale === 'en' ? 'Direct Access:' : 'Accès Direct :'}
+                  {ui.directAccess}
                 </span>
                 {[
-                  { name: 'Passeport', cost: '86 DT', href: '/procedures/passeport-renouvellement' },
-                  { name: 'Carte Grise', cost: '145 DT', href: '/procedures/mutation-carte-grise' },
-                  { name: 'Contrat Bail', cost: '35 DT', href: '/documents/contrat-location' },
-                  { name: 'Auto-Entrepreneur', cost: '1% Tax', href: '/launchpad' },
+                  { name: locale === 'ar' ? 'جواز السفر' : 'Passeport', cost: '86 DT', href: '/procedures/passeport-renouvellement' },
+                  { name: locale === 'ar' ? 'البطاقة الرمادية' : 'Carte Grise', cost: '145 DT', href: '/procedures/mutation-carte-grise' },
+                  { name: locale === 'ar' ? 'عقد الكراء' : 'Contrat Bail', cost: '35 DT', href: '/documents/contrat-location' },
+                  { name: locale === 'ar' ? 'المبادر الذاتي' : 'Auto-Entrepreneur', cost: '1% Tax', href: '/launchpad' },
                 ].map((item, idx) => (
                   <Link
                     key={idx}
@@ -207,9 +340,9 @@ export default function HomePage() {
             {/* Interactive Document Switcher Tabs */}
             <div className="flex items-center gap-2 mb-3">
               {[
-                { id: 'passport' as const, label: '🪪 Passeport', tag: '86 DT' },
-                { id: 'tax' as const, label: '📄 Avis Fiscal', tag: 'DGI' },
-                { id: 'lease' as const, label: '⚖️ Contrat Bail', tag: 'Baladiya' },
+                { id: 'passport' as const, label: locale === 'ar' ? '🪪 جواز السفر' : locale === 'en' ? '🪪 Passport' : '🪪 Passeport' },
+                { id: 'tax' as const, label: locale === 'ar' ? '📄 الضريبة البلدية' : locale === 'en' ? '📄 Tax Notice' : '📄 Avis Fiscal' },
+                { id: 'lease' as const, label: locale === 'ar' ? '⚖️ عقد الكراء' : locale === 'en' ? '⚖️ Lease Contract' : '⚖️ Contrat Bail' },
               ].map((tab) => (
                 <button
                   key={tab.id}
@@ -236,9 +369,9 @@ export default function HomePage() {
                 <div className="space-y-1">
                   <div className="flex items-center gap-2">
                     <span className="text-[10px] font-mono font-bold uppercase tracking-widest text-emerald-400 px-2 py-0.5 rounded bg-emerald-950/80 border border-emerald-800/50">
-                      DOCUMENT OFFICIEL
+                      {ui.officialDoc}
                     </span>
-                    <span className="text-[10px] font-mono text-zinc-500">RÉP. TUNISIENNE</span>
+                    <span className="text-[10px] font-mono text-zinc-500">{ui.repTun}</span>
                   </div>
                   <h3 className="text-base sm:text-lg font-bold text-white tracking-tight">
                     {currentDoc.type}
@@ -249,8 +382,8 @@ export default function HomePage() {
                   </p>
                 </div>
 
-                <div className="text-right shrink-0">
-                  <span className="text-[10px] uppercase font-bold text-zinc-500 block">Total Estimé</span>
+                <div className="text-right rtl:text-left shrink-0">
+                  <span className="text-[10px] uppercase font-bold text-zinc-500 block">{ui.totalEst}</span>
                   <span className="text-base sm:text-lg font-mono font-extrabold text-amber-400">{currentDoc.fee}</span>
                 </div>
               </div>
@@ -259,7 +392,7 @@ export default function HomePage() {
               <div className="py-4 space-y-2.5 relative z-10">
                 <div className="text-[10px] font-mono uppercase tracking-wider text-zinc-500 flex items-center gap-1.5">
                   <Activity className="w-3.5 h-3.5 text-emerald-400" />
-                  <span>SYNTHÈSE JURIDIQUE & EXIGENCES :</span>
+                  <span>{ui.legalSummary}</span>
                 </div>
 
                 <div className="space-y-2">
@@ -287,7 +420,7 @@ export default function HomePage() {
                   href="/procedures"
                   className="flex items-center gap-1 text-emerald-400 hover:text-emerald-300 font-bold group"
                 >
-                  <span>Dossier Complet</span>
+                  <span>{ui.fullDossier}</span>
                   <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-0.5 transition-transform" />
                 </Link>
               </div>
@@ -308,16 +441,14 @@ export default function HomePage() {
             <div>
               <div className="inline-flex items-center gap-1.5 text-xs font-bold uppercase tracking-wider text-amber-400 mb-1">
                 <Sliders className="w-3.5 h-3.5" />
-                <span>SIMULATEUR INTERACTIF EN DIRECT</span>
+                <span>{ui.simulatorEyebrow}</span>
               </div>
               <h2 className="text-xl sm:text-3xl font-extrabold text-white tracking-tight">
-                {locale === 'ar' ? 'حاسبة الضرائب والتنابر التفاعلية' : 'Calculateur Budgétaire & Fiscal en Direct'}
+                {ui.simulatorTitle}
               </h2>
             </div>
             <p className="text-xs text-zinc-400 max-w-md">
-              {locale === 'ar'
-                ? 'حرّك المؤشر لمعرفة الضريبة 1% ومساهمة الضمان الاجتماعي وصافي الدخل.'
-                : 'Ajustez le curseur de chiffre d’affaires pour simuler en temps réel vos impôts au forfait de 1% et vos cotisations CNSS.'}
+              {ui.simulatorDesc}
             </p>
           </div>
 
@@ -327,7 +458,7 @@ export default function HomePage() {
             <div className="lg:col-span-6 space-y-6">
               <div className="space-y-3">
                 <div className="flex items-center justify-between text-xs">
-                  <span className="text-zinc-400 font-semibold">Chiffre d’Affaires Annuel Estimé (TND) :</span>
+                  <span className="text-zinc-400 font-semibold">{ui.revSliderLabel}</span>
                   <span className="text-lg font-mono font-extrabold text-emerald-400">
                     {interactiveBudget.toLocaleString()} DT
                   </span>
@@ -345,17 +476,17 @@ export default function HomePage() {
 
                 <div className="flex justify-between text-[10px] font-mono text-zinc-500">
                   <span>5 000 DT</span>
-                  <span>Plafond Légal : 75 000 DT / an</span>
+                  <span>{ui.legalCeiling}</span>
                 </div>
               </div>
 
               <div className="p-4 rounded-2xl bg-zinc-900/80 border border-zinc-800 text-xs text-zinc-400 space-y-2">
                 <div className="flex items-center gap-2 text-white font-bold">
                   <Sparkles className="w-4 h-4 text-amber-400" />
-                  <span>Avantage Loi Auto-Entrepreneur (Décret 2020-33) :</span>
+                  <span>{ui.decreeBadge}</span>
                 </div>
                 <p className="text-[11px] leading-relaxed">
-                  Taux unique libératoire de 1% pour les prestations de services et développeurs. Exonération totale de TVA à l’exportation avec rapatriement de devises (EUR / USD) homologué Banque Centrale.
+                  {ui.decreeText}
                 </p>
               </div>
             </div>
@@ -364,27 +495,27 @@ export default function HomePage() {
             <div className="lg:col-span-6 grid grid-cols-1 sm:grid-cols-3 gap-3">
               
               <div className="p-5 rounded-2xl bg-zinc-950 border border-zinc-800 flex flex-col justify-between space-y-2">
-                <span className="text-[10px] font-mono uppercase font-bold text-zinc-500">1. Impôt 1% (Services)</span>
+                <span className="text-[10px] font-mono uppercase font-bold text-zinc-500">{ui.taxCardTitle}</span>
                 <span className="text-xl font-mono font-extrabold text-amber-400">
                   {formatTND(simulatedTax, locale)}
                 </span>
-                <span className="text-[10px] text-zinc-500">Annuel forfaitaire</span>
+                <span className="text-[10px] text-zinc-500">{ui.taxCardSub}</span>
               </div>
 
               <div className="p-5 rounded-2xl bg-zinc-950 border border-zinc-800 flex flex-col justify-between space-y-2">
-                <span className="text-[10px] font-mono uppercase font-bold text-zinc-500">2. CNSS Santé</span>
+                <span className="text-[10px] font-mono uppercase font-bold text-zinc-500">{ui.cnssCardTitle}</span>
                 <span className="text-xl font-mono font-extrabold text-zinc-200">
                   {formatTND(simulatedCnss, locale)}
                 </span>
-                <span className="text-[10px] text-zinc-500">~50 DT / trimestre</span>
+                <span className="text-[10px] text-zinc-500">{ui.cnssCardSub}</span>
               </div>
 
               <div className="p-5 rounded-2xl bg-emerald-950/40 border border-emerald-500/40 flex flex-col justify-between space-y-2">
-                <span className="text-[10px] font-mono uppercase font-bold text-emerald-300">3. Revenu Net</span>
+                <span className="text-[10px] font-mono uppercase font-bold text-emerald-300">{ui.netCardTitle}</span>
                 <span className="text-xl font-mono font-extrabold text-emerald-400">
                   {formatTND(simulatedNet, locale)}
                 </span>
-                <span className="text-[10px] text-emerald-300/80">Dans votre poche</span>
+                <span className="text-[10px] text-emerald-300/80">{ui.netCardSub}</span>
               </div>
 
             </div>
@@ -399,10 +530,10 @@ export default function HomePage() {
         <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-3 pb-2 border-b border-zinc-800/80">
           <div>
             <span className="text-[10px] font-mono font-bold uppercase tracking-widest text-cyan-400 block mb-1">
-              RÉSEAU TERRITORIAL EN DIRECT
+              {ui.radarEyebrow}
             </span>
             <h2 className="text-xl sm:text-2xl font-bold text-white tracking-tight">
-              {locale === 'ar' ? 'دليل المصالح وأوقات العمل بالولايات' : 'Horaires et Guichets Ouverts par Wilaya'}
+              {ui.radarTitle}
             </h2>
           </div>
 
@@ -429,17 +560,17 @@ export default function HomePage() {
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-2 text-xs font-bold text-white">
                 <Building2 className="w-4 h-4 text-cyan-400" />
-                <span>Municipalités & Baladiyas ({selectedWilaya})</span>
+                <span>{ui.baladiyaCardTitle(selectedWilaya)}</span>
               </div>
               <span className="text-[10px] font-mono text-emerald-400 bg-emerald-950/60 border border-emerald-800/40 px-2 py-0.5 rounded-full">
-                Ouvert
+                {ui.openStatus}
               </span>
             </div>
             <p className="text-xs font-mono text-cyan-300">
               {wilayaData[selectedWilaya].baladiya}
             </p>
             <p className="text-[11px] text-zinc-500 pt-1">
-              Légalisation de signature (Ta3rif bel Imdha2) & Extraits d’état civil.
+              {ui.baladiyaCardSub}
             </p>
           </div>
 
@@ -447,17 +578,17 @@ export default function HomePage() {
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-2 text-xs font-bold text-white">
                 <Stamp className="w-4 h-4 text-amber-400" />
-                <span>Recettes des Finances ({selectedWilaya})</span>
+                <span>{ui.recetteCardTitle(selectedWilaya)}</span>
               </div>
               <span className="text-[10px] font-mono text-emerald-400 bg-emerald-950/60 border border-emerald-800/40 px-2 py-0.5 rounded-full">
-                Ouvert
+                {ui.openStatus}
               </span>
             </div>
             <p className="text-xs font-mono text-amber-300">
               {wilayaData[selectedWilaya].recette}
             </p>
             <p className="text-[11px] text-zinc-500 pt-1">
-              Vente des timbres fiscaux (80 DT, 15 DT, 5 DT, 3 DT) et enregistrement des contrats.
+              {ui.recetteCardSub}
             </p>
           </div>
         </div>
