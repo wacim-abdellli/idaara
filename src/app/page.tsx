@@ -30,6 +30,12 @@ import {
   Activity,
   Scale,
   FileCheck2,
+  Car,
+  Mail,
+  Compass,
+  Layers,
+  EyeOff,
+  Zap,
 } from 'lucide-react';
 import { formatTND } from '../lib/utils';
 
@@ -312,31 +318,220 @@ export default function HomePage() {
   const simulatedCnss = 200; // ~50 DT / quarter
   const simulatedNet = interactiveBudget - simulatedTax - simulatedCnss;
 
-  const wilayaData: Record<string, { baladiya: string; recette: string }> = {
-    Tunis: {
-      baladiya: locale === 'ar' ? 'القصبة / باب بحر (08:30 - 16:30)' : 'Kasbah / Bab Bhar (08:30 - 16:30)',
-      recette: locale === 'ar' ? 'باب سويقة والقصبة (08:00 - 15:30)' : 'Beb Souika & Kasbah (08:00 - 15:30)',
-    },
-    Ariana: {
-      baladiya: locale === 'ar' ? 'أريانة المدينة / المنزه 6 (08:30 - 16:30)' : 'Ariana Ville / Menzah 6 (08:30 - 16:30)',
-      recette: locale === 'ar' ? 'أريانة المركز (08:00 - 15:30)' : 'Ariana Centre (08:00 - 15:30)',
-    },
-    Sousse: {
-      baladiya: locale === 'ar' ? 'بوحسينة / خزامة (08:30 - 16:30)' : 'Bouhsina / Khezama (08:30 - 16:30)',
-      recette: locale === 'ar' ? 'سوسة المدينة (08:00 - 15:30)' : 'Sousse Médina (08:00 - 15:30)',
-    },
-    Sfax: {
-      baladiya: locale === 'ar' ? 'صفاقس المدينة / ساقية الزيت (08:30 - 16:30)' : 'Sfax Ville / Sakiet Ezzit (08:30 - 16:30)',
-      recette: locale === 'ar' ? 'صفاقس الميناء والمركز (08:00 - 15:30)' : 'Sfax Port & Centre (08:00 - 15:30)',
-    },
-    Nabeul: {
-      baladiya: locale === 'ar' ? 'نابل / الحمامات (08:30 - 16:30)' : 'Nabeul / Hammamet (08:30 - 16:30)',
-      recette: locale === 'ar' ? 'نابل المركز (08:00 - 15:30)' : 'Nabeul Centre (08:00 - 15:30)',
-    },
-    Bizerte: {
-      baladiya: locale === 'ar' ? 'بنزرت المدينة / منزل بورقيبة (08:30 - 16:30)' : 'Bizerte Ville / Menzel B. (08:30 - 16:30)',
-      recette: locale === 'ar' ? 'بنزرت الميناء (08:00 - 15:30)' : 'Bizerte Port (08:00 - 15:30)',
-    },
+  interface GovernorateDesk {
+    type: 'baladiya' | 'recette' | 'attt' | 'poste';
+    title: { fr: string; ar: string; derja: string; en: string };
+    location: { fr: string; ar: string; derja: string; en: string };
+    hours: string;
+    services: { fr: string; ar: string; derja: string; en: string };
+    badge: { fr: string; ar: string; derja: string; en: string };
+  }
+
+  const wilayaDesks: Record<string, GovernorateDesk[]> = {
+    Tunis: [
+      {
+        type: 'baladiya',
+        title: { fr: 'Hôtel de Ville & Baladiya', ar: 'بلدية تونس - القصر البلدي', derja: 'Baladiyat Tunis el Markaziya', en: 'Tunis Central Municipality' },
+        location: { fr: 'La Kasbah / Bab Bhar', ar: 'القصبة / باب بحر', derja: 'El Kasbah / Bab Bhar', en: 'La Kasbah / Bab Bhar' },
+        hours: '08:30 - 16:30',
+        services: { fr: 'Légalisation signature & Extraits d’état civil express', ar: 'التعريف بالإمضاء ومطابقة الأصل ومضامين ولادة فورية', derja: 'Ta3rif bel Imdha2 w Madhmoun Wilada express', en: 'Signature legalization & instant birth certificates' },
+        badge: { fr: 'Guichet Express', ar: 'شباك سريع', derja: 'Guichet Express', en: 'Express Desk' },
+      },
+      {
+        type: 'recette',
+        title: { fr: 'Recette des Finances Principale', ar: 'القباضة المالية المركزية', derja: '9badha Maliya Markaziya', en: 'Central Tax Collection Office' },
+        location: { fr: 'Beb Souika & Avenue de Paris', ar: 'باب سويقة وشارع باريس', derja: 'Beb Souika & Chare3 Paris', en: 'Beb Souika & Paris Ave' },
+        hours: '08:15 - 16:30 (Caisse 16:00)',
+        services: { fr: 'Timbres fiscaux (80DT, 15DT, 5DT, 3DT) & Enregistrement baux', ar: 'بيع جميع التنابر الجبائية وتسجيل عقود الكراء والسيارات', derja: 'Chrayen el Timbres wel 3o9oud', en: 'Fiscal stamps (80DT, 15DT, 5DT, 3DT) & lease registration' },
+        badge: { fr: 'Stock Timbres Dispo', ar: 'تنابر متوفرة', derja: 'Timbres Mawjoudin', en: 'Stamps in Stock' },
+      },
+      {
+        type: 'attt',
+        title: { fr: 'Agence ATTT (Mines & Transport)', ar: 'الوكالة الفنية للنقل البري', derja: 'Wakalat el ATTT (El Mines)', en: 'ATTT Vehicle & Driver Licensing' },
+        location: { fr: 'Sidi Hassine / Charguia', ar: 'سيدي حسين / الشرقية', derja: 'Sidi Hassine / Charguia', en: 'Sidi Hassine / Charguia' },
+        hours: '08:00 - 15:00',
+        services: { fr: 'Mutation Carte Grise, Visite technique & Permis de conduire', ar: 'تحويل ملكية البطاقة الرمادية والفحص الفني ورخص السياقة', derja: 'Carte Grise, Visite technique w Permis', en: 'Vehicle registration transfer (Carte Grise) & licenses' },
+        badge: { fr: 'Visite & Mutation', ar: 'فحص وبطاقة رمادية', derja: 'Visite & Grise', en: 'Tech Inspection' },
+      },
+      {
+        type: 'poste',
+        title: { fr: 'Bureau de Poste Central', ar: 'مكتب البريد المركزي', derja: 'El Bosta el Markaziya', en: 'Central Post Office' },
+        location: { fr: 'Rue Charles de Gaulle / Thameur', ar: 'شارع الحبيب ثامر / شارل ديغول', derja: 'Chare3 Thameur / Charles de Gaulle', en: 'Habib Thameur / Charles de Gaulle' },
+        hours: '08:00 - 17:00 (Séance continue)',
+        services: { fr: 'Services D17, Mandats express & Recommandés avec accusé', ar: 'خدمات D17، الحوالات السريعة، والرسائل المضمونة مع الإشعار بالبلوغ', derja: 'D17, Mandat express w Jwabet Recommandés', en: 'D17 wallet, money orders & registered postal mail' },
+        badge: { fr: 'D17 & Mandats', ar: 'حوالات و D17', derja: 'D17 w Mandat', en: 'D17 & Money Orders' },
+      },
+    ],
+    Ariana: [
+      {
+        type: 'baladiya',
+        title: { fr: 'Municipalité Ariana Ville', ar: 'بلدية أريانة المدينة', derja: 'Baladiyat Ariana el Medina', en: 'Ariana City Municipality' },
+        location: { fr: 'Avenue Habib Bourguiba / Menzah 6', ar: 'شارع الحبيب بورقيبة / المنزه 6', derja: 'Chare3 Bourguiba / Menzah 6', en: 'Habib Bourguiba Ave / Menzah 6' },
+        hours: '08:30 - 16:30',
+        services: { fr: 'Ta3rif bel Imdha2, extraits naissance et autorisations de bâtir', ar: 'التعريف بالإمضاء ورخص البناء ومضامين ولادة', derja: 'Ta3rif bel Imdha2 w Rokhsat Bné', en: 'Signature legalization & civil status certificates' },
+        badge: { fr: 'Guichet Unique', ar: 'شباك موحد', derja: 'Guichet Unique', en: 'One-Stop Desk' },
+      },
+      {
+        type: 'recette',
+        title: { fr: 'Recette des Finances Ariana Centre', ar: 'القباضة المالية أريانة المركز', derja: '9badha Maliya Ariana Centre', en: 'Ariana Tax Office' },
+        location: { fr: 'Rue Ali Belhouane, Ariana', ar: 'نهج علي البلهوان، أريانة', derja: 'Nahj Ali Belhouane, Ariana', en: 'Ali Belhouane St, Ariana' },
+        hours: '08:15 - 16:30',
+        services: { fr: 'Vente timbres passeport, taxe de circulation (vignette) & déclarations', ar: 'تنابر جواز السفر ومعلوم الجولان والتصاريح الجبائية', derja: 'Timbres Passeport w Vignette', en: 'Passport stamps, vehicle road tax & tax filings' },
+        badge: { fr: 'Vignettes & Timbres', ar: 'تنابر ومعلوم جولان', derja: 'Timbres w Vignette', en: 'Road Tax & Stamps' },
+      },
+      {
+        type: 'attt',
+        title: { fr: 'Centre Visite Technique Ariana', ar: 'مركز الفحص الفني بأريانة', derja: 'Centre Visite Technique Ariana', en: 'Ariana ATTT Vehicle Inspection' },
+        location: { fr: 'Zone Industrielle Ariana / Chotrana', ar: 'المنطقة الصناعية أريانة / شطرانة', derja: 'Zone Industrielle Chotrana', en: 'Industrial Zone / Chotrana' },
+        hours: '07:45 - 15:15',
+        services: { fr: 'Visite technique périodique & homologation véhicules', ar: 'الفحص الفني الدوري ومطابقة العربات', derja: 'Visite technique w Homologation', en: 'Periodic technical inspection & vehicle approval' },
+        badge: { fr: 'Visite Auto', ar: 'فحص فني', derja: 'Visite', en: 'Car Inspection' },
+      },
+      {
+        type: 'poste',
+        title: { fr: 'Bureau de Poste Ariana Centre', ar: 'مكتب بريد أريانة المركز', derja: 'Bosta Ariana Centre', en: 'Ariana Central Post Office' },
+        location: { fr: 'Avenue de la République, Ariana', ar: 'شارع الجمهورية، أريانة', derja: 'Chare3 el Joumhouriya', en: 'Republic Ave, Ariana' },
+        hours: '08:00 - 17:00',
+        services: { fr: 'Comptes épargne, virements postaux et retraits Western Union', ar: 'حسابات الادخار والتحويلات البريدية وويسترن يونيون', derja: 'Carnet d’épargne w Western Union', en: 'Savings accounts, postal transfers & Western Union' },
+        badge: { fr: 'Retraits & Épargne', ar: 'سحب وادخار', derja: 'Retrait w Epargne', en: 'Transfers & Cash' },
+      },
+    ],
+    Sousse: [
+      {
+        type: 'baladiya',
+        title: { fr: 'Municipalité de Sousse', ar: 'بلدية سوسة - القصر البلدي', derja: 'Baladiyat Sousse', en: 'Sousse Central Municipality' },
+        location: { fr: 'Bouhsina / Khezama / Médina', ar: 'بوحسينة / خزامة / المدينة العتيقة', derja: 'Bouhsina / Khezama / Médina', en: 'Bouhsina / Khezama / Medina' },
+        hours: '08:30 - 16:30',
+        services: { fr: 'Légalisation de documents, contrats de mariage & état civil', ar: 'التعريف بالإمضاء وعقود الزواج والحالة المدنية', derja: 'Ta3rif bel Imdha2 w 39oud Zwaj', en: 'Signature legalization & marriage certificates' },
+        badge: { fr: 'Permanence Samedi', ar: 'استمرار السبت', derja: 'Khadem el Sebt', en: 'Saturday Open' },
+      },
+      {
+        type: 'recette',
+        title: { fr: 'Recette des Finances Sousse Médina', ar: 'القباضة المالية سوسة المدينة', derja: '9badha Maliya Sousse Médina', en: 'Sousse Medina Tax Office' },
+        location: { fr: 'Avenue Habib Bourguiba, Sousse', ar: 'شارع الحبيب بورقيبة، سوسة', derja: 'Chare3 Bourguiba, Sousse', en: 'Habib Bourguiba Ave, Sousse' },
+        hours: '08:15 - 16:30',
+        services: { fr: 'Vente des timbres fiscaux & Enregistrement des actes notariés', ar: 'بيع التنابر وتسجيل العقود والفرائض', derja: 'Timbres w Tasjil 3o9oud', en: 'Stamp sales & deed registration' },
+        badge: { fr: 'Timbres & Contrats', ar: 'تنابر وعقود', derja: 'Timbres', en: 'Stamps & Contracts' },
+      },
+      {
+        type: 'attt',
+        title: { fr: 'Agence ATTT Sousse', ar: 'الوكالة الفنية للنقل البري بسوسة', derja: 'Agence ATTT Sousse (Akouda)', en: 'ATTT Sousse Vehicle Center' },
+        location: { fr: 'Route de Tunis / Akouda', ar: 'طريق تونس / أكودة', derja: 'Thnyet Tounes / Akouda', en: 'Tunis Rd / Akouda' },
+        hours: '08:00 - 15:00',
+        services: { fr: 'Mutation Carte Grise, examen de permis & plaques d’immatriculation', ar: 'تحويل البطاقة الرمادية وامتحانات السياقة ولوحات التسجيل', derja: 'Carte Grise w Permis', en: 'Vehicle registration, driving tests & plate issuance' },
+        badge: { fr: 'Permis & Grise', ar: 'رخص وبطاقات', derja: 'Permis w Grise', en: 'Licenses & Cards' },
+      },
+      {
+        type: 'poste',
+        title: { fr: 'Poste Centrale de Sousse', ar: 'البريد المركزي بسوسة', derja: 'Bosta Sousse el Markaziya', en: 'Sousse Central Post' },
+        location: { fr: 'Place des Martyrs, Sousse', ar: 'ساحة الشهداء، سوسة', derja: 'Sa7et el Chouhada', en: 'Martyrs Square, Sousse' },
+        hours: '08:00 - 17:00',
+        services: { fr: 'Guichet D17, timbres postaux et paiement factures STEG/SONEDE', ar: 'خدمات D17، خلاص فواتير الستاغ والصوناد', derja: 'Khalas STEG/SONEDE w D17', en: 'D17 wallet & utility bill payments (STEG/SONEDE)' },
+        badge: { fr: 'Factures & D17', ar: 'فواتير و D17', derja: 'Factures STEG', en: 'Bill Pay & D17' },
+      },
+    ],
+    Sfax: [
+      {
+        type: 'baladiya',
+        title: { fr: 'Municipalité de Sfax Ville', ar: 'بلدية صفاقس - القصر البلدي', derja: 'Baladiyat Sfax el Medina', en: 'Sfax City Municipality' },
+        location: { fr: 'Avenue Habib Bourguiba / Sakiet Ezzit', ar: 'شارع الحبيب بورقيبة / ساقية الزيت', derja: 'Chare3 Bourguiba / Sakiet Ezzit', en: 'Habib Bourguiba Ave / Sakiet Ezzit' },
+        hours: '08:30 - 16:30',
+        services: { fr: 'Ta3rif bel Imdha2 express, certificats de résidence et état civil', ar: 'التعريف بالإمضاء، شهادات الإقامة، ومضامين ولادة', derja: 'Ta3rif bel Imdha2 w Chhadet Soukna', en: 'Signature legalization & residence certificates' },
+        badge: { fr: 'Guichet Express', ar: 'شباك سريع', derja: 'Guichet Express', en: 'Express Desk' },
+      },
+      {
+        type: 'recette',
+        title: { fr: 'Recette des Finances Sfax Port & Centre', ar: 'القباضة المالية صفاقس الميناء والمركز', derja: '9badha Sfax el Mina', en: 'Sfax Port Tax Office' },
+        location: { fr: 'Avenue Hédi Chaker, Sfax', ar: 'شارع الهادي شاكر، صفاقس', derja: 'Chare3 Hedi Chaker', en: 'Hedi Chaker Ave, Sfax' },
+        hours: '08:15 - 16:30',
+        services: { fr: 'Timbres fiscaux (80DT, 15DT, 5DT), enregistrement & vignettes', ar: 'بيع جميع التنابر الجبائية وتسجيل العقود وخلاص معلوم الجولان', derja: 'Timbres 80DT/15DT w Vignette', en: 'Fiscal stamps (80DT, 15DT), contract registration & road tax' },
+        badge: { fr: 'Stock Timbres Dispo', ar: 'تنابر متوفرة', derja: 'Timbres Mawjoudin', en: 'Stamps in Stock' },
+      },
+      {
+        type: 'attt',
+        title: { fr: 'Agence ATTT Sfax Sud & Nord', ar: 'الوكالة الفنية للنقل البري بصفاقس', derja: 'Agence ATTT Sfax (Thyna)', en: 'ATTT Sousse Vehicle Center' },
+        location: { fr: 'Route de Gabès Km 3 / Thyna', ar: 'طريق قابس كلم 3 / طينة', derja: 'Thnyet Gabes / Thyna', en: 'Gabes Rd Km 3 / Thyna' },
+        hours: '08:00 - 15:00',
+        services: { fr: 'Visite technique poids lourds & légers, mutation carte grise', ar: 'الفحص الفني للعربات وتحويل ملكية البطاقة الرمادية', derja: 'Visite technique w Carte Grise', en: 'Vehicle inspection & title transfer' },
+        badge: { fr: 'Visite & Grise', ar: 'فحص وبطاقة رمادية', derja: 'Visite & Grise', en: 'Tech Inspection' },
+      },
+      {
+        type: 'poste',
+        title: { fr: 'Bureau de Poste Sfax El Jadida', ar: 'مكتب بريد صفاقس الجديدة', derja: 'Bosta Sousse el Jadida', en: 'Sfax Central Post' },
+        location: { fr: 'Sfax El Jadida, Boulevard Majida Boulila', ar: 'صفاقس الجديدة، شارع مجيدة بوليلة', derja: 'Chare3 Majida Boulila', en: 'Majida Boulila Blvd, Sfax' },
+        hours: '08:00 - 17:00',
+        services: { fr: 'D17, recharges e-Dinar, mandats minute et colis postaux', ar: 'شحن بطاقات الدينار الإلكتروني والحوالات الدقيقة والطرود', derja: 'e-Dinar, D17 w Colis', en: 'e-Dinar top-up, D17 & postal parcels' },
+        badge: { fr: 'e-Dinar & D17', ar: 'دينار إلكتروني', derja: 'e-Dinar', en: 'e-Dinar & D17' },
+      },
+    ],
+    Nabeul: [
+      {
+        type: 'baladiya',
+        title: { fr: 'Municipalité de Nabeul & Hammamet', ar: 'بلدية نابل والحمامات', derja: 'Baladiyat Nabeul w Hammamet', en: 'Nabeul & Hammamet Municipality' },
+        location: { fr: 'Avenue Habib Thameur, Nabeul', ar: 'شارع الحبيب ثامر، نابل', derja: 'Chare3 Habib Thameur', en: 'Habib Thameur Ave, Nabeul' },
+        hours: '08:30 - 16:30',
+        services: { fr: 'Légalisation de signature & Extraits d’état civil express', ar: 'التعريف بالإمضاء ومطابقة الأصل ومضامين ولادة فورية', derja: 'Ta3rif bel Imdha2 w Madhmoun Wilada', en: 'Signature legalization & birth certificates' },
+        badge: { fr: 'Guichet Express', ar: 'شباك سريع', derja: 'Guichet Express', en: 'Express Desk' },
+      },
+      {
+        type: 'recette',
+        title: { fr: 'Recette des Finances Nabeul Centre', ar: 'القباضة المالية نابل المركز', derja: '9badha Nabeul Centre', en: 'Nabeul Tax Office' },
+        location: { fr: 'Avenue Ali Belhouane, Nabeul', ar: 'شارع علي البلهوان، نابل', derja: 'Chare3 Ali Belhouane', en: 'Ali Belhouane Ave, Nabeul' },
+        hours: '08:15 - 16:30',
+        services: { fr: 'Timbres fiscaux (80DT, 15DT, 5DT) & Enregistrement contrats', ar: 'بيع التنابر الجبائية وتسجيل العقود والفرائض', derja: 'Timbres w 3o9oud', en: 'Stamp sales & deed registration' },
+        badge: { fr: 'Stock Timbres Dispo', ar: 'تنابر متوفرة', derja: 'Timbres Mawjoudin', en: 'Stamps in Stock' },
+      },
+      {
+        type: 'attt',
+        title: { fr: 'Agence ATTT Nabeul (Grombalia)', ar: 'الوكالة الفنية للنقل البري بنابل', derja: 'Agence ATTT Nabeul (Grombalia)', en: 'ATTT Nabeul Center' },
+        location: { fr: 'Route de Tunis, Grombalia', ar: 'طريق تونس، قرمبالية', derja: 'Thnyet Tounes, Grombalia', en: 'Tunis Rd, Grombalia' },
+        hours: '08:00 - 15:00',
+        services: { fr: 'Mutation Carte Grise, examen de permis & visite technique', ar: 'تحويل ملكية البطاقة الرمادية وامتحانات السياقة والفحص الفني', derja: 'Carte Grise w Permis', en: 'Vehicle title transfer & inspection' },
+        badge: { fr: 'Permis & Grise', ar: 'رخص وبطاقات', derja: 'Permis w Grise', en: 'Licenses & Cards' },
+      },
+      {
+        type: 'poste',
+        title: { fr: 'Bureau de Poste Nabeul Jarzouna', ar: 'مكتب بريد نابل المركز', derja: 'Bosta Nabeul Centre', en: 'Nabeul Central Post' },
+        location: { fr: 'Rue Farhat Hached, Nabeul', ar: 'نهج فرحات حشاد، نابل', derja: 'Nahj Farhat Hached', en: 'Farhat Hached St, Nabeul' },
+        hours: '08:00 - 17:00',
+        services: { fr: 'D17, mandats minute et paiement factures STEG/SONEDE', ar: 'خدمات D17 وخلاص الفواتير والحوالات البريدية', derja: 'D17 w Factures', en: 'D17 wallet, money orders & bill pay' },
+        badge: { fr: 'D17 & Factures', ar: 'فواتير و D17', derja: 'D17', en: 'D17 & Utility' },
+      },
+    ],
+    Bizerte: [
+      {
+        type: 'baladiya',
+        title: { fr: 'Municipalité de Bizerte Ville', ar: 'بلدية بنزرت المدينة', derja: 'Baladiyat Bizerte el Medina', en: 'Bizerte City Municipality' },
+        location: { fr: 'Place de la Municipalité / Menzel Bourguiba', ar: 'ساحة البلدية / منزل بورقيبة', derja: 'Sa7et el Baladiya', en: 'Municipality Square / Menzel B.' },
+        hours: '08:30 - 16:30',
+        services: { fr: 'Légalisation de signature & Extraits d’état civil express', ar: 'التعريف بالإمضاء ومطابقة الأصل ومضامين ولادة فورية', derja: 'Ta3rif bel Imdha2 w Madhmoun', en: 'Signature legalization & civil status certificates' },
+        badge: { fr: 'Guichet Express', ar: 'شباك سريع', derja: 'Guichet Express', en: 'Express Desk' },
+      },
+      {
+        type: 'recette',
+        title: { fr: 'Recette des Finances Bizerte Port', ar: 'القباضة المالية بنزرت الميناء', derja: '9badha Bizerte el Mina', en: 'Bizerte Port Tax Office' },
+        location: { fr: 'Quai Tarak Ibn Ziad, Bizerte', ar: 'رصيف طارق بن زياد، بنزرت', derja: 'Tariq Ibn Ziad, Bizerte', en: 'Tarak Ibn Ziad Quay, Bizerte' },
+        hours: '08:15 - 16:30',
+        services: { fr: 'Timbres fiscaux (80DT, 15DT, 5DT), enregistrement contrats & taxes', ar: 'بيع التنابر الجبائية وتسجيل العقود وخلاص معلوم الجولان', derja: 'Timbres w 3o9oud', en: 'Fiscal stamps (80DT, 15DT), lease registration & taxes' },
+        badge: { fr: 'Stock Timbres Dispo', ar: 'تنابر متوفرة', derja: 'Timbres Mawjoudin', en: 'Stamps in Stock' },
+      },
+      {
+        type: 'attt',
+        title: { fr: 'Agence ATTT Bizerte (Menzel Jmil)', ar: 'الوكالة الفنية للنقل البري ببنزرت', derja: 'Agence ATTT Bizerte (Menzel Jmil)', en: 'ATTT Bizerte Center' },
+        location: { fr: 'Route de Menzel Jmil, Bizerte', ar: 'طريق منزل جميل، بنزرت', derja: 'Thnyet Menzel Jmil', en: 'Menzel Jmil Rd, Bizerte' },
+        hours: '08:00 - 15:00',
+        services: { fr: 'Mutation Carte Grise, examen de permis & visite technique', ar: 'تحويل ملكية البطاقة الرمادية والفحص الفني ورخص السياقة', derja: 'Carte Grise w Permis', en: 'Title transfer, driving licenses & inspection' },
+        badge: { fr: 'Permis & Grise', ar: 'رخص وبطاقات', derja: 'Permis w Grise', en: 'Licenses & Cards' },
+      },
+      {
+        type: 'poste',
+        title: { fr: 'Bureau de Poste Bizerte Principal', ar: 'مكتب بريد بنزرت الرئيسي', derja: 'Bosta Bizerte el Markaziya', en: 'Bizerte Central Post' },
+        location: { fr: 'Avenue Habib Bourguiba, Bizerte', ar: 'شارع الحبيب بورقيبة، بنزرت', derja: 'Chare3 Bourguiba, Bizerte', en: 'Habib Bourguiba Ave, Bizerte' },
+        hours: '08:00 - 17:00',
+        services: { fr: 'D17, mandats minute, épargne postale et colis express', ar: 'خدمات D17، الحوالات الدقيقة، والادخار البريدي', derja: 'D17 w Mandat', en: 'D17 wallet, money orders & postal savings' },
+        badge: { fr: 'D17 & Mandats', ar: 'حوالات و D17', derja: 'D17', en: 'D17 & Money Orders' },
+      },
+    ],
   };
 
   // Localized UI Labels
@@ -979,114 +1174,245 @@ export default function HomePage() {
 
       {/* ── 3. TERRITORIAL RADAR: 24 WILAYAS PUBLIC DESKS ── */}
       <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-6">
-        <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-3 pb-2 border-b border-zinc-800/80">
-          <div>
-            <span className="text-[10px] font-mono font-bold uppercase tracking-widest text-cyan-400 block mb-1">
-              {ui.radarEyebrow}
-            </span>
-            <h2 className="text-xl sm:text-2xl font-bold text-white tracking-tight">
+        
+        {/* Header & Governorate Selector */}
+        <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-4 pb-4 border-b border-white/[0.08]">
+          <div className="space-y-1">
+            <div className="flex items-center gap-2">
+              <span className="text-[10px] font-mono font-bold uppercase tracking-widest text-cyan-400 px-2.5 py-0.5 rounded-md bg-cyan-950/60 border border-cyan-800/40">
+                {ui.radarEyebrow}
+              </span>
+              <span className="text-[11px] font-mono text-zinc-400">
+                {locale === 'ar' ? '24 ولاية · تحديث فوري' : '24 Gouvernorats · Temps Réel'}
+              </span>
+            </div>
+            <h2 className="text-xl sm:text-3xl font-extrabold text-white tracking-tight">
               {ui.radarTitle}
             </h2>
           </div>
 
           {/* Wilaya Selector Bar with spring pills */}
           <div className="flex items-center gap-1.5 overflow-x-auto pb-1 scrollbar-none">
-            {Object.keys(wilayaData).map((w) => (
-              <motion.button
-                key={w}
-                onClick={() => setSelectedWilaya(w)}
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-                className={`px-3.5 py-1.5 rounded-xl text-xs font-bold transition-all cursor-pointer shrink-0 ${
-                  selectedWilaya === w
-                    ? 'bg-cyan-500 text-zinc-950 shadow-md shadow-cyan-500/20'
-                    : 'bg-zinc-900 border border-zinc-800 text-zinc-400 hover:text-white'
-                }`}
-              >
-                {w}
-              </motion.button>
-            ))}
+            {Object.keys(wilayaDesks).map((w) => {
+              const isSelected = selectedWilaya === w;
+              return (
+                <motion.button
+                  key={w}
+                  onClick={() => setSelectedWilaya(w)}
+                  whileHover={{ scale: 1.04 }}
+                  whileTap={{ scale: 0.96 }}
+                  className={`px-4 py-2 rounded-xl text-xs font-bold transition-all cursor-pointer shrink-0 border ${
+                    isSelected
+                      ? 'bg-cyan-500 text-zinc-950 border-cyan-400 shadow-lg shadow-cyan-500/25 font-extrabold'
+                      : 'bg-[#0d0e12] border-white/[0.06] text-zinc-400 hover:text-white hover:border-white/[0.15]'
+                  }`}
+                >
+                  {w}
+                </motion.button>
+              );
+            })}
           </div>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <SpotlightCard className="p-5 sm:p-6 space-y-2">
-            <div className="flex items-center justify-between">
-              <div className="flex items-center gap-2 text-xs font-bold text-white">
-                <Building2 className="w-4 h-4 text-cyan-400" />
-                <span>{ui.baladiyaCardTitle(selectedWilaya)}</span>
-              </div>
-              <span className="text-[10px] font-mono text-emerald-400 bg-emerald-950/60 border border-emerald-800/40 px-2 py-0.5 rounded-full font-bold">
-                {ui.openStatus}
-              </span>
-            </div>
-            <p className="text-xs font-mono text-cyan-300">
-              {wilayaData[selectedWilaya].baladiya}
-            </p>
-            <p className="text-[11px] text-zinc-400 pt-1">
-              {ui.baladiyaCardSub}
-            </p>
-          </SpotlightCard>
+        {/* 4 Rich Service Desk Cards Grid */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+          {(wilayaDesks[selectedWilaya] || wilayaDesks['Tunis']).map((desk, idx) => {
+            const isBaladiya = desk.type === 'baladiya';
+            const isRecette = desk.type === 'recette';
+            const isAttt = desk.type === 'attt';
+            const isPoste = desk.type === 'poste';
 
-          <SpotlightCard className="p-5 sm:p-6 space-y-2">
-            <div className="flex items-center justify-between">
-              <div className="flex items-center gap-2 text-xs font-bold text-white">
-                <Stamp className="w-4 h-4 text-amber-400" />
-                <span>{ui.recetteCardTitle(selectedWilaya)}</span>
-              </div>
-              <span className="text-[10px] font-mono text-emerald-400 bg-emerald-950/60 border border-emerald-800/40 px-2 py-0.5 rounded-full font-bold">
-                {ui.openStatus}
-              </span>
-            </div>
-            <p className="text-xs font-mono text-amber-300">
-              {wilayaData[selectedWilaya].recette}
-            </p>
-            <p className="text-[11px] text-zinc-400 pt-1">
-              {ui.recetteCardSub}
-            </p>
-          </SpotlightCard>
+            const Icon = isBaladiya ? Building2 : isRecette ? Stamp : isAttt ? Car : Mail;
+            const accentColor = isBaladiya
+              ? 'text-cyan-400 bg-cyan-500/10 border-cyan-500/20'
+              : isRecette
+              ? 'text-amber-400 bg-amber-500/10 border-amber-500/20'
+              : isAttt
+              ? 'text-emerald-400 bg-emerald-500/10 border-emerald-500/20'
+              : 'text-blue-400 bg-blue-500/10 border-blue-500/20';
+
+            const title = (desk.title as any)[locale] || desk.title.fr;
+            const location = (desk.location as any)[locale] || desk.location.fr;
+            const services = (desk.services as any)[locale] || desk.services.fr;
+            const badge = (desk.badge as any)[locale] || desk.badge.fr;
+
+            return (
+              <SpotlightCard
+                key={idx}
+                className="p-5 border-white/[0.08] bg-[#0c0d11] shadow-xl flex flex-col justify-between space-y-4 hover:border-white/[0.18] transition-all relative overflow-hidden group"
+              >
+                <div className="space-y-3">
+                  {/* Top Icon & Real-Time Open Pill */}
+                  <div className="flex items-center justify-between gap-2">
+                    <div className={`p-2 rounded-xl border ${accentColor} flex items-center justify-center`}>
+                      <Icon className="w-4 h-4" />
+                    </div>
+
+                    <div className="flex items-center gap-1.5">
+                      <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse inline-block" />
+                      <span className="text-[10px] font-mono font-bold text-emerald-400 bg-emerald-950/70 border border-emerald-800/40 px-2 py-0.5 rounded-md">
+                        {ui.openStatus}
+                      </span>
+                    </div>
+                  </div>
+
+                  {/* Title & Location */}
+                  <div>
+                    <h3 className="text-sm font-bold text-white group-hover:text-cyan-300 transition-colors leading-snug">
+                      {title}
+                    </h3>
+                    <p className="text-xs text-zinc-400 flex items-center gap-1 mt-1 font-mono">
+                      <MapPin className="w-3 h-3 text-zinc-500 shrink-0" />
+                      <span className="truncate">{location}</span>
+                    </p>
+                  </div>
+
+                  {/* Working Hours */}
+                  <div className="px-2.5 py-1.5 rounded-lg bg-zinc-950/80 border border-white/[0.06] text-[11px] font-mono text-zinc-300 flex items-center gap-1.5">
+                    <Clock className="w-3.5 h-3.5 text-zinc-500 shrink-0" />
+                    <span>{desk.hours}</span>
+                  </div>
+
+                  {/* Services Summary */}
+                  <p className="text-[11px] text-zinc-400 leading-relaxed line-clamp-2">
+                    {services}
+                  </p>
+                </div>
+
+                {/* Bottom Card Footer Tag & Locator CTA */}
+                <div className="pt-2 border-t border-white/[0.06] flex items-center justify-between text-xs">
+                  <span className={`text-[10px] font-mono font-bold px-2 py-0.5 rounded-md border ${accentColor}`}>
+                    {badge}
+                  </span>
+
+                  <Link
+                    href={`/locator?gov=${encodeURIComponent(selectedWilaya)}`}
+                    className="text-[11px] font-semibold text-zinc-400 hover:text-white flex items-center gap-1 transition-colors"
+                  >
+                    <span>{locale === 'ar' ? 'الخريطة' : 'Localiser'}</span>
+                    <ArrowRight className="w-3 h-3 rtl:rotate-180" />
+                  </Link>
+                </div>
+              </SpotlightCard>
+            );
+          })}
         </div>
+
+        {/* Global Directory Link Banner */}
+        <div className="p-4 rounded-2xl bg-zinc-950/80 border border-white/[0.06] flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs">
+          <div className="flex items-center gap-2.5 text-zinc-300">
+            <Compass className="w-4 h-4 text-cyan-400 shrink-0" />
+            <span>
+              {locale === 'ar'
+                ? 'دليل البلديات والقباضات ومراكز الفحص الفني لجميع ولايات الجمهورية (350+ مصلحة عمومية).'
+                : locale === 'derja'
+                ? 'Dalil el Baladiyas, el 9badhat, wel Mines lkol el wilayat fi Tounes (350+ blasa).'
+                : 'Annuaire officiel et géolocalisation de plus de 350 bureaux publics à travers les 24 gouvernorats.'}
+            </span>
+          </div>
+
+          <Link
+            href="/locator"
+            className="inline-flex items-center justify-center gap-1.5 px-4 py-2 rounded-xl bg-cyan-500 hover:bg-cyan-400 text-zinc-950 font-bold text-xs shadow-md shadow-cyan-500/20 transition-all shrink-0 cursor-pointer"
+          >
+            <span>{locale === 'ar' ? 'فتح الدليل الجغرافي الكامل' : 'Consulter le Répertoire Complet'}</span>
+            <ArrowRight className="w-3.5 h-3.5 rtl:rotate-180" />
+          </Link>
+        </div>
+
       </section>
 
       {/* ── 4. ZERO-STORAGE PRIVACY PROTOCOL ── */}
       <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <SpotlightCard className="p-6 sm:p-7 border-emerald-500/30 bg-gradient-to-r from-emerald-950/20 via-[#0d0e12] to-[#0d0e12] flex flex-col sm:flex-row items-start sm:items-center justify-between gap-5 shadow-2xl">
-          <div className="flex items-start sm:items-center gap-4 text-left rtl:text-right">
-            <div className="w-11 h-11 rounded-2xl bg-emerald-500/10 border border-emerald-500/30 flex items-center justify-center text-emerald-400 shrink-0 shadow-lg shadow-emerald-950/80 mt-0.5 sm:mt-0">
-              <ShieldCheck className="w-5 h-5 text-emerald-400" />
-            </div>
-            <div className="space-y-1">
-              <div className="flex flex-wrap items-center gap-2">
-                <h4 className="text-sm sm:text-base font-bold text-white tracking-tight">
-                  {t('zeroStorageBanner')}
-                </h4>
-                <span className="text-[10px] font-mono font-bold text-emerald-400 px-2.5 py-0.5 rounded-full bg-emerald-950/80 border border-emerald-700/50">
-                  100% Client-Side
-                </span>
+        <SpotlightCard className="p-6 sm:p-9 border-emerald-500/30 bg-gradient-to-br from-[#0c1410] via-[#090b0d] to-[#07080a] shadow-2xl space-y-6 relative overflow-hidden">
+          
+          {/* Top Banner Row */}
+          <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-6 pb-5 border-b border-white/[0.08] relative z-10">
+            <div className="flex items-start sm:items-center gap-4 text-left rtl:text-right">
+              <div className="w-12 h-12 rounded-2xl bg-emerald-500/10 border border-emerald-500/30 flex items-center justify-center text-emerald-400 shrink-0 shadow-lg shadow-emerald-950/80 mt-0.5 sm:mt-0">
+                <ShieldCheck className="w-6 h-6 text-emerald-400" />
               </div>
-              <p className="text-xs text-zinc-400 max-w-2xl leading-relaxed">
-                {t('zeroStorageSub')}
+
+              <div className="space-y-1">
+                <div className="flex flex-wrap items-center gap-2.5">
+                  <h3 className="text-base sm:text-xl font-extrabold text-white tracking-tight">
+                    {t('zeroStorageBanner')}
+                  </h3>
+                  <span className="text-[10px] font-mono font-bold text-emerald-300 px-2.5 py-0.5 rounded-full bg-emerald-950/90 border border-emerald-600/40 shadow-sm">
+                    100% Client-Side In-Memory
+                  </span>
+                </div>
+                <p className="text-xs sm:text-sm text-zinc-400 max-w-2xl leading-relaxed">
+                  {t('zeroStorageSub')}
+                </p>
+              </div>
+            </div>
+
+            <motion.div whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.97 }} className="shrink-0">
+              <Link
+                href="/fasserli"
+                className="inline-flex items-center justify-center gap-2 px-6 py-3 rounded-2xl bg-emerald-500 hover:bg-emerald-400 text-zinc-950 font-bold text-xs sm:text-sm shadow-xl shadow-emerald-500/25 transition-all cursor-pointer"
+              >
+                <Lock className="w-4 h-4" />
+                <span>
+                  {locale === 'ar'
+                    ? 'تجربة الفحص الآمن (OCR)'
+                    : locale === 'derja'
+                    ? 'Jarreb el Scanner el Sécurisé'
+                    : locale === 'en'
+                    ? 'Test Secure OCR Scanner'
+                    : 'Tester le Scanner Sécurisé'}
+                </span>
+                <ArrowRight className="w-4 h-4 rtl:rotate-180" />
+              </Link>
+            </motion.div>
+          </div>
+
+          {/* 3 Cryptographic Security Pillars Grid */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 pt-1 relative z-10">
+            <div className="p-4 rounded-2xl bg-zinc-950/70 border border-white/[0.06] space-y-1.5">
+              <div className="flex items-center gap-2 text-xs font-bold text-emerald-400">
+                <Zap className="w-3.5 h-3.5" />
+                <span>{locale === 'ar' ? 'معالجة في الذاكرة الحية فقط' : 'Traitement RAM Éphémère'}</span>
+              </div>
+              <p className="text-[11px] text-zinc-400 leading-relaxed">
+                {locale === 'ar'
+                  ? 'لا يتم حفظ أي صورة أو وثيقة على خوادم أو قواعد بيانات. الحذف فوري بمجرد إغلاق الجلسة.'
+                  : locale === 'derja'
+                  ? 'Les documents yet3aljou fel RAM w yetfas5ou direct. 0 stockage fi ay base de données.'
+                  : 'Aucun stockage sur disque ou base de données. Analyse en mémoire vive volatile puis suppression immédiate.'}
+              </p>
+            </div>
+
+            <div className="p-4 rounded-2xl bg-zinc-950/70 border border-white/[0.06] space-y-1.5">
+              <div className="flex items-center gap-2 text-xs font-bold text-teal-400">
+                <EyeOff className="w-3.5 h-3.5" />
+                <span>{locale === 'ar' ? 'إخفاء المعطيات الحساسة (CIN & RIB)' : 'Masquage Automatique PII'}</span>
+              </div>
+              <p className="text-[11px] text-zinc-400 leading-relaxed">
+                {locale === 'ar'
+                  ? 'اكتشاف تلقائي وحجب فوري لأرقام بطاقة التعريف الوطنية والحسابات البنكية قبل التحليل.'
+                  : locale === 'derja'
+                  ? 'Redaction automatique lel noumrouwat CIN w RIB 9bel ma ysir el traitement OCR.'
+                  : 'Détection automatique et masquage des numéros de carte d’identité (CIN) et coordonnées bancaires (RIB).'}
+              </p>
+            </div>
+
+            <div className="p-4 rounded-2xl bg-zinc-950/70 border border-white/[0.06] space-y-1.5">
+              <div className="flex items-center gap-2 text-xs font-bold text-cyan-400">
+                <Layers className="w-3.5 h-3.5" />
+                <span>{locale === 'ar' ? 'مطابقة لمعايير حماية المعطيات (INPDP)' : 'Conformité Totale INPDP'}</span>
+              </div>
+              <p className="text-[11px] text-zinc-400 leading-relaxed">
+                {locale === 'ar'
+                  ? 'احترام تام للتشريع التونسي لحماية المعطيات الشخصية وقانون الرقمنة الإدارية.'
+                  : locale === 'derja'
+                  ? 'Conforme 100% m3a el 9anoun el tounsi mte3 7imayet el ma3loumet el chakhsiya.'
+                  : 'Respect scrupuleux du cadre juridique tunisien de protection des données personnelles (Loi Organique N°2004-63).'}
               </p>
             </div>
           </div>
 
-          <motion.div whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.97 }} className="shrink-0 w-full sm:w-auto">
-            <Link
-              href="/fasserli"
-              className="w-full sm:w-auto flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-zinc-950 font-bold text-xs shadow-lg shadow-emerald-500/25 transition-all cursor-pointer"
-            >
-              <Lock className="w-3.5 h-3.5" />
-              <span>
-                {locale === 'ar'
-                  ? 'تجربة الفحص الآمن'
-                  : locale === 'derja'
-                  ? 'Jarreb el Scanner el Sécurisé'
-                  : locale === 'en'
-                  ? 'Test Secure OCR'
-                  : 'Tester le Scanner Sécurisé'}
-              </span>
-            </Link>
-          </motion.div>
         </SpotlightCard>
       </section>
 
