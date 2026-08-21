@@ -3,20 +3,110 @@
 import React, { useState } from 'react';
 import Link from 'next/link';
 import { ChatMessage as ChatMessageType } from '../../types/chat';
-import { Volume2, VolumeX, FileText, ExternalLink, Calculator, MapPin, CheckCircle2, Landmark, Stamp } from 'lucide-react';
+import {
+  Volume2,
+  VolumeX,
+  FileText,
+  ExternalLink,
+  Calculator,
+  MapPin,
+  CheckCircle2,
+  Copy,
+  Check,
+  Sparkles,
+  Stamp,
+  User,
+} from 'lucide-react';
 import { useLocale } from '../../context/LocaleContext';
 import { getLocalized } from '../../lib/locale-utils';
+import { BrandIcon } from '../layout/BrandLogo';
 
 interface ChatMessageProps {
   message: ChatMessageType;
+  onSelectPrompt?: (prompt: string) => void;
 }
 
-/** Renders **bold** markdown into JSX without any markdown library */
-function renderMarkdown(text: string): React.ReactNode {
-  const parts = text.split(/(\*\*[^*]+\*\*)/g);
+/** Rich formatting for markdown blocks (bold, bullet points, headers, inline code) */
+function renderFormattedContent(text: string): React.ReactNode {
+  const lines = text.split('\n');
+
+  return (
+    <div className="space-y-2 text-sm sm:text-[15px] leading-relaxed text-zinc-200">
+      {lines.map((line, idx) => {
+        const trimmed = line.trim();
+
+        // Empty line spacer
+        if (!trimmed) {
+          return <div key={idx} className="h-2" />;
+        }
+
+        // Section Headers (### or ## or #)
+        if (trimmed.startsWith('#')) {
+          const headerText = trimmed.replace(/^#+\s*/, '');
+          return (
+            <h4 key={idx} className="text-base sm:text-lg font-bold text-white tracking-tight pt-1.5 pb-0.5 flex items-center gap-2">
+              <span className="w-1.5 h-4 rounded-full bg-emerald-400 inline-block" />
+              <span>{renderInlineStyles(headerText)}</span>
+            </h4>
+          );
+        }
+
+        // Numbered List (1. 2. 3.)
+        const numberedMatch = trimmed.match(/^(\d+)\.\s+(.+)$/);
+        if (numberedMatch) {
+          return (
+            <div key={idx} className="flex items-start gap-2.5 pl-1 my-1">
+              <span className="flex items-center justify-center w-5 h-5 rounded-full bg-emerald-500/15 border border-emerald-500/30 text-emerald-400 text-xs font-mono font-bold shrink-0 mt-0.5">
+                {numberedMatch[1]}
+              </span>
+              <span className="text-zinc-200 flex-1">
+                {renderInlineStyles(numberedMatch[2])}
+              </span>
+            </div>
+          );
+        }
+
+        // Bullet Point (- or * or •)
+        if (trimmed.startsWith('- ') || trimmed.startsWith('* ') || trimmed.startsWith('• ')) {
+          const bulletText = trimmed.replace(/^[-*•]\s+/, '');
+          return (
+            <div key={idx} className="flex items-start gap-2.5 pl-2 my-1">
+              <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 shrink-0 mt-2" />
+              <span className="text-zinc-200 flex-1">
+                {renderInlineStyles(bulletText)}
+              </span>
+            </div>
+          );
+        }
+
+        // Normal paragraph
+        return (
+          <p key={idx} className="leading-relaxed">
+            {renderInlineStyles(line)}
+          </p>
+        );
+      })}
+    </div>
+  );
+}
+
+/** Inline bold and code styling */
+function renderInlineStyles(text: string): React.ReactNode {
+  const parts = text.split(/(\*\*[^*]+\*\*|`[^`]+`)/g);
   return parts.map((part, i) => {
     if (part.startsWith('**') && part.endsWith('**')) {
-      return <strong key={i} className="font-bold text-zinc-100">{part.slice(2, -2)}</strong>;
+      return (
+        <strong key={i} className="font-bold text-white">
+          {part.slice(2, -2)}
+        </strong>
+      );
+    }
+    if (part.startsWith('`') && part.endsWith('`')) {
+      return (
+        <code key={i} className="px-1.5 py-0.5 rounded bg-zinc-800 border border-zinc-700 text-emerald-300 font-mono text-xs">
+          {part.slice(1, -1)}
+        </code>
+      );
     }
     return <span key={i}>{part}</span>;
   });
@@ -25,8 +115,17 @@ function renderMarkdown(text: string): React.ReactNode {
 export const ChatMessage: React.FC<ChatMessageProps> = ({ message }) => {
   const { locale } = useLocale();
   const [isPlayingAudio, setIsPlayingAudio] = useState(false);
+  const [copied, setCopied] = useState(false);
 
   const isAssistant = message.sender === 'assistant';
+
+  const copyToClipboard = async () => {
+    try {
+      await navigator.clipboard.writeText(message.content);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    } catch {}
+  };
 
   const speakMessage = () => {
     if (typeof window === 'undefined' || !('speechSynthesis' in window)) return;
@@ -48,111 +147,138 @@ export const ChatMessage: React.FC<ChatMessageProps> = ({ message }) => {
   };
 
   return (
-    <div className={`flex ${isAssistant ? 'justify-start' : 'justify-end'} w-full my-3 animate-fade-in-up`}>
-      <div className={`flex items-end gap-2 max-w-[88%] ${isAssistant ? 'flex-row' : 'flex-row-reverse'}`}>
-
+    <div className={`w-full py-4 transition-colors ${isAssistant ? '' : ''}`}>
+      <div className="max-w-3xl mx-auto flex items-start gap-3.5 sm:gap-4 px-2 sm:px-4">
+        
         {/* Avatar */}
-        {isAssistant && (
-          <div className="w-7 h-7 rounded-xl bg-gradient-to-br from-emerald-400 to-emerald-600 flex items-center justify-center shrink-0 mb-1 shadow-md shadow-emerald-950">
-            <Landmark className="w-3.5 h-3.5 text-zinc-950 stroke-[2.5]" />
-          </div>
-        )}
-
-        <div className="flex flex-col">
-          {/* Sender label */}
-          <span className={`text-[10px] font-semibold mb-1 px-1 ${isAssistant ? 'text-zinc-500' : 'text-right text-zinc-500'}`}>
-            {isAssistant
-              ? `Idaara AI · ${message.timestamp}`
-              : `${locale === 'ar' ? 'أنت' : locale === 'en' ? 'You' : locale === 'fr' ? 'Vous' : 'Mowaten'} · ${message.timestamp}`}
-          </span>
-
-          {/* Bubble */}
-          <div
-            className={`relative px-4 py-3 rounded-2xl text-[12px] sm:text-sm leading-relaxed ${
-              isAssistant
-                ? 'bg-zinc-900/90 border border-zinc-800 text-zinc-200 rounded-tl-sm shadow-lg'
-                : 'bg-emerald-600 text-white rounded-tr-sm shadow-lg shadow-emerald-900/40'
-            }`}
-          >
-            {/* Content with markdown */}
-            <div className="whitespace-pre-line space-y-0.5">
-              {message.content.split('\n').map((line, i) => (
-                <p key={i} className={line.trim() === '' ? 'h-2' : undefined}>
-                  {renderMarkdown(line)}
-                </p>
-              ))}
+        <div className="shrink-0 pt-0.5">
+          {isAssistant ? (
+            <BrandIcon size={32} />
+          ) : (
+            <div className="w-8 h-8 rounded-xl bg-zinc-800 border border-zinc-700 flex items-center justify-center text-zinc-300 shadow-md">
+              <User className="w-4 h-4" />
             </div>
+          )}
+        </div>
 
-            {/* Timbre breakdown */}
-            {message.timbreBreakdown && (
-              <div className="mt-4 p-3 rounded-xl bg-zinc-950/80 border border-amber-500/25 text-xs">
-                <div className="flex items-center justify-between font-bold text-amber-400 mb-2">
-                  <span className="flex items-center space-x-1.5 rtl:space-x-reverse">
-                    <Stamp className="w-3.5 h-3.5" />
-                    <span>{locale === 'ar' ? 'مجموع التنابر :' : locale === 'en' ? 'Total Stamp Fees :' : locale === 'fr' ? 'Total Timbres :' : 'Majmou3 el Timbres :'}</span>
-                  </span>
-                  <span className="px-2 py-0.5 rounded-lg bg-amber-500/20 text-amber-300 font-mono tabular-nums">
-                    {message.timbreBreakdown.totalTND.toFixed(3)} DT
+        {/* Message Body */}
+        <div className="flex-1 min-w-0 space-y-2.5">
+          
+          {/* Sender & Timestamp */}
+          <div className="flex items-center gap-2 text-xs text-zinc-400">
+            <span className="font-bold text-zinc-200">
+              {isAssistant ? 'Idaara AI' : locale === 'ar' ? 'أنت' : locale === 'en' ? 'You' : locale === 'fr' ? 'Vous' : 'Mowaten'}
+            </span>
+            <span className="text-zinc-600">·</span>
+            <span className="text-zinc-500 font-mono text-[11px]">
+              {message.timestamp}
+            </span>
+          </div>
+
+          {/* Formatted Content */}
+          <div className="prose-dark">
+            {renderFormattedContent(message.content)}
+          </div>
+
+          {/* Timbre Breakdown Card */}
+          {message.timbreBreakdown && (
+            <div className="mt-4 p-4 rounded-2xl bg-zinc-950/80 border border-amber-500/30 shadow-xl space-y-2.5">
+              <div className="flex items-center justify-between font-bold text-amber-400 pb-2 border-b border-zinc-800/80">
+                <div className="flex items-center gap-2">
+                  <Stamp className="w-4 h-4 text-amber-400" />
+                  <span className="text-xs uppercase tracking-wider">
+                    {locale === 'ar' ? 'مجموع المعاليم الجبائية والتنابر' : locale === 'en' ? 'Estimated Statutory Fees' : locale === 'fr' ? 'Frais et Timbres Légaux' : 'Majmou3 el Timbres'}
                   </span>
                 </div>
-                <ul className="space-y-1 text-zinc-400">
-                  {message.timbreBreakdown.items.map((item, idx) => (
-                    <li key={idx} className="flex items-center justify-between text-[11px]">
-                      <span className="text-zinc-300">• {item.label}</span>
-                      <span className="font-mono tabular-nums">{item.amount.toFixed(3)} DT</span>
-                    </li>
-                  ))}
-                </ul>
+                <span className="px-2.5 py-0.5 rounded-lg bg-amber-500/20 text-amber-300 font-mono font-bold text-sm tabular-nums border border-amber-500/30">
+                  {message.timbreBreakdown.totalTND.toFixed(3)} DT
+                </span>
               </div>
-            )}
 
-            {/* Action Buttons */}
-            {message.actions && message.actions.length > 0 && (
-              <div className="mt-3 pt-3 border-t border-zinc-800/80 flex flex-wrap gap-2">
-                {message.actions.map((action, idx) => {
-                  const label = getLocalized(action.label, locale) || 'Voir';
-                  return (
-                    <Link
-                      key={idx}
-                      href={action.payload}
-                      className="inline-flex items-center space-x-1.5 px-3 py-1.5 rounded-lg bg-zinc-800 hover:bg-zinc-700 border border-zinc-700 hover:border-emerald-500/40 text-zinc-200 hover:text-emerald-300 text-[11px] font-semibold transition-all"
-                    >
-                      {action.type === 'pdf_form' && <FileText className="w-3 h-3" />}
-                      {action.type === 'calculator_link' && <Calculator className="w-3 h-3" />}
-                      {action.type === 'office_link' && <MapPin className="w-3 h-3" />}
-                      {action.type === 'procedure_link' && <CheckCircle2 className="w-3 h-3" />}
-                      <span>{label}</span>
-                      <ExternalLink className="w-2.5 h-2.5 opacity-50" />
-                    </Link>
-                  );
-                })}
-              </div>
-            )}
+              <ul className="space-y-1.5 text-xs text-zinc-300">
+                {message.timbreBreakdown.items.map((item, idx) => (
+                  <li key={idx} className="flex items-center justify-between text-zinc-400">
+                    <span className="text-zinc-300 flex items-center gap-1.5">
+                      <span className="w-1 h-1 rounded-full bg-amber-400" />
+                      <span>{item.label}</span>
+                    </span>
+                    <span className="font-mono text-zinc-200 tabular-nums">
+                      {item.amount.toFixed(3)} DT
+                    </span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )}
 
-            {/* TTS Button */}
-            {isAssistant && (
+          {/* Action Chips */}
+          {message.actions && message.actions.length > 0 && (
+            <div className="mt-3.5 pt-2 flex flex-wrap gap-2">
+              {message.actions.map((action, idx) => {
+                const label = getLocalized(action.label, locale) || 'Voir';
+                return (
+                  <Link
+                    key={idx}
+                    href={action.payload}
+                    className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-zinc-900/90 hover:bg-emerald-500/10 border border-zinc-800 hover:border-emerald-500/40 text-zinc-200 hover:text-emerald-300 text-xs font-semibold transition-all shadow-sm group"
+                  >
+                    {action.type === 'pdf_form' && <FileText className="w-3.5 h-3.5 text-emerald-400" />}
+                    {action.type === 'calculator_link' && <Calculator className="w-3.5 h-3.5 text-amber-400" />}
+                    {action.type === 'office_link' && <MapPin className="w-3.5 h-3.5 text-blue-400" />}
+                    {action.type === 'procedure_link' && <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400" />}
+                    <span>{label}</span>
+                    <ExternalLink className="w-3 h-3 text-zinc-500 group-hover:text-emerald-400 transition-colors" />
+                  </Link>
+                );
+              })}
+            </div>
+          )}
+
+          {/* Assistant Action Toolbar (Copy, TTS) */}
+          {isAssistant && (
+            <div className="pt-2 flex items-center gap-3 text-xs text-zinc-500">
               <button
-                onClick={speakMessage}
-                className={`mt-3 flex items-center space-x-1.5 text-[11px] font-medium transition-colors px-2 py-1 rounded-lg ${
-                  isPlayingAudio
-                    ? 'text-red-400 bg-red-500/10 border border-red-500/20'
-                    : 'text-zinc-500 hover:text-emerald-400 hover:bg-emerald-500/8 border border-transparent hover:border-emerald-500/20'
-                }`}
+                onClick={copyToClipboard}
+                className="flex items-center gap-1.5 px-2 py-1 rounded-lg hover:bg-zinc-800 text-zinc-400 hover:text-zinc-200 transition-colors cursor-pointer"
+                title="Copy response"
               >
-                {isPlayingAudio ? (
+                {copied ? (
                   <>
-                    <VolumeX className="w-3 h-3" />
-                    <span>{locale === 'ar' ? 'إيقاف الصوت' : locale === 'fr' ? 'Arrêter' : locale === 'en' ? 'Stop audio' : '9oss el sout'}</span>
+                    <Check className="w-3.5 h-3.5 text-emerald-400" />
+                    <span className="text-emerald-400">{locale === 'ar' ? 'تم النسخ' : 'Copied'}</span>
                   </>
                 ) : (
                   <>
-                    <Volume2 className="w-3 h-3" />
-                    <span>{locale === 'ar' ? 'استمع بالصوت' : locale === 'fr' ? 'Écouter' : locale === 'en' ? 'Listen' : 'Isma3 bel Derja'}</span>
+                    <Copy className="w-3.5 h-3.5" />
+                    <span>{locale === 'ar' ? 'نسخ' : 'Copy'}</span>
                   </>
                 )}
               </button>
-            )}
-          </div>
+
+              <button
+                onClick={speakMessage}
+                className={`flex items-center gap-1.5 px-2 py-1 rounded-lg transition-colors cursor-pointer ${
+                  isPlayingAudio
+                    ? 'text-red-400 bg-red-500/10 border border-red-500/20'
+                    : 'text-zinc-400 hover:text-emerald-400 hover:bg-zinc-800'
+                }`}
+                title="Read out loud"
+              >
+                {isPlayingAudio ? (
+                  <>
+                    <VolumeX className="w-3.5 h-3.5" />
+                    <span>{locale === 'ar' ? 'إيقاف' : 'Stop'}</span>
+                  </>
+                ) : (
+                  <>
+                    <Volume2 className="w-3.5 h-3.5" />
+                    <span>{locale === 'ar' ? 'استمع' : locale === 'fr' ? 'Écouter' : 'Listen'}</span>
+                  </>
+                )}
+              </button>
+            </div>
+          )}
+
         </div>
       </div>
     </div>
