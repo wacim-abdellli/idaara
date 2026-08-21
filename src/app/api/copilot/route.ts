@@ -45,13 +45,13 @@ function detectScriptAndLanguage(prompt: string): string {
   }
 
   // 3. French detection
-  const frenchGreetings = ['bonjour', 'salut', 'bonsoir', 'qui es-tu', 'aide', 'comment'];
+  const frenchGreetings = ['bonjour', 'salut', 'bonsoir', 'qui es-tu', 'aide', 'comment', 'coucou', 'yo', 'slt', 'bjr'];
   const isDirectFrench = frenchGreetings.some((g) => pLower === g || pLower.startsWith(g + ' '));
   if (isDirectFrench) {
     return `USER_SCRIPT: FRENCH.
 - The user wrote in French.
-- You MUST respond 100% in clear, professional French!
-- Example: "Bonjour ! Je suis Idaara AI (إدارة.تونس), votre assistant administratif tunisien. Comment puis-je vous aider aujourd'hui ?"`;
+- You MUST respond 100% in concise, professional French!
+- Example: "Bonjour ! Comment puis-je vous aider dans vos démarches aujourd'hui ?"`;
   }
 
   // 4. Default: Latin Arabizi Derja
