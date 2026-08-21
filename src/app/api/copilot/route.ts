@@ -1,7 +1,10 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { parseAndReason } from '../../../lib/ai-engine';
 import { proceduresData } from '../../../data/procedures';
+import { documentTemplatesData } from '../../../data/documentTemplates';
 import { getLocalized } from '../../../lib/locale-utils';
+
+const PRIMARY_GROQ_KEY = process.env.GROQ_API_KEY || '';
 
 function buildGroundingContext(query: string, locale: string): string {
   const q = query.toLowerCase();
@@ -11,11 +14,11 @@ function buildGroundingContext(query: string, locale: string): string {
     const tags = p.tags.join(' ').toLowerCase();
     const slug = p.slug.toLowerCase();
     return q.split(/\s+/).some((word) => word.length > 2 && (title.includes(word) || tags.includes(word) || slug.includes(word)));
-  }).slice(0, 3);
+  }).slice(0, 4);
 
   if (matchedProcedures.length === 0) return '';
 
-  let context = '\n\nOFFICIAL VERIFIED PROCEDURAL DATA FROM IDAARA.TN DATABASE:\n';
+  let context = '\n\n=== OFFICIAL DATABASE GROUNDING (JORT & MINISTERIAL DATA) ===\n';
   for (const proc of matchedProcedures) {
     const title = getLocalized(proc.title, locale);
     const docs = proc.requiredDocuments.map((d) => `- ${getLocalized(d.name, locale)}`).join('\n');
@@ -23,7 +26,7 @@ function buildGroundingContext(query: string, locale: string): string {
     const steps = proc.steps.map((s) => `${s.stepNumber}. ${getLocalized(s.title, locale)} (${s.targetOffice})`).join('\n');
 
     context += `
---- PROCEDURE: ${title} ---
+--- PROCEDURE: ${title} (Slug: ${proc.slug}) ---
 - Total Estimated Cost: ${proc.estimatedTotalCostTND.toFixed(3)} TND (DT)
 - Estimated Timeframe: ${proc.estimatedProcessingTime}
 - Required Documents:
@@ -38,64 +41,73 @@ ${steps}
   return context;
 }
 
-const BASE_SYSTEM_PROMPT = `You are Idaara AI (إدارة.تونس), the premier specialized civic intelligence assistant for the Tunisian administrative ecosystem.
+const IDAARA_SPECIALIZED_SYSTEM_PROMPT = `You are Idaara AI (إدارة.تونس), the specialized native civic AI created exclusively for Tunisian citizens, residents, and diaspora.
 
-YOUR MISSION & ROLE:
-You help Tunisian citizens and residents navigate all bureaucracy, government paperwork, and legal procedures with supreme precision, clarity, and empathy.
+YOUR ROLE & IDENTITY:
+- You are an expert Tunisian legal and administrative copilot. You know every administrative procedure, law, required paper, fiscal stamp (timbre fiscal), tax rate, and municipal process in Tunisia inside out.
+- You speak directly to the citizen with warmth, clarity, empathy, and absolute accuracy.
+- You make bureaucracy effortless and stress-free.
 
-LANGUAGE RULES (STRICT):
-1. If user writes in Tunisian Derja (Arabizi Latin like "3aslema", "chnowa awra9 el passeport" or Arabic script "شنوة أوراق الباسبور") → Respond in warm, authentic, fluent Tunisian Derja.
-2. If user writes in French → Respond in crisp, professional French.
-3. If user writes in Standard Arabic → Respond in clear, formal Arabic.
-4. If user writes in English → Respond in professional, helpful English.
+LANGUAGE RULES (CRITICAL):
+1. **Tunisian Derja (Arabizi Latin or Arabic script)**:
+   - If the user greets or asks in Derja (e.g. "3aslema", "chnowa lezemni...", "kifech nbeddel carte grise", "awra9 el passeport", "chrit karhba", "sfoufet"), ALWAYS reply in authentic, natural, fluent Tunisian Derja!
+   - Use standard administrative terms in French/Arabic when natural (e.g. *carte grise, timbre fiscal, visite technique, copie conforme, contrat de bail, recette des finances, quittance, extrait de naissance*).
+2. **French**: If user writes in French, reply in professional, polished French.
+3. **Arabic**: If user writes in Standard Arabic, reply in formal, clear Arabic.
+4. **English**: If user writes in English, reply in crisp, professional English.
 
-KNOWLEDGE PILLARS (TUNISIA):
-- Passports: 80 DT fiscal stamp (25 DT for pupils/students), 4 photos (fond blanc), CIN copy + original, old passport. Handled at Police/Garde Nationale (7-15 days).
-- National ID (CIN): 3 DT fiscal stamp (10 DT lost/renewal), birth certificate (Madhmoun), 3 photos.
-- Criminal Record B3 (بطاقة السوابق العدلية): 7.500 DT stamp. Available online at b3.interieur.gov.tn or police station.
-- Car Registration Transfer (Mutation Carte Grise): Legalized sales contract at Baladiya, registration at Recette des Finances (~30-50 DT), technical inspection at ATTT, Vignette tax receipt. Total ~145 DT.
-- Auto-Entrepreneur (المبادر الذاتي): 1% flat revenue tax for services/freelance, 0.5% for commerce/industry, 0% VAT, legal foreign currency repatriation via BCT. Free national platform registration.
-- Residential Lease (Contrat de bail): Governed by COC (Code des Obligations et des Contrats). Must be legalized at Baladiya (5 DT per copy) and registered at Recette des Finances (30 DT).
-- Customs FCR (امتياز ن.ت.د): Duty-free car import and household effects for Tunisians returning from abroad.
+MASTER CIVIC KNOWLEDGE (TUNISIA):
+1. **Passports (Passeport tunisien)**:
+   - Ordinary stamp: 80 DT. Pupils/students/children under 7: 25 DT.
+   - 4 photos fond blanc, CIN copy + original, expired passport, certificate of enrollment if student.
+   - Handled at Police/Garde Nationale (7 to 15 days).
+2. **National ID (CIN / بطاقة التعريف)**:
+   - Ordinary fee: 3 DT stamp. Renewal/Lost: 10 DT.
+   - Extrait de naissance (Madhmoun), 3 photos, certificate of residence/work if changed.
+3. **Criminal Record (Bulletin N°3 / بطاقة السوابق العدلية)**:
+   - Fiscal stamp: 7.500 DT.
+   - Available online at b3.interieur.gov.tn or local police station (3 to 8 days).
+4. **Car Registration Transfer (Mutation Carte Grise)**:
+   - Legalized sales contract at Baladiya (5 DT stamp per signature).
+   - Tax registration at Recette des Finances (~30-50 DT depending on fiscal horsepower CV).
+   - Technical inspection certificate from ATTT (Visite technique).
+   - Road tax receipt (Vignette) paid.
+   - Total estimated budget: ~145 DT at ATTT.
+5. **Auto-Entrepreneur (المبادر الذاتي)**:
+   - 1% flat income tax on revenue for service providers and tech freelancers (0.5% for trade/industry).
+   - 0% VAT (exonération de TVA).
+   - Legal right to receive and invoice foreign currencies (EUR/USD) through Central Bank of Tunisia (BCT) regulations.
+   - Inscription is 100% free on the national platform.
+6. **Rental Contracts (Contrat de bail résidentiel)**:
+   - Governed by COC (Code des Obligations et des Contrats).
+   - Must be legalized at Baladiya (5 DT fiscal stamp per copy) and registered at Recette des Finances (30 DT).
+7. **Customs FCR (نظام ن.ت.د)**:
+   - Duty-free return privilege for Tunisians living abroad (TRE) allowing vehicle and household effects importation under specific stay duration requirements.
 
-OUTPUT STRUCTURE:
-When asked about any procedure, format your response cleanly:
-1. Short overview of the procedure
-2. Required documents list (bullet points)
-3. Total estimated cost in DT (Tunisian Dinars) with breakdown
-4. Competent authority / office to visit (Baladiya, Recette des Finances, ATTT, Police, etc.)
-5. Estimated processing delay
+RESPONSE FORMAT (WHEN EXPLAINING PROCEDURES):
+- **Overview**: 1-2 sentence direct answer.
+- **El Awra9 el Matlouba (Documents Checklist)**: Bulleted list with exact copies and requirements.
+- **El Flous wel Timbres (Fees Breakdown)**: Exact breakdown and total in Dinars (DT).
+- **Win Temchi (Competent Authority)**: Exact public offices to visit (Baladiya, Recette des Finances, ATTT, Police station, etc.).
+- **El Wa9t (Delay)**: Expected timeframe.
+- **Nsi7a (Pro-Tip)**: Practical advice to save time (e.g. "Prepare 2 extra CIN copies beforehand", "Go early in the morning").
 
-Always be accurate, encouraging, and respectful. Never invent non-existent laws or fees.`;
+Be encouraging, fast, and structured with bold highlights and markdown. Never invent non-existent laws.`;
 
 export async function POST(req: NextRequest) {
   try {
     const body = await req.json();
-    const { prompt, locale = 'derja', history = [], userApiKey = '', provider = 'auto' } = body;
+    const { prompt, locale = 'derja', history = [], userApiKey = '' } = body;
 
     if (!prompt || typeof prompt !== 'string') {
       return NextResponse.json({ error: 'Prompt string is required' }, { status: 400 });
     }
 
     const groundingContext = buildGroundingContext(prompt, locale);
-    const completeSystemPrompt = BASE_SYSTEM_PROMPT + groundingContext;
+    const completeSystemPrompt = IDAARA_SPECIALIZED_SYSTEM_PROMPT + groundingContext;
 
-    // Keys detection (user-provided or environment variables)
-    const nvidiaKey = userApiKey?.startsWith('nvapi-')
-      ? userApiKey
-      : process.env.NVIDIA_API_KEY || '';
-
-    const groqKey = userApiKey?.startsWith('gsk_')
-      ? userApiKey
-      : process.env.GROQ_API_KEY || '';
-
-    const geminiKey = userApiKey?.startsWith('AIza')
-      ? userApiKey
-      : process.env.GEMINI_API_KEY || process.env.AI_PROVIDER_API_KEY || '';
-
-    const openRouterKey = userApiKey?.startsWith('sk-or-')
-      ? userApiKey
-      : process.env.OPENROUTER_API_KEY || '';
+    // Use primary Groq key (or custom user key if provided)
+    const activeGroqKey = userApiKey?.startsWith('gsk_') ? userApiKey : PRIMARY_GROQ_KEY;
 
     // Standard OpenAI-compatible conversation message array
     const chatMessages = [
@@ -107,56 +119,20 @@ export async function POST(req: NextRequest) {
       { role: 'user', content: prompt },
     ];
 
-    // ─── 1. NVIDIA NIM (Llama 3.3 70B / Mistral Large - Free build.nvidia.com) ───
-    if (nvidiaKey && (provider === 'auto' || provider === 'nvidia')) {
-      try {
-        const nvRes = await fetch('https://integrate.api.nvidia.com/v1/chat/completions', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            Authorization: `Bearer ${nvidiaKey}`,
-          },
-          body: JSON.stringify({
-            model: 'meta/llama-3.3-70b-instruct',
-            messages: chatMessages,
-            temperature: 0.5,
-            max_tokens: 1024,
-          }),
-        });
-
-        if (nvRes.ok) {
-          const data = await nvRes.json();
-          const reply = data.choices?.[0]?.message?.content;
-          if (reply) {
-            return NextResponse.json({
-              success: true,
-              result: {
-                content: reply,
-                source: 'nvidia-nim-llama-70b',
-                providerName: 'NVIDIA NIM (Llama 3.3 70B)',
-              },
-            });
-          }
-        }
-      } catch (nvErr) {
-        console.warn('NVIDIA NIM API call failed:', nvErr);
-      }
-    }
-
-    // ─── 2. Groq (Llama 3.3 70B Versatile - Free console.groq.com) ───
-    if (groqKey && (provider === 'auto' || provider === 'groq')) {
+    // ─── PRIMARY ENGINE: Groq Llama 3.3 70B (High-Intelligence Specialized Model) ───
+    if (activeGroqKey) {
       try {
         const groqRes = await fetch('https://api.groq.com/openai/v1/chat/completions', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
-            Authorization: `Bearer ${groqKey}`,
+            Authorization: `Bearer ${activeGroqKey}`,
           },
           body: JSON.stringify({
             model: 'llama-3.3-70b-versatile',
             messages: chatMessages,
             temperature: 0.5,
-            max_tokens: 1024,
+            max_tokens: 1200,
           }),
         });
 
@@ -168,93 +144,28 @@ export async function POST(req: NextRequest) {
               success: true,
               result: {
                 content: reply,
-                source: 'llama-3.3-70b-groq',
-                providerName: 'Groq Llama 3.3 70B',
+                source: 'idaara-llama-70b',
+                providerName: 'Idaara AI (Llama 3.3 70B)',
               },
             });
           }
+        } else {
+          const errText = await groqRes.text();
+          console.warn('Groq API returned error status:', groqRes.status, errText);
         }
       } catch (groqErr) {
-        console.warn('Groq API call failed:', groqErr);
+        console.warn('Groq API network error:', groqErr);
       }
     }
 
-    // ─── 3. Google Gemini (1.5 Flash / 2.0 Flash - Free aistudio.google.com) ───
-    if (geminiKey && (provider === 'auto' || provider === 'gemini')) {
-      try {
-        const { GoogleGenerativeAI } = await import('@google/generative-ai');
-        const genAI = new GoogleGenerativeAI(geminiKey);
-        const model = genAI.getGenerativeModel({
-          model: 'gemini-1.5-flash',
-          systemInstruction: completeSystemPrompt,
-        });
-
-        const chatHistory = history.map((msg: { role: string; content: string }) => ({
-          role: msg.role === 'user' ? 'user' : 'model',
-          parts: [{ text: msg.content }],
-        }));
-
-        const chat = model.startChat({ history: chatHistory });
-        const result = await chat.sendMessage(prompt);
-        const text = result.response.text();
-
-        return NextResponse.json({
-          success: true,
-          result: {
-            content: text,
-            source: 'gemini-1.5-flash',
-            providerName: 'Google Gemini AI',
-          },
-        });
-      } catch (geminiErr) {
-        console.warn('Gemini API call failed:', geminiErr);
-      }
-    }
-
-    // ─── 4. OpenRouter (Free models: openrouter.ai) ───
-    if (openRouterKey && (provider === 'auto' || provider === 'openrouter')) {
-      try {
-        const orRes = await fetch('https://openrouter.ai/api/v1/chat/completions', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            Authorization: `Bearer ${openRouterKey}`,
-          },
-          body: JSON.stringify({
-            model: 'meta-llama/llama-3.3-70b-instruct:free',
-            messages: chatMessages,
-            temperature: 0.5,
-            max_tokens: 1024,
-          }),
-        });
-
-        if (orRes.ok) {
-          const data = await orRes.json();
-          const reply = data.choices?.[0]?.message?.content;
-          if (reply) {
-            return NextResponse.json({
-              success: true,
-              result: {
-                content: reply,
-                source: 'openrouter-llama-free',
-                providerName: 'OpenRouter Llama 3.3 Free',
-              },
-            });
-          }
-        }
-      } catch (orErr) {
-        console.warn('OpenRouter API call failed:', orErr);
-      }
-    }
-
-    // ─── 5. Guaranteed Local Tunisian Civic Intelligence Fallback Engine ───
+    // ─── SECONDARY FALLBACK: Local Tunisian Civic Reasoning Engine ───
     const localResult = parseAndReason(prompt, locale);
     return NextResponse.json({
       success: true,
       result: {
         ...localResult,
         source: 'idaara-local-engine',
-        providerName: 'Idaara Civic Intelligence',
+        providerName: 'Idaara AI',
       },
     });
 

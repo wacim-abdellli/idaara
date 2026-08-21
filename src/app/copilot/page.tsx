@@ -36,7 +36,7 @@ export default function CopilotPage() {
   const [showSettingsModal, setShowSettingsModal] = useState<boolean>(false);
   const [showPlusMenu, setShowPlusMenu] = useState<boolean>(false);
   const [showModelDropdown, setShowModelDropdown] = useState<boolean>(false);
-  const [providerBadge, setProviderBadge] = useState<string>('Auto-Smart');
+  const [providerBadge, setProviderBadge] = useState<string>('Llama 3.3 70B');
 
   const messagesContainerRef = useRef<HTMLDivElement | null>(null);
   const textareaRef = useRef<HTMLTextAreaElement | null>(null);
@@ -46,15 +46,10 @@ export default function CopilotPage() {
   useEffect(() => {
     if (typeof window !== 'undefined') {
       const savedKey = localStorage.getItem('idaara_custom_api_key') || '';
-      const savedProvider = localStorage.getItem('idaara_ai_provider') || 'auto';
+      const savedProvider = localStorage.getItem('idaara_ai_provider') || 'groq';
       setCustomApiKey(savedKey);
       setActiveProvider(savedProvider);
-      if (savedProvider === 'nvidia') setProviderBadge('NVIDIA NIM');
-      else if (savedProvider === 'groq') setProviderBadge('Groq Llama 3.3');
-      else if (savedProvider === 'gemini') setProviderBadge('Gemini 1.5 Flash');
-      else if (savedProvider === 'openrouter') setProviderBadge('OpenRouter Free');
-      else if (savedProvider === 'local') setProviderBadge('Civic Engine');
-      else setProviderBadge('Auto-Smart');
+      setProviderBadge('Llama 3.3 70B');
 
       const urlParams = new URLSearchParams(window.location.search);
       const q = urlParams.get('q');
