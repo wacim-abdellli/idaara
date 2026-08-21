@@ -39,9 +39,22 @@ export default function HomePage() {
 
   // Interactive State
   const [searchVal, setSearchVal] = useState('');
-  const [activeInspectorDoc, setActiveInspectorDoc] = useState<'passport' | 'tax' | 'lease'>('passport');
+  const [activeInspectorDoc, setActiveInspectorDoc] = useState<'passport' | 'cin' | 'lease' | 'tax'>('passport');
+  const [checkedInspectorItems, setCheckedInspectorItems] = useState<Record<string, boolean>>({
+    'passport-0': true,
+    'cin-0': true,
+    'lease-0': true,
+    'tax-0': true,
+  });
   const [interactiveBudget, setInteractiveBudget] = useState<number>(35000);
   const [selectedWilaya, setSelectedWilaya] = useState('Tunis');
+
+  const toggleInspectorItem = (key: string) => {
+    setCheckedInspectorItems((prev) => ({
+      ...prev,
+      [key]: !prev[key],
+    }));
+  };
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
@@ -88,6 +101,7 @@ export default function HomePage() {
           : locale === 'en'
           ? '80 DT Fiscal Stamp'
           : '80.000 DT (Tarif Ordinaire)',
+      url: '/procedures/passeport-renouvellement',
       points: [
         locale === 'ar'
           ? 'شراء طابع جبائي بقيمة 80 د.ت من القباضة المالية'
@@ -112,62 +126,63 @@ export default function HomePage() {
           : 'Restitution de l’ancien passeport',
       ],
     },
-    tax: {
+    cin: {
       type:
         locale === 'ar'
-          ? 'إعلام بالضريبة على العقارات المبنية (زبلة وخروبة)'
+          ? 'بطاقة التعريف الوطنية (طلب أول مرة / تجديد)'
           : locale === 'derja'
-          ? 'Avis d’Imposition (Zebla w Khrouba)'
+          ? 'Bita9at Ta3rif CIN (Awel marra / Tajdid)'
           : locale === 'en'
-          ? 'Municipal Property Tax Notice (Zebla w Khrouba)'
-          : 'Avis d’Imposition Fiscale (Zebla w Khrouba)',
+          ? 'National Identity Card (CIN)'
+          : "Carte d'Identité Nationale (CIN)",
       authority:
         locale === 'ar'
-          ? 'الإدارة العامة للأداءات والبلدية'
+          ? 'وزارة الداخلية (مركز الشرطة أو الحرس الوطني مرجع السكنى)'
           : locale === 'derja'
-          ? 'Idarat el Jibaya & Baladiya'
+          ? 'Markez el Chorta walla el 7aras el Marje3 el Tourabi'
           : locale === 'en'
-          ? 'General Directorate of Taxes & Municipality'
-          : 'Direction Générale des Impôts & Baladiya',
-      fee: '85.000 DT',
+          ? 'Police Station / National Guard Territorial Desk'
+          : 'Poste de Police / Garde Nationale Territorial',
+      fee: '3.000 DT',
       time:
         locale === 'ar'
-          ? 'قبل 31 ديسمبر'
+          ? '10 - 15 يوماً'
           : locale === 'derja'
-          ? '9bel 31 Décembre'
+          ? '10 - 15 Youm'
           : locale === 'en'
-          ? 'Before Dec 31st'
-          : 'Avant le 31 Décembre',
+          ? '10 - 15 days'
+          : '10 - 15 jours',
       stamp:
         locale === 'ar'
-          ? 'معلوم موظف على العقار'
+          ? 'طابع جبائي 3 د.ت (10 د.ت ضياع)'
           : locale === 'derja'
-          ? 'Ma3loum el Dar'
+          ? 'Timbre 3 DT (10 DT Dhyaya3)'
           : locale === 'en'
-          ? 'Statutory Municipal Assessment'
-          : 'Taxe Forfaitaire Bâtie',
+          ? '3 DT Fiscal Stamp (10 DT if lost)'
+          : '3.000 DT (10 DT en cas de perte)',
+      url: '/procedures/cin-premiere-demande',
       points: [
         locale === 'ar'
-          ? 'معلوم بلدي سنوي إجباري على العقارات والمحلات المبنية'
+          ? 'مضمون ولادة أصلي باللغة العربية والفرنسية (< 3 أشهر)'
           : locale === 'derja'
-          ? 'Ma3loum baladi sanawi ejbari 3al dyar wel 3a9arat'
+          ? 'Madhmoun wilada asli b’arabi w français (< 3 chhour)'
           : locale === 'en'
-          ? 'Statutory annual municipal tax on built residential properties'
-          : 'Taxe municipale annuelle sur les immeubles bâtis',
+          ? 'Original bilingual birth certificate (< 3 months)'
+          : 'Extrait de naissance bilingue récent (< 3 mois)',
         locale === 'ar'
-          ? 'الخلاص بالقباضة البلدية أو عن بعد'
+          ? '3 صور شمسية مخصصة لبطاقة التعريف بخلفية بيضاء'
           : locale === 'derja'
-          ? 'Khalas fel 9badha el baladiya walla en ligne'
+          ? '3 tsawer CIN jdod b’fond abyedh'
           : locale === 'en'
-          ? 'Payable at municipal tax collector or via online portal'
-          : 'Paiement à la Recette Municipale ou par carte',
+          ? '3 official ID photos on white background'
+          : '3 photos d’identité réglementaires',
         locale === 'ar'
-          ? 'خطية تأخير بنسبة 0.75% شهرياً في صورة عدم الدفع'
+          ? 'شهادة إقامة أو وصل ماء/كهرباء يثبت العنوان'
           : locale === 'derja'
-          ? 'Khatya 0.75% kol chhar ba3d el wa9t'
+          ? 'Chhadet i9ama walla wasl STEG/SONEDE ythabbet l’adresse'
           : locale === 'en'
-          ? '0.75% monthly late interest penalty applies after deadline'
-          : 'Pénalité de 0.75% par mois en cas de retard',
+          ? 'Proof of residence or utility bill under applicant name'
+          : 'Certificat de résidence ou quittance STEG/SONEDE',
       ],
     },
     lease: {
@@ -204,6 +219,7 @@ export default function HomePage() {
           : locale === 'en'
           ? '30 DT Registration + 5 DT Municipal'
           : '30 DT Enregistrement + 5 DT Baladiya',
+      url: '/documents/contrat-location-residentiel',
       points: [
         locale === 'ar'
           ? 'مطابق للفصل 1104 من مجلة الالتزامات والعقود (م.ا.ع)'
@@ -226,6 +242,65 @@ export default function HomePage() {
           : locale === 'en'
           ? 'Mandatory formal registration at tax office within 60 days'
           : 'Enregistrement obligatoire à la Recette dans les 60 jours',
+      ],
+    },
+    tax: {
+      type:
+        locale === 'ar'
+          ? 'إعلام بالضريبة على العقارات المبنية (زبلة وخروبة)'
+          : locale === 'derja'
+          ? 'Avis d’Imposition (Zebla w Khrouba)'
+          : locale === 'en'
+          ? 'Municipal Property Tax Notice (Zebla w Khrouba)'
+          : 'Avis d’Imposition Fiscale (Zebla w Khrouba)',
+      authority:
+        locale === 'ar'
+          ? 'الإدارة العامة للأداءات والبلدية'
+          : locale === 'derja'
+          ? 'Idarat el Jibaya & Baladiya'
+          : locale === 'en'
+          ? 'General Directorate of Taxes & Municipality'
+          : 'Direction Générale des Impôts & Baladiya',
+      fee: '85.000 DT',
+      time:
+        locale === 'ar'
+          ? 'قبل 31 ديسمبر'
+          : locale === 'derja'
+          ? '9bel 31 Décembre'
+          : locale === 'en'
+          ? 'Before Dec 31st'
+          : 'Avant le 31 Décembre',
+      stamp:
+        locale === 'ar'
+          ? 'معلوم موظف على العقار'
+          : locale === 'derja'
+          ? 'Ma3loum el Dar'
+          : locale === 'en'
+          ? 'Statutory Municipal Assessment'
+          : 'Taxe Forfaitaire Bâtie',
+      url: '/fasserli',
+      points: [
+        locale === 'ar'
+          ? 'معلوم بلدي سنوي إجباري على العقارات والمحلات المبنية'
+          : locale === 'derja'
+          ? 'Ma3loum baladi sanawi ejbari 3al dyar wel 3a9arat'
+          : locale === 'en'
+          ? 'Statutory annual municipal tax on built residential properties'
+          : 'Taxe municipale annuelle sur les immeubles bâtis',
+        locale === 'ar'
+          ? 'الخلاص بالقباضة البلدية أو عن بعد'
+          : locale === 'derja'
+          ? 'Khalas fel 9badha el baladiya walla en ligne'
+          : locale === 'en'
+          ? 'Payable at municipal tax collector or via online portal'
+          : 'Paiement à la Recette Municipale ou par carte',
+        locale === 'ar'
+          ? 'خطية تأخير بنسبة 0.75% شهرياً في صورة عدم الدفع'
+          : locale === 'derja'
+          ? 'Khatya 0.75% kol chhar ba3d el wa9t'
+          : locale === 'en'
+          ? '0.75% monthly late interest penalty applies after deadline'
+          : 'Pénalité de 0.75% par mois en cas de retard',
       ],
     },
   };
@@ -584,26 +659,35 @@ export default function HomePage() {
 
           </FadeIn>
 
-          {/* Right Column: Physical Laser Document Scanner & Legal Telemetry (Tactile Inspector) */}
+          {/* Right Column: Holographic Civic Dossier Simulator & Interactive Inspector */}
           <FadeIn direction="left" delay={0.2} className="lg:col-span-6 relative">
             
-            {/* Interactive Document Switcher Tabs */}
-            <div className="flex items-center gap-2 mb-3">
+            {/* Interactive Document Switcher Tabs with Spring Motion */}
+            <div className="flex items-center gap-1.5 sm:gap-2 mb-3 overflow-x-auto pb-1 scrollbar-none">
               {[
                 {
                   id: 'passport' as const,
                   label: locale === 'ar' ? 'جواز السفر' : locale === 'derja' ? 'Passeport' : locale === 'en' ? 'Passport' : 'Passeport',
+                  tag: '80 DT',
                   icon: FileCheck2,
                 },
                 {
-                  id: 'tax' as const,
-                  label: locale === 'ar' ? 'الضريبة البلدية' : locale === 'derja' ? 'Zebla w Khrouba' : locale === 'en' ? 'Tax Notice' : 'Avis Fiscal',
-                  icon: FileText,
+                  id: 'cin' as const,
+                  label: locale === 'ar' ? 'بطاقة التعريف' : locale === 'derja' ? 'CIN' : locale === 'en' ? 'ID Card' : 'Carte CIN',
+                  tag: '3 DT',
+                  icon: ShieldCheck,
                 },
                 {
                   id: 'lease' as const,
-                  label: locale === 'ar' ? 'عقد الكراء' : locale === 'derja' ? '3a9d Kré' : locale === 'en' ? 'Lease Contract' : 'Contrat Bail',
+                  label: locale === 'ar' ? 'عقد الكراء' : locale === 'derja' ? '3a9d Kré' : locale === 'en' ? 'Lease' : 'Contrat Bail',
+                  tag: '35 DT',
                   icon: Scale,
+                },
+                {
+                  id: 'tax' as const,
+                  label: locale === 'ar' ? 'زبلة وخروبة' : locale === 'derja' ? 'Zebla & Khrouba' : locale === 'en' ? 'Tax' : 'Taxe Municipale',
+                  tag: 'Recette',
+                  icon: FileText,
                 },
               ].map((tab) => {
                 const Icon = tab.icon;
@@ -612,93 +696,176 @@ export default function HomePage() {
                   <motion.button
                     key={tab.id}
                     onClick={() => setActiveInspectorDoc(tab.id)}
-                    whileHover={{ scale: 1.04 }}
-                    whileTap={{ scale: 0.96 }}
-                    className={`px-3.5 py-1.5 rounded-xl text-xs font-bold transition-all cursor-pointer flex items-center gap-2 border ${
+                    whileHover={{ scale: 1.03, y: -1 }}
+                    whileTap={{ scale: 0.97 }}
+                    className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-all cursor-pointer flex items-center gap-1.5 shrink-0 border ${
                       isActive
-                        ? 'bg-emerald-500 text-zinc-950 border-emerald-400 shadow-lg shadow-emerald-500/20'
-                        : 'bg-zinc-900/80 text-zinc-400 hover:text-white border-zinc-800'
+                        ? 'bg-emerald-500 text-zinc-950 border-emerald-400 shadow-md shadow-emerald-500/25'
+                        : 'bg-[#0d0e12] text-zinc-400 hover:text-white border-white/[0.08] hover:border-white/[0.15]'
                     }`}
                   >
                     <Icon className={`w-3.5 h-3.5 ${isActive ? 'text-zinc-950' : 'text-zinc-500'}`} />
                     <span>{tab.label}</span>
+                    <span
+                      className={`text-[9px] font-mono px-1.5 py-0.5 rounded-md ${
+                        isActive
+                          ? 'bg-zinc-950/20 text-zinc-950 font-extrabold'
+                          : 'bg-zinc-800/80 text-zinc-400'
+                      }`}
+                    >
+                      {tab.tag}
+                    </span>
                   </motion.button>
                 );
               })}
             </div>
 
-            {/* The Document Visual Card with Sweeping Laser Scan Line & Spotlight Hover */}
-            <SpotlightCard className="p-6 sm:p-7 border-zinc-800/90 shadow-2xl relative animate-border-glow">
+            {/* The Holographic Civic Dossier Simulator Card */}
+            <SpotlightCard className="p-5 sm:p-7 border-white/[0.1] shadow-2xl relative overflow-hidden bg-gradient-to-br from-[#0e1014] via-[#0d0e12] to-[#090a0d]">
               
-              {/* Sweeping Laser Beam Animation */}
-              <div className="absolute left-0 right-0 h-0.5 bg-gradient-to-r from-transparent via-emerald-400 to-transparent shadow-[0_0_15px_#10b981] animate-laser pointer-events-none z-20" />
+              {/* Subtle Guilloche Security Hologram Badge in Corner */}
+              <div className="absolute top-0 right-0 w-36 h-36 bg-radial from-emerald-500/10 via-transparent to-transparent pointer-events-none rounded-full blur-2xl -mr-10 -mt-10" />
 
-              {/* Document Header */}
-              <div className="flex items-start justify-between pb-4 border-b border-zinc-800 relative z-10">
-                <div className="space-y-1">
+              {/* Document Header with Official Credentials */}
+              <div className="flex items-start justify-between pb-4 border-b border-white/[0.08] relative z-10 gap-3">
+                <div className="space-y-1 min-w-0">
                   <div className="flex items-center gap-2">
-                    <span className="text-[10px] font-mono font-bold uppercase tracking-widest text-emerald-400 px-2 py-0.5 rounded bg-emerald-950/80 border border-emerald-800/50">
-                      {ui.officialDoc}
+                    <span className="text-[10px] font-mono font-bold uppercase tracking-wider text-emerald-400 px-2 py-0.5 rounded-md bg-emerald-950/70 border border-emerald-800/50 flex items-center gap-1">
+                      <ShieldCheck className="w-3 h-3" />
+                      <span>{ui.officialDoc}</span>
                     </span>
-                    <span className="text-[10px] font-mono text-zinc-500">{ui.repTun}</span>
+                    <span className="text-[10px] font-mono text-zinc-500 hidden sm:inline-block">
+                      JORT 2026 · {ui.repTun}
+                    </span>
                   </div>
-                  <h3 className="text-base sm:text-lg font-bold text-white tracking-tight">
+
+                  <h3 className="text-base sm:text-lg font-bold text-white tracking-tight truncate">
                     {currentDoc.type}
                   </h3>
-                  <p className="text-xs text-zinc-400 flex items-center gap-1">
+
+                  <p className="text-xs text-zinc-400 flex items-center gap-1.5 truncate">
                     <Building2 className="w-3.5 h-3.5 text-emerald-400 shrink-0" />
-                    <span>{currentDoc.authority}</span>
+                    <span className="truncate">{currentDoc.authority}</span>
                   </p>
                 </div>
 
-                <div className="text-right rtl:text-left shrink-0">
-                  <span className="text-[10px] uppercase font-bold text-zinc-500 block">{ui.totalEst}</span>
-                  <span className="text-base sm:text-lg font-mono font-extrabold text-amber-400">{currentDoc.fee}</span>
+                {/* Total Cost Badge */}
+                <div className="text-right rtl:text-left shrink-0 pl-3 rtl:pl-0 rtl:pr-3 border-l rtl:border-l-0 rtl:border-r border-white/[0.08]">
+                  <span className="text-[10px] uppercase font-bold text-zinc-500 block">
+                    {ui.totalEst}
+                  </span>
+                  <span className="text-base sm:text-xl font-mono font-extrabold text-amber-400">
+                    {currentDoc.fee}
+                  </span>
                 </div>
               </div>
 
-              {/* Key Verification Points */}
-              <div className="py-4 space-y-2.5 relative z-10">
-                <div className="text-[10px] font-mono uppercase tracking-wider text-zinc-500 flex items-center gap-1.5">
-                  <Activity className="w-3.5 h-3.5 text-emerald-400" />
-                  <span>{ui.legalSummary}</span>
-                </div>
+              {/* Interactive Checklist & Live Readiness Gauge */}
+              <div className="py-4 space-y-3 relative z-10">
+                
+                {/* Live Gauge Header */}
+                {(() => {
+                  const docKeys = currentDoc.points.map((_, idx) => `${activeInspectorDoc}-${idx}`);
+                  const readyCount = docKeys.filter((k) => checkedInspectorItems[k]).length;
+                  const totalCount = docKeys.length;
+                  const pct = Math.round((readyCount / totalCount) * 100);
+                  const isComplete = readyCount === totalCount;
 
-                <div className="space-y-2">
-                  {currentDoc.points.map((pt, pIdx) => (
-                    <motion.div
-                      key={pIdx}
-                      initial={{ opacity: 0, x: -6 }}
-                      animate={{ opacity: 1, x: 0 }}
-                      transition={{ delay: pIdx * 0.1 }}
-                      className="flex items-start gap-2 text-xs text-zinc-300"
-                    >
-                      <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0 mt-0.5" />
-                      <span>{pt}</span>
-                    </motion.div>
-                  ))}
+                  return (
+                    <div className="space-y-1.5">
+                      <div className="flex items-center justify-between text-xs">
+                        <span className="text-[11px] font-bold text-zinc-300 flex items-center gap-1.5">
+                          <Activity className="w-3.5 h-3.5 text-emerald-400" />
+                          <span>
+                            {locale === 'ar'
+                              ? 'جاهزية الملف (انقر لتحديد الوثائق) :'
+                              : locale === 'derja'
+                              ? '7dhour el dossier (Click bech tmarki) :'
+                              : locale === 'en'
+                              ? 'Dossier Readiness (Click to check items):'
+                              : 'Préparation du dossier (Cliquez pour cocher) :'}
+                          </span>
+                        </span>
+                        <span
+                          className={`font-mono text-[11px] font-bold ${
+                            isComplete ? 'text-emerald-400' : 'text-amber-400'
+                          }`}
+                        >
+                          {readyCount}/{totalCount} {isComplete ? '🎉 100%' : `${pct}%`}
+                        </span>
+                      </div>
+
+                      {/* Animated Progress Bar */}
+                      <div className="w-full h-1.5 bg-zinc-800 rounded-full overflow-hidden">
+                        <motion.div
+                          animate={{ width: `${pct}%` }}
+                          transition={{ type: 'spring', stiffness: 120, damping: 20 }}
+                          className={`h-full rounded-full ${
+                            isComplete
+                              ? 'bg-gradient-to-r from-emerald-500 to-teal-300 shadow-[0_0_10px_#10b981]'
+                              : 'bg-gradient-to-r from-amber-500 to-emerald-400'
+                          }`}
+                        />
+                      </div>
+                    </div>
+                  );
+                })()}
+
+                {/* Interactive Checkable Requirements */}
+                <div className="space-y-2 pt-1">
+                  {currentDoc.points.map((pt, pIdx) => {
+                    const itemKey = `${activeInspectorDoc}-${pIdx}`;
+                    const isChecked = !!checkedInspectorItems[itemKey];
+
+                    return (
+                      <motion.div
+                        key={itemKey}
+                        onClick={() => toggleInspectorItem(itemKey)}
+                        whileHover={{ scale: 1.01, x: 2 }}
+                        whileTap={{ scale: 0.98 }}
+                        className={`p-2.5 rounded-xl border cursor-pointer select-none transition-all flex items-start gap-2.5 text-xs ${
+                          isChecked
+                            ? 'bg-emerald-950/20 border-emerald-800/40 text-zinc-200'
+                            : 'bg-zinc-900/60 border-white/[0.05] hover:border-white/[0.12] text-zinc-400'
+                        }`}
+                      >
+                        <div className="mt-0.5 shrink-0">
+                          {isChecked ? (
+                            <CheckCircle2 className="w-4 h-4 text-emerald-400" />
+                          ) : (
+                            <div className="w-4 h-4 rounded-full border border-zinc-600 hover:border-zinc-400 transition-colors" />
+                          )}
+                        </div>
+                        <span className={`leading-relaxed flex-1 ${isChecked ? 'text-zinc-100 font-medium' : 'text-zinc-400'}`}>
+                          {pt}
+                        </span>
+                      </motion.div>
+                    );
+                  })}
                 </div>
               </div>
 
-              {/* Document Footer Bar */}
-              <div className="pt-4 border-t border-zinc-800/80 flex items-center justify-between relative z-10 text-xs font-mono">
+              {/* Document Footer Bar Telemetry & Direct Guide Button */}
+              <div className="pt-3.5 border-t border-white/[0.08] flex flex-col sm:flex-row sm:items-center justify-between gap-3 relative z-10 text-xs font-mono">
                 <div className="flex items-center gap-2">
-                  <span className="px-2 py-0.5 rounded bg-zinc-900 border border-zinc-800 text-zinc-400 text-[11px] flex items-center gap-1">
+                  <span className="px-2.5 py-1 rounded-lg bg-zinc-900/90 border border-white/[0.08] text-zinc-300 text-[11px] flex items-center gap-1.5">
                     <Clock className="w-3 h-3 text-zinc-500" />
                     <span>{currentDoc.time}</span>
                   </span>
-                  <span className="px-2 py-0.5 rounded bg-zinc-900 border border-zinc-800 text-emerald-400 text-[11px]">
+                  <span className="px-2.5 py-1 rounded-lg bg-zinc-900/90 border border-white/[0.08] text-emerald-400 text-[11px]">
                     {currentDoc.stamp}
                   </span>
                 </div>
 
-                <Link
-                  href="/procedures"
-                  className="flex items-center gap-1 text-emerald-400 hover:text-emerald-300 font-bold group"
-                >
-                  <span>{ui.fullDossier}</span>
-                  <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-0.5 transition-transform" />
-                </Link>
+                <motion.div whileHover={{ scale: 1.04 }} whileTap={{ scale: 0.96 }}>
+                  <Link
+                    href={currentDoc.url || '/procedures'}
+                    className="inline-flex items-center justify-center gap-1.5 px-4 py-1.5 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-zinc-950 font-bold text-xs shadow-md shadow-emerald-500/20 transition-all cursor-pointer"
+                  >
+                    <span>{ui.fullDossier}</span>
+                    <ArrowRight className="w-3.5 h-3.5 rtl:rotate-180" />
+                  </Link>
+                </motion.div>
               </div>
 
             </SpotlightCard>
