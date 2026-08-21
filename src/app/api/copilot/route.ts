@@ -21,27 +21,45 @@ function getGroqKey(): string {
   return '';
 }
 
-function detectScriptAndLanguage(prompt: string, locale: string): string {
+function detectScriptAndLanguage(prompt: string): string {
+  const p = prompt.trim();
+  const pLower = p.toLowerCase();
+  
+  // 1. Arabic script detection
   const arabicRegex = /[\u0600-\u06FF]/;
-  const isArabicScript = arabicRegex.test(prompt);
-
-  if (isArabicScript) {
-    return 'USER_SCRIPT: ARABIC_SCRIPT_DERJA. You MUST respond 100% in pure Arabic script Tunisian Derja! Do NOT use Latin characters.';
+  if (arabicRegex.test(p)) {
+    return `USER_SCRIPT: ARABIC_SCRIPT.
+- The user wrote in Arabic script.
+- You MUST respond 100% in pure Arabic script Tunisian Derja!
+- DO NOT use any Latin characters.`;
   }
 
-  const pLower = prompt.toLowerCase();
-  const frenchKeywords = ['comment', 'renouveler', 'obtenir', 'passeport', 'pourquoi', 'combien', 'quelles', 'quels', 'documents', 'frais', 'bonjour', 'mutation'];
-  const hasDerjaWords = ['3aslema', 'chnowa', 'kifech', 'n7eb', 'n5arej', 'karhba', 'awra9', 'bita9at', 'ta3rif', 'b3', 'sfoufet', 'chkoun', 'chkounnek', 'ahla'].some((w) => pLower.includes(w));
-
-  if (locale === 'fr' && !hasDerjaWords && frenchKeywords.some((w) => pLower.includes(w))) {
-    return 'USER_SCRIPT: FRENCH. You MUST respond 100% in clean, professional French.';
+  // 2. English detection
+  const englishGreetings = ['hi', 'hello', 'hey', 'good morning', 'good evening', 'who are you', 'what is this', 'help'];
+  const isDirectEnglish = englishGreetings.includes(pLower) || (pLower.startsWith('hi ') || pLower.startsWith('hello '));
+  if (isDirectEnglish) {
+    return `USER_SCRIPT: ENGLISH.
+- The user wrote in English.
+- You MUST respond 100% in crisp, professional English!
+- Example: "Hello! I am Idaara AI (إدارة.تونس), your Tunisian civic assistant. How can I help you today with procedures, fees, or documents in Tunisia?"`;
   }
 
-  if (locale === 'en' && !hasDerjaWords && !pLower.includes('3aslema')) {
-    return 'USER_SCRIPT: ENGLISH. You MUST respond 100% in clean, helpful English.';
+  // 3. French detection
+  const frenchGreetings = ['bonjour', 'salut', 'bonsoir', 'qui es-tu', 'aide', 'comment'];
+  const isDirectFrench = frenchGreetings.some((g) => pLower === g || pLower.startsWith(g + ' '));
+  if (isDirectFrench) {
+    return `USER_SCRIPT: FRENCH.
+- The user wrote in French.
+- You MUST respond 100% in clear, professional French!
+- Example: "Bonjour ! Je suis Idaara AI (إدارة.تونس), votre assistant administratif tunisien. Comment puis-je vous aider aujourd'hui ?"`;
   }
 
-  return 'USER_SCRIPT: LATIN_ARABIZI_DERJA. The user wrote in Latin Arabizi (e.g. n7eb, 3aslema, chnowa, kifech, bita9et ta3rif). You MUST respond 100% in authentic Latin Arabizi Derja! Do NOT write in Arabic script! Use Arabizi formatting (e.g. "Bech t5arrej Bita9at Ta3rif (CIN) fi Tounes, lezmek...").';
+  // 4. Default: Latin Arabizi Derja
+  return `USER_SCRIPT: LATIN_ARABIZI_DERJA.
+- The user wrote in Latin Arabizi (Tunisian Derja in Latin letters).
+- You MUST respond 100% in authentic Latin Arabizi Derja!
+- CRITICAL: DO NOT use ANY Arabic characters/letters in your response. Write all words in Latin letters (using standard Arabizi: 3 for ع, 7 for ح, 9 for ق, 5 for خ).
+- Example: "3aslema w mar7ba bik! Ena Idaara AI. Najjem n3awnek fi ay war9a walla procédure idariya fi Tounes (Passeport, Carte Grise, CIN, B3, Contrat de bail, Auto-Entrepreneur...). Chnowa 7achtek tawa?"`;
 }
 
 function buildGroundingContext(query: string, locale: string): string {
@@ -81,26 +99,22 @@ ${steps}
   return context;
 }
 
-const IDAARA_MASTER_SYSTEM_PROMPT = `You are Idaara AI (إدارة.تونس), the premier Tunisian administrative and legal AI copilot.
+const IDAARA_MASTER_SYSTEM_PROMPT = `You are Idaara AI (إدارة.تونس), the premier Tunisian administrative, legal, and civic AI copilot.
 
-RESPONSE STRUCTURE (MAKE IT SUPER EASY AND CLEAR):
-Whenever explaining a procedure, always structure your response with these clear sections:
+RESPONSE STRUCTURE (ALWAYS USE THIS STRUCTURE FOR PROCEDURES):
 1. **Direct Answer (Khousla)**: 1-2 sentence direct summary of what the user needs.
-2. **Awra9 el Matlouba (Required Documents)**: Clean bulleted list with exact documents, copies, and conditions.
-3. **Masrouf & Timbres (Fees in DT)**: Bullet points or table with exact costs in Tunisian Dinars (DT) and total.
+2. **Awra9 el Matlouba (Required Documents)**: Clean bulleted list with exact documents and copies.
+3. **Masrouf & Timbres (Fees in DT)**: Exact statutory stamp fees and total cost in Dinars (DT).
 4. **Win Temchi (Competent Authority)**: Exact public office to visit (Police station, Baladiya, Recette des Finances, ATTT, etc.).
 5. **El Wa9t (Delay)**: Expected delay.
-6. **Nsi7a men Idaara (Pro-Tip)**: Practical tip to avoid long queues or save money.
+6. **Nsi7a men Idaara (Pro-Tip)**: Practical tip to avoid long queues, student discounts, or prepare extra copies.
 
-SCRIPT & SCRIPT INTEGRITY (STRICT):
-- NEVER MIX Arabic script and Latin letters inside the same sentence. It breaks bidirectional text formatting.
-- If user writes in Latin Arabizi (e.g. 'n7eb n5arej bita9et ta3rif', 'ahla', '3aslema', 'chnowa', 'kifech'):
-  → Respond 100% in pure Latin Arabizi Derja!
-- If user writes in Arabic script:
-  → Respond 100% in pure Arabic script Derja!
+STRICT SCRIPT ISOLATION:
+- When writing in Latin script (English, French, or Latin Arabizi), NEVER EVER output any Arabic script letters. All words must be in Latin characters.
+- When writing in Arabic script, write purely in Arabic script.
 
 CORE TUNISIAN CIVIC KNOWLEDGE (OFFICIAL JORT):
-- **Passports**: 80 DT fiscal stamp (25 DT for students/pupils), 4 photos fond blanc, CIN copy + original, expired passport. Handled at Police/Garde Nationale (7-15 days).
+- **Passports (Passeport tunisien)**: 80 DT fiscal stamp (25 DT for students/pupils), 4 photos fond blanc, CIN copy + original, expired passport. Handled at Police/Garde Nationale (7-15 days).
 - **National ID (CIN)**: 3 DT fiscal stamp (10 DT lost/renewal), birth certificate (Madhmoun wilada < 3 months), 3 photos fond blanc. Handled at Police/Garde Nationale (10-15 days).
 - **Criminal Record B3 (Bulletin N°3)**: 7.500 DT stamp. Available online at b3.interieur.gov.tn or police station.
 - **Car Registration Transfer (Mutation Carte Grise)**: Legalized sales contract at Baladiya (5 DT per signature), tax registration at Recette des Finances (~30-50 DT), technical inspection at ATTT (Visite technique), road tax (Vignette) paid. Total ~145 DT at ATTT.
@@ -118,7 +132,7 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: 'Prompt string is required' }, { status: 400 });
     }
 
-    const scriptDirective = detectScriptAndLanguage(prompt, locale);
+    const scriptDirective = detectScriptAndLanguage(prompt);
     const groundingContext = buildGroundingContext(prompt, locale);
     const completeSystemPrompt = `${IDAARA_MASTER_SYSTEM_PROMPT}\n\n${scriptDirective}\n\n${groundingContext}`;
 
@@ -133,7 +147,7 @@ export async function POST(req: NextRequest) {
       { role: 'user', content: prompt },
     ];
 
-    // ─── CALL IDAARA NATIVE AI (Groq 120B / Qwen Engine) ───
+    // ─── PRIMARY ENGINE: Groq 120B / Qwen ───
     if (apiKey) {
       try {
         const groqRes = await fetch('https://api.groq.com/openai/v1/chat/completions', {
@@ -145,7 +159,7 @@ export async function POST(req: NextRequest) {
           body: JSON.stringify({
             model: 'openai/gpt-oss-120b',
             messages: chatMessages,
-            temperature: 0.3,
+            temperature: 0.2,
             max_tokens: 1200,
           }),
         });
@@ -174,14 +188,16 @@ export async function POST(req: NextRequest) {
             body: JSON.stringify({
               model: 'qwen/qwen3.6-27b',
               messages: chatMessages,
-              temperature: 0.3,
+              temperature: 0.2,
               max_tokens: 1024,
             }),
           });
           if (qwenRes.ok) {
             const data = await qwenRes.json();
-            const reply = data.choices?.[0]?.message?.content;
+            let reply = data.choices?.[0]?.message?.content;
             if (reply) {
+              // Strip any <think> tags if present
+              reply = reply.replace(/<think>[\s\S]*?<\/think>/g, '').trim();
               return NextResponse.json({
                 success: true,
                 result: {
