@@ -21,6 +21,29 @@ function getGroqKey(): string {
   return '';
 }
 
+function detectScriptAndLanguage(prompt: string, locale: string): string {
+  const arabicRegex = /[\u0600-\u06FF]/;
+  const isArabicScript = arabicRegex.test(prompt);
+
+  if (isArabicScript) {
+    return 'USER_SCRIPT: ARABIC_SCRIPT_DERJA. You MUST respond 100% in pure Arabic script Tunisian Derja! Do NOT use Latin characters.';
+  }
+
+  const pLower = prompt.toLowerCase();
+  const frenchKeywords = ['comment', 'renouveler', 'obtenir', 'passeport', 'pourquoi', 'combien', 'quelles', 'quels', 'documents', 'frais', 'bonjour', 'mutation'];
+  const hasDerjaWords = ['3aslema', 'chnowa', 'kifech', 'n7eb', 'n5arej', 'karhba', 'awra9', 'bita9at', 'ta3rif', 'b3', 'sfoufet', 'chkoun', 'chkounnek', 'ahla'].some((w) => pLower.includes(w));
+
+  if (locale === 'fr' && !hasDerjaWords && frenchKeywords.some((w) => pLower.includes(w))) {
+    return 'USER_SCRIPT: FRENCH. You MUST respond 100% in clean, professional French.';
+  }
+
+  if (locale === 'en' && !hasDerjaWords && !pLower.includes('3aslema')) {
+    return 'USER_SCRIPT: ENGLISH. You MUST respond 100% in clean, helpful English.';
+  }
+
+  return 'USER_SCRIPT: LATIN_ARABIZI_DERJA. The user wrote in Latin Arabizi (e.g. n7eb, 3aslema, chnowa, kifech, bita9et ta3rif). You MUST respond 100% in authentic Latin Arabizi Derja! Do NOT write in Arabic script! Use Arabizi formatting (e.g. "Bech t5arrej Bita9at Ta3rif (CIN) fi Tounes, lezmek...").';
+}
+
 function buildGroundingContext(query: string, locale: string): string {
   const q = query.toLowerCase();
   
@@ -60,38 +83,31 @@ ${steps}
 
 const IDAARA_MASTER_SYSTEM_PROMPT = `You are Idaara AI (إدارة.تونس), the premier Tunisian administrative and legal AI copilot.
 
-SCRIPT & SCRIPT INTEGRITY (CRITICAL RULE):
-- NEVER EVER mix Arabic script and Latin characters inside the same sentence or paragraph! Mixing scripts corrupts bidirectional text rendering and creates broken words like 'Nجم'.
-- When the user writes in Latin Arabizi (e.g. 'ahla', '3aslema', 'chnowa', 'kifech', 'chkounnek'):
+RESPONSE STRUCTURE (MAKE IT SUPER EASY AND CLEAR):
+Whenever explaining a procedure, always structure your response with these clear sections:
+1. **Direct Answer (Khousla)**: 1-2 sentence direct summary of what the user needs.
+2. **Awra9 el Matlouba (Required Documents)**: Clean bulleted list with exact documents, copies, and conditions.
+3. **Masrouf & Timbres (Fees in DT)**: Bullet points or table with exact costs in Tunisian Dinars (DT) and total.
+4. **Win Temchi (Competent Authority)**: Exact public office to visit (Police station, Baladiya, Recette des Finances, ATTT, etc.).
+5. **El Wa9t (Delay)**: Expected delay.
+6. **Nsi7a men Idaara (Pro-Tip)**: Practical tip to avoid long queues or save money.
+
+SCRIPT & SCRIPT INTEGRITY (STRICT):
+- NEVER MIX Arabic script and Latin letters inside the same sentence. It breaks bidirectional text formatting.
+- If user writes in Latin Arabizi (e.g. 'n7eb n5arej bita9et ta3rif', 'ahla', '3aslema', 'chnowa', 'kifech'):
   → Respond 100% in pure Latin Arabizi Derja!
-  → Example greeting: "3aslema w mar7ba bik! Ena Idaara AI (إدارة.تونس) — el Copilot el Idari el Tounsi el Thaki. Najjem n3awnek fi ay war9a walla procédure idariya fi Tounes (Passeport, Carte Grise, CIN, B3, Contrat de bail, Auto-Entrepreneur...). Chnowa 7achtek tawa?"
-- When the user writes in Arabic script (e.g. 'أهلا', 'عسلامة', 'شنوة', 'شكونك'):
+- If user writes in Arabic script:
   → Respond 100% in pure Arabic script Derja!
-  → Example greeting: "عسلامة ومرحباً بك! أنا إدارة.تونس AI — المساعد الإداري التونسي الذكي. نجم نعاونك في أي وثيقة أو إجراء إداري بتونس (جواز سفر، بطاقة رمادية، بطاقة تعريف، بطاقة ب3، عقد كراء، مبادر ذاتي...). شنوة تحب تسأل؟"
-- When the user writes in French:
-  → Respond 100% in professional French.
-- When the user writes in English:
-  → Respond 100% in clear English.
 
-CORE TUNISIAN CIVIC KNOWLEDGE:
-- Passports: 80 DT fiscal stamp (25 DT for students/pupils), 4 photos fond blanc, CIN copy + original, expired passport. Handled at Police/Garde Nationale (7-15 days).
-- National ID (CIN): 3 DT fiscal stamp (10 DT lost/renewal), birth certificate (Madhmoun wilada), 3 photos fond blanc.
-- Criminal Record B3 (Bulletin N°3): 7.500 DT stamp. Available online at b3.interieur.gov.tn or police station.
-- Car Registration Transfer (Mutation Carte Grise): Legalized sales contract at Baladiya (5 DT per signature), tax registration at Recette des Finances (~30-50 DT), technical inspection at ATTT (Visite technique), road tax (Vignette) paid. Total ~145 DT.
-- Auto-Entrepreneur (المبادر الذاتي): 1% flat revenue tax for services/freelance (0.5% for commerce/industry), 0% VAT, legal foreign currency repatriation via BCT. Free national platform registration.
-- Residential Lease (Contrat de bail): Governed by COC (Code des Obligations et des Contrats). Must be legalized at Baladiya (5 DT fiscal stamp per copy) and registered at Recette des Finances (30 DT).
-- Customs FCR (امتياز ن.ت.د): Duty-free car import and household effects for Tunisians living abroad.
-- Civil Status (Madhmoun): 1 DT at Baladiya or online via madhmoun.tn.
-
-STRUCTURE OF ANSWERS:
-- Direct overview answering the user's question clearly.
-- Documents checklist (bullet points).
-- Total estimated cost in DT with breakdown.
-- Competent authority (Baladiya, Recette des Finances, ATTT, Police, etc.).
-- Estimated delay.
-- Practical pro-tip (Nsi7a).
-
-Never invent non-existent laws or fees. Be clean, structured, and helpful.`;
+CORE TUNISIAN CIVIC KNOWLEDGE (OFFICIAL JORT):
+- **Passports**: 80 DT fiscal stamp (25 DT for students/pupils), 4 photos fond blanc, CIN copy + original, expired passport. Handled at Police/Garde Nationale (7-15 days).
+- **National ID (CIN)**: 3 DT fiscal stamp (10 DT lost/renewal), birth certificate (Madhmoun wilada < 3 months), 3 photos fond blanc. Handled at Police/Garde Nationale (10-15 days).
+- **Criminal Record B3 (Bulletin N°3)**: 7.500 DT stamp. Available online at b3.interieur.gov.tn or police station.
+- **Car Registration Transfer (Mutation Carte Grise)**: Legalized sales contract at Baladiya (5 DT per signature), tax registration at Recette des Finances (~30-50 DT), technical inspection at ATTT (Visite technique), road tax (Vignette) paid. Total ~145 DT at ATTT.
+- **Auto-Entrepreneur (المبادر الذاتي)**: 1% flat revenue tax for services/freelance (0.5% for commerce/industry), 0% VAT, legal foreign currency repatriation via BCT. Free national platform registration.
+- **Residential Lease (Contrat de bail)**: Governed by COC (Code des Obligations et des Contrats). Must be legalized at Baladiya (5 DT fiscal stamp per copy) and registered at Recette des Finances (30 DT).
+- **Customs FCR (امتياز ن.ت.د)**: Duty-free car import and household effects for Tunisians living abroad.
+- **Civil Status (Madhmoun)**: 1 DT at Baladiya or online via madhmoun.tn.`;
 
 export async function POST(req: NextRequest) {
   try {
@@ -102,8 +118,9 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: 'Prompt string is required' }, { status: 400 });
     }
 
+    const scriptDirective = detectScriptAndLanguage(prompt, locale);
     const groundingContext = buildGroundingContext(prompt, locale);
-    const completeSystemPrompt = IDAARA_MASTER_SYSTEM_PROMPT + groundingContext;
+    const completeSystemPrompt = `${IDAARA_MASTER_SYSTEM_PROMPT}\n\n${scriptDirective}\n\n${groundingContext}`;
 
     const apiKey = getGroqKey();
 
@@ -116,7 +133,7 @@ export async function POST(req: NextRequest) {
       { role: 'user', content: prompt },
     ];
 
-    // ─── PRIMARY ENGINE: Groq 120B (High-Intelligence Specialized Model) ───
+    // ─── CALL IDAARA NATIVE AI (Groq 120B / Qwen Engine) ───
     if (apiKey) {
       try {
         const groqRes = await fetch('https://api.groq.com/openai/v1/chat/completions', {
@@ -128,7 +145,7 @@ export async function POST(req: NextRequest) {
           body: JSON.stringify({
             model: 'openai/gpt-oss-120b',
             messages: chatMessages,
-            temperature: 0.4,
+            temperature: 0.3,
             max_tokens: 1200,
           }),
         });
@@ -157,7 +174,7 @@ export async function POST(req: NextRequest) {
             body: JSON.stringify({
               model: 'qwen/qwen3.6-27b',
               messages: chatMessages,
-              temperature: 0.4,
+              temperature: 0.3,
               max_tokens: 1024,
             }),
           });

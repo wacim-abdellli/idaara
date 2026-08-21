@@ -23,68 +23,142 @@ interface ChatMessageProps {
   onSelectPrompt?: (prompt: string) => void;
 }
 
-/** Rich formatting for markdown blocks (bold, bullet points, headers, inline code) */
+/** Full Markdown & Table Parser for Chat Messages */
 function renderFormattedContent(text: string): React.ReactNode {
-  const lines = text.split('\n');
+  const rawLines = text.split('\n');
+  const blocks: React.ReactNode[] = [];
+  let i = 0;
 
-  return (
-    <div className="space-y-2 text-[15px] sm:text-base leading-relaxed text-zinc-100 font-normal">
-      {lines.map((line, idx) => {
-        const trimmed = line.trim();
+  while (i < rawLines.length) {
+    const line = rawLines[i].trim();
 
-        // Empty line spacer
-        if (!trimmed) {
-          return <div key={idx} className="h-1.5" />;
-        }
+    // 1. Skip empty lines with a clean spacer
+    if (!line) {
+      blocks.push(<div key={`spacer-${i}`} className="h-2" />);
+      i++;
+      continue;
+    }
 
-        // Section Headers (### or ## or #)
-        if (trimmed.startsWith('#')) {
-          const headerText = trimmed.replace(/^#+\s*/, '');
-          return (
-            <h4 key={idx} className="text-base sm:text-lg font-bold text-white tracking-tight pt-2.5 pb-0.5 flex items-center gap-2">
-              <span className="w-1 h-3.5 rounded-full bg-emerald-400 inline-block shrink-0" />
-              <span>{renderInlineStyles(headerText)}</span>
-            </h4>
-          );
-        }
+    // 2. Horizontal divider (--- or ***)
+    if (line === '---' || line === '***' || line === '___') {
+      blocks.push(<hr key={`hr-${i}`} className="border-t border-white/10 my-3" />);
+      i++;
+      continue;
+    }
 
-        // Numbered List (1. 2. 3.)
-        const numberedMatch = trimmed.match(/^(\d+)\.\s+(.+)$/);
-        if (numberedMatch) {
-          return (
-            <div key={idx} className="flex items-start gap-2.5 pl-1 my-1">
-              <span className="flex items-center justify-center w-5 h-5 rounded-full bg-zinc-800 text-emerald-400 text-xs font-mono font-bold shrink-0 mt-0.5">
-                {numberedMatch[1]}
-              </span>
-              <span className="text-zinc-200 flex-1">
-                {renderInlineStyles(numberedMatch[2])}
-              </span>
-            </div>
-          );
-        }
+    // 3. Markdown Table Detection (| Header 1 | Header 2 |)
+    if (line.startsWith('|') && line.endsWith('|')) {
+      const tableLines: string[] = [];
+      while (i < rawLines.length && rawLines[i].trim().startsWith('|') && rawLines[i].trim().endsWith('|')) {
+        tableLines.push(rawLines[i].trim());
+        i++;
+      }
 
-        // Bullet Point (- or * or •)
-        if (trimmed.startsWith('- ') || trimmed.startsWith('* ') || trimmed.startsWith('• ')) {
-          const bulletText = trimmed.replace(/^[-*•]\s+/, '');
-          return (
-            <div key={idx} className="flex items-start gap-2.5 pl-2 my-1">
-              <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 shrink-0 mt-2.5" />
-              <span className="text-zinc-200 flex-1">
-                {renderInlineStyles(bulletText)}
-              </span>
-            </div>
-          );
-        }
-
-        // Normal paragraph
-        return (
-          <p key={idx} className="leading-relaxed">
-            {renderInlineStyles(line)}
-          </p>
+      if (tableLines.length >= 2) {
+        const headerRow = tableLines[0].split('|').filter((_, idx, arr) => idx > 0 && idx < arr.length - 1).map((c) => c.trim());
+        // line 1 is usually separator (|---|---|)
+        const bodyRows = tableLines.slice(2).map((row) =>
+          row.split('|').filter((_, idx, arr) => idx > 0 && idx < arr.length - 1).map((c) => c.trim())
         );
-      })}
-    </div>
-  );
+
+        blocks.push(
+          <div key={`table-${i}`} className="my-3 overflow-x-auto rounded-xl border border-white/10 bg-[#161618] shadow-md">
+            <table className="w-full text-left text-xs sm:text-sm">
+              <thead className="bg-white/5 border-b border-white/10 font-bold text-white">
+                <tr>
+                  {headerRow.map((h, hIdx) => (
+                    <th key={hIdx} className="px-3.5 py-2.5 font-semibold">
+                      {renderInlineStyles(h)}
+                    </th>
+                  ))}
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-white/5 text-zinc-300">
+                {bodyRows.map((row, rIdx) => (
+                  <tr key={rIdx} className="hover:bg-white/[0.02] transition-colors">
+                    {row.map((cell, cIdx) => (
+                      <td key={cIdx} className="px-3.5 py-2">
+                        {renderInlineStyles(cell)}
+                      </td>
+                    ))}
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        );
+        continue;
+      }
+    }
+
+    // 4. Section Headers (### or ## or #)
+    if (line.startsWith('#')) {
+      const headerText = line.replace(/^#+\s*/, '');
+      blocks.push(
+        <h4 key={`h-${i}`} className="text-base sm:text-lg font-bold text-white tracking-tight pt-2 pb-0.5 flex items-center gap-2">
+          <span className="w-1 h-3.5 rounded-full bg-emerald-400 inline-block shrink-0" />
+          <span>{renderInlineStyles(headerText)}</span>
+        </h4>
+      );
+      i++;
+      continue;
+    }
+
+    // 5. Bold Title Lines (e.g. **Awra9 el Matlouba:**)
+    const boldHeaderMatch = line.match(/^\*\*([^*]+)\*\*:?$/);
+    if (boldHeaderMatch) {
+      blocks.push(
+        <h5 key={`bh-${i}`} className="text-sm sm:text-base font-bold text-emerald-400 tracking-tight pt-2 pb-0.5 flex items-center gap-2">
+          <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 inline-block shrink-0" />
+          <span>{boldHeaderMatch[1]}</span>
+        </h5>
+      );
+      i++;
+      continue;
+    }
+
+    // 6. Numbered List (1. 2. 3.)
+    const numberedMatch = line.match(/^(\d+)\.\s+(.+)$/);
+    if (numberedMatch) {
+      blocks.push(
+        <div key={`num-${i}`} className="flex items-start gap-2.5 pl-1 my-1">
+          <span className="flex items-center justify-center w-5 h-5 rounded-full bg-white/10 text-emerald-400 text-xs font-mono font-bold shrink-0 mt-0.5">
+            {numberedMatch[1]}
+          </span>
+          <span className="text-zinc-200 flex-1 leading-relaxed">
+            {renderInlineStyles(numberedMatch[2])}
+          </span>
+        </div>
+      );
+      i++;
+      continue;
+    }
+
+    // 7. Bullet Points (- or * or •)
+    if (line.startsWith('- ') || line.startsWith('* ') || line.startsWith('• ')) {
+      const bulletText = line.replace(/^[-*•]\s+/, '');
+      blocks.push(
+        <div key={`bullet-${i}`} className="flex items-start gap-2.5 pl-2 my-1">
+          <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 shrink-0 mt-2" />
+          <span className="text-zinc-200 flex-1 leading-relaxed">
+            {renderInlineStyles(bulletText)}
+          </span>
+        </div>
+      );
+      i++;
+      continue;
+    }
+
+    // 8. Normal paragraph
+    blocks.push(
+      <p key={`p-${i}`} className="leading-relaxed text-zinc-100">
+        {renderInlineStyles(line)}
+      </p>
+    );
+    i++;
+  }
+
+  return <div className="space-y-1.5 text-[15px] sm:text-base leading-relaxed text-zinc-100 font-normal">{blocks}</div>;
 }
 
 /** Inline bold and code styling */
@@ -100,7 +174,7 @@ function renderInlineStyles(text: string): React.ReactNode {
     }
     if (part.startsWith('`') && part.endsWith('`')) {
       return (
-        <code key={i} className="px-1.5 py-0.5 rounded bg-zinc-800 text-emerald-300 font-mono text-xs">
+        <code key={i} className="px-1.5 py-0.5 rounded bg-white/10 text-emerald-300 font-mono text-xs">
           {part.slice(1, -1)}
         </code>
       );
@@ -143,7 +217,7 @@ export const ChatMessage: React.FC<ChatMessageProps> = ({ message }) => {
     window.speechSynthesis.speak(utterance);
   };
 
-  // ── USER MESSAGE BUBBLE (Exact ChatGPT style: right-aligned clean pill) ──
+  // ── USER MESSAGE BUBBLE (Clean right-aligned ChatGPT pill) ──
   if (!isAssistant) {
     return (
       <div className="w-full py-2 flex justify-end">
@@ -154,18 +228,18 @@ export const ChatMessage: React.FC<ChatMessageProps> = ({ message }) => {
     );
   }
 
-  // ── ASSISTANT MESSAGE (Exact ChatGPT style: direct clean canvas layout) ──
+  // ── ASSISTANT MESSAGE (Clean spacious canvas layout) ──
   return (
     <div className="w-full py-3 space-y-3">
-      {/* Content directly on canvas */}
+      {/* Content directly on canvas with rich markdown & table rendering */}
       <div className="prose-chat text-zinc-100">
         {renderFormattedContent(message.content)}
       </div>
 
       {/* Timbre Breakdown Docket (if any) */}
       {message.timbreBreakdown && (
-        <div className="mt-3 p-3.5 rounded-2xl bg-zinc-900/80 border border-amber-500/25 space-y-2 max-w-lg">
-          <div className="flex items-center justify-between font-bold text-amber-400 pb-1.5 border-b border-zinc-800 text-xs">
+        <div className="mt-3 p-3.5 rounded-2xl bg-[#1a1a1d] border border-amber-500/25 space-y-2 max-w-lg shadow-lg">
+          <div className="flex items-center justify-between font-bold text-amber-400 pb-1.5 border-b border-white/10 text-xs">
             <div className="flex items-center gap-1.5">
               <Stamp className="w-3.5 h-3.5 text-amber-400" />
               <span>{locale === 'ar' ? 'المعاليم الجبائية والتنابر' : 'Statutory Stamp Fees'}</span>
@@ -197,7 +271,7 @@ export const ChatMessage: React.FC<ChatMessageProps> = ({ message }) => {
               <Link
                 key={idx}
                 href={action.payload}
-                className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-zinc-900 hover:bg-zinc-800 border border-zinc-800 hover:border-zinc-700 text-zinc-300 hover:text-emerald-300 text-xs font-semibold transition-all shadow-sm group"
+                className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-[#212121] hover:bg-white/10 border border-white/10 text-zinc-300 hover:text-emerald-300 text-xs font-semibold transition-all shadow-sm group"
               >
                 {action.type === 'pdf_form' && <FileText className="w-3.5 h-3.5 text-emerald-400" />}
                 {action.type === 'calculator_link' && <Calculator className="w-3.5 h-3.5 text-amber-400" />}
@@ -215,7 +289,7 @@ export const ChatMessage: React.FC<ChatMessageProps> = ({ message }) => {
       <div className="flex items-center gap-2 pt-1 text-zinc-500">
         <button
           onClick={copyToClipboard}
-          className="p-1.5 rounded-lg hover:bg-zinc-800/80 text-zinc-400 hover:text-zinc-200 transition-colors cursor-pointer"
+          className="p-1.5 rounded-lg hover:bg-white/10 text-zinc-400 hover:text-zinc-200 transition-colors cursor-pointer border-0 outline-none"
           title="Copy"
         >
           {copied ? <Check className="w-4 h-4 text-emerald-400" /> : <Copy className="w-4 h-4" />}
@@ -223,10 +297,10 @@ export const ChatMessage: React.FC<ChatMessageProps> = ({ message }) => {
 
         <button
           onClick={speakMessage}
-          className={`p-1.5 rounded-lg transition-colors cursor-pointer ${
+          className={`p-1.5 rounded-lg transition-colors cursor-pointer border-0 outline-none ${
             isPlayingAudio
               ? 'text-red-400 bg-red-500/10'
-              : 'text-zinc-400 hover:text-zinc-200 hover:bg-zinc-800/80'
+              : 'text-zinc-400 hover:text-zinc-200 hover:bg-white/10'
           }`}
           title="Read out loud"
         >
