@@ -11,7 +11,7 @@ export const Footer: React.FC = () => {
   const { t, locale } = useLocale();
   const pathname = usePathname();
 
-  if (pathname === '/copilot') {
+  if (!pathname || pathname === '/copilot' || pathname.startsWith('/copilot')) {
     return null;
   }
 

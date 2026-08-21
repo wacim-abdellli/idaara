@@ -18,7 +18,7 @@ export const MobileBottomNav: React.FC = () => {
     { href: '/locator', label: locale === 'ar' ? 'بلديات' : locale === 'en' ? 'Offices' : 'Guichets', icon: MapPin },
   ];
 
-  if (pathname === '/copilot') {
+  if (!pathname || pathname === '/copilot' || pathname.startsWith('/copilot')) {
     return null;
   }
 

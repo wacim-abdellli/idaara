@@ -231,16 +231,16 @@ export default function CopilotPage() {
       : 'Ask anything');
 
   return (
-    <div className="h-[calc(100vh-3.5rem)] flex flex-col bg-[#09090b] text-white overflow-hidden relative">
+    <div className="fixed inset-x-0 top-14 bottom-0 z-30 flex flex-col bg-[#09090b] text-white overflow-hidden">
 
       {/* ─── Top Bar (Exact ChatGPT style) ─── */}
-      <header className="shrink-0 h-13 px-4 sm:px-6 flex items-center justify-between border-b border-white/5 bg-[#09090b]/80 backdrop-blur-xl z-20">
+      <header className="shrink-0 h-13 px-4 sm:px-6 flex items-center justify-between border-b border-white/5 bg-[#09090b]/90 backdrop-blur-xl z-20">
         
         {/* Model Selector Dropdown on Left */}
         <div className="relative">
           <button
             onClick={() => setShowModelDropdown((p) => !p)}
-            className="flex items-center gap-2 px-3 py-1.5 rounded-xl hover:bg-white/10 text-zinc-200 font-semibold text-sm transition-colors cursor-pointer"
+            className="flex items-center gap-2 px-3 py-1.5 rounded-xl hover:bg-white/10 text-zinc-200 font-semibold text-sm transition-colors cursor-pointer border-0 outline-none"
           >
             <span>Idaara Copilot</span>
             <span className="text-[11px] font-mono text-zinc-400 font-normal">({providerBadge})</span>
@@ -264,7 +264,7 @@ export default function CopilotPage() {
                     setProviderBadge(m.name);
                     setShowModelDropdown(false);
                   }}
-                  className={`w-full flex items-center justify-between px-3 py-2 rounded-xl text-left text-xs transition-colors cursor-pointer ${
+                  className={`w-full flex items-center justify-between px-3 py-2 rounded-xl text-left text-xs transition-colors cursor-pointer border-0 outline-none ${
                     activeProvider === m.id ? 'bg-white/10 text-white font-semibold' : 'text-zinc-300 hover:bg-white/5'
                   }`}
                 >
@@ -282,7 +282,7 @@ export default function CopilotPage() {
                     setShowModelDropdown(false);
                     setShowSettingsModal(true);
                   }}
-                  className="w-full flex items-center gap-2 px-3 py-2 rounded-xl text-xs text-zinc-400 hover:text-white hover:bg-white/5 transition-colors cursor-pointer"
+                  className="w-full flex items-center gap-2 px-3 py-2 rounded-xl text-xs text-zinc-400 hover:text-white hover:bg-white/5 transition-colors cursor-pointer border-0 outline-none"
                 >
                   <Settings className="w-3.5 h-3.5" />
                   <span>Configure API Key...</span>
@@ -297,7 +297,7 @@ export default function CopilotPage() {
           {messages.length > 0 && (
             <button
               onClick={() => setMessages([])}
-              className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl hover:bg-white/10 text-zinc-300 hover:text-white text-xs transition-colors cursor-pointer"
+              className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl hover:bg-white/10 text-zinc-300 hover:text-white text-xs transition-colors cursor-pointer border-0 outline-none"
               title="New Chat"
             >
               <RotateCcw className="w-3.5 h-3.5" />
@@ -307,7 +307,7 @@ export default function CopilotPage() {
 
           <button
             onClick={() => setShowSettingsModal(true)}
-            className="p-2 rounded-xl hover:bg-white/10 text-zinc-400 hover:text-white transition-colors cursor-pointer"
+            className="p-2 rounded-xl hover:bg-white/10 text-zinc-400 hover:text-white transition-colors cursor-pointer border-0 outline-none"
             title="Settings"
           >
             <Settings className="w-4 h-4" />
@@ -317,7 +317,7 @@ export default function CopilotPage() {
 
       {/* ─── Empty State (Exact ChatGPT style centered headline & bar) ─── */}
       {messages.length === 0 && !isProcessing && (
-        <div className="flex-1 flex flex-col items-center justify-center px-4 sm:px-6 max-w-2xl mx-auto w-full -mt-12">
+        <div className="flex-1 flex flex-col items-center justify-center px-4 sm:px-6 max-w-2xl mx-auto w-full -mt-8">
           
           {/* Centered Headline */}
           <h1 className="text-2xl sm:text-4xl font-semibold text-white tracking-tight mb-8 text-center">
@@ -350,7 +350,7 @@ export default function CopilotPage() {
                         <button
                           key={idx}
                           onClick={() => handleSendMessage(item.q)}
-                          className="w-full flex items-center gap-2.5 px-3 py-2 rounded-xl text-left hover:bg-white/10 text-xs text-zinc-200 transition-colors cursor-pointer"
+                          className="w-full flex items-center gap-2.5 px-3 py-2 rounded-xl text-left hover:bg-white/10 text-xs text-zinc-200 transition-colors cursor-pointer border-0 outline-none"
                         >
                           <Icon className="w-3.5 h-3.5 text-emerald-400 shrink-0" />
                           <span className="truncate">{item.label}</span>
@@ -466,7 +466,7 @@ export default function CopilotPage() {
                           <button
                             key={idx}
                             onClick={() => handleSendMessage(item.q)}
-                            className="w-full flex items-center gap-2.5 px-3 py-2 rounded-xl text-left hover:bg-white/10 text-xs text-zinc-200 transition-colors cursor-pointer"
+                            className="w-full flex items-center gap-2.5 px-3 py-2 rounded-xl text-left hover:bg-white/10 text-xs text-zinc-200 transition-colors cursor-pointer border-0 outline-none"
                           >
                             <Icon className="w-3.5 h-3.5 text-emerald-400 shrink-0" />
                             <span className="truncate">{item.label}</span>
@@ -558,7 +558,7 @@ export default function CopilotPage() {
                   <button
                     key={id}
                     onClick={() => setActiveProvider(id)}
-                    className={`p-3 rounded-xl border text-left text-xs transition-all cursor-pointer ${
+                    className={`p-3 rounded-xl border text-left text-xs transition-all cursor-pointer border-0 outline-none ${
                       activeProvider === id
                         ? 'bg-white/10 border-white/30 text-white font-semibold'
                         : 'bg-black/20 border-white/5 text-zinc-400 hover:text-white hover:bg-white/5'
