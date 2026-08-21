@@ -5,7 +5,6 @@ import { useLocale } from '../../context/LocaleContext';
 import { AudioRecorder } from '../../components/copilot/AudioRecorder';
 import { ChatMessage } from '../../components/copilot/ChatMessage';
 import { ChatMessage as ChatMessageType } from '../../types/chat';
-import { parseAndReason } from '../../lib/ai-engine';
 import { Send, RefreshCw, Mic, Sparkles, MessageSquare } from 'lucide-react';
 
 export default function CopilotPage() {
@@ -91,7 +90,7 @@ export default function CopilotPage() {
     }
   }, [messages, isProcessing]);
 
-  const handleSendMessage = (text: string) => {
+  const handleSendMessage = async (text: string) => {
     if (!text.trim()) return;
 
     const userMsg: ChatMessageType = {
@@ -105,8 +104,22 @@ export default function CopilotPage() {
     setInputVal('');
     setIsProcessing(true);
 
-    setTimeout(() => {
-      const response = parseAndReason(text, locale);
+    try {
+      // Build conversation history (exclude the welcome msg, keep last 10 turns)
+      const history = messages
+        .filter((m) => m.id !== 'welcome-msg' && !m.id.startsWith('welcome-'))
+        .slice(-10)
+        .map((m) => ({ role: m.sender === 'user' ? 'user' : 'assistant', content: m.content }));
+
+      const res = await fetch('/api/copilot', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ prompt: text, locale, history }),
+      });
+
+      const data = await res.json();
+      const response = data.result;
+
       const aiMsg: ChatMessageType = {
         id: `ai-${Date.now()}`,
         sender: 'assistant',
@@ -117,8 +130,23 @@ export default function CopilotPage() {
       };
 
       setMessages((prev) => [...prev, aiMsg]);
+    } catch {
+      const aiMsg: ChatMessageType = {
+        id: `ai-${Date.now()}`,
+        sender: 'assistant',
+        content: locale === 'ar'
+          ? 'حدث خطأ في الاتصال. يرجى المحاولة مرة أخرى.'
+          : locale === 'fr'
+          ? 'Erreur de connexion. Veuillez réessayer.'
+          : locale === 'en'
+          ? 'Connection error. Please try again.'
+          : 'Kayen mochkel fel connexion. 7awal marra okhra.',
+        timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+      };
+      setMessages((prev) => [...prev, aiMsg]);
+    } finally {
       setIsProcessing(false);
-    }, 700);
+    }
   };
 
   const handleResetChat = () => {
