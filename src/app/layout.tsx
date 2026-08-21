@@ -30,21 +30,8 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="fr" className="dark scroll-smooth">
-      <head>
-        <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
-        <link rel="preconnect" href="https://fonts.googleapis.com" />
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
-        {/* Orbitron: futuristic robotic display typeface */}
-        {/* Space Grotesk: techno-geometric modernist UI typeface */}
-        {/* Cairo: Arabic script */}
-        {/* JetBrains Mono: data, numbers, amounts */}
-        <link
-          href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600;700&family=Orbitron:wght@500;600;700;800;900&family=Space+Grotesk:wght@400;500;600;700&display=swap"
-          rel="stylesheet"
-        />
-      </head>
-      <body className="antialiased min-h-screen flex flex-col selection:bg-emerald-500/30 selection:text-emerald-200 pb-16 lg:pb-0">
+    <html lang="fr" className="dark scroll-smooth" suppressHydrationWarning>
+      <body className="antialiased min-h-screen flex flex-col selection:bg-emerald-500/30 selection:text-emerald-200 pb-16 lg:pb-0" suppressHydrationWarning>
         <LocaleProvider>
           <ChecklistProvider>
             <Navbar />
