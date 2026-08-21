@@ -5,7 +5,7 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useLocale } from '../../context/LocaleContext';
 import { LanguageSwitcher } from './LanguageSwitcher';
-import { Mic, FileSearch, FileText, Calculator, MapPin, Rocket, BookOpen, Menu, X, Zap, Search } from 'lucide-react';
+import { Mic, FileSearch, FileText, Calculator, MapPin, Rocket, BookOpen, Menu, X, Zap, Search, Landmark } from 'lucide-react';
 
 const NAV_LINKS = [
   { href: '/copilot',    tKey: 'copilotNav',    icon: Mic },
@@ -37,8 +37,8 @@ export const Navbar: React.FC = () => {
 
           {/* ── Brand logo — fixed width, never reflows ── */}
           <Link href="/" className="flex items-center space-x-2 group shrink-0 min-w-0" style={{ width: 110 }}>
-            <div className="w-8 h-8 rounded-xl bg-gradient-to-br from-emerald-400 to-emerald-700 flex items-center justify-center shadow-lg shadow-emerald-950 group-hover:scale-105 transition-transform shrink-0">
-              <span className="text-base leading-none">🏛️</span>
+            <div className="w-8 h-8 rounded-xl bg-gradient-to-br from-emerald-400 to-emerald-600 flex items-center justify-center shadow-lg shadow-emerald-950 group-hover:scale-105 transition-transform shrink-0">
+              <Landmark className="w-4 h-4 text-zinc-950 stroke-[2.5]" />
             </div>
             <div className="flex flex-col leading-none min-w-0">
               <div className="flex items-center space-x-1">

@@ -3,7 +3,7 @@
 import React, { useState } from 'react';
 import Link from 'next/link';
 import { ChatMessage as ChatMessageType } from '../../types/chat';
-import { Volume2, VolumeX, FileText, ExternalLink, Calculator, MapPin, CheckCircle2 } from 'lucide-react';
+import { Volume2, VolumeX, FileText, ExternalLink, Calculator, MapPin, CheckCircle2, Landmark, Stamp } from 'lucide-react';
 import { useLocale } from '../../context/LocaleContext';
 import { getLocalized } from '../../lib/locale-utils';
 
@@ -53,8 +53,8 @@ export const ChatMessage: React.FC<ChatMessageProps> = ({ message }) => {
 
         {/* Avatar */}
         {isAssistant && (
-          <div className="w-7 h-7 rounded-xl bg-gradient-to-br from-emerald-500 to-emerald-700 flex items-center justify-center shrink-0 mb-1 shadow-md shadow-emerald-500/20">
-            <span className="text-xs">🏛️</span>
+          <div className="w-7 h-7 rounded-xl bg-gradient-to-br from-emerald-400 to-emerald-600 flex items-center justify-center shrink-0 mb-1 shadow-md shadow-emerald-950">
+            <Landmark className="w-3.5 h-3.5 text-zinc-950 stroke-[2.5]" />
           </div>
         )}
 
@@ -63,7 +63,7 @@ export const ChatMessage: React.FC<ChatMessageProps> = ({ message }) => {
           <span className={`text-[10px] font-semibold mb-1 px-1 ${isAssistant ? 'text-zinc-500' : 'text-right text-zinc-500'}`}>
             {isAssistant
               ? `Idaara AI · ${message.timestamp}`
-              : `Mowaten 🇹🇳 · ${message.timestamp}`}
+              : `Mowaten · ${message.timestamp}`}
           </span>
 
           {/* Bubble */}
@@ -87,8 +87,8 @@ export const ChatMessage: React.FC<ChatMessageProps> = ({ message }) => {
             {message.timbreBreakdown && (
               <div className="mt-4 p-3 rounded-xl bg-zinc-950/80 border border-amber-500/25 text-xs">
                 <div className="flex items-center justify-between font-bold text-amber-400 mb-2">
-                  <span className="flex items-center space-x-1.5">
-                    <span>🏷️</span>
+                  <span className="flex items-center space-x-1.5 rtl:space-x-reverse">
+                    <Stamp className="w-3.5 h-3.5" />
                     <span>Majmou3 el Timbres :</span>
                   </span>
                   <span className="px-2 py-0.5 rounded-lg bg-amber-500/20 text-amber-300 font-mono tabular-nums">

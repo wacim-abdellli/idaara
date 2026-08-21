@@ -1,7 +1,7 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
-import { Mic, MicOff, Loader2 } from 'lucide-react';
+import React, { useState } from 'react';
+import { Mic, MicOff, Loader2, Radio } from 'lucide-react';
 import { VoiceVisualizer } from './VoiceVisualizer';
 import { useLocale } from '../../context/LocaleContext';
 
@@ -35,7 +35,6 @@ export const AudioRecorder: React.FC<AudioRecorderProps> = ({
     setIsRecording(true);
     setInterimText(t('voiceListening'));
 
-    // Check if SpeechRecognition is available in browser
     const SpeechRecognition =
       (window as unknown as { SpeechRecognition?: unknown; webkitSpeechRecognition?: unknown })
         .SpeechRecognition ||
@@ -62,7 +61,6 @@ export const AudioRecorder: React.FC<AudioRecorderProps> = ({
         };
 
         recognition.onerror = () => {
-          // Fallback simulation on error/permission deny
           simulateDerjaVoiceInput();
         };
 
@@ -78,7 +76,6 @@ export const AudioRecorder: React.FC<AudioRecorderProps> = ({
       }
     }
 
-    // Fallback simulated natural Derja voice experience
     simulateDerjaVoiceInput();
   };
 
@@ -101,58 +98,103 @@ export const AudioRecorder: React.FC<AudioRecorderProps> = ({
     }, 80);
   };
 
-  return (
-    <div className="flex flex-col items-center justify-center p-6 glass-panel rounded-2xl border border-zinc-800 relative overflow-hidden">
-      {/* Background glow when recording */}
-      {isRecording && (
-        <div className="absolute inset-0 bg-emerald-500/5 animate-pulse pointer-events-none" />
-      )}
+  const promptText =
+    isRecording
+      ? locale === 'ar'
+        ? 'جار الاستماع إلى صوتك بالدارجة...'
+        : locale === 'en'
+        ? 'Listening in Tunisian Derja...'
+        : 'Écoute active en Derja / Français...'
+      : isProcessing
+      ? locale === 'ar'
+        ? 'المساعد يحلل طلبك الإداري...'
+        : locale === 'en'
+        ? 'Idaara AI is analyzing your civic request...'
+        : "Idaara AI analyse votre demande..."
+      : locale === 'ar'
+      ? 'اضغط على الميكروفون وتكلم بالدارجة أو الفرنسية'
+      : locale === 'en'
+      ? 'Tap the microphone and speak naturally in Derja or English'
+      : 'Appuyez sur le micro et parlez en Derja ou Français';
 
-      {/* Waveform Visualizer */}
-      <div className="w-full mb-4">
-        <VoiceVisualizer isActive={isRecording || isProcessing} />
+  const actionHint =
+    isRecording
+      ? locale === 'ar' ? 'انقر لإيقاف التسجيل' : locale === 'en' ? 'Tap to stop recording' : "Cliquez pour arrêter l'enregistrement"
+      : locale === 'ar' ? 'تحدث مباشرة بالدارجة التونسية' : locale === 'en' ? 'Speak directly in Tunisian Derja' : 'Parlez directement en Derja tunisienne';
+
+  return (
+    <div className="glass-panel rounded-3xl p-6 sm:p-8 border border-zinc-800/80 relative overflow-hidden flex flex-col items-center justify-center text-center group">
+      {/* Ambient background aura */}
+      <div
+        className={`absolute inset-0 transition-opacity duration-700 pointer-events-none ${
+          isRecording
+            ? 'bg-gradient-to-b from-red-500/10 via-emerald-500/5 to-transparent opacity-100'
+            : isProcessing
+            ? 'bg-gradient-to-b from-emerald-500/10 via-zinc-900/50 to-transparent opacity-100'
+            : 'bg-gradient-to-b from-emerald-500/5 to-transparent opacity-40'
+        }`}
+      />
+
+      {/* Top Status Pill */}
+      <div className="inline-flex items-center space-x-1.5 rtl:space-x-reverse px-3 py-1 rounded-full bg-zinc-950/80 border border-zinc-800 text-[11px] font-mono text-zinc-400 mb-6 z-10">
+        <Radio className={`w-3 h-3 ${isRecording ? 'text-red-400 animate-pulse' : 'text-emerald-400'}`} />
+        <span>{isRecording ? 'LIVE AUDIO' : 'SPEECH-TO-TEXT'}</span>
       </div>
 
-      {/* Interim Speech Transcript */}
-      <div className="min-h-[28px] mb-4 text-center px-4">
-        {isRecording ? (
-          <p className="text-emerald-400 text-sm font-medium animate-pulse">
+      {/* Dynamic Waveform Visualizer */}
+      <div className="w-full max-w-md mb-6 z-10">
+        <VoiceVisualizer
+          isActive={isRecording || isProcessing}
+          color={isRecording ? '#EF4444' : '#00C07F'}
+        />
+      </div>
+
+      {/* Speech Transcript or Prompt */}
+      <div className="min-h-[36px] max-w-md mb-6 flex items-center justify-center px-4 z-10">
+        {isRecording && interimText ? (
+          <p className="text-emerald-300 font-semibold text-sm animate-pulse tracking-wide">
             "{interimText}"
           </p>
         ) : isProcessing ? (
-          <div className="flex items-center space-x-2 text-zinc-400 text-sm">
-            <Loader2 className="w-4 h-4 animate-spin text-emerald-400" />
-            <span>Idaara AI 9a3da t'khammem...</span>
+          <div className="flex items-center space-x-2 rtl:space-x-reverse text-emerald-400 text-xs font-semibold">
+            <Loader2 className="w-4 h-4 animate-spin shrink-0" />
+            <span>{promptText}</span>
           </div>
         ) : (
-          <p className="text-zinc-500 text-xs">
-            {t('voiceActivePrompt')}
+          <p className="text-zinc-400 text-xs leading-relaxed font-medium">
+            {promptText}
           </p>
         )}
       </div>
 
-      {/* Main Microphone Button */}
-      <button
-        onClick={toggleRecording}
-        disabled={isProcessing}
-        aria-label="Toggle voice recording"
-        className={`relative flex items-center justify-center w-16 h-16 rounded-full transition-all duration-300 shadow-xl ${
-          isRecording
-            ? 'bg-red-500 hover:bg-red-600 text-white animate-pulse-ring'
-            : 'bg-emerald-500 hover:bg-emerald-400 text-zinc-950 hover:scale-105 shadow-emerald-500/20'
-        } ${isProcessing ? 'opacity-50 cursor-not-allowed' : ''}`}
-      >
-        {isRecording ? (
-          <MicOff className="w-7 h-7" />
-        ) : isProcessing ? (
-          <Loader2 className="w-7 h-7 animate-spin" />
-        ) : (
-          <Mic className="w-7 h-7" />
+      {/* Tactical Center Microphone Trigger */}
+      <div className="relative z-10">
+        {isRecording && (
+          <div className="absolute inset-0 rounded-full bg-red-500/20 animate-ping pointer-events-none" />
         )}
-      </button>
 
-      <span className="text-[11px] text-zinc-400 font-medium mt-3">
-        {isRecording ? 'An9or bech t9oss el tesjil' : 'An9or bech tetkallem bel Derja 🇹🇳'}
+        <button
+          onClick={toggleRecording}
+          disabled={isProcessing}
+          aria-label="Toggle voice recording"
+          className={`relative flex items-center justify-center w-18 h-18 sm:w-20 sm:h-20 rounded-full transition-all duration-300 shadow-2xl cursor-pointer ${
+            isRecording
+              ? 'bg-red-500 hover:bg-red-600 text-white shadow-red-500/40 scale-105 ring-4 ring-red-500/30'
+              : 'bg-emerald-500 hover:bg-emerald-400 text-zinc-950 hover:scale-105 shadow-emerald-500/30 ring-4 ring-emerald-500/20'
+          } ${isProcessing ? 'opacity-40 cursor-not-allowed' : ''}`}
+        >
+          {isRecording ? (
+            <MicOff className="w-8 h-8" />
+          ) : isProcessing ? (
+            <Loader2 className="w-8 h-8 animate-spin" />
+          ) : (
+            <Mic className="w-8 h-8" />
+          )}
+        </button>
+      </div>
+
+      <span className="text-[11px] text-zinc-500 font-medium mt-4 z-10">
+        {actionHint}
       </span>
     </div>
   );
