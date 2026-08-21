@@ -185,8 +185,8 @@ export default function ProceduresPage() {
 
         {/* Left: Titles & Context */}
         <div className="lg:col-span-7 space-y-3 relative z-10">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-zinc-900 border border-zinc-800 text-[11px] font-semibold text-zinc-400">
-            <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 shrink-0 animate-pulse" />
+          <div className="flex items-center gap-2 text-xs font-mono text-zinc-500 uppercase tracking-widest">
+            <span className="text-emerald-400 font-bold">/</span>
             <span>JORT & Code Administratif Tunisien</span>
           </div>
 

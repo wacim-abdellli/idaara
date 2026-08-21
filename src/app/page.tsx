@@ -259,15 +259,12 @@ export default function HomePage() {
           {/* Left Column: Bold Typographic Narrative & Voice Launcher */}
           <div className="lg:col-span-6 space-y-6 text-left rtl:text-right relative z-10">
             
-            {/* Live National Registry Badge */}
-            <div className="inline-flex items-center gap-2.5 px-3.5 py-1.5 rounded-full bg-zinc-900/90 border border-emerald-500/30 text-xs font-mono font-bold text-emerald-400 shadow-xl shadow-emerald-950/60">
-              <span className="relative flex h-2 w-2">
-                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75" />
-                <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500" />
-              </span>
+            {/* Minimalist Civic Header Index */}
+            <div className="flex items-center gap-2.5 text-xs font-mono text-zinc-500 uppercase tracking-widest">
+              <span className="text-emerald-400 font-bold">/</span>
               <span>{ui.nationalPlatform}</span>
-              <span className="text-zinc-600">·</span>
-              <span className="text-zinc-400 font-normal">{ui.jort2026}</span>
+              <span className="text-zinc-700">|</span>
+              <span className="text-zinc-400">{ui.jort2026}</span>
             </div>
 
             {/* Monumental Robotic Headline */}
