@@ -119,7 +119,7 @@ export async function POST(req: NextRequest) {
       { role: 'user', content: prompt },
     ];
 
-    // ─── PRIMARY ENGINE: Groq Llama 3.3 70B (High-Intelligence Specialized Model) ───
+    // ─── PRIMARY ENGINE: Groq 120B / Qwen (High-Intelligence Specialized Model) ───
     if (activeGroqKey) {
       try {
         const groqRes = await fetch('https://api.groq.com/openai/v1/chat/completions', {
@@ -129,7 +129,7 @@ export async function POST(req: NextRequest) {
             Authorization: `Bearer ${activeGroqKey}`,
           },
           body: JSON.stringify({
-            model: 'llama-3.3-70b-versatile',
+            model: 'openai/gpt-oss-120b',
             messages: chatMessages,
             temperature: 0.5,
             max_tokens: 1200,
@@ -144,14 +144,40 @@ export async function POST(req: NextRequest) {
               success: true,
               result: {
                 content: reply,
-                source: 'idaara-llama-70b',
-                providerName: 'Idaara AI (Llama 3.3 70B)',
+                source: 'idaara-gpt-120b',
+                providerName: 'Idaara AI (GPT-120B)',
               },
             });
           }
         } else {
-          const errText = await groqRes.text();
-          console.warn('Groq API returned error status:', groqRes.status, errText);
+          // Fallback to Qwen on Groq
+          const qwenRes = await fetch('https://api.groq.com/openai/v1/chat/completions', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              Authorization: `Bearer ${activeGroqKey}`,
+            },
+            body: JSON.stringify({
+              model: 'qwen/qwen3.6-27b',
+              messages: chatMessages,
+              temperature: 0.5,
+              max_tokens: 1024,
+            }),
+          });
+          if (qwenRes.ok) {
+            const data = await qwenRes.json();
+            const reply = data.choices?.[0]?.message?.content;
+            if (reply) {
+              return NextResponse.json({
+                success: true,
+                result: {
+                  content: reply,
+                  source: 'idaara-qwen-27b',
+                  providerName: 'Idaara AI (Qwen 27B)',
+                },
+              });
+            }
+          }
         }
       } catch (groqErr) {
         console.warn('Groq API network error:', groqErr);
