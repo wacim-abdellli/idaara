@@ -756,10 +756,10 @@ export default function HomePage() {
   };
 
   return (
-    <div className="space-y-24 sm:space-y-36 pb-28 relative overflow-hidden">
+    <div className="space-y-10 sm:space-y-14 pb-10 relative overflow-hidden">
 
       {/* ── 1. MONUMENTAL HERO STAGE ── */}
-      <section className="relative pt-6 sm:pt-14 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
+      <section className="relative pt-3 sm:pt-6 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
         
         {/* Cinematic Organic Floating Ambient Orbs */}
         <AmbientOrbs variant="emerald" />
