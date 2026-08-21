@@ -187,6 +187,80 @@ export function parseAndReason(prompt: string, locale: SupportedLanguage | strin
     };
   }
 
+  // Check for Concours and Public Recruitment intents
+  if (
+    query.includes('concour') ||
+    query.includes('intidhab') ||
+    query.includes('recrutement') ||
+    query.includes('مناظرة') ||
+    query.includes('انتداب') ||
+    query.includes('وظيفة') ||
+    query.includes('steg') ||
+    query.includes('sonede') ||
+    query.includes('capes') ||
+    query.includes('mouhandsin')
+  ) {
+    return {
+      content:
+        lang === 'ar'
+          ? "المناظرات الوطنية المفتوحة حالياً بالوظيفة العمومية والمنشآت الوطنية (2026):\n1. **الشركة التونسية للكهرباء والغاز (STEG)**: انتداب 180 مهندساً وإطاراً فنياً (آخر أجل: 25 مارس 2026)\n2. **وزارة التربية (الكاباس CAPES)**: انتداب 1250 أستاذ تعليم ثانوي (آخر أجل: 10 أفريل 2026)\n3. **الشركة الوطنية لاستغلال وتوزيع المياه (SONEDE)**: انتداب 95 تقنياً سامياً (آخر أجل: 30 مارس 2026)\n4. **وزارة المالية (الجباية والقباضات)**: انتداب 110 متفقدين ومراقبي أداءات (آخر أجل: 18 أفريل 2026)\n\nالتسجيل الأولي يتم وجوباً عبر البوابة الوطنية للانتداب بالقطاع العمومي **www.concours.gov.tn** مع إعداد ملف يحتوي على استمارة الترشح، نسخة مطابقة للأصل من بطاقة التعريف والشهادة العلمية، وبطاقة عدد 3 حديثة."
+          : lang === 'en'
+          ? "Currently active Tunisian national public competitions (2026):\n1. **STEG**: Recruitment of 180 Power, Systems & IT Engineers (Deadline: March 25, 2026)\n2. **Ministry of Education (CAPES)**: 1,250 Secondary School Teachers (Deadline: April 10, 2026)\n3. **SONEDE**: 95 Hydraulic & Mechanical Senior Techs (Deadline: March 30, 2026)\n4. **Ministry of Finance (DGI)**: 110 Tax Inspectors & Audit Officers (Deadline: April 18, 2026)\n\nPreliminary registration is mandatory on **www.concours.gov.tn**. Required dossier: Printed application receipt, certified copy of National ID (CIN), certified degree, and recent Bulletin N°3 (< 3 months)."
+          : lang === 'fr'
+          ? "Concours nationaux de la fonction publique actuellement ouverts en Tunisie (2026) :\n1. **STEG** : Recrutement de 180 Ingénieurs & Cadres techniques (Délai : 25 Mars 2026)\n2. **Ministère de l'Éducation (CAPES)** : 1 250 Professeurs d'enseignement secondaire (Délai : 10 Avril 2026)\n3. **SONEDE** : 95 Techniciens Supérieurs en Hydraulique & Électromécanique (Délai : 30 Mars 2026)\n4. **Ministère des Finances (DGI)** : 110 Inspecteurs & Contrôleurs des Impôts (Délai : 18 Avril 2026)\n\nL'inscription s'effectue obligatoirement sur **www.concours.gov.tn**. Pièces requises : Fiche imprimée, copie conforme CIN, diplôme et extrait de casier B3 récent."
+          : "Les concours maftou7in tawa fi Tounes (2026):\n1. **STEG**: Inscription Ingénieurs w Cadres (180 postes, dernier délai 25 Mars 2026)\n2. **Wizarat el Tarbiya (CAPES)**: Asatidhat Ta3lim Thanawi (1250 postes, dernier délai 10 Avril 2026)\n3. **SONEDE**: Techniciens Supérieurs (95 postes, dernier délai 30 Mars 2026)\n4. **Wizarat el Maliya (Jibaya)**: Motafaqdin w Mura9bin (110 postes, dernier délai 18 Avril 2026)\n\nL'inscription lezemha tsir 3al site officiel **www.concours.gov.tn**. El wra9 el matlouba: Formulaire matbou3, Copie conforme CIN w Diplôme, w B3 jdida (< 3 chhour).",
+      actions: [
+        {
+          label: { derja: '💼 Radar el Concourat', fr: 'Radar des Concours', ar: 'رادار المناظرات', en: 'Concours Radar' },
+          type: 'procedure_link',
+          payload: '/concours',
+        },
+        {
+          label: { derja: '📋 Guide des Démarches', fr: 'Toutes les démarches', ar: 'جميع الإجراءات', en: 'All Procedures' },
+          type: 'procedure_link',
+          payload: '/procedures',
+        },
+      ],
+    };
+  }
+
+  // Check for short conversational follow-ups (chnou, kifech, wa9tech, chkounik)
+  if (
+    query === 'chnou' ||
+    query === 'chnowa' ||
+    query === 'chnia' ||
+    query === 'kifech' ||
+    query === 'kifeh' ||
+    query === 'شنو' ||
+    query === 'شنوة' ||
+    query === 'كيفاش' ||
+    query === 'quoi' ||
+    query === 'comment'
+  ) {
+    return {
+      content:
+        lang === 'ar'
+          ? "تفضل، حدد لي الإجراء أو الوثيقة التي تريد الاستفسار عنها (مثل: أوراق جواز السفر، كيفية تجديد بطاقة التعريف، استخراج بطاقة عدد 3، المناظرات المفتوحة، أو معلوم التنابر بالدينار)."
+          : lang === 'en'
+          ? "Please tell me which procedure or document you need details on (e.g. Passport requirements, National ID renewal, Criminal record B3, active public concours, or stamp fees)."
+          : lang === 'fr'
+          ? "Précisez-moi la démarche ou le document qui vous intéresse (ex: papiers du passeport, renouvellement CIN, extrait B3, concours ouverts, ou calcul des timbres)."
+          : "9oli 3la anahou dossier walla war9a t7eb tefhemha (mthelen: awra9 el Passeport, CIN jdida, extrait B3, les concours maftou7in tawa, walla 7seb el timbres).",
+      actions: [
+        {
+          label: { derja: '💼 Radar el Concourat', fr: 'Radar des Concours', ar: 'رادار المناظرات', en: 'Concours Radar' },
+          type: 'procedure_link',
+          payload: '/concours',
+        },
+        {
+          label: { derja: '📋 Guide des Démarches', fr: 'Toutes les démarches', ar: 'جميع الإجراءات', en: 'All Procedures' },
+          type: 'procedure_link',
+          payload: '/procedures',
+        },
+      ],
+    };
+  }
+
   // Check for greetings (hi, hello, 3aslema, bonjour, salam, ahla)
   if (
     query === 'hi' ||
@@ -206,13 +280,18 @@ export function parseAndReason(prompt: string, locale: SupportedLanguage | strin
     return {
       content:
         lang === 'ar'
-          ? "مرحباً بك في إدارة.تونس! اسألني عن أي إجراء إداري، وثيقة رسمية، أو معلوم جبائي (جواز سفر، بطاقة رمادية، بطاقة ب3، عقد كراء، مبادر ذاتي...)."
+          ? "مرحباً بك في إدارة.تونس! اسألني عن أي إجراء إداري، وثيقة رسمية، أو مناظرة عمومية (جواز سفر، بطاقة رمادية، بطاقة ب3، مناظرة STEG، عقد كراء، مبادر ذاتي...)."
           : lang === 'en'
-          ? "Hello! Welcome to Idaara.tn. Ask me anything in English, French, or Derja about Tunisian administrative procedures, paperwork, or stamp fees."
+          ? "Hello! Welcome to Idaara.tn. Ask me anything in English, French, or Derja about Tunisian administrative procedures, public concours, or stamp fees."
           : lang === 'derja'
-          ? "3aslema! Mar7ba bik fi Idaara.tn. Es'elni bel Derja 3la ay war9a, procédure, walla timbre mte3 l'Idara (Passeport, Carte Grise, B3, Contrat de bail, Auto-Entrepreneur...)."
-          : "Bonjour ! Bienvenue sur Idaara.tn. Posez toutes vos questions sur les démarches administratives tunisiennes, dossiers et timbres fiscaux.",
+          ? "3aslema! Mar7ba bik fi Idaara.tn. Es'elni bel Derja 3la ay war9a, procédure, concours maftou7, walla timbre mte3 l'Idara (Passeport, Carte Grise, B3, STEG, Contrat de bail, Auto-Entrepreneur...)."
+          : "Bonjour ! Bienvenue sur Idaara.tn. Posez toutes vos questions sur les démarches administratives tunisiennes, concours publics et timbres fiscaux.",
       actions: [
+        {
+          label: { derja: '💼 Radar el Concourat', fr: 'Radar des Concours', ar: 'رادار المناظرات', en: 'Concours Radar' },
+          type: 'procedure_link',
+          payload: '/concours',
+        },
         {
           label: { derja: '📋 Guide des Démarches', fr: 'Toutes les démarches', ar: 'جميع الإجراءات', en: 'All Procedures' },
           type: 'procedure_link',
@@ -231,12 +310,12 @@ export function parseAndReason(prompt: string, locale: SupportedLanguage | strin
   return {
     content:
       lang === 'ar'
-        ? "شكراً على استفسارك. يمكنك سؤالي بالدارجة التونسية، الفرنسية، أو الإنجليزية عن أي وثيقة إدارية (مثل: تجديد جواز السفر، تحويل ملكية سيارة، بطاقة التعريف، بطاقة عدد 3، عقود الكراء، المبادر الذاتي، أو معاليم التنابر)."
+        ? "شكراً على استفسارك. يمكنك سؤالي بالدارجة التونسية، الفرنسية، أو الإنجليزية عن أي وثيقة إدارية أو مناظرة (مثل: تجديد جواز السفر، تحويل ملكية سيارة، بطاقة التعريف، بطاقة عدد 3، مناظرة STEG، عقود الكراء، المبادر الذاتي، أو معاليم التنابر)."
         : lang === 'en'
-        ? "Thank you for your question. You can ask me in Tunisian Derja, French, or English about any administrative paperwork (e.g. Passport renewal, Car registration, National ID, Criminal record B3, Lease contracts, Auto-Entrepreneur 1% tax, or statutory fiscal stamp costs)."
+        ? "Thank you for your question. You can ask me in Tunisian Derja, French, or English about any administrative paperwork or public concours (e.g. Passport renewal, Car registration, National ID, Criminal record B3, STEG/CAPES exams, Lease contracts, Auto-Entrepreneur 1% tax, or statutory fiscal stamp costs)."
         : lang === 'derja'
-        ? "Mar7ba bik! Tnejjem tes'elni bel Derja 3la ay war9a idariya (Passeport, Carte Grise, CIN, B3, Contrat de bail, Statut Auto-Entrepreneur 1%, walla timbres fiscaux)."
-        : "Merci pour votre demande. Posez votre question en Derja tunisienne ou Français concernant n'importe quel dossier administratif (Renouvellement passeport, Mutation carte grise, CIN, Bulletin N°3, Contrat de bail, Statut Auto-Entrepreneur 1%, ou timbres fiscaux).",
+        ? "Mar7ba bik! Tnejjem tes'elni bel Derja 3la ay war9a idariya walla concours (Passeport, Carte Grise, CIN, B3, Concours STEG/CAPES, Contrat de bail, Statut Auto-Entrepreneur 1%, walla timbres fiscaux)."
+        : "Merci pour votre demande. Posez votre question en Derja tunisienne ou Français concernant n'importe quel dossier administratif ou concours public (Renouvellement passeport, Mutation carte grise, CIN, Bulletin N°3, Concours STEG/CAPES, Contrat de bail, Statut Auto-Entrepreneur 1%, ou timbres fiscaux).",
     actions: [
       {
         label: { derja: '📋 Guide des Démarches', fr: 'Toutes les démarches', ar: 'جميع الإجراءات', en: 'All Procedures' },
