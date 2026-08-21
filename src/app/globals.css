@@ -213,7 +213,7 @@ body {
   animation: laser-sweep 3s cubic-bezier(0.4, 0, 0.2, 1) infinite;
 }
 
-/* ── Smooth Float Animations ──────────────── */
+/* ── Cinematic Motion Design Keyframes ─────── */
 @keyframes float-slow {
   0%, 100% { transform: translateY(0px) rotate(0deg); }
   50% { transform: translateY(-8px) rotate(1deg); }
@@ -227,6 +227,51 @@ body {
 }
 .animate-float-reverse {
   animation: float-reverse 7s ease-in-out infinite;
+}
+
+@keyframes aurora-drift {
+  0% { transform: translate(0, 0) scale(1); opacity: 0.12; }
+  33% { transform: translate(25px, -35px) scale(1.1); opacity: 0.18; }
+  66% { transform: translate(-20px, 20px) scale(0.95); opacity: 0.14; }
+  100% { transform: translate(0, 0) scale(1); opacity: 0.12; }
+}
+.animate-aurora {
+  animation: aurora-drift 14s ease-in-out infinite;
+}
+
+@keyframes rubber-slam {
+  0%   { transform: scale(2.2) rotate(-18deg); opacity: 0; filter: blur(6px); }
+  45%  { transform: scale(0.92) rotate(-8deg); opacity: 1; filter: blur(0px); }
+  65%  { transform: scale(1.08) rotate(-10deg); }
+  85%  { transform: scale(0.98) rotate(-9deg); }
+  100% { transform: scale(1) rotate(-9deg); opacity: 1; }
+}
+.animate-rubber-slam {
+  animation: rubber-slam 0.65s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+}
+
+@keyframes shockwave {
+  0% { transform: scale(0.8); opacity: 0.8; }
+  100% { transform: scale(2.4); opacity: 0; }
+}
+.animate-shockwave {
+  animation: shockwave 0.8s cubic-bezier(0.1, 0.8, 0.3, 1) forwards;
+}
+
+@keyframes radar-scan {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+.animate-radar-scan {
+  animation: radar-scan 5s linear infinite;
+}
+
+@keyframes badge-glow {
+  0%, 100% { box-shadow: 0 0 12px rgba(16, 185, 129, 0.2); }
+  50% { box-shadow: 0 0 25px rgba(16, 185, 129, 0.5); }
+}
+.animate-badge-glow {
+  animation: badge-glow 2.5s ease-in-out infinite;
 }
 
 /* ── Border Glow Pulse ─────────────────────── */

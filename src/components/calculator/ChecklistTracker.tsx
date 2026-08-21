@@ -1,12 +1,15 @@
 'use client';
 
 import React from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
 import { Procedure } from '../../types/procedure';
 import { useChecklist } from '../../context/ChecklistContext';
 import { useLocale } from '../../context/LocaleContext';
 import { CheckCircle2, Circle, RotateCcw, Sparkles, ListChecks, Copy } from 'lucide-react';
 import { triggerConfetti } from '../../lib/utils';
 import { getLocalized } from '../../lib/locale-utils';
+import { RubberStampFX } from '../motion/RubberStampFX';
+import { SpotlightCard } from '../motion/SpotlightCard';
 
 interface ChecklistTrackerProps {
   procedure: Procedure;
@@ -69,7 +72,7 @@ export const ChecklistTracker: React.FC<ChecklistTrackerProps> = ({ procedure })
       : '🎉 Mabrouk! Dossier mte3ek 7adher 100% lel dépôt.';
 
   return (
-    <div className="glass-panel rounded-2xl p-5 border border-zinc-800/80 space-y-4">
+    <SpotlightCard className="p-5 border-zinc-800/80 space-y-4 shadow-xl relative">
 
       {/* Header */}
       <div className="flex items-start justify-between gap-3">
@@ -87,13 +90,15 @@ export const ChecklistTracker: React.FC<ChecklistTrackerProps> = ({ procedure })
           </div>
         </div>
 
-        <button
+        <motion.button
+          whileHover={{ rotate: -180, scale: 1.1 }}
+          whileTap={{ scale: 0.9 }}
           onClick={() => resetProcedureChecklist(docIds)}
-          className="flex items-center space-x-1 rtl:space-x-reverse text-[11px] text-zinc-600 hover:text-zinc-300 transition-colors shrink-0 pt-0.5"
+          className="flex items-center space-x-1 rtl:space-x-reverse text-[11px] text-zinc-600 hover:text-zinc-300 transition-colors shrink-0 pt-0.5 cursor-pointer"
         >
           <RotateCcw className="w-3 h-3" />
           <span>{resetBtnText}</span>
-        </button>
+        </motion.button>
       </div>
 
       {/* Progress Section */}
@@ -111,35 +116,48 @@ export const ChecklistTracker: React.FC<ChecklistTrackerProps> = ({ procedure })
           </span>
         </div>
 
-        {/* Progress bar */}
+        {/* Animated Progress bar */}
         <div className="w-full h-2.5 bg-zinc-800/80 rounded-full overflow-hidden">
-          <div
-            className={`h-full rounded-full transition-all duration-500 ${
+          <motion.div
+            initial={{ width: 0 }}
+            animate={{ width: `${Math.max(progress.percentage, progress.percentage > 0 ? 4 : 0)}%` }}
+            transition={{ type: 'spring', stiffness: 120, damping: 20 }}
+            className={`h-full rounded-full ${
               isDone
-                ? 'bg-gradient-to-r from-emerald-500 to-teal-400'
+                ? 'bg-gradient-to-r from-emerald-500 to-teal-400 shadow-[0_0_12px_rgba(16,185,129,0.5)]'
                 : progress.percentage > 50
                 ? 'bg-gradient-to-r from-amber-500 to-emerald-500'
                 : 'bg-zinc-600'
             }`}
-            style={{ width: `${Math.max(progress.percentage, progress.percentage > 0 ? 4 : 0)}%` }}
           />
         </div>
 
-        {/* Done banner */}
-        {isDone && (
-          <div className="flex items-center space-x-2 rtl:space-x-reverse p-3 rounded-xl bg-emerald-500/10 border border-emerald-500/30 animate-fade-in-up">
-            <Sparkles className="w-4 h-4 text-emerald-400 shrink-0" />
-            <span className="text-xs font-bold text-emerald-300">
-              {doneBannerText}
-            </span>
-          </div>
-        )}
+        {/* Done banner with RubberStampFX */}
+        <AnimatePresence>
+          {isDone && (
+            <motion.div
+              initial={{ opacity: 0, scale: 0.95, y: 6 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.95 }}
+              transition={{ type: 'spring', stiffness: 400, damping: 25 }}
+            >
+              <RubberStampFX label="DOSSIER CONFORME" sublabel="RÉPUBLIQUE TUNISIENNE">
+                <div className="flex items-center space-x-2 rtl:space-x-reverse p-3 rounded-xl bg-emerald-500/10 border border-emerald-500/30 cursor-pointer shadow-lg">
+                  <Sparkles className="w-4 h-4 text-emerald-400 shrink-0" />
+                  <span className="text-xs font-bold text-emerald-300">
+                    {doneBannerText}
+                  </span>
+                </div>
+              </RubberStampFX>
+            </motion.div>
+          )}
+        </AnimatePresence>
       </div>
 
       {/* Divider */}
       <div className="h-px bg-gradient-to-r from-transparent via-zinc-800 to-transparent" />
 
-      {/* Document List */}
+      {/* Document List with interactive item springs */}
       <div className="space-y-2">
         {procedure.requiredDocuments.map((doc) => {
           const isChecked = isItemChecked(doc.id);
@@ -147,29 +165,35 @@ export const ChecklistTracker: React.FC<ChecklistTrackerProps> = ({ procedure })
           const desc = doc.description ? getLocalized(doc.description, locale) : undefined;
 
           return (
-            <div
+            <motion.div
               key={doc.id}
               onClick={() => handleToggle(doc.id)}
-              className={`group p-3 rounded-xl border cursor-pointer select-none transition-all duration-200 flex items-start gap-3 ${
+              whileHover={{ scale: 1.01, x: 2 }}
+              whileTap={{ scale: 0.98 }}
+              className={`group p-3 rounded-xl border cursor-pointer select-none transition-all duration-200 flex items-start gap-3 shadow-sm ${
                 isChecked
                   ? 'bg-emerald-950/25 border-emerald-800/50'
                   : 'bg-zinc-900/60 border-zinc-800/80 hover:border-zinc-700 hover:bg-zinc-900/80'
               }`}
             >
               {/* Checkbox icon */}
-              <div className="mt-0.5 shrink-0">
+              <motion.div
+                className="mt-0.5 shrink-0"
+                animate={{ scale: isChecked ? [1, 1.25, 1] : 1 }}
+                transition={{ duration: 0.25 }}
+              >
                 {isChecked ? (
                   <CheckCircle2 className="w-4 h-4 text-emerald-400" />
                 ) : (
                   <Circle className="w-4 h-4 text-zinc-700 group-hover:text-zinc-500 transition-colors" />
                 )}
-              </div>
+              </motion.div>
 
               {/* Content */}
               <div className="flex-1 min-w-0">
                 <div className="flex items-start justify-between gap-2">
                   <p
-                    className={`text-[11px] font-semibold leading-snug ${
+                    className={`text-[11px] font-semibold leading-snug transition-colors ${
                       isChecked ? 'line-through text-zinc-600' : 'text-zinc-200'
                     }`}
                   >
@@ -188,10 +212,10 @@ export const ChecklistTracker: React.FC<ChecklistTrackerProps> = ({ procedure })
                   </p>
                 )}
               </div>
-            </div>
+            </motion.div>
           );
         })}
       </div>
-    </div>
+    </SpotlightCard>
   );
 };

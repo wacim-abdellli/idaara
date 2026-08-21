@@ -1,12 +1,16 @@
 'use client';
 
 import React, { useState } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
 import { useLocale } from '../../context/LocaleContext';
 import { DocumentUploader } from '../../components/fasserli/DocumentUploader';
 import { SampleDocsPicker } from '../../components/fasserli/SampleDocsPicker';
 import { DocumentAnalysisResult } from '../../components/fasserli/DocumentAnalysisResult';
 import { SampleDocItem, sampleDocumentsList } from '../../data/sampleDocuments';
 import { OCRAnalysisResult } from '../../types/chat';
+import { SpotlightCard } from '../../components/motion/SpotlightCard';
+import { FadeIn, FadeInStagger, FadeInItem } from '../../components/motion/FadeInStagger';
+import { AmbientOrbs } from '../../components/motion/AmbientOrbs';
 import { ShieldCheck, FileSearch, Sparkles, FileText, Lock, CheckCircle2 } from 'lucide-react';
 
 export default function FasserliPage() {
@@ -179,12 +183,15 @@ export default function FasserliPage() {
   ];
 
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-10 space-y-10">
+    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-10 space-y-10 relative overflow-hidden">
+
+      {/* Cinematic Ambient Orbs */}
+      <AmbientOrbs variant="cyan" />
 
       {/* ── 2-Column Hero Header (Balances Left & Right space) ── */}
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center pb-4 border-b border-zinc-800/80">
+      <FadeIn direction="up" className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center pb-4 border-b border-zinc-800/80 relative">
         {/* Left: Titles & Context */}
-        <div className="lg:col-span-7 space-y-3">
+        <div className="lg:col-span-7 space-y-3 relative z-10">
           <div className="flex items-center gap-2 text-xs font-mono text-zinc-500 uppercase tracking-widest">
             <span className="text-emerald-400 font-bold">/</span>
             <span>OCR Juridique Tunisien · Confidentialité 100% Locale</span>
@@ -194,12 +201,15 @@ export default function FasserliPage() {
             <span className="display-heading block text-3xl sm:text-5xl text-[#F5F4F0]">
               {headlineMain}
             </span>
-            <span
+            <motion.span
+              initial={{ opacity: 0, scale: 0.95 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ duration: 0.5, delay: 0.2 }}
               className="display-heading block text-3xl sm:text-5xl italic"
               style={{ color: 'var(--stamp-green)' }}
             >
               {headlineAccent}
-            </span>
+            </motion.span>
           </h1>
 
           <p className="text-xs sm:text-sm text-zinc-400 leading-relaxed max-w-xl pt-1">
@@ -207,9 +217,9 @@ export default function FasserliPage() {
           </p>
         </div>
 
-        {/* Right: Supported Document Categories Radar (Fills the empty space) */}
-        <div className="lg:col-span-5">
-          <div className="glass-panel rounded-3xl p-4 sm:p-5 border border-zinc-800/90 bg-gradient-to-br from-zinc-900/80 via-zinc-900/50 to-zinc-950 shadow-xl space-y-3">
+        {/* Right: Supported Document Categories Radar */}
+        <div className="lg:col-span-5 relative z-10">
+          <SpotlightCard className="p-4 sm:p-5 border-zinc-800/90 shadow-xl space-y-3">
             <div className="flex items-center justify-between text-xs pb-2.5 border-b border-zinc-800">
               <span className="font-bold uppercase tracking-wider text-[10px] text-zinc-400 flex items-center gap-1.5">
                 <FileText className="w-3.5 h-3.5 text-emerald-400" />
@@ -223,8 +233,9 @@ export default function FasserliPage() {
 
             <div className="grid grid-cols-2 gap-2">
               {supportedTypes.map((type, idx) => (
-                <div
+                <motion.div
                   key={idx}
+                  whileHover={{ y: -2 }}
                   className="p-2.5 rounded-xl bg-zinc-950/60 border border-zinc-800/80 flex flex-col justify-between"
                 >
                   <div className="flex items-center gap-1 text-emerald-400 mb-1">
@@ -236,26 +247,28 @@ export default function FasserliPage() {
                   <span className="text-[10px] text-zinc-200 font-semibold line-clamp-1">
                     {type.name}
                   </span>
-                </div>
+                </motion.div>
               ))}
             </div>
-          </div>
+          </SpotlightCard>
         </div>
-      </div>
+      </FadeIn>
 
       {/* ── Zero Storage Privacy Guarantee ── */}
-      <div className="p-4 rounded-2xl glass-panel border border-emerald-500/20 flex items-center justify-between bg-emerald-950/20">
-        <div className="flex items-center gap-3 text-xs text-zinc-300">
-          <ShieldCheck className="w-5 h-5 text-emerald-400 shrink-0" />
-          <div>
-            <span className="font-semibold text-zinc-100">{t('zeroStorageBanner')} : </span>
-            <span className="text-zinc-400">{t('zeroStorageSub')}</span>
+      <FadeIn direction="up" delay={0.1}>
+        <SpotlightCard className="p-4 border-emerald-500/20 flex items-center justify-between bg-emerald-950/20 shadow-md">
+          <div className="flex items-center gap-3 text-xs text-zinc-300">
+            <ShieldCheck className="w-5 h-5 text-emerald-400 shrink-0" />
+            <div>
+              <span className="font-semibold text-zinc-100">{t('zeroStorageBanner')} : </span>
+              <span className="text-zinc-400">{t('zeroStorageSub')}</span>
+            </div>
           </div>
-        </div>
-      </div>
+        </SpotlightCard>
+      </FadeIn>
 
       {/* ── Main Grid: Upload & Sample Documents ── */}
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+      <FadeIn direction="up" delay={0.15} className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
         {/* Left: Upload zone */}
         <div className="lg:col-span-6 space-y-6">
           <DocumentUploader
@@ -271,26 +284,34 @@ export default function FasserliPage() {
             selectedId={selectedSample?.id}
           />
         </div>
-      </div>
+      </FadeIn>
 
-      {/* ── Result Section ── */}
-      {analysisResult && (
-        <div className="pt-6 border-t border-zinc-800/80">
-          <div className="flex items-center gap-2 text-xs font-bold text-zinc-400 uppercase tracking-wider mb-4">
-            <FileSearch className="w-4 h-4 text-emerald-400" />
-            <span>
-              {locale === 'ar'
-                ? 'تقرير التحليل القانوني والإداري للوثيقة :'
-                : locale === 'en'
-                ? 'Administrative OCR Analysis & Legal Report :'
-                : locale === 'fr'
-                ? "Rapport d'analyse administrative du document :"
-                : "Taqrir el Tahlil el Idari (Rapport d'analyse) :"}
-            </span>
-          </div>
-          <DocumentAnalysisResult result={analysisResult} />
-        </div>
-      )}
+      {/* ── Result Section with AnimatePresence ── */}
+      <AnimatePresence>
+        {analysisResult && (
+          <motion.div
+            initial={{ opacity: 0, y: 16 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -10 }}
+            transition={{ duration: 0.35, ease: 'easeOut' }}
+            className="pt-6 border-t border-zinc-800/80"
+          >
+            <div className="flex items-center gap-2 text-xs font-bold text-zinc-400 uppercase tracking-wider mb-4">
+              <FileSearch className="w-4 h-4 text-emerald-400" />
+              <span>
+                {locale === 'ar'
+                  ? 'تقرير التحليل القانوني والإداري للوثيقة :'
+                  : locale === 'en'
+                  ? 'Administrative OCR Analysis & Legal Report :'
+                  : locale === 'fr'
+                  ? "Rapport d'analyse administrative du document :"
+                  : "Taqrir el Tahlil el Idari (Rapport d'analyse) :"}
+              </span>
+            </div>
+            <DocumentAnalysisResult result={analysisResult} />
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   );
 }

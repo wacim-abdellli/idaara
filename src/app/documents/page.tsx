@@ -1,10 +1,14 @@
 'use client';
 
 import React, { useState } from 'react';
+import { motion } from 'framer-motion';
 import { documentTemplatesData } from '../../data/documentTemplates';
 import { DocumentCard } from '../../components/documents/DocumentCard';
 import { useLocale } from '../../context/LocaleContext';
 import { getLocalized } from '../../lib/locale-utils';
+import { SpotlightCard } from '../../components/motion/SpotlightCard';
+import { FadeIn, FadeInStagger, FadeInItem } from '../../components/motion/FadeInStagger';
+import { AmbientOrbs } from '../../components/motion/AmbientOrbs';
 import { FileText, Search, ShieldCheck, CheckCircle2, Download, Stamp, Sparkles } from 'lucide-react';
 
 export default function DocumentsPage() {
@@ -166,12 +170,15 @@ export default function DocumentsPage() {
   ];
 
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-10 space-y-10">
+    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-10 space-y-10 relative overflow-hidden">
+
+      {/* Cinematic Ambient Orbs */}
+      <AmbientOrbs variant="emerald" />
 
       {/* ── 2-Column Hero Header (Balances Left & Right space) ── */}
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center pb-4 border-b border-zinc-800/80">
+      <FadeIn direction="up" className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center pb-4 border-b border-zinc-800/80 relative">
         {/* Left: Titles & Context */}
-        <div className="lg:col-span-7 space-y-3">
+        <div className="lg:col-span-7 space-y-3 relative z-10">
           <div className="flex items-center gap-2 text-xs font-mono text-zinc-500 uppercase tracking-widest">
             <span className="text-emerald-400 font-bold">/</span>
             <span>Code des Obligations et des Contrats (COC)</span>
@@ -181,12 +188,15 @@ export default function DocumentsPage() {
             <span className="display-heading block text-3xl sm:text-5xl text-[#F5F4F0]">
               {headlineMain}
             </span>
-            <span
+            <motion.span
+              initial={{ opacity: 0, scale: 0.95 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ duration: 0.5, delay: 0.2 }}
               className="display-heading block text-3xl sm:text-5xl italic"
               style={{ color: 'var(--stamp-green)' }}
             >
               {headlineAccent}
-            </span>
+            </motion.span>
           </h1>
 
           <p className="text-xs sm:text-sm text-zinc-400 leading-relaxed max-w-xl pt-1">
@@ -195,8 +205,8 @@ export default function DocumentsPage() {
         </div>
 
         {/* Right: Official Legalization & Standards Hub */}
-        <div className="lg:col-span-5">
-          <div className="glass-panel rounded-3xl p-4 sm:p-5 border border-zinc-800/90 bg-gradient-to-br from-zinc-900/80 via-zinc-900/50 to-zinc-950 shadow-xl space-y-3">
+        <div className="lg:col-span-5 relative z-10">
+          <SpotlightCard className="p-4 sm:p-5 border-zinc-800/90 shadow-xl space-y-3">
             <div className="flex items-center justify-between text-xs pb-2.5 border-b border-zinc-800">
               <span className="font-bold uppercase tracking-wider text-[10px] text-zinc-400 flex items-center gap-1.5">
                 <Stamp className="w-3.5 h-3.5 text-amber-400" />
@@ -209,8 +219,9 @@ export default function DocumentsPage() {
 
             <div className="grid grid-cols-2 gap-2">
               {legalSpecs.map((spec, idx) => (
-                <div
+                <motion.div
                   key={idx}
+                  whileHover={{ y: -2 }}
                   className="p-2.5 rounded-xl bg-zinc-950/60 border border-zinc-800/80 flex flex-col justify-between"
                 >
                   <div className="flex items-center gap-1.5 text-emerald-400 mb-1">
@@ -222,20 +233,22 @@ export default function DocumentsPage() {
                   <span className="text-[9px] text-zinc-500 line-clamp-1">
                     {spec.desc}
                   </span>
-                </div>
+                </motion.div>
               ))}
             </div>
-          </div>
+          </SpotlightCard>
         </div>
-      </div>
+      </FadeIn>
 
       {/* ── Search & Filter Controls ── */}
-      <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
+      <FadeIn direction="up" delay={0.1} className="flex flex-col sm:flex-row items-center justify-between gap-4">
         <div className="flex items-center gap-2 overflow-x-auto w-full sm:w-auto pb-2 sm:pb-0 scrollbar-none">
           {categories.map((cat) => (
-            <button
+            <motion.button
               key={cat.id}
               onClick={() => setSelectedCategory(cat.id)}
+              whileHover={{ scale: 1.03 }}
+              whileTap={{ scale: 0.96 }}
               className={`px-4 py-2 rounded-xl text-xs font-semibold whitespace-nowrap transition-all border shrink-0 cursor-pointer ${
                 selectedCategory === cat.id
                   ? 'bg-emerald-500 text-zinc-950 border-emerald-400 shadow-md shadow-emerald-500/20 font-bold'
@@ -243,12 +256,12 @@ export default function DocumentsPage() {
               }`}
             >
               {cat.label}
-            </button>
+            </motion.button>
           ))}
         </div>
 
         <div className="relative w-full sm:w-80">
-          <Search className="w-4 h-4 text-zinc-500 absolute left-3.5 top-1/2 -translate-y-1/2" />
+          <Search className="w-4 h-4 text-zinc-500 absolute left-3.5 top-1/2 -translate-y-1/2 rtl:left-auto rtl:right-3.5" />
           <input
             type="text"
             value={searchQuery}
@@ -256,21 +269,25 @@ export default function DocumentsPage() {
             placeholder={
               locale === 'ar'
                 ? 'ابحث عن نموذج...'
+                : locale === 'derja'
+                ? 'Lawwej 3la formulaire...'
                 : locale === 'en'
                 ? 'Search a template...'
                 : 'Rechercher un modèle...'
             }
-            className="w-full bg-zinc-900 border border-zinc-800 focus:border-emerald-500 rounded-2xl pl-10 pr-4 py-2.5 text-xs text-zinc-100 placeholder-zinc-500 focus:outline-none"
+            className="w-full bg-zinc-900 border border-zinc-800 focus:border-emerald-500 rounded-2xl pl-10 pr-4 rtl:pr-10 rtl:pl-4 py-2.5 text-xs text-zinc-100 placeholder-zinc-500 focus:outline-none"
           />
         </div>
-      </div>
+      </FadeIn>
 
-      {/* ── Templates Grid ── */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      {/* ── Templates Grid with Stagger ── */}
+      <FadeInStagger faster className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {filteredTemplates.map((template) => (
-          <DocumentCard key={template.slug} template={template} />
+          <FadeInItem key={template.slug}>
+            <DocumentCard template={template} />
+          </FadeInItem>
         ))}
-      </div>
+      </FadeInStagger>
     </div>
   );
 }

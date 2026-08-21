@@ -2,10 +2,14 @@
 
 import React, { useState, useMemo } from 'react';
 import Link from 'next/link';
+import { motion, AnimatePresence } from 'framer-motion';
 import { proceduresData } from '../../data/procedures';
 import { useLocale } from '../../context/LocaleContext';
 import { getLocalized } from '../../lib/locale-utils';
 import { formatTND } from '../../lib/utils';
+import { SpotlightCard } from '../../components/motion/SpotlightCard';
+import { FadeIn, FadeInStagger, FadeInItem } from '../../components/motion/FadeInStagger';
+import { AmbientOrbs } from '../../components/motion/AmbientOrbs';
 import {
   Search,
   ArrowRight,
@@ -306,13 +310,13 @@ export default function ProceduresPage() {
   ];
 
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-10 space-y-10">
+    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-10 space-y-10 relative overflow-hidden">
+
+      {/* Cinematic Ambient Orbs */}
+      <AmbientOrbs variant="mixed" />
 
       {/* ── 2-Column Hero Header (Balanced Layout with Glow) ── */}
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center pb-4 border-b border-zinc-800/80 relative">
-        {/* Ambient Glow */}
-        <div className="absolute -top-10 -left-10 w-72 h-72 bg-emerald-500/10 rounded-full blur-3xl pointer-events-none" />
-
+      <FadeIn direction="up" className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center pb-4 border-b border-zinc-800/80 relative">
         {/* Left: Titles & Context */}
         <div className="lg:col-span-7 space-y-3 relative z-10">
           <div className="flex items-center gap-2 text-xs font-mono text-zinc-500 uppercase tracking-widest">
@@ -324,12 +328,15 @@ export default function ProceduresPage() {
             <span className="display-heading block text-3xl sm:text-5xl text-[#F5F4F0]">
               {headlineMain}
             </span>
-            <span
+            <motion.span
+              initial={{ opacity: 0, scale: 0.95 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ duration: 0.5, delay: 0.2 }}
               className="display-heading block text-3xl sm:text-5xl italic"
               style={{ color: 'var(--stamp-green)' }}
             >
               {headlineAccent}
-            </span>
+            </motion.span>
           </h1>
 
           <p className="text-xs sm:text-sm text-zinc-400 leading-relaxed max-w-xl pt-1">
@@ -339,7 +346,7 @@ export default function ProceduresPage() {
 
         {/* Right: Civic Standards Hub Widget */}
         <div className="lg:col-span-5 relative z-10">
-          <div className="glass-panel rounded-3xl p-4 sm:p-5 border border-zinc-800/90 bg-gradient-to-br from-zinc-900/80 via-zinc-900/50 to-zinc-950 shadow-xl space-y-3">
+          <SpotlightCard className="p-4 sm:p-5 border-zinc-800/90 shadow-xl space-y-3">
             <div className="flex items-center justify-between text-xs pb-2.5 border-b border-zinc-800">
               <span className="font-bold uppercase tracking-wider text-[10px] text-zinc-400 flex items-center gap-1.5">
                 <Building2 className="w-3.5 h-3.5 text-emerald-400" />
@@ -353,8 +360,9 @@ export default function ProceduresPage() {
 
             <div className="grid grid-cols-2 gap-2">
               {civicStats.map((stat, idx) => (
-                <div
+                <motion.div
                   key={idx}
+                  whileHover={{ y: -2 }}
                   className="p-2.5 rounded-xl bg-zinc-950/60 border border-zinc-800/80 flex flex-col justify-between hover:border-emerald-500/30 transition-colors"
                 >
                   <div className="flex items-center justify-between mb-1">
@@ -368,15 +376,15 @@ export default function ProceduresPage() {
                   <span className="text-[10px] text-zinc-400 font-medium line-clamp-1">
                     {stat.label}
                   </span>
-                </div>
+                </motion.div>
               ))}
             </div>
-          </div>
+          </SpotlightCard>
         </div>
-      </div>
+      </FadeIn>
 
       {/* ── Life-Event Quick Scenario Pills ── */}
-      <div className="space-y-2">
+      <FadeIn direction="up" delay={0.1} className="space-y-2">
         <div className="flex items-center justify-between text-xs">
           <span className="text-[11px] font-bold uppercase tracking-wider text-zinc-500 flex items-center gap-1.5">
             <Sparkles className="w-3.5 h-3.5 text-amber-400" />
@@ -391,30 +399,31 @@ export default function ProceduresPage() {
 
         <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-2.5">
           {lifeScenarios.map((scenario) => (
-            <Link
-              key={scenario.id}
-              href={`/procedures/${scenario.id}`}
-              className="p-3 rounded-2xl bg-zinc-900/80 border border-zinc-800 hover:border-emerald-500/40 hover:bg-zinc-900 transition-all duration-200 group flex flex-col justify-between hover:-translate-y-0.5 hover:shadow-lg hover:shadow-emerald-950/30"
-            >
-              <span className="text-xs font-bold text-zinc-200 group-hover:text-emerald-300 transition-colors leading-snug line-clamp-2">
-                {scenario.label}
-              </span>
-              <div className="pt-2 mt-2 border-t border-zinc-800/80 flex items-center justify-between">
-                <span className="text-[10px] font-mono font-bold text-amber-400">
-                  {scenario.tag}
+            <motion.div key={scenario.id} whileHover={{ y: -3, scale: 1.02 }} whileTap={{ scale: 0.98 }}>
+              <Link
+                href={`/procedures/${scenario.id}`}
+                className="p-3 rounded-2xl bg-zinc-900/80 border border-zinc-800 hover:border-emerald-500/40 hover:bg-zinc-900 transition-all duration-200 group flex flex-col justify-between h-full shadow-sm"
+              >
+                <span className="text-xs font-bold text-zinc-200 group-hover:text-emerald-300 transition-colors leading-snug line-clamp-2">
+                  {scenario.label}
                 </span>
-                <ChevronRight className="w-3 h-3 text-zinc-600 group-hover:text-emerald-400 group-hover:translate-x-0.5 transition-all" />
-              </div>
-            </Link>
+                <div className="pt-2 mt-2 border-t border-zinc-800/80 flex items-center justify-between">
+                  <span className="text-[10px] font-mono font-bold text-amber-400">
+                    {scenario.tag}
+                  </span>
+                  <ChevronRight className="w-3 h-3 text-zinc-600 group-hover:text-emerald-400 group-hover:translate-x-0.5 transition-all rtl:rotate-180" />
+                </div>
+              </Link>
+            </motion.div>
           ))}
         </div>
-      </div>
+      </FadeIn>
 
       {/* ── Filter & Search Control Bar ── */}
-      <div className="p-3 sm:p-4 rounded-2xl glass-panel border border-zinc-800 flex flex-col md:flex-row items-center justify-between gap-3">
+      <FadeIn direction="up" delay={0.15} className="p-3 sm:p-4 rounded-2xl glass-panel border border-zinc-800 flex flex-col md:flex-row items-center justify-between gap-3 shadow-lg">
         {/* Search */}
         <div className="relative w-full md:w-96">
-          <Search className="w-4 h-4 text-zinc-500 absolute left-3.5 top-1/2 -translate-y-1/2" />
+          <Search className="w-4 h-4 text-zinc-500 absolute left-3.5 top-1/2 -translate-y-1/2 rtl:left-auto rtl:right-3.5" />
           <input
             type="text"
             value={searchQuery}
@@ -422,11 +431,13 @@ export default function ProceduresPage() {
             placeholder={
               locale === 'ar'
                 ? 'ابحث عن إجراء (جواز سفر، بطاقة تعريف، كراء...)'
+                : locale === 'derja'
+                ? 'Lawwej 3la démarche (Passeport, CIN, Krè...)'
                 : locale === 'en'
                 ? 'Search procedures (e.g. Passport, CIN, Lease...)'
                 : 'Rechercher une démarche (Passeport, CIN, Bail...)'
             }
-            className="w-full bg-zinc-900 border border-zinc-800 focus:border-emerald-500 rounded-xl pl-10 pr-4 py-2 text-xs text-zinc-100 placeholder-zinc-500 focus:outline-none transition-all"
+            className="w-full bg-zinc-900 border border-zinc-800 focus:border-emerald-500 rounded-xl pl-10 pr-4 rtl:pr-10 rtl:pl-4 py-2 text-xs text-zinc-100 placeholder-zinc-500 focus:outline-none transition-all"
           />
         </div>
 
@@ -448,14 +459,14 @@ export default function ProceduresPage() {
             <option value="steps">{locale === 'en' ? 'Fewest Steps' : 'Moins d’étapes'}</option>
           </select>
         </div>
-      </div>
+      </FadeIn>
 
       {/* ── Main Layout: Sidebar Categories + Procedure Dossiers Grid ── */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
         
         {/* Left Column: Category Filter Menu */}
-        <div className="lg:col-span-4 space-y-4 lg:sticky lg:top-20">
-          <div className="glass-panel rounded-3xl p-3 border border-zinc-800/80 space-y-1">
+        <FadeIn direction="right" delay={0.2} className="lg:col-span-4 space-y-4 lg:sticky lg:top-20">
+          <div className="glass-panel rounded-3xl p-3 border border-zinc-800/80 space-y-1 shadow-lg">
             <div className="px-3 py-2 text-[10px] font-bold uppercase tracking-wider text-zinc-500">
               {locale === 'en' ? 'Filter by Sector' : 'Domaines d’administration'}
             </div>
@@ -469,9 +480,11 @@ export default function ProceduresPage() {
                   : proceduresData.filter((p) => p.vertical === v.id).length;
 
               return (
-                <button
+                <motion.button
                   key={v.id}
                   onClick={() => setSelectedVertical(v.id)}
+                  whileHover={{ scale: 1.01, x: 2 }}
+                  whileTap={{ scale: 0.98 }}
                   className={`w-full flex items-center justify-between px-3.5 py-2.5 rounded-2xl text-xs font-semibold transition-all cursor-pointer ${
                     isSelected
                       ? 'bg-emerald-500 text-zinc-950 shadow-md shadow-emerald-500/20 font-bold'
@@ -491,13 +504,13 @@ export default function ProceduresPage() {
                   >
                     {count}
                   </span>
-                </button>
+                </motion.button>
               );
             })}
           </div>
 
           {/* Quick Voice Assistant Banner */}
-          <div className="p-4 rounded-3xl glass-panel border border-emerald-500/20 bg-gradient-to-br from-emerald-950/30 to-zinc-900 space-y-2.5">
+          <SpotlightCard className="p-4 border-emerald-500/20 bg-gradient-to-br from-emerald-950/30 to-zinc-900 space-y-2.5 shadow-xl">
             <div className="flex items-center gap-2 text-emerald-400 text-xs font-bold">
               <Mic className="w-4 h-4" />
               <span>{locale === 'en' ? 'Voice Question?' : 'Question vocale ?'}</span>
@@ -507,17 +520,19 @@ export default function ProceduresPage() {
                 ? 'Speak in Derja or French and Idaara AI will identify the exact documents and stamp fees.'
                 : 'Posez votre question en Derja ou Français au Voice Copilot pour obtenir les étapes en direct.'}
             </p>
-            <Link
-              href="/copilot"
-              className="inline-flex items-center gap-1.5 text-xs font-bold text-emerald-300 hover:text-emerald-200 hover:underline pt-1"
-            >
-              <span>{locale === 'en' ? 'Launch Voice Copilot' : 'Ouvrir le Voice Copilot'}</span>
-              <ArrowRight className="w-3.5 h-3.5" />
-            </Link>
-          </div>
-        </div>
+            <motion.div whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.97 }}>
+              <Link
+                href="/copilot"
+                className="inline-flex items-center gap-1.5 text-xs font-bold text-emerald-300 hover:text-emerald-200 hover:underline pt-1"
+              >
+                <span>{locale === 'en' ? 'Launch Voice Copilot' : 'Ouvrir le Voice Copilot'}</span>
+                <ArrowRight className="w-3.5 h-3.5 rtl:rotate-180" />
+              </Link>
+            </motion.div>
+          </SpotlightCard>
+        </FadeIn>
 
-        {/* Right Column: Procedure Dossier Cards with Interactive Step Timelines */}
+        {/* Right Column: Procedure Dossier Cards with Stagger and Spotlight */}
         <div className="lg:col-span-8 space-y-4">
           <div className="flex items-center justify-between text-xs text-zinc-500 px-1">
             <span className="font-semibold text-zinc-400">
@@ -525,100 +540,100 @@ export default function ProceduresPage() {
             </span>
           </div>
 
-          <div className="space-y-4">
+          <FadeInStagger faster className="space-y-4">
             {filteredProcedures.map((proc) => {
               const title = getLocalized(proc.title, locale);
               const shortDesc = getLocalized(proc.shortDescription, locale);
 
               return (
-                <Link
-                  key={proc.id}
-                  href={`/procedures/${proc.id}`}
-                  className="glass-panel rounded-3xl p-5 sm:p-6 border border-zinc-800/80 hover:border-zinc-700 hover:shadow-2xl transition-all duration-200 block group relative overflow-hidden hover:-translate-y-0.5"
-                >
-                  {/* Top Hover Gradient */}
-                  <div className="absolute top-0 left-0 right-0 h-0.5 bg-gradient-to-r from-transparent via-emerald-500/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
+                <FadeInItem key={proc.id}>
+                  <Link href={`/procedures/${proc.id}`} className="block group">
+                    <SpotlightCard className="p-5 sm:p-6 border-zinc-800/80 hover:border-zinc-700 shadow-xl relative overflow-hidden">
+                      {/* Top Hover Gradient */}
+                      <div className="absolute top-0 left-0 right-0 h-0.5 bg-gradient-to-r from-transparent via-emerald-500/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
 
-                  {/* Header Row */}
-                  <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3.5 border-b border-zinc-800/80">
-                    <div className="space-y-1">
-                      <div className="flex items-center gap-2">
-                        <span className="text-[9px] font-extrabold uppercase tracking-wider px-2.5 py-0.5 rounded-lg bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
-                          {proc.vertical}
-                        </span>
-                        <span className="text-zinc-600 text-xs">·</span>
-                        <span className="font-mono text-[11px] text-zinc-400 flex items-center gap-1">
-                          <Clock className="w-3 h-3 text-zinc-500" />
-                          <span>{proc.estimatedProcessingTime}</span>
-                        </span>
-                      </div>
-                      <h3 className="text-sm sm:text-base font-bold text-white group-hover:text-emerald-300 transition-colors leading-snug">
-                        {title}
-                      </h3>
-                    </div>
-
-                    <div className="flex items-center gap-3 shrink-0 self-start sm:self-center">
-                      <div className="text-right rtl:text-left">
-                        <span className="text-[9px] text-zinc-500 uppercase font-bold block">
-                          {locale === 'ar' ? 'المصاريف' : 'Budget'}
-                        </span>
-                        <span className="font-mono font-bold text-sm text-amber-400">
-                          {formatTND(proc.estimatedTotalCostTND, locale)}
-                        </span>
-                      </div>
-                      <div className="w-8 h-8 rounded-xl bg-zinc-800/80 border border-zinc-700 flex items-center justify-center text-zinc-300 group-hover:bg-emerald-500 group-hover:text-zinc-950 group-hover:border-emerald-400 transition-all">
-                        <ArrowRight className="w-4 h-4" />
-                      </div>
-                    </div>
-                  </div>
-
-                  {/* Description & Step Breadcrumbs */}
-                  <div className="pt-3.5 space-y-3">
-                    <p className="text-xs text-zinc-400 leading-relaxed line-clamp-2">
-                      {shortDesc}
-                    </p>
-
-                    {/* Step Timeline Breadcrumbs */}
-                    <div className="flex flex-wrap items-center gap-1.5 pt-1">
-                      {proc.steps.map((step, sIdx) => {
-                        const stepTitle = getLocalized(step.title, locale);
-                        return (
-                          <div key={sIdx} className="flex items-center gap-1 text-[10px] text-zinc-400">
-                            <span className="px-2 py-0.5 rounded-md bg-zinc-900 border border-zinc-800 flex items-center gap-1 text-zinc-300">
-                              <span className="w-3.5 h-3.5 rounded-full bg-emerald-500/20 text-emerald-400 font-mono text-[9px] flex items-center justify-center font-bold">
-                                {sIdx + 1}
-                              </span>
-                              <span className="truncate max-w-[120px]">{stepTitle}</span>
+                      {/* Header Row */}
+                      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3.5 border-b border-zinc-800/80">
+                        <div className="space-y-1">
+                          <div className="flex items-center gap-2">
+                            <span className="text-[9px] font-extrabold uppercase tracking-wider px-2.5 py-0.5 rounded-lg bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
+                              {proc.vertical}
                             </span>
-                            {sIdx < proc.steps.length - 1 && (
-                              <ChevronRight className="w-3 h-3 text-zinc-600 shrink-0" />
-                            )}
+                            <span className="text-zinc-600 text-xs">·</span>
+                            <span className="font-mono text-[11px] text-zinc-400 flex items-center gap-1">
+                              <Clock className="w-3 h-3 text-zinc-500" />
+                              <span>{proc.estimatedProcessingTime}</span>
+                            </span>
                           </div>
-                        );
-                      })}
-                    </div>
+                          <h3 className="text-sm sm:text-base font-bold text-white group-hover:text-emerald-300 transition-colors leading-snug">
+                            {title}
+                          </h3>
+                        </div>
 
-                    {/* Bottom Metadata Badges */}
-                    <div className="flex items-center justify-between pt-2 border-t border-zinc-800/60 text-[11px] text-zinc-500 font-mono">
-                      <div className="flex items-center gap-2">
-                        <span className="px-2 py-0.5 rounded bg-zinc-900 border border-zinc-800 text-zinc-400">
-                          {proc.requiredDocuments.length} {locale === 'ar' ? 'وثائق مطلوبة' : 'pièces'}
-                        </span>
-                        <span className="px-2 py-0.5 rounded bg-zinc-900 border border-zinc-800 text-zinc-400">
-                          {proc.costsBreakdown.length} {locale === 'ar' ? 'معاليم/تنابر' : 'frais'}
-                        </span>
+                        <div className="flex items-center gap-3 shrink-0 self-start sm:self-center">
+                          <div className="text-right rtl:text-left">
+                            <span className="text-[9px] text-zinc-500 uppercase font-bold block">
+                              {locale === 'ar' ? 'المصاريف' : 'Budget'}
+                            </span>
+                            <span className="font-mono font-bold text-sm text-amber-400">
+                              {formatTND(proc.estimatedTotalCostTND, locale)}
+                            </span>
+                          </div>
+                          <div className="w-8 h-8 rounded-xl bg-zinc-800/80 border border-zinc-700 flex items-center justify-center text-zinc-300 group-hover:bg-emerald-500 group-hover:text-zinc-950 group-hover:border-emerald-400 transition-all shadow-md">
+                            <ArrowRight className="w-4 h-4 rtl:rotate-180" />
+                          </div>
+                        </div>
                       </div>
 
-                      <span className="text-emerald-400 font-bold group-hover:translate-x-1 transition-transform flex items-center gap-1 text-xs">
-                        <span>{locale === 'en' ? 'Open Dossier' : 'Consulter le dossier'}</span>
-                        <ArrowRight className="w-3.5 h-3.5" />
-                      </span>
-                    </div>
-                  </div>
-                </Link>
+                      {/* Description & Step Breadcrumbs */}
+                      <div className="pt-3.5 space-y-3">
+                        <p className="text-xs text-zinc-400 leading-relaxed line-clamp-2">
+                          {shortDesc}
+                        </p>
+
+                        {/* Step Timeline Breadcrumbs */}
+                        <div className="flex flex-wrap items-center gap-1.5 pt-1">
+                          {proc.steps.map((step, sIdx) => {
+                            const stepTitle = getLocalized(step.title, locale);
+                            return (
+                              <div key={sIdx} className="flex items-center gap-1 text-[10px] text-zinc-400">
+                                <span className="px-2 py-0.5 rounded-md bg-zinc-900 border border-zinc-800 flex items-center gap-1 text-zinc-300">
+                                  <span className="w-3.5 h-3.5 rounded-full bg-emerald-500/20 text-emerald-400 font-mono text-[9px] flex items-center justify-center font-bold">
+                                    {sIdx + 1}
+                                  </span>
+                                  <span className="truncate max-w-[120px]">{stepTitle}</span>
+                                </span>
+                                {sIdx < proc.steps.length - 1 && (
+                                  <ChevronRight className="w-3 h-3 text-zinc-600 shrink-0 rtl:rotate-180" />
+                                )}
+                              </div>
+                            );
+                          })}
+                        </div>
+
+                        {/* Bottom Metadata Badges */}
+                        <div className="flex items-center justify-between pt-2 border-t border-zinc-800/60 text-[11px] text-zinc-500 font-mono">
+                          <div className="flex items-center gap-2">
+                            <span className="px-2 py-0.5 rounded bg-zinc-900 border border-zinc-800 text-zinc-400">
+                              {proc.requiredDocuments.length} {locale === 'ar' ? 'وثائق مطلوبة' : 'pièces'}
+                            </span>
+                            <span className="px-2 py-0.5 rounded bg-zinc-900 border border-zinc-800 text-zinc-400">
+                              {proc.costsBreakdown.length} {locale === 'ar' ? 'معاليم/تنابر' : 'frais'}
+                            </span>
+                          </div>
+
+                          <span className="text-emerald-400 font-bold group-hover:translate-x-1 rtl:group-hover:-translate-x-1 transition-transform flex items-center gap-1 text-xs">
+                            <span>{locale === 'en' ? 'Open Dossier' : 'Consulter le dossier'}</span>
+                            <ArrowRight className="w-3.5 h-3.5 rtl:rotate-180" />
+                          </span>
+                        </div>
+                      </div>
+                    </SpotlightCard>
+                  </Link>
+                </FadeInItem>
               );
             })}
-          </div>
+          </FadeInStagger>
         </div>
       </div>
     </div>

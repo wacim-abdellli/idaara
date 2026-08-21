@@ -3,7 +3,12 @@
 import React, { useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
+import { motion, AnimatePresence } from 'framer-motion';
 import { useLocale } from '../context/LocaleContext';
+import { SpotlightCard } from '../components/motion/SpotlightCard';
+import { AnimatedCounter } from '../components/motion/AnimatedCounter';
+import { FadeIn, FadeInStagger, FadeInItem } from '../components/motion/FadeInStagger';
+import { AmbientOrbs } from '../components/motion/AmbientOrbs';
 import {
   Mic,
   FileSearch,
@@ -486,34 +491,41 @@ export default function HomePage() {
       {/* ── 1. MONUMENTAL HERO STAGE ── */}
       <section className="relative pt-6 sm:pt-14 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
         
-        {/* Ambient Glows */}
-        <div className="absolute -top-12 left-1/3 w-[600px] h-[600px] bg-emerald-500/10 rounded-full blur-[140px] pointer-events-none" />
-        <div className="absolute top-1/3 right-10 w-[450px] h-[450px] bg-teal-500/5 rounded-full blur-[120px] pointer-events-none" />
+        {/* Cinematic Organic Floating Ambient Orbs */}
+        <AmbientOrbs variant="emerald" />
 
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
           
           {/* Left Column: Bold Typographic Narrative & Voice Launcher */}
-          <div className="lg:col-span-6 space-y-6 text-left rtl:text-right relative z-10">
+          <FadeIn direction="up" className="lg:col-span-6 space-y-6 text-left rtl:text-right relative z-10">
             
             {/* Minimalist Civic Header Index */}
-            <div className="flex items-center gap-2.5 text-xs font-mono text-zinc-500 uppercase tracking-widest">
+            <motion.div
+              initial={{ opacity: 0, x: -10 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.5 }}
+              className="flex items-center gap-2.5 text-xs font-mono text-zinc-500 uppercase tracking-widest"
+            >
               <span className="text-emerald-400 font-bold">/</span>
               <span>{ui.nationalPlatform}</span>
               <span className="text-zinc-700">|</span>
               <span className="text-zinc-400">{ui.jort2026}</span>
-            </div>
+            </motion.div>
 
             {/* Monumental Robotic Headline */}
             <h1 className="leading-[1.1] tracking-tight">
               <span className="display-heading block text-3xl sm:text-5xl lg:text-6xl text-[#F5F4F0] font-bold">
                 {t('heroHeadline')}
               </span>
-              <span
+              <motion.span
+                initial={{ opacity: 0, scale: 0.95 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ duration: 0.6, delay: 0.15 }}
                 className="display-heading block text-3xl sm:text-5xl lg:text-6xl mt-1 font-extrabold"
                 style={{ color: 'var(--stamp-green)' }}
               >
                 {t('heroHeadlineHighlight')}
-              </span>
+              </motion.span>
             </h1>
 
             {/* Subheadline */}
@@ -525,7 +537,7 @@ export default function HomePage() {
             <div className="space-y-3 pt-2">
               <form
                 onSubmit={handleSearch}
-                className="flex items-center bg-zinc-900/90 border border-zinc-800 focus-within:border-emerald-500/70 rounded-2xl p-2 shadow-2xl transition-all max-w-xl group"
+                className="flex items-center bg-zinc-900/90 border border-zinc-800 focus-within:border-emerald-500/70 focus-within:shadow-[0_0_25px_rgba(16,185,129,0.15)] rounded-2xl p-2 shadow-2xl transition-all max-w-xl group"
               >
                 <Search className="w-4 h-4 text-zinc-500 mx-3 shrink-0 group-focus-within:text-emerald-400 transition-colors" />
                 <input
@@ -535,13 +547,15 @@ export default function HomePage() {
                   placeholder={t('voiceSearchBarPlaceholder')}
                   className="flex-1 bg-transparent text-xs sm:text-sm text-zinc-100 placeholder-zinc-500 focus:outline-none py-2 min-w-0"
                 />
-                <Link
-                  href="/copilot"
-                  className="flex items-center gap-2 px-5 py-2.5 rounded-xl font-bold text-xs bg-emerald-500 hover:bg-emerald-400 text-zinc-950 shrink-0 shadow-lg shadow-emerald-500/30 transition-all hover:scale-105 cursor-pointer"
-                >
-                  <Mic className="w-3.5 h-3.5" />
-                  <span>{locale === 'ar' ? 'المساعد الصوتي' : locale === 'en' ? 'Voice AI' : 'Voice Copilot'}</span>
-                </Link>
+                <motion.div whileHover={{ scale: 1.04 }} whileTap={{ scale: 0.96 }}>
+                  <Link
+                    href="/copilot"
+                    className="flex items-center gap-2 px-5 py-2.5 rounded-xl font-bold text-xs bg-emerald-500 hover:bg-emerald-400 text-zinc-950 shrink-0 shadow-lg shadow-emerald-500/30 transition-all cursor-pointer"
+                  >
+                    <Mic className="w-3.5 h-3.5" />
+                    <span>{locale === 'ar' ? 'المساعد الصوتي' : locale === 'en' ? 'Voice AI' : 'Voice Copilot'}</span>
+                  </Link>
+                </motion.div>
               </form>
 
               {/* Direct Procedure Pills */}
@@ -550,53 +564,56 @@ export default function HomePage() {
                   {ui.directAccess}
                 </span>
                 {[
-                  { name: locale === 'ar' ? 'جواز السفر' : 'Passeport', cost: '86 DT', href: '/procedures/passeport-renouvellement' },
-                  { name: locale === 'ar' ? 'البطاقة الرمادية' : 'Carte Grise', cost: '145 DT', href: '/procedures/mutation-carte-grise' },
-                  { name: locale === 'ar' ? 'عقد الكراء' : 'Contrat Bail', cost: '35 DT', href: '/documents/contrat-location' },
-                  { name: locale === 'ar' ? 'المبادر الذاتي' : 'Auto-Entrepreneur', cost: '1% Tax', href: '/launchpad' },
+                  { name: locale === 'ar' ? 'جواز السفر' : locale === 'derja' ? 'Passeport' : 'Passeport', cost: '86 DT', href: '/procedures/passeport-renouvellement' },
+                  { name: locale === 'ar' ? 'البطاقة الرمادية' : locale === 'derja' ? 'Carte Grise' : 'Carte Grise', cost: '145 DT', href: '/procedures/mutation-carte-grise' },
+                  { name: locale === 'ar' ? 'عقد الكراء' : locale === 'derja' ? 'Contrat Bail' : 'Contrat Bail', cost: '35 DT', href: '/documents/contrat-location' },
+                  { name: locale === 'ar' ? 'المبادر الذاتي' : locale === 'derja' ? 'Auto-Entrepreneur' : 'Auto-Entrepreneur', cost: '1% Tax', href: '/launchpad' },
                 ].map((item, idx) => (
-                  <Link
-                    key={idx}
-                    href={item.href}
-                    className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-xl bg-zinc-900/90 hover:bg-zinc-800 border border-zinc-800 hover:border-emerald-500/40 text-xs text-zinc-300 transition-all group"
-                  >
-                    <span className="group-hover:text-emerald-300 transition-colors">{item.name}</span>
-                    <span className="text-[10px] font-mono text-amber-400 font-bold">{item.cost}</span>
-                  </Link>
+                  <motion.div key={idx} whileHover={{ y: -2, scale: 1.03 }} whileTap={{ scale: 0.97 }}>
+                    <Link
+                      href={item.href}
+                      className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-xl bg-zinc-900/90 hover:bg-zinc-800 border border-zinc-800 hover:border-emerald-500/40 text-xs text-zinc-300 transition-all group shadow-sm"
+                    >
+                      <span className="group-hover:text-emerald-300 transition-colors">{item.name}</span>
+                      <span className="text-[10px] font-mono text-amber-400 font-bold">{item.cost}</span>
+                    </Link>
+                  </motion.div>
                 ))}
               </div>
             </div>
 
-          </div>
+          </FadeIn>
 
           {/* Right Column: Physical Laser Document Scanner & Legal Telemetry (Tactile Inspector) */}
-          <div className="lg:col-span-6 relative">
+          <FadeIn direction="left" delay={0.2} className="lg:col-span-6 relative">
             
             {/* Interactive Document Switcher Tabs */}
             <div className="flex items-center gap-2 mb-3">
               {[
                 {
                   id: 'passport' as const,
-                  label: locale === 'ar' ? 'جواز السفر' : locale === 'en' ? 'Passport' : 'Passeport',
+                  label: locale === 'ar' ? 'جواز السفر' : locale === 'derja' ? 'Passeport' : locale === 'en' ? 'Passport' : 'Passeport',
                   icon: FileCheck2,
                 },
                 {
                   id: 'tax' as const,
-                  label: locale === 'ar' ? 'الضريبة البلدية' : locale === 'en' ? 'Tax Notice' : 'Avis Fiscal',
+                  label: locale === 'ar' ? 'الضريبة البلدية' : locale === 'derja' ? 'Zebla w Khrouba' : locale === 'en' ? 'Tax Notice' : 'Avis Fiscal',
                   icon: FileText,
                 },
                 {
                   id: 'lease' as const,
-                  label: locale === 'ar' ? 'عقد الكراء' : locale === 'en' ? 'Lease Contract' : 'Contrat Bail',
+                  label: locale === 'ar' ? 'عقد الكراء' : locale === 'derja' ? '3a9d Kré' : locale === 'en' ? 'Lease Contract' : 'Contrat Bail',
                   icon: Scale,
                 },
               ].map((tab) => {
                 const Icon = tab.icon;
                 const isActive = activeInspectorDoc === tab.id;
                 return (
-                  <button
+                  <motion.button
                     key={tab.id}
                     onClick={() => setActiveInspectorDoc(tab.id)}
+                    whileHover={{ scale: 1.04 }}
+                    whileTap={{ scale: 0.96 }}
                     className={`px-3.5 py-1.5 rounded-xl text-xs font-bold transition-all cursor-pointer flex items-center gap-2 border ${
                       isActive
                         ? 'bg-emerald-500 text-zinc-950 border-emerald-400 shadow-lg shadow-emerald-500/20'
@@ -605,13 +622,13 @@ export default function HomePage() {
                   >
                     <Icon className={`w-3.5 h-3.5 ${isActive ? 'text-zinc-950' : 'text-zinc-500'}`} />
                     <span>{tab.label}</span>
-                  </button>
+                  </motion.button>
                 );
               })}
             </div>
 
-            {/* The Document Visual Card with Sweeping Laser Scan Line */}
-            <div className="glass-panel rounded-3xl p-6 sm:p-7 border border-zinc-800/90 bg-gradient-to-br from-zinc-950 via-zinc-900/90 to-zinc-950 shadow-2xl relative overflow-hidden animate-border-glow">
+            {/* The Document Visual Card with Sweeping Laser Scan Line & Spotlight Hover */}
+            <SpotlightCard className="p-6 sm:p-7 border-zinc-800/90 shadow-2xl relative animate-border-glow">
               
               {/* Sweeping Laser Beam Animation */}
               <div className="absolute left-0 right-0 h-0.5 bg-gradient-to-r from-transparent via-emerald-400 to-transparent shadow-[0_0_15px_#10b981] animate-laser pointer-events-none z-20" />
@@ -649,10 +666,16 @@ export default function HomePage() {
 
                 <div className="space-y-2">
                   {currentDoc.points.map((pt, pIdx) => (
-                    <div key={pIdx} className="flex items-start gap-2 text-xs text-zinc-300">
+                    <motion.div
+                      key={pIdx}
+                      initial={{ opacity: 0, x: -6 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      transition={{ delay: pIdx * 0.1 }}
+                      className="flex items-start gap-2 text-xs text-zinc-300"
+                    >
                       <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0 mt-0.5" />
                       <span>{pt}</span>
-                    </div>
+                    </motion.div>
                   ))}
                 </div>
               </div>
@@ -678,9 +701,9 @@ export default function HomePage() {
                 </Link>
               </div>
 
-            </div>
+            </SpotlightCard>
 
-          </div>
+          </FadeIn>
 
         </div>
 
@@ -688,7 +711,7 @@ export default function HomePage() {
 
       {/* ── 2. INTERACTIVE FISCAL STAMP & 1% TAX STUDIO ── */}
       <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="glass-panel rounded-3xl p-6 sm:p-10 border border-zinc-800/90 bg-gradient-to-br from-zinc-950 via-zinc-900/60 to-zinc-950 shadow-2xl space-y-8">
+        <SpotlightCard className="p-6 sm:p-10 border-zinc-800/90 shadow-2xl space-y-8">
           
           <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 pb-4 border-b border-zinc-800">
             <div>
@@ -713,7 +736,7 @@ export default function HomePage() {
                 <div className="flex items-center justify-between text-xs">
                   <span className="text-zinc-400 font-semibold">{ui.revSliderLabel}</span>
                   <span className="text-lg font-mono font-extrabold text-emerald-400">
-                    {interactiveBudget.toLocaleString()} DT
+                    <AnimatedCounter value={interactiveBudget} suffix=" DT" />
                   </span>
                 </div>
 
@@ -724,7 +747,7 @@ export default function HomePage() {
                   step={1000}
                   value={interactiveBudget}
                   onChange={(e) => setInteractiveBudget(Number(e.target.value))}
-                  className="w-full accent-emerald-500 cursor-pointer h-2 bg-zinc-800 rounded-lg"
+                  className="w-full accent-emerald-500 cursor-pointer h-2 bg-zinc-800 rounded-lg transition-all"
                 />
 
                 <div className="flex justify-between text-[10px] font-mono text-zinc-500">
@@ -744,38 +767,47 @@ export default function HomePage() {
               </div>
             </div>
 
-            {/* Calculated Breakdown Display */}
+            {/* Calculated Breakdown Display with Live Animated Counters */}
             <div className="lg:col-span-6 grid grid-cols-1 sm:grid-cols-3 gap-3">
               
-              <div className="p-5 rounded-2xl bg-zinc-950 border border-zinc-800 flex flex-col justify-between space-y-2">
+              <motion.div
+                whileHover={{ y: -3, scale: 1.02 }}
+                className="p-5 rounded-2xl bg-zinc-950 border border-zinc-800 flex flex-col justify-between space-y-2 shadow-lg"
+              >
                 <span className="text-[10px] font-mono uppercase font-bold text-zinc-500">{ui.taxCardTitle}</span>
                 <span className="text-xl font-mono font-extrabold text-amber-400">
-                  {formatTND(simulatedTax, locale)}
+                  <AnimatedCounter value={simulatedTax} decimals={3} suffix=" DT" />
                 </span>
                 <span className="text-[10px] text-zinc-500">{ui.taxCardSub}</span>
-              </div>
+              </motion.div>
 
-              <div className="p-5 rounded-2xl bg-zinc-950 border border-zinc-800 flex flex-col justify-between space-y-2">
+              <motion.div
+                whileHover={{ y: -3, scale: 1.02 }}
+                className="p-5 rounded-2xl bg-zinc-950 border border-zinc-800 flex flex-col justify-between space-y-2 shadow-lg"
+              >
                 <span className="text-[10px] font-mono uppercase font-bold text-zinc-500">{ui.cnssCardTitle}</span>
                 <span className="text-xl font-mono font-extrabold text-zinc-200">
-                  {formatTND(simulatedCnss, locale)}
+                  <AnimatedCounter value={simulatedCnss} decimals={3} suffix=" DT" />
                 </span>
                 <span className="text-[10px] text-zinc-500">{ui.cnssCardSub}</span>
-              </div>
+              </motion.div>
 
-              <div className="p-5 rounded-2xl bg-emerald-950/40 border border-emerald-500/40 flex flex-col justify-between space-y-2">
+              <motion.div
+                whileHover={{ y: -3, scale: 1.02 }}
+                className="p-5 rounded-2xl bg-emerald-950/40 border border-emerald-500/40 flex flex-col justify-between space-y-2 shadow-lg shadow-emerald-950/50"
+              >
                 <span className="text-[10px] font-mono uppercase font-bold text-emerald-300">{ui.netCardTitle}</span>
                 <span className="text-xl font-mono font-extrabold text-emerald-400">
-                  {formatTND(simulatedNet, locale)}
+                  <AnimatedCounter value={simulatedNet} decimals={3} suffix=" DT" />
                 </span>
                 <span className="text-[10px] text-emerald-300/80">{ui.netCardSub}</span>
-              </div>
+              </motion.div>
 
             </div>
 
           </div>
 
-        </div>
+        </SpotlightCard>
       </section>
 
       {/* ── 3. TERRITORIAL RADAR: 24 WILAYAS PUBLIC DESKS ── */}
@@ -790,12 +822,14 @@ export default function HomePage() {
             </h2>
           </div>
 
-          {/* Wilaya Selector Bar */}
+          {/* Wilaya Selector Bar with spring pills */}
           <div className="flex items-center gap-1.5 overflow-x-auto pb-1 scrollbar-none">
             {Object.keys(wilayaData).map((w) => (
-              <button
+              <motion.button
                 key={w}
                 onClick={() => setSelectedWilaya(w)}
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
                 className={`px-3.5 py-1.5 rounded-xl text-xs font-bold transition-all cursor-pointer shrink-0 ${
                   selectedWilaya === w
                     ? 'bg-cyan-500 text-zinc-950 shadow-md shadow-cyan-500/20'
@@ -803,13 +837,13 @@ export default function HomePage() {
                 }`}
               >
                 {w}
-              </button>
+              </motion.button>
             ))}
           </div>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <div className="glass-panel rounded-3xl p-5 sm:p-6 border border-zinc-800 space-y-2">
+          <SpotlightCard className="p-5 sm:p-6 border-zinc-800 space-y-2">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-2 text-xs font-bold text-white">
                 <Building2 className="w-4 h-4 text-cyan-400" />
@@ -825,9 +859,9 @@ export default function HomePage() {
             <p className="text-[11px] text-zinc-500 pt-1">
               {ui.baladiyaCardSub}
             </p>
-          </div>
+          </SpotlightCard>
 
-          <div className="glass-panel rounded-3xl p-5 sm:p-6 border border-zinc-800 space-y-2">
+          <SpotlightCard className="p-5 sm:p-6 border-zinc-800 space-y-2">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-2 text-xs font-bold text-white">
                 <Stamp className="w-4 h-4 text-amber-400" />
@@ -843,13 +877,13 @@ export default function HomePage() {
             <p className="text-[11px] text-zinc-500 pt-1">
               {ui.recetteCardSub}
             </p>
-          </div>
+          </SpotlightCard>
         </div>
       </section>
 
       {/* ── 4. ZERO-STORAGE PRIVACY PROTOCOL ── */}
       <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="p-6 sm:p-8 rounded-3xl glass-panel border border-emerald-500/20 bg-gradient-to-br from-emerald-950/20 via-zinc-900/90 to-zinc-950 flex flex-col md:flex-row items-center justify-between gap-6">
+        <SpotlightCard className="p-6 sm:p-8 border-emerald-500/20 bg-gradient-to-br from-emerald-950/20 via-zinc-900/90 to-zinc-950 flex flex-col md:flex-row items-center justify-between gap-6 shadow-2xl">
           <div className="flex items-center gap-4 text-left rtl:text-right">
             <div className="w-12 h-12 rounded-2xl bg-emerald-500/10 border border-emerald-500/30 flex items-center justify-center text-emerald-400 shrink-0 shadow-lg shadow-emerald-950">
               <ShieldCheck className="w-6 h-6" />
@@ -867,22 +901,24 @@ export default function HomePage() {
             </div>
           </div>
 
-          <Link
-            href="/fasserli"
-            className="flex items-center gap-2 px-5 py-2.5 rounded-xl bg-zinc-900 hover:bg-zinc-800 border border-zinc-700 text-zinc-200 font-bold text-xs transition-all hover:scale-105 shrink-0 cursor-pointer"
-          >
-            <Lock className="w-3.5 h-3.5 text-emerald-400" />
-            <span>
-              {locale === 'ar'
-                ? 'تجربة الفحص الآمن'
-                : locale === 'derja'
-                ? 'Jarreb el Scanner el Sécurisé'
-                : locale === 'en'
-                ? 'Test Secure OCR'
-                : 'Tester le Scanner Sécurisé'}
-            </span>
-          </Link>
-        </div>
+          <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+            <Link
+              href="/fasserli"
+              className="flex items-center gap-2 px-5 py-2.5 rounded-xl bg-zinc-900 hover:bg-zinc-800 border border-zinc-700 text-zinc-200 font-bold text-xs transition-all shrink-0 cursor-pointer shadow-md"
+            >
+              <Lock className="w-3.5 h-3.5 text-emerald-400" />
+              <span>
+                {locale === 'ar'
+                  ? 'تجربة الفحص الآمن'
+                  : locale === 'derja'
+                  ? 'Jarreb el Scanner el Sécurisé'
+                  : locale === 'en'
+                  ? 'Test Secure OCR'
+                  : 'Tester le Scanner Sécurisé'}
+              </span>
+            </Link>
+          </motion.div>
+        </SpotlightCard>
       </section>
 
     </div>
