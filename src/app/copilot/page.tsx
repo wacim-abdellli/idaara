@@ -10,18 +10,12 @@ import {
   MicOff,
   ArrowUp,
   RotateCcw,
-  Settings,
-  X,
-  Check,
-  ChevronDown,
-  SlidersHorizontal,
   FileCheck2,
   Car,
   Briefcase,
   FileText,
   ShieldCheck,
   Plane,
-  ExternalLink,
 } from 'lucide-react';
 
 export default function CopilotPage() {
@@ -31,12 +25,7 @@ export default function CopilotPage() {
   const [inputVal, setInputVal] = useState('');
   const [isProcessing, setIsProcessing] = useState(false);
   const [isRecording, setIsRecording] = useState(false);
-  const [activeProvider, setActiveProvider] = useState<string>('auto');
-  const [customApiKey, setCustomApiKey] = useState<string>('');
-  const [showSettingsModal, setShowSettingsModal] = useState<boolean>(false);
   const [showPlusMenu, setShowPlusMenu] = useState<boolean>(false);
-  const [showModelDropdown, setShowModelDropdown] = useState<boolean>(false);
-  const [providerBadge, setProviderBadge] = useState<string>('Llama 3.3 70B');
 
   const messagesContainerRef = useRef<HTMLDivElement | null>(null);
   const textareaRef = useRef<HTMLTextAreaElement | null>(null);
@@ -45,12 +34,6 @@ export default function CopilotPage() {
 
   useEffect(() => {
     if (typeof window !== 'undefined') {
-      const savedKey = localStorage.getItem('idaara_custom_api_key') || '';
-      const savedProvider = localStorage.getItem('idaara_ai_provider') || 'groq';
-      setCustomApiKey(savedKey);
-      setActiveProvider(savedProvider);
-      setProviderBadge('Llama 3.3 70B');
-
       const urlParams = new URLSearchParams(window.location.search);
       const q = urlParams.get('q');
       if (q && q.trim()) handleSendMessage(q.trim());
@@ -126,12 +109,11 @@ export default function CopilotPage() {
       const res = await fetch('/api/copilot', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ prompt: query, locale, history, userApiKey: customApiKey, provider: activeProvider }),
+        body: JSON.stringify({ prompt: query, locale, history }),
       });
 
       const data = await res.json();
       const response = data.result || {};
-      if (response.providerName) setProviderBadge(response.providerName);
 
       setMessages((prev) => [
         ...prev,
@@ -201,22 +183,6 @@ export default function CopilotPage() {
     }
   };
 
-  const saveSettings = () => {
-    localStorage.setItem('idaara_custom_api_key', customApiKey.trim());
-    localStorage.setItem('idaara_ai_provider', activeProvider);
-    const map: Record<string, string> = {
-      auto: 'Auto-Smart',
-      nvidia: 'NVIDIA NIM (70B)',
-      groq: 'Groq Llama 3.3',
-      gemini: 'Gemini 1.5 Flash',
-      openrouter: 'OpenRouter Free',
-      local: 'Civic Engine',
-    };
-    setProviderBadge(map[activeProvider] || 'Auto-Smart');
-    setShowSettingsModal(false);
-    setShowModelDropdown(false);
-  };
-
   const centerHeadline =
     locale === 'ar'
       ? "فاش نجم نعاونك اليوم؟"
@@ -239,69 +205,20 @@ export default function CopilotPage() {
   return (
     <div className="fixed inset-x-0 top-14 bottom-0 z-30 flex flex-col bg-[#09090b] text-white overflow-hidden">
 
-      {/* ─── Top Bar (Exact ChatGPT style) ─── */}
+      {/* ─── Top Bar: Single Dedicated Idaara Copilot Branding ─── */}
       <header className="shrink-0 h-13 px-4 sm:px-6 flex items-center justify-between border-b border-white/5 bg-[#09090b]/90 backdrop-blur-xl z-20">
         
-        {/* Model Selector Dropdown on Left */}
-        <div className="relative">
-          <button
-            onClick={() => setShowModelDropdown((p) => !p)}
-            className="flex items-center gap-2 px-3 py-1.5 rounded-xl hover:bg-white/10 text-zinc-200 font-semibold text-sm transition-colors cursor-pointer border-0 outline-none"
-          >
-            <span>Idaara Copilot</span>
-            <span className="text-[11px] font-mono text-zinc-400 font-normal">({providerBadge})</span>
-            <ChevronDown className="w-3.5 h-3.5 text-zinc-400" />
-          </button>
-
-          {/* Model Dropdown Menu */}
-          {showModelDropdown && (
-            <div className="absolute top-full left-0 mt-1.5 w-72 rounded-2xl bg-[#1e1e1e] border border-white/10 shadow-2xl p-2 z-50 animate-fade-in space-y-1">
-              {[
-                { id: 'auto', name: '⚡ Auto-Smart', desc: 'Auto-detects best free key' },
-                { id: 'groq', name: '🚀 Groq Llama 3.3', desc: 'Ultra-fast 70B (console.groq.com)' },
-                { id: 'nvidia', name: '🟢 NVIDIA NIM 70B', desc: 'Free build.nvidia.com key' },
-                { id: 'gemini', name: '✨ Google Gemini 1.5', desc: 'Free aistudio.google.com' },
-                { id: 'openrouter', name: '🌐 OpenRouter Free', desc: 'Free Llama/DeepSeek models' },
-                { id: 'local', name: '🏛️ Civic Engine', desc: 'No API key needed (Offline)' },
-              ].map((m) => (
-                <button
-                  key={m.id}
-                  onClick={() => {
-                    setActiveProvider(m.id);
-                    localStorage.setItem('idaara_ai_provider', m.id);
-                    setProviderBadge(m.name.replace(/^[^\s]+\s/, ''));
-                    setShowModelDropdown(false);
-                  }}
-                  className={`w-full flex items-center justify-between px-3 py-2 rounded-xl text-left text-xs transition-colors cursor-pointer border-0 outline-none ${
-                    activeProvider === m.id ? 'bg-white/10 text-white font-semibold' : 'text-zinc-300 hover:bg-white/5'
-                  }`}
-                >
-                  <div>
-                    <div className="text-sm">{m.name}</div>
-                    <div className="text-[10px] text-zinc-400">{m.desc}</div>
-                  </div>
-                  {activeProvider === m.id && <Check className="w-4 h-4 text-emerald-400" />}
-                </button>
-              ))}
-
-              <div className="pt-1.5 mt-1 border-t border-white/10">
-                <button
-                  onClick={() => {
-                    setShowModelDropdown(false);
-                    setShowSettingsModal(true);
-                  }}
-                  className="w-full flex items-center gap-2 px-3 py-2 rounded-xl text-xs text-zinc-400 hover:text-white hover:bg-white/5 transition-colors cursor-pointer border-0 outline-none"
-                >
-                  <Settings className="w-3.5 h-3.5" />
-                  <span>Enter Free API Key...</span>
-                </button>
-              </div>
-            </div>
-          )}
+        {/* Left: Official Brand Label */}
+        <div className="flex items-center gap-2.5">
+          <div className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
+          <span className="text-sm font-bold text-white tracking-tight">Idaara Copilot</span>
+          <span className="text-[10px] font-mono text-emerald-400/90 bg-emerald-950/60 border border-emerald-800/40 px-2 py-0.5 rounded-full">
+            Official Civic AI
+          </span>
         </div>
 
-        {/* Right Actions */}
-        <div className="flex items-center gap-1.5">
+        {/* Right: New Chat Action */}
+        <div>
           {messages.length > 0 && (
             <button
               onClick={() => setMessages([])}
@@ -309,21 +226,13 @@ export default function CopilotPage() {
               title="New Chat"
             >
               <RotateCcw className="w-3.5 h-3.5" />
-              <span className="hidden sm:inline">New Chat</span>
+              <span>New Chat</span>
             </button>
           )}
-
-          <button
-            onClick={() => setShowSettingsModal(true)}
-            className="p-2 rounded-xl hover:bg-white/10 text-zinc-400 hover:text-white transition-colors cursor-pointer border-0 outline-none"
-            title="Settings"
-          >
-            <Settings className="w-4 h-4" />
-          </button>
         </div>
       </header>
 
-      {/* ─── Empty State (Exact ChatGPT style centered headline & bar) ─── */}
+      {/* ─── Empty State: Clean Native ChatGPT style ─── */}
       {messages.length === 0 && !isProcessing && (
         <div className="flex-1 flex flex-col items-center justify-center px-4 sm:px-6 max-w-2xl mx-auto w-full -mt-8">
           
@@ -332,7 +241,7 @@ export default function CopilotPage() {
             {centerHeadline}
           </h1>
 
-          {/* Centered Floating Prompt Input Bar (NO green border, clean ChatGPT style) */}
+          {/* Centered Floating Prompt Input Bar */}
           <div className="w-full relative">
             <div className="flex items-center gap-2 bg-[#212121] hover:bg-[#262626] border border-white/10 rounded-full px-4 py-2.5 shadow-2xl transition-all">
               
@@ -369,7 +278,7 @@ export default function CopilotPage() {
                 )}
               </div>
 
-              {/* Text Input (Zero green outline or border) */}
+              {/* Text Input */}
               <input
                 autoFocus
                 type="text"
@@ -449,7 +358,7 @@ export default function CopilotPage() {
           <footer className="shrink-0 pb-4 pt-2 bg-gradient-to-t from-[#09090b] via-[#09090b]/95 to-transparent z-20 px-4 sm:px-6">
             <div className="max-w-3xl mx-auto space-y-2">
               
-              {/* Bottom Pill Input (NO green border) */}
+              {/* Bottom Pill Input */}
               <div className="flex items-end gap-2 bg-[#212121] border border-white/10 rounded-3xl px-3 py-2 transition-all shadow-2xl">
                 
                 {/* Plus Topic Button */}
@@ -485,7 +394,7 @@ export default function CopilotPage() {
                   )}
                 </div>
 
-                {/* Auto-growing Textarea (Zero green border) */}
+                {/* Auto-growing Textarea */}
                 <textarea
                   ref={textareaRef}
                   rows={1}
@@ -532,97 +441,6 @@ export default function CopilotPage() {
             </div>
           </footer>
         </>
-      )}
-
-      {/* ─── Model & API Key Settings Modal ─── */}
-      {showSettingsModal && (
-        <div
-          className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/75 backdrop-blur-md"
-          onClick={() => setShowSettingsModal(false)}
-        >
-          <div
-            className="w-full max-w-lg bg-[#1e1e1e] border border-white/10 rounded-2xl p-6 shadow-2xl space-y-4 text-white"
-            onClick={(e) => e.stopPropagation()}
-          >
-            <div className="flex items-center justify-between border-b border-white/10 pb-3">
-              <div className="flex items-center gap-2">
-                <SlidersHorizontal className="w-4 h-4 text-emerald-400" />
-                <h3 className="text-sm font-bold">AI Providers & Free API Keys</h3>
-              </div>
-              <button onClick={() => setShowSettingsModal(false)} className="p-1 rounded-lg text-zinc-400 hover:text-white hover:bg-white/10 cursor-pointer border-0 outline-none">
-                <X className="w-4 h-4" />
-              </button>
-            </div>
-
-            <div className="space-y-2">
-              <p className="text-xs text-zinc-400 font-semibold">Choose Your Free AI Provider</p>
-              <div className="grid grid-cols-2 gap-2">
-                {[
-                  { id: 'auto',       label: '⚡ Auto-Smart',         sub: 'Auto-detect key' },
-                  { id: 'groq',       label: '🚀 Groq Llama 3.3',    sub: 'Ultra-fast 70B' },
-                  { id: 'nvidia',     label: '🟢 NVIDIA NIM 70B',    sub: '1000 free calls' },
-                  { id: 'gemini',     label: '✨ Google Gemini 1.5', sub: '15 RPM free' },
-                  { id: 'openrouter', label: '🌐 OpenRouter Free',   sub: 'Free models pool' },
-                  { id: 'local',      label: '🏛️ Civic Engine',      sub: 'Built-in (No key)' },
-                ].map(({ id, label, sub }) => (
-                  <button
-                    key={id}
-                    onClick={() => setActiveProvider(id)}
-                    className={`p-3 rounded-xl border text-left text-xs transition-all cursor-pointer border-0 outline-none ${
-                      activeProvider === id
-                        ? 'bg-white/10 border-white/30 text-white font-semibold'
-                        : 'bg-black/20 border-white/5 text-zinc-400 hover:text-white hover:bg-white/5'
-                    }`}
-                  >
-                    <div className="flex items-center justify-between">
-                      <span>{label}</span>
-                      {activeProvider === id && <Check className="w-3.5 h-3.5 text-emerald-400" />}
-                    </div>
-                    <div className="text-[10px] text-zinc-400 mt-0.5">{sub}</div>
-                  </button>
-                ))}
-              </div>
-            </div>
-
-            {/* API Key Input */}
-            <div className="space-y-2">
-              <div className="flex items-center justify-between">
-                <p className="text-xs text-zinc-400 font-semibold">Paste Your Free API Key</p>
-                <div className="flex items-center gap-2 text-[11px] text-emerald-400">
-                  <a href="https://console.groq.com/keys" target="_blank" rel="noreferrer" className="hover:underline flex items-center gap-0.5">
-                    Groq <ExternalLink className="w-2.5 h-2.5" />
-                  </a>
-                  <span>·</span>
-                  <a href="https://build.nvidia.com" target="_blank" rel="noreferrer" className="hover:underline flex items-center gap-0.5">
-                    NVIDIA <ExternalLink className="w-2.5 h-2.5" />
-                  </a>
-                  <span>·</span>
-                  <a href="https://aistudio.google.com/app/apikey" target="_blank" rel="noreferrer" className="hover:underline flex items-center gap-0.5">
-                    Gemini <ExternalLink className="w-2.5 h-2.5" />
-                  </a>
-                </div>
-              </div>
-
-              <input
-                type="password"
-                value={customApiKey}
-                onChange={(e) => setCustomApiKey(e.target.value)}
-                placeholder="gsk_... (Groq) or nvapi-... (NVIDIA) or AIzaSy... (Gemini) or sk-or-... (OpenRouter)"
-                className="w-full bg-black/40 border border-white/10 rounded-xl px-3 py-2.5 text-xs font-mono text-white placeholder-zinc-600 border-0 outline-none ring-0 focus:border-0 focus:outline-none focus:ring-0 focus-visible:ring-0"
-              />
-              <p className="text-[10px] text-zinc-400">Saved only inside your browser local storage.</p>
-            </div>
-
-            <div className="flex justify-end gap-2 pt-2">
-              <button onClick={() => setShowSettingsModal(false)} className="px-4 py-2 rounded-xl text-xs text-zinc-400 hover:text-white cursor-pointer border-0 outline-none">
-                Cancel
-              </button>
-              <button onClick={saveSettings} className="px-4 py-2 rounded-xl bg-white hover:bg-zinc-200 text-black font-bold text-xs cursor-pointer shadow-md border-0 outline-none">
-                Save & Apply
-              </button>
-            </div>
-          </div>
-        </div>
       )}
 
     </div>
