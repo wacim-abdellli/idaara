@@ -105,7 +105,7 @@ function renderFormattedContent(text: string): React.ReactNode {
     if (line.startsWith('#')) {
       const headerText = line.replace(/^#+\s*/, '');
       blocks.push(
-        <h4 key={`h-${i}`} className="text-base sm:text-lg font-bold text-white tracking-tight pt-2 pb-0.5 flex items-center gap-2">
+        <h4 key={`h-${i}`} dir="auto" className="text-base sm:text-lg font-bold text-white tracking-tight pt-2 pb-0.5 flex items-center gap-2">
           <span className="w-1 h-3.5 rounded-full bg-emerald-400 inline-block shrink-0" />
           <span>{renderInlineStyles(headerText)}</span>
         </h4>
@@ -118,9 +118,9 @@ function renderFormattedContent(text: string): React.ReactNode {
     const boldHeaderMatch = line.match(/^\*\*([^*]+)\*\*:?$/);
     if (boldHeaderMatch) {
       blocks.push(
-        <h5 key={`bh-${i}`} className="text-sm sm:text-base font-bold text-emerald-400 tracking-tight pt-2 pb-0.5 flex items-center gap-2">
+        <h5 key={`bh-${i}`} dir="auto" className="text-sm sm:text-base font-bold text-emerald-400 tracking-tight pt-2 pb-0.5 flex items-center gap-2">
           <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 inline-block shrink-0" />
-          <span>{boldHeaderMatch[1]}</span>
+          <bdi>{boldHeaderMatch[1]}</bdi>
         </h5>
       );
       i++;
@@ -131,7 +131,7 @@ function renderFormattedContent(text: string): React.ReactNode {
     const numberedMatch = line.match(/^(\d+)\.\s+(.+)$/);
     if (numberedMatch) {
       blocks.push(
-        <div key={`num-${i}`} className="flex items-start gap-2.5 pl-1 my-1">
+        <div key={`num-${i}`} dir="auto" className="flex items-start gap-2.5 pl-1 my-1">
           <span className="flex items-center justify-center w-5 h-5 rounded-full bg-white/10 text-emerald-400 text-xs font-mono font-bold shrink-0 mt-0.5">
             {numberedMatch[1]}
           </span>
@@ -148,7 +148,7 @@ function renderFormattedContent(text: string): React.ReactNode {
     if (line.startsWith('- ') || line.startsWith('* ') || line.startsWith('• ')) {
       const bulletText = line.replace(/^[-*•]\s+/, '');
       blocks.push(
-        <div key={`bullet-${i}`} className="flex items-start gap-2.5 pl-2 my-1">
+        <div key={`bullet-${i}`} dir="auto" className="flex items-start gap-2.5 pl-2 my-1">
           <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 shrink-0 mt-2" />
           <span className="text-zinc-200 flex-1 leading-relaxed">
             {renderInlineStyles(bulletText)}
@@ -159,37 +159,37 @@ function renderFormattedContent(text: string): React.ReactNode {
       continue;
     }
 
-    // 8. Normal paragraph
+    // 8. Normal paragraph with BiDi auto-direction
     blocks.push(
-      <p key={`p-${i}`} className="leading-relaxed text-zinc-100">
+      <p key={`p-${i}`} dir="auto" className="leading-relaxed text-zinc-100">
         {renderInlineStyles(line)}
       </p>
     );
     i++;
   }
 
-  return <div className="space-y-1.5 text-[15px] sm:text-base leading-relaxed text-zinc-100 font-normal">{blocks}</div>;
+  return <div dir="auto" className="space-y-1.5 text-[15px] sm:text-base leading-relaxed text-zinc-100 font-normal">{blocks}</div>;
 }
 
-/** Inline bold and code styling */
+/** Inline bold, code, and bidirectional text isolation */
 function renderInlineStyles(text: string): React.ReactNode {
   const parts = text.split(/(\*\*[^*]+\*\*|`[^`]+`)/g);
   return parts.map((part, i) => {
     if (part.startsWith('**') && part.endsWith('**')) {
       return (
         <strong key={i} className="font-bold text-white">
-          {part.slice(2, -2)}
+          <bdi>{part.slice(2, -2)}</bdi>
         </strong>
       );
     }
     if (part.startsWith('`') && part.endsWith('`')) {
       return (
         <code key={i} className="px-1.5 py-0.5 rounded bg-white/10 text-emerald-300 font-mono text-xs">
-          {part.slice(1, -1)}
+          <bdi>{part.slice(1, -1)}</bdi>
         </code>
       );
     }
-    return <span key={i}>{part}</span>;
+    return <bdi key={i}>{part}</bdi>;
   });
 }
 
@@ -267,7 +267,7 @@ export const ChatMessage: React.FC<ChatMessageProps> = ({ message }) => {
   if (!isAssistant) {
     return (
       <div className="w-full py-2 flex justify-end">
-        <div className="max-w-[85%] sm:max-w-[75%] px-4 py-2.5 rounded-3xl bg-[#2f2f2f] text-white text-sm sm:text-[15px] leading-relaxed shadow-sm">
+        <div dir="auto" className="max-w-[85%] sm:max-w-[75%] px-4 py-2.5 rounded-3xl bg-[#2f2f2f] text-white text-sm sm:text-[15px] leading-relaxed shadow-sm">
           {message.content}
         </div>
       </div>
@@ -278,7 +278,7 @@ export const ChatMessage: React.FC<ChatMessageProps> = ({ message }) => {
   return (
     <div className="w-full py-3 space-y-3">
       {/* Content directly on canvas with rich markdown & table rendering */}
-      <div className="prose-chat text-zinc-100">
+      <div dir="auto" className="prose-chat text-zinc-100">
         {renderFormattedContent(message.content)}
       </div>
 
