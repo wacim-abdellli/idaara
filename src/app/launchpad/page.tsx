@@ -14,6 +14,8 @@ export default function LaunchpadPage() {
   const headlineMain =
     locale === 'ar'
       ? 'فضاء المستقلين والمشاريع'
+      : locale === 'derja'
+      ? 'Fadha2 el Freelancers w el Machari3'
       : locale === 'en'
       ? 'Freelancer & Founder'
       : 'Espace Freelance & Création';
@@ -21,6 +23,8 @@ export default function LaunchpadPage() {
   const headlineAccent =
     locale === 'ar'
       ? 'والمبادر الذاتي.'
+      : locale === 'derja'
+      ? 'w el Auto-Entrepreneur (1%).'
       : locale === 'en'
       ? 'Launchpad 1% Tax.'
       : "d'Entreprise (1%).";
@@ -28,6 +32,8 @@ export default function LaunchpadPage() {
   const subtitle =
     locale === 'ar'
       ? 'قارن بين الأنظمة الجبائية (مبادر ذاتي مقابل براءة مقابل SUARL)، احسب ضرائبك بـ 1%، واستخرج فواتير التصدير بالعملة الأجنبية وفق بنك تونس المركزي.'
+      : locale === 'derja'
+      ? '9aren bin el statuts (Auto-Entrepreneur vs Patente vs SUARL)، a7seb dharibtek b’1%، w talla3 factures export bi-devises mrigla m3a el BCT.'
       : locale === 'en'
       ? 'Compare legal structures (Auto-Entrepreneur vs. Sole Proprietor vs. SUARL), simulate 1% flat tax & CNSS dues, and generate BCT-compliant foreign currency export invoices.'
       : "Comparez les régimes fiscaux (Auto-Entrepreneur vs Patente vs SUARL), simulez vos impôts au taux forfaitaire de 1%, et éditez vos factures d'exportation conformes à la BCT.";
@@ -38,6 +44,8 @@ export default function LaunchpadPage() {
       label:
         locale === 'ar'
           ? 'مقارنة الأنظمة القانونية'
+          : locale === 'derja'
+          ? 'M9arna bin les Statuts'
           : locale === 'en'
           ? 'Legal Status Matrix'
           : 'Comparateur des Statuts',
@@ -48,6 +56,8 @@ export default function LaunchpadPage() {
       label:
         locale === 'ar'
           ? 'محاكي الضريبة 1% والـ CNSS'
+          : locale === 'derja'
+          ? 'Calculateur Driba 1% w CNSS'
           : locale === 'en'
           ? '1% Flat Tax & CNSS Simulator'
           : 'Simulateur Impôts 1% & CNSS',
@@ -58,6 +68,8 @@ export default function LaunchpadPage() {
       label:
         locale === 'ar'
           ? 'فواتير التصدير (EUR / USD)'
+          : locale === 'derja'
+          ? 'Factures Export (EUR / USD)'
           : locale === 'en'
           ? 'FX Export Invoices (EUR / USD)'
           : 'Facturation Export (EUR / USD)',
@@ -66,15 +78,89 @@ export default function LaunchpadPage() {
   ];
 
   const frameworkSpecs = [
-    { title: '1% Impôt Unique', desc: 'Prestations de services & devs', tag: 'Loi de Finances' },
-    { title: '~50 DT / Trimestre', desc: 'Couverture santé CNSS', tag: 'Forfaitaire' },
-    { title: '0% TVA Export', desc: 'Devises EUR / USD rapatriées', tag: 'Non assujetti' },
-    { title: 'BCT Conforme', desc: 'Factures export homologuées', tag: 'Banque Centrale' },
+    {
+      title:
+        locale === 'ar'
+          ? '1% ضريبة وحيدة'
+          : locale === 'derja'
+          ? '1% Driba Wa7ida'
+          : locale === 'en'
+          ? '1% Single Flat Tax'
+          : '1% Impôt Unique',
+      desc:
+        locale === 'ar'
+          ? 'للخدمات والمطورين'
+          : locale === 'derja'
+          ? 'Services & Développeurs'
+          : locale === 'en'
+          ? 'Service providers & devs'
+          : 'Prestations de services & devs',
+      tag: 'Loi de Finances',
+    },
+    {
+      title:
+        locale === 'ar'
+          ? '~50 د.ت / ثلاثية'
+          : locale === 'derja'
+          ? '~50 DT / Thlethya'
+          : locale === 'en'
+          ? '~50 DT / Quarter'
+          : '~50 DT / Trimestre',
+      desc:
+        locale === 'ar'
+          ? 'تغطية صحية CNSS'
+          : locale === 'derja'
+          ? 'Couverture CNSS'
+          : locale === 'en'
+          ? 'CNSS Health coverage'
+          : 'Couverture santé CNSS',
+      tag: 'Forfaitaire',
+    },
+    {
+      title:
+        locale === 'ar'
+          ? '0% TVA للتصدير'
+          : locale === 'derja'
+          ? '0% TVA fel Export'
+          : locale === 'en'
+          ? '0% VAT on Export'
+          : '0% TVA Export',
+      desc:
+        locale === 'ar'
+          ? 'تحويل العملة الصعبة'
+          : locale === 'derja'
+          ? 'Devises EUR / USD'
+          : locale === 'en'
+          ? 'EUR / USD repatriation'
+          : 'Devises EUR / USD rapatriées',
+      tag: 'Non assujetti',
+    },
+    {
+      title:
+        locale === 'ar'
+          ? 'مطابق للبنك المركزي'
+          : locale === 'derja'
+          ? 'BCT Conforme'
+          : locale === 'en'
+          ? 'BCT Compliant'
+          : 'BCT Conforme',
+      desc:
+        locale === 'ar'
+          ? 'فواتير تصدير قانونية'
+          : locale === 'derja'
+          ? 'Factures export homologuées'
+          : locale === 'en'
+          ? 'Homologated FX invoices'
+          : 'Factures export homologuées',
+      tag: 'Banque Centrale',
+    },
   ];
 
   const registrationTitle =
     locale === 'ar'
       ? 'هل أنت مستعد للتسجيل كمبادر ذاتي؟'
+      : locale === 'derja'
+      ? 'Meste3ed bech t9ayed fi statut Auto-Entrepreneur?'
       : locale === 'en'
       ? 'Ready to enroll in the Tunisian Auto-Entrepreneur Regime?'
       : 'Prêt à vous inscrire au Statut Auto-Entrepreneur ?';
@@ -82,14 +168,20 @@ export default function LaunchpadPage() {
   const registrationDesc =
     locale === 'ar'
       ? 'التسجيل يتم مباشرة على البوابة الوطنية الرسمية ببطاقة التعريف الوطنية ووثيقة نشاط للحصول على البطاقة الجبائية وتغطية CNSS.'
+      : locale === 'derja'
+      ? 'El tarsim yet3adda en ligne 3al portail el rasmi mte3 el dawla b’CIN bech tekhedh el carte professionnelle mte3ek w couverture CNSS.'
       : locale === 'en'
       ? 'Registration takes place on the official national portal with your national ID card (CIN) to obtain your tax card and CNSS healthcare coverage.'
       : "L'adhésion s'effectue en ligne sur le portail officiel de l'État pour bénéficier de la couverture maladie CNSS et de la carte professionnelle.";
 
   const registrationBtn =
-    locale === 'ar' ? 'البوابة الوطنية (autoentrepreneur.tn)' :
-    locale === 'en' ? 'National Portal (autoentrepreneur.tn)' :
-    'Portail National (autoentrepreneur.tn)';
+    locale === 'ar'
+      ? 'البوابة الوطنية (autoentrepreneur.tn)'
+      : locale === 'derja'
+      ? 'El Portail el Rasmi (autoentrepreneur.tn)'
+      : locale === 'en'
+      ? 'National Portal (autoentrepreneur.tn)'
+      : 'Portail National (autoentrepreneur.tn)';
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-10 space-y-10">

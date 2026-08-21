@@ -56,6 +56,8 @@ export default function DocumentDetailPage({
           <span>
             {locale === 'ar'
               ? 'الرجوع إلى قائمة النماذج والعقود'
+              : locale === 'derja'
+              ? 'Arje3 lel les formulaires wel contrats'
               : locale === 'en'
               ? 'Back to all document templates'
               : 'Retour à la liste des formulaires'}
@@ -69,6 +71,8 @@ export default function DocumentDetailPage({
               <span>
                 {locale === 'ar'
                   ? 'نموذج مطابق لتراتيب البلدية والقباضة المالية'
+                  : locale === 'derja'
+                  ? 'Modèle Homologué Baladiya & Recette'
                   : locale === 'en'
                   ? 'Certified Model for Baladiya & Recette'
                   : 'Modèle Certifié Baladiya & Recette'}
@@ -80,9 +84,15 @@ export default function DocumentDetailPage({
             <p className="text-xs text-zinc-400 mt-1 max-w-2xl">{description}</p>
           </div>
 
-          <div className="p-3.5 rounded-2xl bg-zinc-900 border border-zinc-800 text-right shrink-0">
+          <div className="p-3.5 rounded-2xl bg-zinc-900 border border-zinc-800 text-right rtl:text-left shrink-0">
             <span className="text-[10px] text-zinc-500 block uppercase font-bold">
-              {locale === 'ar' ? 'التنبر المطلوب' : 'Timbre Requis'}
+              {locale === 'ar'
+                ? 'التنبر المطلوب'
+                : locale === 'derja'
+                ? 'El Timbre el Matloub'
+                : locale === 'en'
+                ? 'Required Stamp'
+                : 'Timbre Requis'}
             </span>
             <span className="text-base font-bold text-emerald-400">{template.requiredTimbreTND} DT</span>
           </div>

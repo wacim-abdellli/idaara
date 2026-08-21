@@ -6,17 +6,6 @@ import { OfficeCard } from '../../components/locator/OfficeCard';
 import { useLocale } from '../../context/LocaleContext';
 import { MapPin, Search, Moon, Sun, Clock, Building2, Navigation2, PhoneCall } from 'lucide-react';
 
-const REGIONS = [
-  { id: 'all', label: 'Toutes les Régions (24)' },
-  { id: 'Tunis', label: 'Tunis & Banlieue' },
-  { id: 'Ariana', label: 'Ariana' },
-  { id: 'Sousse', label: 'Sousse & Sahel' },
-  { id: 'Sfax', label: 'Sfax' },
-  { id: 'Nabeul', label: 'Nabeul / Cap Bon' },
-  { id: 'Bizerte', label: 'Bizerte' },
-  { id: 'Medenine', label: 'Djerba / Médenine' },
-];
-
 export default function LocatorPage() {
   const { t, locale } = useLocale();
   const [selectedGovernorate, setSelectedGovernorate] = useState<string>('all');
@@ -24,12 +13,75 @@ export default function LocatorPage() {
   const [scheduleMode, setScheduleMode] = useState<'regular' | 'ramadan' | 'summer'>('regular');
   const [searchQuery, setSearchQuery] = useState('');
 
+  const regions = [
+    {
+      id: 'all',
+      label:
+        locale === 'ar'
+          ? 'جميع الولايات (24)'
+          : locale === 'derja'
+          ? 'El Wilayat el Kol (24)'
+          : locale === 'en'
+          ? 'All Regions (24)'
+          : 'Toutes les Régions (24)',
+    },
+    {
+      id: 'Tunis',
+      label:
+        locale === 'ar'
+          ? 'تونس الكبرى'
+          : locale === 'derja'
+          ? 'Tounes el Kobra'
+          : locale === 'en'
+          ? 'Tunis & Suburbs'
+          : 'Tunis & Banlieue',
+    },
+    { id: 'Ariana', label: locale === 'ar' ? 'أريانة' : 'Ariana' },
+    {
+      id: 'Sousse',
+      label:
+        locale === 'ar'
+          ? 'سوسة والساحل'
+          : locale === 'derja'
+          ? 'Soussa wel Sahel'
+          : locale === 'en'
+          ? 'Sousse & Sahel'
+          : 'Sousse & Sahel',
+    },
+    { id: 'Sfax', label: locale === 'ar' ? 'صفاقس' : 'Sfax' },
+    {
+      id: 'Nabeul',
+      label:
+        locale === 'ar'
+          ? 'نابل والوطن القبلي'
+          : locale === 'derja'
+          ? 'Nabeul / Cap Bon'
+          : locale === 'en'
+          ? 'Nabeul / Cap Bon'
+          : 'Nabeul / Cap Bon',
+    },
+    { id: 'Bizerte', label: locale === 'ar' ? 'بنزرت' : 'Bizerte' },
+    {
+      id: 'Medenine',
+      label:
+        locale === 'ar'
+          ? 'مدنين وجربة'
+          : locale === 'derja'
+          ? 'Mednine w Jerba'
+          : locale === 'en'
+          ? 'Djerba / Médenine'
+          : 'Djerba / Médenine',
+    },
+  ];
+
   const categories = [
     {
       id: 'all',
       label:
         locale === 'ar'
           ? 'جميع الإدارات'
+          : locale === 'derja'
+          ? 'El Masale7 el Kol'
           : locale === 'en'
           ? 'All Agencies & Offices'
           : 'Tous les organismes',
@@ -39,6 +91,8 @@ export default function LocatorPage() {
       label:
         locale === 'ar'
           ? 'البلديات'
+          : locale === 'derja'
+          ? 'Baladiyas'
           : locale === 'en'
           ? 'Municipalities (Baladiya)'
           : 'Municipalités (Baladiya)',
@@ -48,6 +102,8 @@ export default function LocatorPage() {
       label:
         locale === 'ar'
           ? 'القباضات المالية'
+          : locale === 'derja'
+          ? '9badhat Maliya'
           : locale === 'en'
           ? 'Tax Offices (Recette des Finances)'
           : 'Recettes des Finances',
@@ -57,13 +113,45 @@ export default function LocatorPage() {
       label:
         locale === 'ar'
           ? 'مراكز البريد'
+          : locale === 'derja'
+          ? 'Bousta'
           : locale === 'en'
           ? 'Post Offices (La Poste)'
           : 'Bureaux de Poste',
     },
-    { id: 'attt', label: locale === 'en' ? 'ATTT Transport Agencies' : 'Agences ATTT' },
-    { id: 'cnam', label: locale === 'en' ? 'CNAM Health Centers' : 'Centres CNAM' },
-    { id: 'rne',  label: locale === 'en' ? 'RNE Business Registry' : 'Bureaux RNE' },
+    {
+      id: 'attt',
+      label:
+        locale === 'ar'
+          ? 'وكالات النقل الفني (ATTT)'
+          : locale === 'derja'
+          ? 'Agences ATTT'
+          : locale === 'en'
+          ? 'ATTT Transport Agencies'
+          : 'Agences ATTT',
+    },
+    {
+      id: 'cnam',
+      label:
+        locale === 'ar'
+          ? 'مراكز التأمين على المرض (CNAM)'
+          : locale === 'derja'
+          ? 'Marakez CNAM'
+          : locale === 'en'
+          ? 'CNAM Health Centers'
+          : 'Centres CNAM',
+    },
+    {
+      id: 'rne',
+      label:
+        locale === 'ar'
+          ? 'السجل الوطني للمؤسسات (RNE)'
+          : locale === 'derja'
+          ? 'Bureaux RNE'
+          : locale === 'en'
+          ? 'RNE Business Registry'
+          : 'Bureaux RNE',
+    },
   ];
 
   const filteredOffices = publicOfficesData.filter((office) => {
@@ -107,6 +195,8 @@ export default function LocatorPage() {
   const headlineMain =
     locale === 'ar'
       ? 'دليل البلديات والمصالح الإدارية'
+      : locale === 'derja'
+      ? 'Dalil el Baladiyas wel Masale7'
       : locale === 'en'
       ? 'Municipalities & Public Offices'
       : 'Annuaire des Municipalités';
@@ -114,6 +204,8 @@ export default function LocatorPage() {
   const headlineAccent =
     locale === 'ar'
       ? 'عبر 24 ولاية.'
+      : locale === 'derja'
+      ? 'Fi 24 Wilaya.'
       : locale === 'en'
       ? 'GPS Directory (24 Wilayas).'
       : '& Services Publics.';
@@ -121,15 +213,33 @@ export default function LocatorPage() {
   const subtitle =
     locale === 'ar'
       ? 'ابحث عن عناوين وأرقام هواتف وأوقات عمل أكثر من 350 بلدية ومصلحة عمومية عبر 24 ولاية — بما فيها توقيت رمضان والحصة الواحدة.'
+      : locale === 'derja'
+      ? 'Lawwej 3la les adresses, numérowet, w aw9at el khedma (Taw9it Romdhan w Séance Unique) mte3 akther men 350 baladiya w masla7a fi 24 wilaya.'
       : locale === 'en'
       ? 'Locate exact GPS coordinates, phone numbers, and official opening hours (including Ramadan & summer single-shift schedules) for over 350 public offices across all 24 governorates.'
       : "Retrouvez adresses, numéros de téléphone et horaires réels (Ramadan & Séance Unique d'été) de plus de 350 municipalités et guichets sur les 24 gouvernorats.";
 
   const coverageSpecs = [
-    { title: '350+ Organismes', desc: 'Baladiyas & Recettes', tag: '24 Wilayas' },
-    { title: 'GPS Précis', desc: 'Navigation Waze & Maps', tag: 'Direct Link' },
-    { title: 'Séances Saisons', desc: 'Ramadan & Été synchro', tag: 'Temps réel' },
-    { title: 'Appel Direct', desc: 'Standards téléphoniques', tag: 'Vérifiés' },
+    {
+      title: locale === 'ar' ? '350+ مصلحة وبلدية' : locale === 'derja' ? '350+ Masla7a' : locale === 'en' ? '350+ Public Desks' : '350+ Organismes',
+      desc: locale === 'ar' ? 'بلديات وقباضات مالية' : locale === 'derja' ? 'Baladiyas & 9badhat' : locale === 'en' ? 'Baladiyas & Tax Offices' : 'Baladiyas & Recettes',
+      tag: '24 Wilayas',
+    },
+    {
+      title: locale === 'ar' ? 'تحديد دقيق للموقع GPS' : locale === 'derja' ? 'GPS Mrigel' : locale === 'en' ? 'Precise GPS' : 'GPS Précis',
+      desc: locale === 'ar' ? 'توجيه عبر Waze وMaps' : locale === 'derja' ? 'Navigation Waze & Maps' : locale === 'en' ? 'Waze & Maps Navigation' : 'Navigation Waze & Maps',
+      tag: 'Direct Link',
+    },
+    {
+      title: locale === 'ar' ? 'توقيت الفصول' : locale === 'derja' ? 'Aw9at Romdhan w Sayf' : locale === 'en' ? 'Seasonal Hours' : 'Séances Saisons',
+      desc: locale === 'ar' ? 'رمضان وحصة الصيف' : locale === 'derja' ? 'Romdhan w Séance Unique' : locale === 'en' ? 'Ramadan & Summer shift' : 'Ramadan & Été synchro',
+      tag: 'Temps réel',
+    },
+    {
+      title: locale === 'ar' ? 'اتصال هاتفي مباشر' : locale === 'derja' ? 'Talifoun Direct' : locale === 'en' ? 'Direct Phone Call' : 'Appel Direct',
+      desc: locale === 'ar' ? 'أرقام هواتف موثقة' : locale === 'derja' ? 'Numérowet vérifiés' : locale === 'en' ? 'Verified phone lines' : 'Standards téléphoniques',
+      tag: 'Vérifiés',
+    },
   ];
 
   return (
@@ -167,7 +277,7 @@ export default function LocatorPage() {
             <div className="flex items-center justify-between text-xs pb-2.5 border-b border-zinc-800">
               <span className="font-bold uppercase tracking-wider text-[10px] text-zinc-400 flex items-center gap-1.5">
                 <Navigation2 className="w-3.5 h-3.5 text-emerald-400" />
-                <span>{locale === 'en' ? 'Territorial Civic Radar' : 'Réseau Administratif National'}</span>
+                <span>{locale === 'en' ? 'Territorial Civic Radar' : locale === 'ar' ? 'الشبكة الإدارية الوطنية' : 'Réseau Administratif National'}</span>
               </span>
               <span className="text-[10px] font-mono text-emerald-400 bg-emerald-950/60 border border-emerald-800/50 px-2 py-0.5 rounded-full">
                 24 Wilayas
@@ -214,6 +324,10 @@ export default function LocatorPage() {
           <p className="text-[11px] text-zinc-500">
             {locale === 'ar'
               ? 'تبديل التوقيت الشتوي / توقيت رمضان / توقيت الحصة الواحدة'
+              : locale === 'derja'
+              ? 'Taw9it 3adi / Taw9it Romdhan / Séance Unique fi sayf'
+              : locale === 'en'
+              ? 'Live display of statutory administrative work shifts'
               : 'Affichage en temps réel des séances administratives homologuées'}
           </p>
         </div>
@@ -236,7 +350,7 @@ export default function LocatorPage() {
 
       {/* ── Quick Regions Bar ── */}
       <div className="flex items-center gap-2 overflow-x-auto pb-1 scrollbar-none">
-        {REGIONS.map((r) => {
+        {regions.map((r) => {
           const isSelected = (r.id === 'all' && selectedGovernorate === 'all') || selectedGovernorate === r.id;
           return (
             <button

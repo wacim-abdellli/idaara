@@ -42,6 +42,8 @@ export default function ProceduresPage() {
       label:
         locale === 'ar'
           ? 'جميع الإجراءات'
+          : locale === 'derja'
+          ? 'El Procédures el Kol'
           : locale === 'en'
           ? 'All Procedures'
           : 'Toutes les Démarches',
@@ -52,6 +54,8 @@ export default function ProceduresPage() {
       label:
         locale === 'ar'
           ? 'الهوية والمواطنة'
+          : locale === 'derja'
+          ? 'Awra9 el Houwiya (CIN & Passeport)'
           : locale === 'en'
           ? 'Identity & Citizenship'
           : 'Identité & Citoyenneté',
@@ -62,6 +66,8 @@ export default function ProceduresPage() {
       label:
         locale === 'ar'
           ? 'النقل والسيارات'
+          : locale === 'derja'
+          ? 'Krahba w Permis (ATTT)'
           : locale === 'en'
           ? 'Transport & Vehicles'
           : 'Transport & Véhicules',
@@ -72,6 +78,8 @@ export default function ProceduresPage() {
       label:
         locale === 'ar'
           ? 'الشركات والمشاريع'
+          : locale === 'derja'
+          ? 'Machari3 w Freelance'
           : locale === 'en'
           ? 'Business & Freelance'
           : 'Entreprise & Freelance',
@@ -82,6 +90,8 @@ export default function ProceduresPage() {
       label:
         locale === 'ar'
           ? 'السكن والطاقة'
+          : locale === 'derja'
+          ? 'Kré, Dar, w STEG'
           : locale === 'en'
           ? 'Housing & Energy'
           : 'Logement & Énergie',
@@ -92,6 +102,8 @@ export default function ProceduresPage() {
       label:
         locale === 'ar'
           ? 'الصحة والضمان الاجتماعي'
+          : locale === 'derja'
+          ? 'CNAM w CNSS'
           : locale === 'en'
           ? 'Health & CNAM / CNSS'
           : 'Santé & Sécurité Sociale',
@@ -102,6 +114,8 @@ export default function ProceduresPage() {
       label:
         locale === 'ar'
           ? 'الديوانة والتونسيين بالخارج'
+          : locale === 'derja'
+          ? 'Diwana & FCR'
           : locale === 'en'
           ? 'Customs & Diaspora (FCR)'
           : 'Douane & Diaspora (FCR)',
@@ -110,12 +124,78 @@ export default function ProceduresPage() {
   ];
 
   const lifeScenarios = [
-    { id: 'passeport-renouvellement', label: 'Renouvellement Passeport', tag: '80 DT' },
-    { id: 'mutation-carte-grise', label: 'Achat Voiture (Carte Grise)', tag: '145 DT' },
-    { id: 'bulletin-numero-3', label: 'Extrait B3 (Casier)', tag: '7.5 DT' },
-    { id: 'auto-entrepreneur-creation', label: 'Statut Auto-Entrepreneur', tag: '0 DT' },
-    { id: 'contrat-location-residentiel', label: 'Contrat de Bail Baladiya', tag: '35 DT' },
-    { id: 'fcr-regime-douanier', label: 'Régime Douanier FCR', tag: '50 DT' },
+    {
+      id: 'passeport-renouvellement',
+      label:
+        locale === 'ar'
+          ? 'تجديد جواز السفر'
+          : locale === 'derja'
+          ? 'Baddel el Passeport'
+          : locale === 'en'
+          ? 'Passport Renewal'
+          : 'Renouvellement Passeport',
+      tag: '80 DT',
+    },
+    {
+      id: 'mutation-carte-grise',
+      label:
+        locale === 'ar'
+          ? 'شراء سيارة (بطاقة رمادية)'
+          : locale === 'derja'
+          ? 'Chrayen Krahba (Carte Grise)'
+          : locale === 'en'
+          ? 'Car Purchase (Carte Grise)'
+          : 'Achat Voiture (Carte Grise)',
+      tag: '145 DT',
+    },
+    {
+      id: 'bulletin-numero-3',
+      label:
+        locale === 'ar'
+          ? 'بطاقة السوابق العدلية (B3)'
+          : locale === 'derja'
+          ? 'Bita9a B3 (Casier)'
+          : locale === 'en'
+          ? 'B3 Police Record'
+          : 'Extrait B3 (Casier)',
+      tag: '7.5 DT',
+    },
+    {
+      id: 'auto-entrepreneur-creation',
+      label:
+        locale === 'ar'
+          ? 'نظام المبادر الذاتي'
+          : locale === 'derja'
+          ? 'Statut Auto-Entrepreneur'
+          : locale === 'en'
+          ? 'Auto-Entrepreneur Status'
+          : 'Statut Auto-Entrepreneur',
+      tag: '0 DT',
+    },
+    {
+      id: 'contrat-location-residentiel',
+      label:
+        locale === 'ar'
+          ? 'عقد كراء سكني مصادق'
+          : locale === 'derja'
+          ? 'Contrat de Bail Baladiya'
+          : locale === 'en'
+          ? 'Residential Lease Contract'
+          : 'Contrat de Bail Baladiya',
+      tag: '35 DT',
+    },
+    {
+      id: 'fcr-regime-douanier',
+      label:
+        locale === 'ar'
+          ? 'امتياز الديوانة (ن.ت.د / FCR)'
+          : locale === 'derja'
+          ? 'Imtiyaz FCR Diwana'
+          : locale === 'en'
+          ? 'FCR Customs Privilege'
+          : 'Régime Douanier FCR',
+      tag: '50 DT',
+    },
   ];
 
   const filteredProcedures = useMemo(() => {
@@ -150,6 +230,8 @@ export default function ProceduresPage() {
   const headlineMain =
     locale === 'ar'
       ? 'دليل الإجراءات الإدارية'
+      : locale === 'derja'
+      ? 'Dalil el Démarches wel Awra9'
       : locale === 'en'
       ? 'Official Procedures'
       : 'Répertoire Officiel des Démarches';
@@ -157,6 +239,8 @@ export default function ProceduresPage() {
   const headlineAccent =
     locale === 'ar'
       ? 'خطوة بخطوة.'
+      : locale === 'derja'
+      ? 'Khatwa b’Khatwa.'
       : locale === 'en'
       ? 'Dossier Registry.'
       : 'Administratives.';
@@ -164,15 +248,61 @@ export default function ProceduresPage() {
   const subtitle =
     locale === 'ar'
       ? 'تعرف على الوثائق المطلوبة، مصاريف التنابر الجبائية، الآجال والمكاتب المعنية لكل إجراء إداري دون مفاجآت.'
+      : locale === 'derja'
+      ? 'A3ref el awra9 el matlouba, masrouf el timbres, el wa9t wel blasa win temchi l’ay démarche men ghir t3ab.'
       : locale === 'en'
       ? 'Comprehensive citizen guide with exact fiscal stamp calculations, document checklists, and target public desks across Tunisia.'
       : 'Liste exhaustive des pièces requises, calcul des timbres fiscaux au millime près, délais légaux et guichets compétents.';
 
   const civicStats = [
-    { label: locale === 'en' ? 'Verified Dossiers' : 'Démarches Certifiées', val: '11 Procédures', desc: 'JORT & Décrets' },
-    { label: locale === 'en' ? 'Fiscal Stamp Accuracy' : 'Précision Timbres', val: '100% Exact', desc: 'Barème Officiel' },
-    { label: locale === 'en' ? 'Average Step Count' : 'Étapes Moyennes', val: '3 - 4 Étapes', desc: 'Circuit optimisé' },
-    { label: locale === 'en' ? 'Competent Desks' : 'Guichets & Baladiyas', val: '24 Wilayas', desc: 'Couverture nationale' },
+    {
+      label:
+        locale === 'ar'
+          ? 'إجراءات موثقة'
+          : locale === 'derja'
+          ? 'Démarches vérifiés'
+          : locale === 'en'
+          ? 'Verified Dossiers'
+          : 'Démarches Certifiées',
+      val: '11 Procédures',
+      desc: 'JORT & Décrets',
+    },
+    {
+      label:
+        locale === 'ar'
+          ? 'دقة التنابر'
+          : locale === 'derja'
+          ? 'Di9et el Timbres'
+          : locale === 'en'
+          ? 'Fiscal Stamp Accuracy'
+          : 'Précision Timbres',
+      val: '100% Exact',
+      desc: 'Barème Officiel',
+    },
+    {
+      label:
+        locale === 'ar'
+          ? 'معدل المراحل'
+          : locale === 'derja'
+          ? 'Khatwet'
+          : locale === 'en'
+          ? 'Average Step Count'
+          : 'Étapes Moyennes',
+      val: '3 - 4 Étapes',
+      desc: 'Circuit optimisé',
+    },
+    {
+      label:
+        locale === 'ar'
+          ? 'المصالح المعنية'
+          : locale === 'derja'
+          ? 'Baladiyas w Guichets'
+          : locale === 'en'
+          ? 'Competent Desks'
+          : 'Guichets & Baladiyas',
+      val: '24 Wilayas',
+      desc: 'Couverture nationale',
+    },
   ];
 
   return (

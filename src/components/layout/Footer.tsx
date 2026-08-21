@@ -18,6 +18,8 @@ export const Footer: React.FC = () => {
   const servicesTitle =
     locale === 'ar'
       ? 'الخدمات الذكية'
+      : locale === 'derja'
+      ? 'Khedmetna el Thakiya'
       : locale === 'en'
       ? 'Smart Services'
       : 'Services Intelligents';
@@ -25,6 +27,8 @@ export const Footer: React.FC = () => {
   const directoryTitle =
     locale === 'ar'
       ? 'الأدلة والإجراءات'
+      : locale === 'derja'
+      ? 'Dalil el Idara wel Démarches'
       : locale === 'en'
       ? 'Directories & Guides'
       : 'Annuaires & Démarches';
@@ -32,6 +36,8 @@ export const Footer: React.FC = () => {
   const legalTitle =
     locale === 'ar'
       ? 'الشفافية والإطار القانوني'
+      : locale === 'derja'
+      ? 'El Chafafiya wel 9anoun'
       : locale === 'en'
       ? 'Framework & Transparency'
       : 'Transparence & Cadre';
@@ -42,6 +48,8 @@ export const Footer: React.FC = () => {
       label:
         locale === 'ar'
           ? 'المساعد الصوتي بالدارجة'
+          : locale === 'derja'
+          ? 'Voice Copilot bel Derja'
           : locale === 'en'
           ? 'Voice Copilot (Derja AI)'
           : 'Voice Copilot (Derja AI)',
@@ -51,6 +59,8 @@ export const Footer: React.FC = () => {
       label:
         locale === 'ar'
           ? 'قارئ الوثائق الذكي (OCR)'
+          : locale === 'derja'
+          ? 'Fasserli el War9a (OCR)'
           : locale === 'en'
           ? 'Document Decoder (OCR)'
           : 'Décrypteur de Courriers (OCR)',
@@ -60,6 +70,8 @@ export const Footer: React.FC = () => {
       label:
         locale === 'ar'
           ? 'نماذج العقود والاستمارات الرسمية'
+          : locale === 'derja'
+          ? 'Les Contrats wel Wathaye9 PDF'
           : locale === 'en'
           ? 'Official Legal Forms & Contracts'
           : 'Formulaires & Contrats PDF',
@@ -69,6 +81,8 @@ export const Footer: React.FC = () => {
       label:
         locale === 'ar'
           ? 'حاسبة التنابر وميزانية الإجراء'
+          : locale === 'derja'
+          ? 'Calculateur el Timbres wel Masrouf'
           : locale === 'en'
           ? 'Fiscal Stamp & Budget Calculator'
           : 'Calculateur de Timbres Fiscaux',
@@ -81,6 +95,8 @@ export const Footer: React.FC = () => {
       label:
         locale === 'ar'
           ? 'دليل البلديات والمصالح (24 ولاية)'
+          : locale === 'derja'
+          ? 'Baladiyas w Masale7 (24 Wilaya)'
           : locale === 'en'
           ? 'Public Offices & Baladiyas (24 Wilayas)'
           : 'Guide des Baladiyas (24 Wilayas)',
@@ -90,6 +106,8 @@ export const Footer: React.FC = () => {
       label:
         locale === 'ar'
           ? 'فضاء المستقل والمبادر الذاتي'
+          : locale === 'derja'
+          ? 'Statut Auto-Entrepreneur 1%'
           : locale === 'en'
           ? 'Freelancers & Auto-Entrepreneurs'
           : 'Freelance & Auto-Entrepreneur',
@@ -99,6 +117,8 @@ export const Footer: React.FC = () => {
       label:
         locale === 'ar'
           ? 'دليل الإجراءات الإدارية الرسمية'
+          : locale === 'derja'
+          ? 'Dalil el Procédures el Rasmiya'
           : locale === 'en'
           ? 'Official Procedures Catalog'
           : 'Catalogue des Démarches',

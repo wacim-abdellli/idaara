@@ -19,6 +19,8 @@ export default function CalculatorPage() {
   const headlineMain =
     locale === 'ar'
       ? 'حاسبة التنابر الجبائية'
+      : locale === 'derja'
+      ? 'Calculateur el Timbres'
       : locale === 'en'
       ? 'Fiscal Stamp & Budget'
       : 'Calculateur des Timbres';
@@ -26,6 +28,8 @@ export default function CalculatorPage() {
   const headlineAccent =
     locale === 'ar'
       ? 'وميزانية الأوراق.'
+      : locale === 'derja'
+      ? 'w Masrouf el Awra9.'
       : locale === 'en'
       ? 'Counter & Dossier.'
       : 'Fiscaux & Pièces.';
@@ -33,15 +37,68 @@ export default function CalculatorPage() {
   const subtitle =
     locale === 'ar'
       ? 'احتساب المصاريف القانونية الدقيقة (تنابر 3 د.ت، 5 د.ت، 15 د.ت، 80 د.ت، صور شمسية، نسخ مطابقة) حتى لا تُفاجأ عند الشباك.'
+      : locale === 'derja'
+      ? 'A7seb el masrouf el s7i7 lel timbres (3 DT, 5 DT, 15 DT, 80 DT), el tsawer, wel copies conformes bech ma yetfadja3ch fel guichet.'
       : locale === 'en'
       ? 'Calculate the exact statutory fiscal stamps, photo fees, and copy costs for any Tunisian administrative procedure before heading to the counter.'
       : "Calculez le montant exact des timbres fiscaux (3 DT, 5 DT, 15 DT, 80 DT), photos d'identité et copies conformes pour éviter tout imprévu au guichet.";
 
   const officialTariffs = [
-    { amount: '3.000 DT', label: locale === 'en' ? 'Municipal Signature (Légalisation)' : 'Ta3rif bel Imdha2 Baladiya', desc: 'Tarif unitaire' },
-    { amount: '5.000 DT', label: locale === 'en' ? 'Civil Status & Mandates' : 'Tawkîl & 7alet Madaniya', desc: 'Recette des Finances' },
-    { amount: '15.000 DT', label: locale === 'en' ? 'Commercial Deeds & Bail' : '3a9d Kré & Bita9a B3', desc: 'Recette / Enregistrement' },
-    { amount: '80.000 DT', label: locale === 'en' ? 'Ordinary Passport Stamp' : 'Timbre Passeport Tounsi', desc: 'Tarif officiel' },
+    {
+      amount: '3.000 DT',
+      label:
+        locale === 'ar'
+          ? 'التعريف بالإمضاء بالبلدية'
+          : locale === 'derja'
+          ? 'Ta3rif bel Imdha2 Baladiya'
+          : locale === 'en'
+          ? 'Municipal Signature (Légalisation)'
+          : 'Légalisation de Signature',
+      desc:
+        locale === 'ar'
+          ? 'تعريفة موحدة'
+          : locale === 'derja'
+          ? 'Tarif unitaire'
+          : locale === 'en'
+          ? 'Unit rate'
+          : 'Tarif unitaire',
+    },
+    {
+      amount: '5.000 DT',
+      label:
+        locale === 'ar'
+          ? 'الحالة المدنية والتواكيل'
+          : locale === 'derja'
+          ? 'Tawkîl & 7alet Madaniya'
+          : locale === 'en'
+          ? 'Civil Status & Mandates'
+          : 'État Civil & Procuration',
+      desc: 'Recette des Finances',
+    },
+    {
+      amount: '15.000 DT',
+      label:
+        locale === 'ar'
+          ? 'تسجيل العقود والبطاقة عدد 3'
+          : locale === 'derja'
+          ? '3a9d Kré & Bita9a B3'
+          : locale === 'en'
+          ? 'Commercial Deeds & B3 Record'
+          : 'Bail & Bulletin N°3',
+      desc: 'Recette / Enregistrement',
+    },
+    {
+      amount: '80.000 DT',
+      label:
+        locale === 'ar'
+          ? 'طابع جواز السفر التونسي'
+          : locale === 'derja'
+          ? 'Timbre Passeport Tounsi'
+          : locale === 'en'
+          ? 'Ordinary Passport Stamp'
+          : 'Passeport Ordinaire',
+      desc: 'Tarif officiel',
+    },
   ];
 
   return (

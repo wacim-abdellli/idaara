@@ -66,6 +66,8 @@ export default function DocumentsPage() {
   const headlineMain =
     locale === 'ar'
       ? 'نماذج العقود والاستمارات'
+      : locale === 'derja'
+      ? 'Les Modèles wel Contrats'
       : locale === 'en'
       ? 'Official Legal Forms'
       : 'Formulaires & Contrats';
@@ -73,6 +75,8 @@ export default function DocumentsPage() {
   const headlineAccent =
     locale === 'ar'
       ? 'المطابقة للبلدية.'
+      : locale === 'derja'
+      ? 'Homologués Baladiya.'
       : locale === 'en'
       ? '& Certified Contracts.'
       : 'Homologués Baladiya.';
@@ -80,15 +84,85 @@ export default function DocumentsPage() {
   const subtitle =
     locale === 'ar'
       ? 'استخرج في ثوانٍ عقود الكراء، التواكيل، والتصاريح على الشرف بصيغة رسمية مطابقة مع مواقع التنابر ومناطق التعريف بالإمضاء.'
+      : locale === 'derja'
+      ? 'Talla3 fi d9i9a contrat de bail, tawkîl, walla tasri7 3al charaf b’format officiel mrigel m3a blayes el timbres wel ta3rif bel imdha2.'
       : locale === 'en'
       ? 'Generate certified lease contracts, powers of attorney, and sworn declarations formatted with exact fiscal stamp slots and legalization zones.'
       : "Générez en quelques clics vos contrats de location, procurations, déclarations sur l'honneur au format officiel conforme avec emplacements timbres fiscaux.";
 
   const legalSpecs = [
-    { title: locale === 'en' ? 'COC Compliance' : 'Conformité Code COC', desc: locale === 'en' ? 'Valid before Tunisian courts & banks' : 'Articles 1104 & suivants' },
-    { title: locale === 'en' ? 'Stamp Pre-alignment' : 'Cadres Timbres Fiscaux', desc: locale === 'en' ? 'Slots for 3 DT / 5 DT / 30 DT' : 'Réservés pour la recette' },
-    { title: locale === 'en' ? 'Baladiya Legalization' : 'Mention Ta3rif bel Imdha2', desc: locale === 'en' ? 'Formatted for municipal stamps' : 'Espace légalisation officiel' },
-    { title: locale === 'en' ? 'Instant Vector PDF' : 'Export PDF Vectoriel A4', desc: locale === 'en' ? 'Print ready, 0 sign-up needed' : 'Prêt à imprimer immédiatement' },
+    {
+      title:
+        locale === 'ar'
+          ? 'مطابق لمجلة الالتزامات (م.ا.ع)'
+          : locale === 'derja'
+          ? 'Conforme Code COC'
+          : locale === 'en'
+          ? 'COC Compliance'
+          : 'Conformité Code COC',
+      desc:
+        locale === 'ar'
+          ? 'معتمد أمام المحاكم والبنوك'
+          : locale === 'derja'
+          ? 'Articles 1104 & suivants'
+          : locale === 'en'
+          ? 'Valid before Tunisian courts & banks'
+          : 'Articles 1104 & suivants',
+    },
+    {
+      title:
+        locale === 'ar'
+          ? 'إطارات مخصصة للتنابر'
+          : locale === 'derja'
+          ? 'Cadres Timbres Fiscaux'
+          : locale === 'en'
+          ? 'Stamp Pre-alignment'
+          : 'Cadres Timbres Fiscaux',
+      desc:
+        locale === 'ar'
+          ? 'أماكن 3 د.ت / 5 د.ت / 30 د.ت'
+          : locale === 'derja'
+          ? 'Pour timbres 3 DT / 5 DT / 30 DT'
+          : locale === 'en'
+          ? 'Slots for 3 DT / 5 DT / 30 DT'
+          : 'Réservés pour la recette',
+    },
+    {
+      title:
+        locale === 'ar'
+          ? 'منطقة التعريف بالإمضاء'
+          : locale === 'derja'
+          ? 'Mention Ta3rif bel Imdha2'
+          : locale === 'en'
+          ? 'Baladiya Legalization'
+          : 'Mention Ta3rif bel Imdha2',
+      desc:
+        locale === 'ar'
+          ? 'مخصصة لخاتم البلدية'
+          : locale === 'derja'
+          ? 'Espace légalisation baladiya'
+          : locale === 'en'
+          ? 'Formatted for municipal stamps'
+          : 'Espace légalisation officiel',
+    },
+    {
+      title:
+        locale === 'ar'
+          ? 'تحميل PDF بحجم A4'
+          : locale === 'derja'
+          ? 'Export PDF Vectoriel A4'
+          : locale === 'en'
+          ? 'Instant Vector PDF'
+          : 'Export PDF Vectoriel A4',
+      desc:
+        locale === 'ar'
+          ? 'جاهز للطباعة فورياً'
+          : locale === 'derja'
+          ? 'Prêt à imprimer direct'
+          : locale === 'en'
+          ? 'Print ready, 0 sign-up needed'
+          : 'Prêt à imprimer immédiatement',
+    },
   ];
 
   return (

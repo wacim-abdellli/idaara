@@ -107,6 +107,8 @@ export default function FasserliPage() {
   const headlineMain =
     locale === 'ar'
       ? 'فسّرلي هالورقة'
+      : locale === 'derja'
+      ? 'Fasserli Hal War9a'
       : locale === 'en'
       ? 'Administrative OCR'
       : 'Décrypteur de Courriers';
@@ -114,6 +116,8 @@ export default function FasserliPage() {
   const headlineAccent =
     locale === 'ar'
       ? 'وقارئ الوثائق الذكي.'
+      : locale === 'derja'
+      ? 'w Scanner bel AI.'
       : locale === 'en'
       ? '& Legal Decoder.'
       : '& Avis Officiels.';
@@ -121,15 +125,57 @@ export default function FasserliPage() {
   const subtitle =
     locale === 'ar'
       ? 'صوّر أي وثيقة إدارية (إعلام ضريبي، استدعاء، إشعار CNSS) وسيفسّرها لك المساعد بـ 3 نقاط مع الآجال القانونية وما يجب فعله.'
+      : locale === 'derja'
+      ? 'Souwer ay war9a idariya (avis d\'imposition, convocation, CNSS...) w Idaara AI tfaserlek kol chay fi 3 n9at m3a el wa9t el 9anouni.'
       : locale === 'en'
       ? 'Scan any official notice (tax adjustment, police summons, CNSS demand) and Idaara AI will summarize it in 3 points with strict statutory deadlines.'
       : "Scannez n'importe quel courrier officiel (redressement fiscal, convocation, mise en demeure CNSS) et obtenez une synthèse juridique en 3 points.";
 
   const supportedTypes = [
-    { name: locale === 'en' ? 'Tax Audit & Adjustments' : 'Avis Fiscaux & Contrôle', tag: 'DGI / Recette' },
-    { name: locale === 'en' ? 'CNSS Social Demands' : 'Mises en Demeure CNSS', tag: 'Daman Ijtima3i' },
-    { name: locale === 'en' ? 'Police & Court Summons' : 'Convocations & Justice', tag: 'Tribunal / Police' },
-    { name: locale === 'en' ? 'Bailiff Formal Notices' : "Actes d'Huissier Notaire", tag: '3adoul Iched' },
+    {
+      name:
+        locale === 'ar'
+          ? 'الإعلامات والضرائب'
+          : locale === 'derja'
+          ? 'Avis Fiscaux w Contrôle'
+          : locale === 'en'
+          ? 'Tax Audit & Adjustments'
+          : 'Avis Fiscaux & Contrôle',
+      tag: 'DGI / Recette',
+    },
+    {
+      name:
+        locale === 'ar'
+          ? 'تنبيهات الضمان الاجتماعي'
+          : locale === 'derja'
+          ? 'Mises en Demeure CNSS'
+          : locale === 'en'
+          ? 'CNSS Social Demands'
+          : 'Mises en Demeure CNSS',
+      tag: 'Daman Ijtima3i',
+    },
+    {
+      name:
+        locale === 'ar'
+          ? 'الاستدعاءات الأمنية والعدلية'
+          : locale === 'derja'
+          ? 'Convocations Markez w Ma7kma'
+          : locale === 'en'
+          ? 'Police & Court Summons'
+          : 'Convocations & Justice',
+      tag: 'Tribunal / Police',
+    },
+    {
+      name:
+        locale === 'ar'
+          ? 'محاضر عدول التنفيذ'
+          : locale === 'derja'
+          ? "Actes 3adoul Iched"
+          : locale === 'en'
+          ? 'Bailiff Formal Notices'
+          : "Actes d'Huissier Notaire",
+      tag: '3adoul Iched',
+    },
   ];
 
   return (

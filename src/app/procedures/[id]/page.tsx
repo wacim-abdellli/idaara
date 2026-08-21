@@ -47,8 +47,16 @@ export default function ProcedureDetailPage({
         href="/procedures"
         className="inline-flex items-center gap-1.5 text-xs text-zinc-400 hover:text-emerald-400 transition-colors group"
       >
-        <ArrowLeft className="w-3.5 h-3.5 group-hover:-translate-x-1 transition-transform" />
-        <span>{locale === 'ar' ? 'الرجوع إلى دليل الإجراءات' : locale === 'en' ? 'Back to procedures' : 'Retour à la liste des démarches'}</span>
+        <ArrowLeft className="w-3.5 h-3.5 group-hover:-translate-x-1 transition-transform rtl:rotate-180" />
+        <span>
+          {locale === 'ar'
+            ? 'الرجوع إلى دليل الإجراءات'
+            : locale === 'derja'
+            ? 'Arje3 l’dalil el démarches'
+            : locale === 'en'
+            ? 'Back to procedures'
+            : 'Retour à la liste des démarches'}
+        </span>
       </Link>
 
       {/* Hero Header Card */}
@@ -62,13 +70,30 @@ export default function ProcedureDetailPage({
             </span>
             <span className="text-xs text-zinc-400 flex items-center gap-1">
               <Clock className="w-3.5 h-3.5 text-zinc-500" />
-              <span>{locale === 'ar' ? 'المدة التقديرية :' : locale === 'en' ? 'Est. duration:' : 'Délai estimé :'} <strong className="text-zinc-200 font-semibold">{procedure.estimatedProcessingTime}</strong></span>
+              <span>
+                {locale === 'ar'
+                  ? 'المدة التقديرية :'
+                  : locale === 'derja'
+                  ? 'El Wa9t el Te9ribi :'
+                  : locale === 'en'
+                  ? 'Est. duration:'
+                  : 'Délai estimé :'}{' '}
+                <strong className="text-zinc-200 font-semibold">{procedure.estimatedProcessingTime}</strong>
+              </span>
             </span>
           </div>
 
           <div className="px-3.5 py-1.5 rounded-2xl bg-zinc-900 border border-zinc-800 text-xs text-zinc-300 flex items-center gap-2">
             <Coins className="w-3.5 h-3.5 text-amber-400" />
-            <span>{locale === 'ar' ? 'معلوم التنابر :' : locale === 'en' ? 'Stamp budget:' : 'Budget Timbres :'}</span>
+            <span>
+              {locale === 'ar'
+                ? 'معلوم التنابر :'
+                : locale === 'derja'
+                ? 'Masrouf el Timbres :'
+                : locale === 'en'
+                ? 'Stamp budget:'
+                : 'Budget Timbres :'}
+            </span>
             <span className="font-mono font-extrabold text-emerald-400">{formatTND(procedure.estimatedTotalCostTND, locale)}</span>
           </div>
         </div>
@@ -89,7 +114,15 @@ export default function ProcedureDetailPage({
               className="inline-flex items-center gap-2 px-4 py-2.5 rounded-2xl bg-emerald-500 hover:bg-emerald-400 text-zinc-950 font-bold text-xs shadow-lg shadow-emerald-500/20 transition-all hover:scale-105"
             >
               <FileText className="w-4 h-4" />
-              <span>{locale === 'ar' ? 'استخراج النموذج وتعميره تلقائياً' : locale === 'en' ? 'Fill official form online' : 'Remplir le formulaire officiel en ligne'}</span>
+              <span>
+                {locale === 'ar'
+                  ? 'استخراج النموذج وتعميره تلقائياً'
+                  : locale === 'derja'
+                  ? 'Talla3 el Formulaire w 3ammrou direct'
+                  : locale === 'en'
+                  ? 'Fill official form online'
+                  : 'Remplir le formulaire officiel en ligne'}
+              </span>
             </Link>
           </div>
         )}
@@ -102,7 +135,15 @@ export default function ProcedureDetailPage({
           <div className="glass-panel rounded-3xl p-6 sm:p-7 border border-zinc-800 space-y-6 shadow-xl">
             <h2 className="text-sm sm:text-base font-bold text-white flex items-center gap-2 pb-4 border-b border-zinc-800">
               <CheckCircle2 className="w-4 h-4 text-emerald-400" />
-              <span>{locale === 'ar' ? 'المسار الإجرائي خطوة بخطوة' : locale === 'en' ? 'Step-by-step procedure guide' : 'Étapes et Démarches (Marahal el Idara)'}</span>
+              <span>
+                {locale === 'ar'
+                  ? 'المسار الإجرائي خطوة بخطوة'
+                  : locale === 'derja'
+                  ? 'El Khatwet el Idariya Khatwa b’Khatwa'
+                  : locale === 'en'
+                  ? 'Step-by-step procedure guide'
+                  : 'Étapes et Démarches (Marahal el Idara)'}
+              </span>
             </h2>
 
             <div className="space-y-6 relative before:absolute before:inset-0 before:left-3.5 rtl:before:left-auto rtl:before:right-3.5 before:w-0.5 before:bg-zinc-800">
@@ -148,14 +189,30 @@ export default function ProcedureDetailPage({
           {/* Related Offices Link */}
           <div className="p-5 rounded-3xl glass-panel border border-zinc-800 flex items-center justify-between gap-3">
             <div className="text-xs text-zinc-400">
-              <span className="text-zinc-200 font-semibold block">{locale === 'ar' ? 'هل تبحث عن أقرب مركز أو بلدية؟' : locale === 'en' ? 'Looking for the closest office or municipality?' : 'Vous cherchez le bureau le plus proche ?'}</span>
-              <span className="text-zinc-500">{locale === 'ar' ? 'اطلع على دليل المصالح والبلديات حسب ولايتك' : locale === 'en' ? 'Browse official offices in your governorate' : 'Consultez les adresses dans votre gouvernorat'}</span>
+              <span className="text-zinc-200 font-semibold block">
+                {locale === 'ar'
+                  ? 'هل تبحث عن أقرب مركز أو بلدية؟'
+                  : locale === 'derja'
+                  ? 'Tlawej 3la a9rab markez walla baladiya?'
+                  : locale === 'en'
+                  ? 'Looking for the closest office or municipality?'
+                  : 'Vous cherchez le bureau le plus proche ?'}
+              </span>
+              <span className="text-zinc-500">
+                {locale === 'ar'
+                  ? 'اطلع على دليل المصالح والبلديات حسب ولايتك'
+                  : locale === 'derja'
+                  ? 'Chouf les adresses wel baladiyas fi wilaytek'
+                  : locale === 'en'
+                  ? 'Browse official offices in your governorate'
+                  : 'Consultez les adresses dans votre gouvernorat'}
+              </span>
             </div>
             <Link
               href={`/locator`}
               className="px-4 py-2 rounded-xl bg-zinc-800 hover:bg-zinc-700 text-zinc-200 text-xs font-bold transition-all shrink-0 hover:scale-105"
             >
-              {locale === 'ar' ? 'دليل المصالح' : locale === 'en' ? 'Office Locator' : 'Annuaire GPS'}
+              {locale === 'ar' ? 'دليل المصالح' : locale === 'derja' ? 'Dalil el Masale7' : locale === 'en' ? 'Office Locator' : 'Annuaire GPS'}
             </Link>
           </div>
         </div>

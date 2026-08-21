@@ -34,6 +34,8 @@ export const BaladiyaStampGuide: React.FC<BaladiyaStampGuideProps> = ({
             <h4 className="text-xs sm:text-sm font-bold text-white leading-tight">
               {locale === 'ar'
                 ? 'دليل التعريف بالإمضاء والتنابر الجبائية بالبلدية'
+                : locale === 'derja'
+                ? 'Dalil el Ta3rif bel Imdha2 wel Timbres fel Baladiya'
                 : locale === 'en'
                 ? 'Baladiya Legalization & Stamp Placement Guide'
                 : 'Guide de Légalisation & Timbres Baladiya'}
@@ -41,6 +43,8 @@ export const BaladiyaStampGuide: React.FC<BaladiyaStampGuideProps> = ({
             <p className="text-[11px] text-zinc-400 mt-0.5">
               {locale === 'ar'
                 ? 'اتبع هذه الإرشادات لتفادي رفض العقد لدى شباك البلدية'
+                : locale === 'derja'
+                ? 'Tabba3 hal 9awa3ed bech el baladiya ma tarja3kch'
                 : locale === 'en'
                 ? 'Follow these rules to avoid rejection at the municipal window'
                 : 'Suivez ces consignes pour éviter le rejet de votre document au guichet'}
@@ -64,11 +68,21 @@ export const BaladiyaStampGuide: React.FC<BaladiyaStampGuideProps> = ({
             <div className="p-3 rounded-xl bg-zinc-900/80 border border-zinc-800 space-y-1">
               <div className="flex items-center space-x-1.5 text-xs font-bold text-zinc-200">
                 <Copy className="w-3.5 h-3.5 text-emerald-400" />
-                <span>{locale === 'ar' ? 'عدد النظائر' : locale === 'en' ? 'Copies Count' : 'Nombre d’exemplaires'}</span>
+                <span>
+                  {locale === 'ar'
+                    ? 'عدد النظائر'
+                    : locale === 'derja'
+                    ? '3 Nadhayer (Copies)'
+                    : locale === 'en'
+                    ? 'Copies Count'
+                    : 'Nombre d’exemplaires'}
+                </span>
               </div>
               <p className="text-[11px] text-zinc-400 leading-relaxed">
                 {locale === 'ar'
                   ? 'اطبع 3 نظائر أصلية (نسخة لكل طرف ونسخة للتسجيل بالقباضة).'
+                  : locale === 'derja'
+                  ? 'Imprimer 3 copies d’origine (noskha l’kol we7ed w noskha lel 9badha).'
                   : locale === 'en'
                   ? 'Print 3 original copies (1 per party + 1 for tax registration).'
                   : 'Imprimez 3 exemplaires originaux (1 pour chaque partie + 1 pour la Recette).'}
@@ -79,11 +93,21 @@ export const BaladiyaStampGuide: React.FC<BaladiyaStampGuideProps> = ({
             <div className="p-3 rounded-xl bg-zinc-900/80 border border-zinc-800 space-y-1">
               <div className="flex items-center space-x-1.5 text-xs font-bold text-zinc-200">
                 <AlertTriangle className="w-3.5 h-3.5 text-amber-400" />
-                <span>{locale === 'ar' ? 'الإمضاء الحضوري' : locale === 'en' ? 'In-Person Signing' : 'Signature en présence'}</span>
+                <span>
+                  {locale === 'ar'
+                    ? 'الإمضاء الحضوري'
+                    : locale === 'derja'
+                    ? 'Imdha2 7oudhouri'
+                    : locale === 'en'
+                    ? 'In-Person Signing'
+                    : 'Signature en présence'}
+                </span>
               </div>
               <p className="text-[11px] text-zinc-400 leading-relaxed">
                 {locale === 'ar'
                   ? '⚠️ لا تمضِ في المنزل! يجب الإمضاء أمام عون البلدية مع الاستظهار بـ CIN.'
+                  : locale === 'derja'
+                  ? '⚠️ Ma ts7a7ech fel dar! El s7a7 lezemha 9odem 3oun el baladiya b’CIN.'
                   : locale === 'en'
                   ? '⚠️ Do not sign at home! Signatures must be made in front of the officer.'
                   : '⚠️ Ne signez pas chez vous ! Les signatures se font devant l’agent avec la CIN.'}
@@ -94,11 +118,21 @@ export const BaladiyaStampGuide: React.FC<BaladiyaStampGuideProps> = ({
             <div className="p-3 rounded-xl bg-zinc-900/80 border border-zinc-800 space-y-1">
               <div className="flex items-center space-x-1.5 text-xs font-bold text-zinc-200">
                 <Stamp className="w-3.5 h-3.5 text-amber-400" />
-                <span>{locale === 'ar' ? 'إلصاق التنبر' : locale === 'en' ? 'Stamp Affixing' : 'Emplacement Timbre'}</span>
+                <span>
+                  {locale === 'ar'
+                    ? 'إلصاق التنبر'
+                    : locale === 'derja'
+                    ? 'Blaset el Timbre'
+                    : locale === 'en'
+                    ? 'Stamp Affixing'
+                    : 'Emplacement Timbre'}
+                </span>
               </div>
               <p className="text-[11px] text-zinc-400 leading-relaxed">
                 {locale === 'ar'
                   ? `يُلصق تنبر جبائي بقيمة ${formatTND(requiredTimbreTND, locale)} في أعلى الصفحة الأولى.`
+                  : locale === 'derja'
+                  ? `7ott timbre fiscal b’${formatTND(requiredTimbreTND, locale)} mel fou9 fel page loula.`
                   : locale === 'en'
                   ? `Affix a ${formatTND(requiredTimbreTND, locale)} fiscal stamp on top of the first page.`
                   : `Collez un timbre fiscal de ${formatTND(requiredTimbreTND, locale)} en haut de la 1ère page.`}

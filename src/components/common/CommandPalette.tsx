@@ -78,8 +78,22 @@ export const CommandPalette: React.FC = () => {
       {
         id: 'tool-copilot',
         category: 'tool',
-        title: locale === 'ar' ? 'المساعد الذكي بالدارجة' : locale === 'en' ? 'Voice Copilot (Derja AI)' : 'Copilot Vocal en Derja',
-        subtitle: locale === 'ar' ? 'تحدث بالصوت حول أي إجراء' : locale === 'en' ? 'Ask AI about any procedure in any language' : 'Posez vos questions par la voix ou le texte',
+        title:
+          locale === 'ar'
+            ? 'المساعد الذكي بالدارجة'
+            : locale === 'derja'
+            ? 'Voice Copilot bel Derja'
+            : locale === 'en'
+            ? 'Voice Copilot (Derja AI)'
+            : 'Copilot Vocal en Derja',
+        subtitle:
+          locale === 'ar'
+            ? 'تحدث بالصوت حول أي إجراء'
+            : locale === 'derja'
+            ? 'Tkallem bel sout 3la ay war9a walla démarche'
+            : locale === 'en'
+            ? 'Ask AI about any procedure in any language'
+            : 'Posez vos questions par la voix ou le texte',
         url: '/copilot',
         badge: 'AI',
         icon: Mic,
@@ -87,8 +101,22 @@ export const CommandPalette: React.FC = () => {
       {
         id: 'tool-fasserli',
         category: 'tool',
-        title: locale === 'ar' ? 'فسّرلي هالورقة (OCR)' : locale === 'en' ? 'Notice OCR Decoder' : 'Décrypteur de Courriers (OCR)',
-        subtitle: locale === 'ar' ? 'تحليل الإشعارات الجبائية والاستدعاءات' : locale === 'en' ? 'Scan and decode official Tunisian letters' : 'Scannez avis fiscaux et convocations',
+        title:
+          locale === 'ar'
+            ? 'فسّرلي هالورقة (OCR)'
+            : locale === 'derja'
+            ? 'Fasserli Hal War9a (OCR)'
+            : locale === 'en'
+            ? 'Notice OCR Decoder'
+            : 'Décrypteur de Courriers (OCR)',
+        subtitle:
+          locale === 'ar'
+            ? 'تحليل الإشعارات الجبائية والاستدعاءات'
+            : locale === 'derja'
+            ? 'Ta7lil les avis d’imposition wel convocations'
+            : locale === 'en'
+            ? 'Scan and decode official Tunisian letters'
+            : 'Scannez avis fiscaux et convocations',
         url: '/fasserli',
         badge: 'OCR',
         icon: Sparkles,
@@ -96,8 +124,22 @@ export const CommandPalette: React.FC = () => {
       {
         id: 'tool-calc',
         category: 'tool',
-        title: locale === 'ar' ? 'حاسبة التنابر الجبائية' : locale === 'en' ? 'Stamp & Budget Calculator' : 'Calculateur Timbres & Budget',
-        subtitle: locale === 'ar' ? 'حساب دقيق لتنابر 5د، 15د، 80د' : locale === 'en' ? 'Exact calculation for 5DT, 15DT, 80DT stamps' : 'Calcul exact des timbres 5DT, 15DT, 80DT',
+        title:
+          locale === 'ar'
+            ? 'حاسبة التنابر الجبائية'
+            : locale === 'derja'
+            ? 'Calculateur el Timbres wel Masrouf'
+            : locale === 'en'
+            ? 'Stamp & Budget Calculator'
+            : 'Calculateur Timbres & Budget',
+        subtitle:
+          locale === 'ar'
+            ? 'حساب دقيق لتنابر 5د، 15د، 80د'
+            : locale === 'derja'
+            ? '7seb s7i7 lel timbres 3DT, 5DT, 15DT, 80DT'
+            : locale === 'en'
+            ? 'Exact calculation for 5DT, 15DT, 80DT stamps'
+            : 'Calcul exact des timbres 5DT, 15DT, 80DT',
         url: '/calculator',
         badge: 'DT',
         icon: Calculator,
@@ -119,7 +161,7 @@ export const CommandPalette: React.FC = () => {
         title: getLocalized(p.title, locale),
         subtitle: `${p.estimatedProcessingTime} · ${p.estimatedTotalCostTND.toFixed(3)} DT`,
         url: `/procedures/${p.id}`,
-        badge: locale === 'ar' ? 'دليل' : locale === 'en' ? 'Guide' : 'Guide',
+        badge: locale === 'ar' ? 'دليل' : locale === 'derja' ? 'Dalil' : locale === 'en' ? 'Guide' : 'Guide',
         icon: BookOpen,
       }));
 
@@ -156,7 +198,7 @@ export const CommandPalette: React.FC = () => {
         title: getLocalized(o.name, locale),
         subtitle: `${o.governorate} · ${o.delegation}`,
         url: `/locator`,
-        badge: locale === 'ar' ? 'مكتب' : locale === 'en' ? 'Office' : 'Bureau',
+        badge: locale === 'ar' ? 'مكتب' : locale === 'derja' ? 'Bureau' : locale === 'en' ? 'Office' : 'Bureau',
         icon: Building2,
       }));
 
@@ -189,20 +231,42 @@ export const CommandPalette: React.FC = () => {
   const placeholder =
     locale === 'ar'
       ? 'ابحث عن إجراء، عقد، بلدية، أو تنبر...'
+      : locale === 'derja'
+      ? 'Lawwej 3la procédure, contrat, baladiya, timbre...'
       : locale === 'en'
       ? 'Search procedures, contracts, municipalities, or stamps...'
       : 'Rechercher une démarche, contrat, municipalité ou timbre...';
 
   const navHint =
-    locale === 'ar' ? 'للتنقل' : locale === 'en' ? 'Navigate' : 'Naviguer';
+    locale === 'ar'
+      ? 'للتنقل'
+      : locale === 'derja'
+      ? 'Tbadal'
+      : locale === 'en'
+      ? 'Navigate'
+      : 'Naviguer';
   const selectHint =
-    locale === 'ar' ? 'للاختيار' : locale === 'en' ? 'Select' : 'Sélectionner';
+    locale === 'ar'
+      ? 'للاختيار'
+      : locale === 'derja'
+      ? 'Tnakheb'
+      : locale === 'en'
+      ? 'Select'
+      : 'Sélectionner';
 
   const emptyTitle =
-    locale === 'ar' ? 'لا توجد نتائج مطابقة' : locale === 'en' ? 'No results found' : 'Aucun résultat trouvé';
+    locale === 'ar'
+      ? 'لا توجد نتائج مطابقة'
+      : locale === 'derja'
+      ? 'Ma fammech natija'
+      : locale === 'en'
+      ? 'No results found'
+      : 'Aucun résultat trouvé';
   const emptyHint =
     locale === 'ar'
       ? 'جرب كلمات مثل «جواز» أو «كراء» أو «بلدية»'
+      : locale === 'derja'
+      ? 'Jarreb klem kima «passeport», «krè», walla «baladiya»'
       : locale === 'en'
       ? 'Try keywords like "passport", "lease", or "carte grise"'
       : 'Essayez «passeport», «bail» ou «carte grise»';

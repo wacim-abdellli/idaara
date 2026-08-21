@@ -53,36 +53,55 @@ export default function HomePage() {
       type:
         locale === 'ar'
           ? 'تجديد جواز السفر التونسي'
+          : locale === 'derja'
+          ? 'Passeport Tounsi (Renouvellement)'
           : locale === 'en'
           ? 'Tunisian Passport Renewal'
           : 'Renouvellement Passeport Tunisien',
       authority:
         locale === 'ar'
           ? 'وزارة الداخلية (مركز الشرطة أو الحرس الوطني)'
+          : locale === 'derja'
+          ? 'Wizarat el Dakhiliya (Markez el Chorta / Garde)'
           : locale === 'en'
           ? 'Ministry of Interior (Police / National Guard Desk)'
           : 'Ministère de l’Intérieur (Poste de Police / Garde)',
       fee: '86.000 DT',
-      time: locale === 'ar' ? '7 - 15 يوماً' : locale === 'en' ? '7 - 15 days' : '7 - 15 jours',
+      time:
+        locale === 'ar'
+          ? '7 - 15 يوماً'
+          : locale === 'derja'
+          ? '7 - 15 Youm'
+          : locale === 'en'
+          ? '7 - 15 days'
+          : '7 - 15 jours',
       stamp:
         locale === 'ar'
           ? 'طابع جبائي 80 د.ت (تعريفة عادية)'
+          : locale === 'derja'
+          ? 'Timbre 80 DT (Tarif 3adi)'
           : locale === 'en'
           ? '80 DT Fiscal Stamp'
           : '80.000 DT (Tarif Ordinaire)',
       points: [
         locale === 'ar'
           ? 'شراء طابع جبائي بقيمة 80 د.ت من القباضة المالية'
+          : locale === 'derja'
+          ? 'Timbre fiscal 80 DT men el 9badha el Maliya'
           : locale === 'en'
           ? 'Mandatory 80 DT fiscal stamp from Recette des Finances'
           : 'Timbre fiscal 80 DT obligatoire de la Recette',
         locale === 'ar'
           ? '4 صور شمسية حديثة بخلفية بيضاء'
+          : locale === 'derja'
+          ? '4 tsawer shamsiya jdod b’fond abyedh'
           : locale === 'en'
           ? '4 recent passport photos on white background'
           : '4 photos d’identité récentes sur fond blanc',
         locale === 'ar'
           ? 'تسليم جواز السفر القديم المنتهي الصلاحية'
+          : locale === 'derja'
+          ? 'Rajja3 el passeport el 9dim el moufa'
           : locale === 'en'
           ? 'Surrender of expiring / old passport'
           : 'Restitution de l’ancien passeport',
@@ -92,36 +111,55 @@ export default function HomePage() {
       type:
         locale === 'ar'
           ? 'إعلام بالضريبة على العقارات المبنية (زبلة وخروبة)'
+          : locale === 'derja'
+          ? 'Avis d’Imposition (Zebla w Khrouba)'
           : locale === 'en'
           ? 'Municipal Property Tax Notice (Zebla w Khrouba)'
           : 'Avis d’Imposition Fiscale (Zebla w Khrouba)',
       authority:
         locale === 'ar'
           ? 'الإدارة العامة للأداءات والبلدية'
+          : locale === 'derja'
+          ? 'Idarat el Jibaya & Baladiya'
           : locale === 'en'
           ? 'General Directorate of Taxes & Municipality'
           : 'Direction Générale des Impôts & Baladiya',
       fee: '85.000 DT',
-      time: locale === 'ar' ? 'قبل 31 ديسمبر' : locale === 'en' ? 'Before Dec 31st' : 'Avant le 31 Décembre',
+      time:
+        locale === 'ar'
+          ? 'قبل 31 ديسمبر'
+          : locale === 'derja'
+          ? '9bel 31 Décembre'
+          : locale === 'en'
+          ? 'Before Dec 31st'
+          : 'Avant le 31 Décembre',
       stamp:
         locale === 'ar'
           ? 'معلوم موظف على العقار'
+          : locale === 'derja'
+          ? 'Ma3loum el Dar'
           : locale === 'en'
           ? 'Statutory Municipal Assessment'
           : 'Taxe Forfaitaire Bâtie',
       points: [
         locale === 'ar'
           ? 'معلوم بلدي سنوي إجباري على العقارات والمحلات المبنية'
+          : locale === 'derja'
+          ? 'Ma3loum baladi sanawi ejbari 3al dyar wel 3a9arat'
           : locale === 'en'
           ? 'Statutory annual municipal tax on built residential properties'
           : 'Taxe municipale annuelle sur les immeubles bâtis',
         locale === 'ar'
           ? 'الخلاص بالقباضة البلدية أو عن بعد'
+          : locale === 'derja'
+          ? 'Khalas fel 9badha el baladiya walla en ligne'
           : locale === 'en'
           ? 'Payable at municipal tax collector or via online portal'
           : 'Paiement à la Recette Municipale ou par carte',
         locale === 'ar'
           ? 'خطية تأخير بنسبة 0.75% شهرياً في صورة عدم الدفع'
+          : locale === 'derja'
+          ? 'Khatya 0.75% kol chhar ba3d el wa9t'
           : locale === 'en'
           ? '0.75% monthly late interest penalty applies after deadline'
           : 'Pénalité de 0.75% par mois en cas de retard',
@@ -131,36 +169,55 @@ export default function HomePage() {
       type:
         locale === 'ar'
           ? 'عقد كراء سكني مصادق (التعريف بالإمضاء)'
+          : locale === 'derja'
+          ? 'Contrat de Bail Mrigel (3a9d Kré)'
           : locale === 'en'
           ? 'Certified Residential Lease Agreement'
           : 'Contrat de Location Résidentiel (3a9d Kré)',
       authority:
         locale === 'ar'
           ? 'البلدية (مصلحة التعريف بالإمضاء)'
+          : locale === 'derja'
+          ? 'Baladiya (Ta3rif bel Imdha2)'
           : locale === 'en'
           ? 'Municipality (Signature Legalization Desk)'
           : 'Municipalité (Baladiya Ta3rif bel Imdha2)',
       fee: '35.000 DT',
-      time: locale === 'ar' ? 'فوري بالبلدية' : locale === 'en' ? 'Immediate at counter' : 'Immédiat au guichet',
+      time:
+        locale === 'ar'
+          ? 'فوري بالبلدية'
+          : locale === 'derja'
+          ? 'Direct fel Baladiya'
+          : locale === 'en'
+          ? 'Immediate at counter'
+          : 'Immédiat au guichet',
       stamp:
         locale === 'ar'
           ? '30 د.ت تسجيل + 5 د.ت طابع بلدي'
+          : locale === 'derja'
+          ? '30 DT Tasjil + 5 DT Timbre Baladi'
           : locale === 'en'
           ? '30 DT Registration + 5 DT Municipal'
           : '30 DT Enregistrement + 5 DT Baladiya',
       points: [
         locale === 'ar'
           ? 'مطابق للفصل 1104 من مجلة الالتزامات والعقود (م.ا.ع)'
+          : locale === 'derja'
+          ? 'Mrigel 7asb Majallat el Iltizamat wel 3o9oud (COC)'
           : locale === 'en'
           ? 'Code of Obligations & Contracts (COC) compliant'
           : 'Conforme aux articles 1104 du Code des Contrats',
         locale === 'ar'
           ? 'حضور المؤجر والمكتري شخصياً مع بطاقة التعريف'
+          : locale === 'derja'
+          ? '7dhour el keri wel mekré b’bita9at ta3rif (CIN)'
           : locale === 'en'
           ? 'Physical in-person presence of lessor and lessee required'
           : 'Légalisation des signatures en présence physique',
         locale === 'ar'
           ? 'تسجيل العقد وجوباً بالقباضة المالية خلال 60 يوماً'
+          : locale === 'derja'
+          ? 'Tasjil ejbari fel 9badha el Maliya fi 60 youm'
           : locale === 'en'
           ? 'Mandatory formal registration at tax office within 60 days'
           : 'Enregistrement obligatoire à la Recette dans les 60 jours',
@@ -204,44 +261,223 @@ export default function HomePage() {
 
   // Localized UI Labels
   const ui = {
-    nationalPlatform: locale === 'ar' ? 'إدارة.تونس · المنظومة الإدارية الذكية' : locale === 'en' ? 'IDAARA AI · NATIONAL CIVIC PLATFORM' : 'IDAARA AI · RÉSEAU CITOYEN NATIONAL',
+    nationalPlatform:
+      locale === 'ar'
+        ? 'إدارة.تونس · المنظومة الإدارية الذكية'
+        : locale === 'derja'
+        ? 'Idaara.tn · El Menassa el Idariya el Thakiya'
+        : locale === 'en'
+        ? 'IDAARA AI · NATIONAL CIVIC PLATFORM'
+        : 'IDAARA AI · RÉSEAU CITOYEN NATIONAL',
     jort2026: 'JORT 2026',
-    directAccess: locale === 'ar' ? 'روابط مباشرة :' : locale === 'en' ? 'Direct Access:' : 'Accès Direct :',
-    officialDoc: locale === 'ar' ? 'وثيقة رسمية' : locale === 'en' ? 'OFFICIAL DOCUMENT' : 'DOCUMENT OFFICIEL',
-    repTun: locale === 'ar' ? 'الجمهورية التونسية' : locale === 'en' ? 'REP. OF TUNISIA' : 'RÉP. TUNISIENNE',
-    totalEst: locale === 'ar' ? 'المجموع التقديري' : locale === 'en' ? 'Estimated Total' : 'Total Estimé',
-    legalSummary: locale === 'ar' ? 'الملخص القانوني والشروط :' : locale === 'en' ? 'LEGAL SUMMARY & REQUIREMENTS:' : 'SYNTHÈSE JURIDIQUE & EXIGENCES :',
-    fullDossier: locale === 'ar' ? 'الملف الكامل' : locale === 'en' ? 'Full Dossier' : 'Dossier Complet',
-    openStatus: locale === 'ar' ? 'مفتوح' : locale === 'en' ? 'Open' : 'Ouvert',
-    simulatorEyebrow: locale === 'ar' ? 'حاسبة المحاكاة الجبائية المباشرة' : locale === 'en' ? 'REALTIME TAX & STAMP SIMULATOR' : 'SIMULATEUR INTERACTIF EN DIRECT',
-    simulatorTitle: locale === 'ar' ? 'حاسبة الضرائب وصافي الدخل للمبادر الذاتي' : locale === 'en' ? 'Live Auto-Entrepreneur Tax & Net Calculator' : 'Calculateur Budgétaire & Fiscal en Direct',
+    directAccess:
+      locale === 'ar'
+        ? 'روابط مباشرة :'
+        : locale === 'derja'
+        ? 'Rawabit Moubechra :'
+        : locale === 'en'
+        ? 'Direct Access:'
+        : 'Accès Direct :',
+    officialDoc:
+      locale === 'ar'
+        ? 'وثيقة رسمية'
+        : locale === 'derja'
+        ? 'Wathi9a Rasmiya'
+        : locale === 'en'
+        ? 'OFFICIAL DOCUMENT'
+        : 'DOCUMENT OFFICIEL',
+    repTun:
+      locale === 'ar'
+        ? 'الجمهورية التونسية'
+        : locale === 'derja'
+        ? 'El Joumhouriya el Tounsiya'
+        : locale === 'en'
+        ? 'REP. OF TUNISIA'
+        : 'RÉP. TUNISIENNE',
+    totalEst:
+      locale === 'ar'
+        ? 'المجموع التقديري'
+        : locale === 'derja'
+        ? 'El Majmou3 el Te9ribi'
+        : locale === 'en'
+        ? 'Estimated Total'
+        : 'Total Estimé',
+    legalSummary:
+      locale === 'ar'
+        ? 'الملخص القانوني والشروط :'
+        : locale === 'derja'
+        ? 'El Chourout wel Awra9 :'
+        : locale === 'en'
+        ? 'LEGAL SUMMARY & REQUIREMENTS:'
+        : 'SYNTHÈSE JURIDIQUE & EXIGENCES :',
+    fullDossier:
+      locale === 'ar'
+        ? 'الملف الكامل'
+        : locale === 'derja'
+        ? 'El Dossier Kemel'
+        : locale === 'en'
+        ? 'Full Dossier'
+        : 'Dossier Complet',
+    openStatus:
+      locale === 'ar'
+        ? 'مفتوح'
+        : locale === 'derja'
+        ? 'Ma7loul'
+        : locale === 'en'
+        ? 'Open'
+        : 'Ouvert',
+    simulatorEyebrow:
+      locale === 'ar'
+        ? 'حاسبة المحاكاة الجبائية المباشرة'
+        : locale === 'derja'
+        ? '7asbet el Driba wel Masrouf en Direct'
+        : locale === 'en'
+        ? 'REALTIME TAX & STAMP SIMULATOR'
+        : 'SIMULATEUR INTERACTIF EN DIRECT',
+    simulatorTitle:
+      locale === 'ar'
+        ? 'حاسبة الضرائب وصافي الدخل للمبادر الذاتي'
+        : locale === 'derja'
+        ? '7asebet el Driba 1% w el CNSS lel Auto-Entrepreneur'
+        : locale === 'en'
+        ? 'Live Auto-Entrepreneur Tax & Net Calculator'
+        : 'Calculateur Budgétaire & Fiscal en Direct',
     simulatorDesc:
       locale === 'ar'
         ? 'حرّك المؤشر حسب رقم معاملاتك التقديري لمعرفة الضريبة 1% ومساهمة الضمان الاجتماعي وصافي دخلك السنوي.'
+        : locale === 'derja'
+        ? 'Baddel el curseur 7asb el Chiffre d’Affaires mte3ek bech tchouf el 1% driba, el CNSS, w 9adech yo93odlek net fi jeybek.'
         : locale === 'en'
         ? 'Adjust the revenue slider to simulate in real-time your 1% flat income tax, CNSS coverage, and net earnings.'
         : 'Ajustez le curseur de chiffre d’affaires pour simuler en temps réel vos impôts au forfait de 1% et vos cotisations CNSS.',
-    revSliderLabel: locale === 'ar' ? 'رقم المعاملات السنوي التقديري (د.ت) :' : locale === 'en' ? 'Estimated Annual Turnover (TND):' : 'Chiffre d’Affaires Annuel Estimé (TND) :',
-    legalCeiling: locale === 'ar' ? 'السقف القانوني : 75 ألف د.ت / سنوياً' : locale === 'en' ? 'Statutory Ceiling: 75,000 DT / yr' : 'Plafond Légal : 75 000 DT / an',
-    decreeBadge: locale === 'ar' ? 'امتياز قانون المبادر الذاتي (مرسوم 2020-33) :' : locale === 'en' ? 'Auto-Entrepreneur Statutory Advantage (Decree 2020-33):' : 'Avantage Loi Auto-Entrepreneur (Décret 2020-33) :',
+    revSliderLabel:
+      locale === 'ar'
+        ? 'رقم المعاملات السنوي التقديري (د.ت) :'
+        : locale === 'derja'
+        ? 'El Chiffre d’Affaires el Sanawi (DT) :'
+        : locale === 'en'
+        ? 'Estimated Annual Turnover (TND):'
+        : 'Chiffre d’Affaires Annuel Estimé (TND) :',
+    legalCeiling:
+      locale === 'ar'
+        ? 'السقف القانوني : 75 ألف د.ت / سنوياً'
+        : locale === 'derja'
+        ? 'Plafond 9anouni : 75 alf DT / 3am'
+        : locale === 'en'
+        ? 'Statutory Ceiling: 75,000 DT / yr'
+        : 'Plafond Légal : 75 000 DT / an',
+    decreeBadge:
+      locale === 'ar'
+        ? 'امتياز قانون المبادر الذاتي (مرسوم 2020-33) :'
+        : locale === 'derja'
+        ? 'Imtiyaz el Auto-Entrepreneur (Décret 2020-33) :'
+        : locale === 'en'
+        ? 'Auto-Entrepreneur Statutory Advantage (Decree 2020-33):'
+        : 'Avantage Loi Auto-Entrepreneur (Décret 2020-33) :',
     decreeText:
       locale === 'ar'
         ? 'نسبة ضريبية وحيدة 1% لمهن الخدمات والمطورين والمصممين. إعفاء كامل من الأداء على القيمة المضافة (TVA) عند التصدير مع ترخيص بالعملة الصعبة من البنك المركزي.'
+        : locale === 'derja'
+        ? 'Taux wa7id 1% lel services wel devs. Mo3fa kemel men el TVA fel export m3a dkhoul el devises homologué men el Banque Centrale (BCT).'
         : locale === 'en'
         ? 'Single 1% flat tax rate for service providers, developers, and freelancers. 0% VAT on export services with BCT foreign currency repatriation compliance.'
         : 'Taux unique libératoire de 1% pour les prestations de services et développeurs. Exonération totale de TVA à l’exportation avec rapatriement de devises (EUR / USD) homologué Banque Centrale.',
-    taxCardTitle: locale === 'ar' ? '1. الضريبة 1% (الخدمات)' : locale === 'en' ? '1. 1% Tax (Services)' : '1. Impôt 1% (Services)',
-    taxCardSub: locale === 'ar' ? 'سنوي جزافي' : locale === 'en' ? 'Annual Flat Tax' : 'Annuel forfaitaire',
-    cnssCardTitle: locale === 'ar' ? '2. التغطية الاجتماعية CNSS' : locale === 'en' ? '2. CNSS Health Coverage' : '2. CNSS Santé',
-    cnssCardSub: locale === 'ar' ? 'حوالي 50 د.ت / ثلاثية' : locale === 'en' ? '~50 DT / quarter' : '~50 DT / trimestre',
-    netCardTitle: locale === 'ar' ? '3. صافي الدخل' : locale === 'en' ? '3. Net Income' : '3. Revenu Net',
-    netCardSub: locale === 'ar' ? 'في جيبك' : locale === 'en' ? 'Take-home amount' : 'Dans votre poche',
-    radarEyebrow: locale === 'ar' ? 'الشبكة الإدارية المباشرة' : locale === 'en' ? 'TERRITORIAL PUBLIC DESK RADAR' : 'RÉSEAU TERRITORIAL EN DIRECT',
-    radarTitle: locale === 'ar' ? 'مواعيد العمل الرسمية حسب الولاية' : locale === 'en' ? 'Open Desks & Working Hours by Governorate' : 'Horaires et Guichets Ouverts par Wilaya',
-    baladiyaCardTitle: (w: string) => locale === 'ar' ? `البلديات والدوائر (${w})` : locale === 'en' ? `Municipalities & Baladiyas (${w})` : `Municipalités & Baladiyas (${w})`,
-    baladiyaCardSub: locale === 'ar' ? 'التعريف بالإمضاء (Ta3rif bel Imdha2) واستخراج مضامين الحالة المدنية.' : locale === 'en' ? 'Signature legalization & civil status certificates.' : 'Légalisation de signature (Ta3rif bel Imdha2) & Extraits d’état civil.',
-    recetteCardTitle: (w: string) => locale === 'ar' ? `القباضات المالية (${w})` : locale === 'en' ? `Tax Collection Desks (${w})` : `Recettes des Finances (${w})`,
-    recetteCardSub: locale === 'ar' ? 'شراء التنابر الجبائية (80 د.ت، 15 د.ت، 5 د.ت) وتسجيل العقود.' : locale === 'en' ? 'Fiscal stamp purchase (80 DT, 15 DT, 5 DT, 3 DT) & contract registration.' : 'Vente des timbres fiscaux (80 DT, 15 DT, 5 DT, 3 DT) et enregistrement des contrats.',
+    taxCardTitle:
+      locale === 'ar'
+        ? '1. الضريبة 1% (الخدمات)'
+        : locale === 'derja'
+        ? '1. Driba 1% (Services)'
+        : locale === 'en'
+        ? '1. 1% Tax (Services)'
+        : '1. Impôt 1% (Services)',
+    taxCardSub:
+      locale === 'ar'
+        ? 'سنوي جزافي'
+        : locale === 'derja'
+        ? 'Sanawi Forfaitaire'
+        : locale === 'en'
+        ? 'Annual Flat Tax'
+        : 'Annuel forfaitaire',
+    cnssCardTitle:
+      locale === 'ar'
+        ? '2. التغطية الاجتماعية CNSS'
+        : locale === 'derja'
+        ? '2. CNSS Daman Ijtima3i'
+        : locale === 'en'
+        ? '2. CNSS Health Coverage'
+        : '2. CNSS Santé',
+    cnssCardSub:
+      locale === 'ar'
+        ? 'حوالي 50 د.ت / ثلاثية'
+        : locale === 'derja'
+        ? '~50 DT / Thlethya'
+        : locale === 'en'
+        ? '~50 DT / quarter'
+        : '~50 DT / trimestre',
+    netCardTitle:
+      locale === 'ar'
+        ? '3. صافي الدخل'
+        : locale === 'derja'
+        ? '3. El Net mte3ek'
+        : locale === 'en'
+        ? '3. Net Income'
+        : '3. Revenu Net',
+    netCardSub:
+      locale === 'ar'
+        ? 'في جيبك'
+        : locale === 'derja'
+        ? 'Fi Jeybek'
+        : locale === 'en'
+        ? 'Take-home amount'
+        : 'Dans votre poche',
+    radarEyebrow:
+      locale === 'ar'
+        ? 'الشبكة الإدارية المباشرة'
+        : locale === 'derja'
+        ? 'Chabaket el Baladiyas wel 9badhat'
+        : locale === 'en'
+        ? 'TERRITORIAL PUBLIC DESK RADAR'
+        : 'RÉSEAU TERRITORIAL EN DIRECT',
+    radarTitle:
+      locale === 'ar'
+        ? 'مواعيد العمل الرسمية حسب الولاية'
+        : locale === 'derja'
+        ? 'Aw9at el Khedma 7asb el Wilaya'
+        : locale === 'en'
+        ? 'Open Desks & Working Hours by Governorate'
+        : 'Horaires et Guichets Ouverts par Wilaya',
+    baladiyaCardTitle: (w: string) =>
+      locale === 'ar'
+        ? `البلديات والدوائر (${w})`
+        : locale === 'derja'
+        ? `Baladiyas & Dawayir (${w})`
+        : locale === 'en'
+        ? `Municipalities & Baladiyas (${w})`
+        : `Municipalités & Baladiyas (${w})`,
+    baladiyaCardSub:
+      locale === 'ar'
+        ? 'التعريف بالإمضاء (Ta3rif bel Imdha2) واستخراج مضامين الحالة المدنية.'
+        : locale === 'derja'
+        ? 'Ta3rif bel Imdha2 w Madhmoun Wilada.'
+        : locale === 'en'
+        ? 'Signature legalization & civil status certificates.'
+        : 'Légalisation de signature (Ta3rif bel Imdha2) & Extraits d’état civil.',
+    recetteCardTitle: (w: string) =>
+      locale === 'ar'
+        ? `القباضات المالية (${w})`
+        : locale === 'derja'
+        ? `9badhat Maliya (${w})`
+        : locale === 'en'
+        ? `Tax Collection Desks (${w})`
+        : `Recettes des Finances (${w})`,
+    recetteCardSub:
+      locale === 'ar'
+        ? 'شراء التنابر الجبائية (80 د.ت، 15 د.ت، 5 د.ت) وتسجيل العقود.'
+        : locale === 'derja'
+        ? 'Chrayen el Timbres (80 DT, 15 DT, 5 DT) w tasjil el 3o9oud.'
+        : locale === 'en'
+        ? 'Fiscal stamp purchase (80 DT, 15 DT, 5 DT, 3 DT) & contract registration.'
+        : 'Vente des timbres fiscaux (80 DT, 15 DT, 5 DT, 3 DT) et enregistrement des contrats.',
   };
 
   return (
@@ -636,7 +872,15 @@ export default function HomePage() {
             className="flex items-center gap-2 px-5 py-2.5 rounded-xl bg-zinc-900 hover:bg-zinc-800 border border-zinc-700 text-zinc-200 font-bold text-xs transition-all hover:scale-105 shrink-0 cursor-pointer"
           >
             <Lock className="w-3.5 h-3.5 text-emerald-400" />
-            <span>{locale === 'en' ? 'Test Secure OCR' : 'Tester le Scanner Sécurisé'}</span>
+            <span>
+              {locale === 'ar'
+                ? 'تجربة الفحص الآمن'
+                : locale === 'derja'
+                ? 'Jarreb el Scanner el Sécurisé'
+                : locale === 'en'
+                ? 'Test Secure OCR'
+                : 'Tester le Scanner Sécurisé'}
+            </span>
           </Link>
         </div>
       </section>
