@@ -3,85 +3,165 @@
 import React from 'react';
 import Link from 'next/link';
 import { useLocale } from '../../context/LocaleContext';
-import { ShieldCheck, Heart, FileText, ExternalLink } from 'lucide-react';
+import { ShieldCheck, ExternalLink } from 'lucide-react';
 
 export const Footer: React.FC = () => {
-  const { t } = useLocale();
+  const { t, locale } = useLocale();
+
+  const servicesTitle =
+    locale === 'ar'
+      ? 'الخدمات الذكية'
+      : locale === 'en'
+      ? 'Smart Services'
+      : 'Services Intelligents';
+
+  const directoryTitle =
+    locale === 'ar'
+      ? 'الأدلة والإجراءات'
+      : locale === 'en'
+      ? 'Directories & Guides'
+      : 'Annuaires & Démarches';
+
+  const legalTitle =
+    locale === 'ar'
+      ? 'الشفافية والإطار القانوني'
+      : locale === 'en'
+      ? 'Framework & Transparency'
+      : 'Transparence & Cadre';
+
+  const servicesLinks = [
+    {
+      href: '/copilot',
+      label:
+        locale === 'ar'
+          ? 'المساعد الصوتي بالدارجة'
+          : locale === 'en'
+          ? 'Voice Copilot (Derja AI)'
+          : 'Voice Copilot (Derja AI)',
+    },
+    {
+      href: '/fasserli',
+      label:
+        locale === 'ar'
+          ? 'قارئ الوثائق الذكي (OCR)'
+          : locale === 'en'
+          ? 'Document Decoder (OCR)'
+          : 'Décrypteur de Courriers (OCR)',
+    },
+    {
+      href: '/documents',
+      label:
+        locale === 'ar'
+          ? 'نماذج العقود والاستمارات الرسمية'
+          : locale === 'en'
+          ? 'Official Legal Forms & Contracts'
+          : 'Formulaires & Contrats PDF',
+    },
+    {
+      href: '/calculator',
+      label:
+        locale === 'ar'
+          ? 'حاسبة التنابر وميزانية الإجراء'
+          : locale === 'en'
+          ? 'Fiscal Stamp & Budget Calculator'
+          : 'Calculateur de Timbres Fiscaux',
+    },
+  ];
+
+  const directoryLinks = [
+    {
+      href: '/locator',
+      label:
+        locale === 'ar'
+          ? 'دليل البلديات والمصالح (24 ولاية)'
+          : locale === 'en'
+          ? 'Public Offices & Baladiyas (24 Wilayas)'
+          : 'Guide des Baladiyas (24 Wilayas)',
+    },
+    {
+      href: '/launchpad',
+      label:
+        locale === 'ar'
+          ? 'فضاء المستقل والمبادر الذاتي'
+          : locale === 'en'
+          ? 'Freelancers & Auto-Entrepreneurs'
+          : 'Freelance & Auto-Entrepreneur',
+    },
+    {
+      href: '/procedures',
+      label:
+        locale === 'ar'
+          ? 'دليل الإجراءات الإدارية الرسمية'
+          : locale === 'en'
+          ? 'Official Procedures Catalog'
+          : 'Catalogue des Démarches',
+    },
+  ];
 
   return (
-    <footer className="border-t border-zinc-800/80 bg-zinc-950/90 text-zinc-400 text-xs mt-20">
+    <footer className="border-t border-zinc-800/80 bg-zinc-950/95 text-zinc-400 text-xs mt-20">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8 mb-12">
           {/* Col 1: Brand & Mission */}
           <div className="space-y-4 md:col-span-1">
-            <div className="flex items-center space-x-2">
-              <span className="text-xl">🏛️</span>
-              <span className="font-bold text-base text-white">Idaara.tn · إدارة.تونس</span>
-            </div>
-            <p className="text-zinc-400 text-xs leading-relaxed">
+            <Link href="/" className="flex items-center space-x-2 rtl:space-x-reverse">
+              <span className="font-extrabold text-sm text-white tracking-tight">Idaara<span className="text-emerald-400">.tn</span></span>
+              <span className="text-zinc-600">·</span>
+              <span className="text-xs text-zinc-400 font-medium">إدارة.تونس</span>
+            </Link>
+            <p className="text-zinc-500 text-xs leading-relaxed">
               {t('heroSubheadline')}
             </p>
-            <div className="flex items-center space-x-2 text-emerald-400 bg-emerald-950/40 border border-emerald-800/50 px-3 py-1.5 rounded-lg text-[11px]">
-              <ShieldCheck className="w-4 h-4 shrink-0 text-emerald-400" />
+            <div className="inline-flex items-center space-x-2 rtl:space-x-reverse text-emerald-400/90 bg-emerald-950/30 border border-emerald-800/40 px-3 py-1.5 rounded-xl text-[11px]">
+              <ShieldCheck className="w-3.5 h-3.5 shrink-0 text-emerald-400" />
               <span>Zero-Storage Privacy Protocol</span>
             </div>
           </div>
 
-          {/* Col 2: Core Tools */}
+          {/* Col 2: Core Tools (Clean text, no icons) */}
           <div>
-            <h4 className="font-semibold text-zinc-200 mb-3 text-sm">Services Intelligents</h4>
-            <ul className="space-y-2">
-              <li>
-                <Link href="/copilot" className="hover:text-emerald-400 transition-colors">
-                  🎙️ Voice Copilot (Derja AI)
-                </Link>
-              </li>
-              <li>
-                <Link href="/fasserli" className="hover:text-emerald-400 transition-colors">
-                  📄 Fasserli Hal War9a (OCR)
-                </Link>
-              </li>
-              <li>
-                <Link href="/documents" className="hover:text-emerald-400 transition-colors">
-                  📝 Smart PDF Form Generator
-                </Link>
-              </li>
-              <li>
-                <Link href="/calculator" className="hover:text-emerald-400 transition-colors">
-                  🧮 Timbre & Awra9 Budget
-                </Link>
-              </li>
+            <h4 className="font-semibold text-zinc-200 mb-3 text-xs uppercase tracking-wider">
+              {servicesTitle}
+            </h4>
+            <ul className="space-y-2.5">
+              {servicesLinks.map((link) => (
+                <li key={link.href}>
+                  <Link
+                    href={link.href}
+                    className="text-zinc-400 hover:text-emerald-400 transition-colors text-xs inline-block"
+                  >
+                    {link.label}
+                  </Link>
+                </li>
+              ))}
             </ul>
           </div>
 
-          {/* Col 3: Directories & Guides */}
+          {/* Col 3: Directories & Guides (Clean text, no icons) */}
           <div>
-            <h4 className="font-semibold text-zinc-200 mb-3 text-sm">Annuaires & Démarches</h4>
-            <ul className="space-y-2">
-              <li>
-                <Link href="/locator" className="hover:text-emerald-400 transition-colors">
-                  📍 Guide des Baladiyas (24 Wilayas)
-                </Link>
-              </li>
-              <li>
-                <Link href="/launchpad" className="hover:text-emerald-400 transition-colors">
-                  🚀 Freelance & Auto-Entrepreneur
-                </Link>
-              </li>
-              <li>
-                <Link href="/procedures" className="hover:text-emerald-400 transition-colors">
-                  📚 25+ Démarches Officielles
-                </Link>
-              </li>
+            <h4 className="font-semibold text-zinc-200 mb-3 text-xs uppercase tracking-wider">
+              {directoryTitle}
+            </h4>
+            <ul className="space-y-2.5">
+              {directoryLinks.map((link) => (
+                <li key={link.href}>
+                  <Link
+                    href={link.href}
+                    className="text-zinc-400 hover:text-emerald-400 transition-colors text-xs inline-block"
+                  >
+                    {link.label}
+                  </Link>
+                </li>
+              ))}
               <li>
                 <a
                   href="http://www.iort.gov.tn"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="flex items-center space-x-1 hover:text-emerald-400 transition-colors"
+                  className="inline-flex items-center space-x-1 rtl:space-x-reverse text-zinc-400 hover:text-emerald-400 transition-colors text-xs"
                 >
                   <span>Journal Officiel (JORT)</span>
-                  <ExternalLink className="w-3 h-3" />
+                  <ExternalLink className="w-3 h-3 text-zinc-600" />
                 </a>
               </li>
             </ul>
@@ -89,22 +169,26 @@ export const Footer: React.FC = () => {
 
           {/* Col 4: Official Standards & Legal */}
           <div>
-            <h4 className="font-semibold text-zinc-200 mb-3 text-sm">Transparence & Cadre</h4>
+            <h4 className="font-semibold text-zinc-200 mb-3 text-xs uppercase tracking-wider">
+              {legalTitle}
+            </h4>
             <p className="text-zinc-500 text-xs leading-relaxed mb-3">
               {t('footerDisclaimer')}
             </p>
-            <div className="text-[11px] text-zinc-500">
-              Version 1.0.0 (Production) · 🇹🇳 Made with care for all Tunisians.
+            <div className="text-[11px] text-zinc-600 font-mono">
+              Version 1.0.0 · Production
             </div>
           </div>
         </div>
 
-        <div className="pt-8 border-t border-zinc-900 flex flex-col sm:flex-row items-center justify-between text-zinc-500 text-xs">
-          <p>© {new Date().getFullYear()} Idaara.tn. Tous droits réservés.</p>
-          <div className="flex items-center space-x-1 mt-4 sm:mt-0">
-            <span>Bniyet b'kol 7ob fi Tounes</span>
-            <Heart className="w-3 h-3 text-red-500 fill-red-500" />
-            <span>bech traye7 l'mowaten.</span>
+        <div className="pt-8 border-t border-zinc-900/80 flex flex-col sm:flex-row items-center justify-between text-zinc-500 text-xs">
+          <p>© {new Date().getFullYear()} Idaara.tn. {locale === 'en' ? 'All rights reserved.' : locale === 'ar' ? 'جميع الحقوق محفوظة.' : 'Tous droits réservés.'}</p>
+          <div className="mt-3 sm:mt-0 text-[11px] text-zinc-600">
+            {locale === 'en'
+              ? 'Independent civic technology project for Tunisia.'
+              : locale === 'ar'
+              ? 'مشروع تكنولوجي مدني مستقل للمواطن التونسي.'
+              : 'Projet civique indépendant pour les citoyens tunisiens.'}
           </div>
         </div>
       </div>
