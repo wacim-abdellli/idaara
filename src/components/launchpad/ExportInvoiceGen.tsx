@@ -1,11 +1,13 @@
 'use client';
 
 import React, { useState } from 'react';
-import { FileText, Download, Sparkles, ShieldCheck } from 'lucide-react';
+import { FileText, Download, Sparkles, ShieldCheck, Loader2 } from 'lucide-react';
 import { generatePDFFromElement } from '../../lib/pdf-generator';
 import { triggerConfetti } from '../../lib/utils';
+import { useLocale } from '../../context/LocaleContext';
 
 export const ExportInvoiceGen: React.FC = () => {
+  const { locale } = useLocale();
   const [invoiceNumber, setInvoiceNumber] = useState('INV-2026-001');
   const [clientName, setClientName] = useState('Acme Corp SAS (Paris, France)');
   const [description, setDescription] = useState('Fullstack Software Engineering & AI Integration Services');
@@ -26,33 +28,54 @@ export const ExportInvoiceGen: React.FC = () => {
     }
   };
 
+  const title =
+    locale === 'ar'
+      ? 'استخراج فاتورة تصدير دولية (EUR / USD)'
+      : locale === 'en'
+      ? 'International FX Export Invoice Generator'
+      : "Générateur de Facture d'Export Internationale (EUR / USD)";
+
+  const subtitle =
+    locale === 'ar'
+      ? 'مطابقة لمواصفات بنك تونس المركزي (BCT) مع التنصيص على الإعفاء من الأداء على القيمة المضافة (TVA)'
+      : locale === 'en'
+      ? 'Compliant with Central Bank of Tunisia (BCT) foreign exchange rules with mandatory 0% VAT export exemption clause'
+      : "Conforme Banque Centrale de Tunisie (BCT) avec mention d'exonération TVA à l'exportation";
+
+  const btnText =
+    isGenerating
+      ? (locale === 'en' ? 'Generating...' : 'Export en cours...')
+      : (locale === 'ar' ? 'تحميل الفاتورة PDF' : locale === 'en' ? 'Download Vector PDF' : 'Télécharger Facture PDF');
+
   return (
-    <div className="glass-panel rounded-2xl p-6 border border-zinc-800 space-y-6">
+    <div className="glass-panel rounded-3xl p-6 sm:p-7 border border-zinc-800 space-y-6">
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-zinc-800">
         <div>
-          <h3 className="text-base font-bold text-white flex items-center space-x-2">
-            <FileText className="w-5 h-5 text-emerald-400" />
-            <span>Générateur de Facture d'Export Internationale (EUR / USD)</span>
+          <h3 className="text-sm sm:text-base font-bold text-white flex items-center gap-2.5">
+            <FileText className="w-5 h-5 text-emerald-400 shrink-0" />
+            <span>{title}</span>
           </h3>
-          <p className="text-xs text-zinc-400 mt-0.5">
-            Conforme Banque Centrale de Tunisie (BCT) avec mention d'exonération TVA à l'exportation
+          <p className="text-xs text-zinc-400 mt-1 max-w-2xl">
+            {subtitle}
           </p>
         </div>
 
         <button
           onClick={handleDownloadInvoice}
           disabled={isGenerating}
-          className="flex items-center space-x-1.5 px-4 py-2 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-zinc-950 font-bold text-xs shadow-md shadow-emerald-500/20 transition-all self-start sm:self-auto"
+          className="flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-zinc-950 font-bold text-xs shadow-md shadow-emerald-500/20 transition-all self-start sm:self-auto shrink-0 cursor-pointer disabled:opacity-40"
         >
-          <Download className="w-4 h-4" />
-          <span>{isGenerating ? 'Export en cours...' : 'Télécharger Facture PDF'}</span>
+          {isGenerating ? <Loader2 className="w-4 h-4 animate-spin" /> : <Download className="w-4 h-4" />}
+          <span>{btnText}</span>
         </button>
       </div>
 
       {/* Input controls */}
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
         <div>
-          <label className="block text-xs font-medium text-zinc-400 mb-1">Votre Nom / Société :</label>
+          <label className="block text-xs font-medium text-zinc-400 mb-1">
+            {locale === 'en' ? 'Your Full Name / Entity:' : 'Votre Nom / Société :'}
+          </label>
           <input
             type="text"
             value={freelancerName}
@@ -62,7 +85,9 @@ export const ExportInvoiceGen: React.FC = () => {
         </div>
 
         <div>
-          <label className="block text-xs font-medium text-zinc-400 mb-1">Matricule / Identifiant :</label>
+          <label className="block text-xs font-medium text-zinc-400 mb-1">
+            {locale === 'en' ? 'National Tax ID / Matricule:' : 'Matricule / Identifiant :'}
+          </label>
           <input
             type="text"
             value={matricule}
@@ -72,7 +97,9 @@ export const ExportInvoiceGen: React.FC = () => {
         </div>
 
         <div>
-          <label className="block text-xs font-medium text-zinc-400 mb-1">Client Étranger :</label>
+          <label className="block text-xs font-medium text-zinc-400 mb-1">
+            {locale === 'en' ? 'Foreign Client & Country:' : 'Client Étranger :'}
+          </label>
           <input
             type="text"
             value={clientName}
@@ -82,7 +109,9 @@ export const ExportInvoiceGen: React.FC = () => {
         </div>
 
         <div className="sm:col-span-2">
-          <label className="block text-xs font-medium text-zinc-400 mb-1">Prestation de Service :</label>
+          <label className="block text-xs font-medium text-zinc-400 mb-1">
+            {locale === 'en' ? 'Service Description:' : 'Prestation de Service :'}
+          </label>
           <input
             type="text"
             value={description}
@@ -92,7 +121,9 @@ export const ExportInvoiceGen: React.FC = () => {
         </div>
 
         <div>
-          <label className="block text-xs font-medium text-zinc-400 mb-1">Montant Net (€ EUR) :</label>
+          <label className="block text-xs font-medium text-zinc-400 mb-1">
+            {locale === 'en' ? 'Net Amount (€ EUR):' : 'Montant Net (€ EUR) :'}
+          </label>
           <input
             type="number"
             value={amountEUR}
@@ -103,7 +134,7 @@ export const ExportInvoiceGen: React.FC = () => {
       </div>
 
       {/* Visual render of invoice */}
-      <div className="bg-zinc-950 p-4 rounded-xl border border-zinc-800 overflow-x-auto flex justify-center">
+      <div className="bg-zinc-950 p-4 sm:p-6 rounded-2xl border border-zinc-800 overflow-x-auto flex justify-center">
         <div
           id="export-invoice-render"
           className="w-[180mm] min-h-[220mm] bg-white text-zinc-900 p-8 shadow-xl flex flex-col justify-between font-sans text-xs"

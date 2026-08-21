@@ -5,7 +5,7 @@ import { Procedure, TimbreCostItem } from '../../types/procedure';
 import { useLocale } from '../../context/LocaleContext';
 import { formatTND } from '../../lib/utils';
 import { getLocalized } from '../../lib/locale-utils';
-import { Calculator, Stamp, Camera, FileCheck, Coins, Lightbulb } from 'lucide-react';
+import { Calculator, Stamp, Camera, FileCheck, Coins, Lightbulb, Sparkles } from 'lucide-react';
 
 interface TimbreCostBreakdownProps {
   procedure: Procedure;
@@ -51,15 +51,15 @@ export const TimbreCostBreakdown: React.FC<TimbreCostBreakdownProps> = ({ proced
       : "Ashtri timbres mte3ek men Recette des Finances rasmiyin bech ma yakhdhoulekch bezzef.";
 
   return (
-    <div className="glass-panel rounded-2xl p-5 border border-zinc-800/80 space-y-4">
+    <div className="glass-panel rounded-3xl p-5 sm:p-6 border border-zinc-800/80 space-y-4">
       {/* Header Row */}
       <div className="flex items-center justify-between gap-3">
-        <div className="flex items-center space-x-2.5 rtl:space-x-reverse">
-          <div className="w-8 h-8 rounded-xl bg-emerald-500/15 flex items-center justify-center border border-emerald-500/20">
-            <Calculator className="w-4 h-4 text-emerald-400" />
+        <div className="flex items-center gap-2.5">
+          <div className="w-9 h-9 rounded-2xl bg-emerald-500/15 flex items-center justify-center border border-emerald-500/20 text-emerald-400 shrink-0">
+            <Calculator className="w-4 h-4" />
           </div>
           <div>
-            <h3 className="text-xs font-bold text-white leading-tight">
+            <h3 className="text-xs sm:text-sm font-bold text-white leading-tight">
               {locale === 'ar'
                 ? 'تفاصيل التنابر والمعاليم'
                 : locale === 'en'
@@ -75,7 +75,7 @@ export const TimbreCostBreakdown: React.FC<TimbreCostBreakdownProps> = ({ proced
         </div>
 
         {/* Total badge */}
-        <div className="flex flex-col items-end">
+        <div className="flex flex-col items-end shrink-0">
           <span className="text-[9px] text-zinc-500 mb-0.5">
             {locale === 'ar' ? 'المجموع' : locale === 'en' ? 'Total' : 'Total'}
           </span>
@@ -98,9 +98,9 @@ export const TimbreCostBreakdown: React.FC<TimbreCostBreakdownProps> = ({ proced
             return (
               <div
                 key={item.id}
-                className={`p-3 rounded-xl border flex items-center gap-3 ${getCategoryBg(item.category)}`}
+                className={`p-3 rounded-2xl border flex items-center gap-3 ${getCategoryBg(item.category)}`}
               >
-                <div className="p-1.5 rounded-lg bg-zinc-900/80 shrink-0">
+                <div className="p-1.5 rounded-xl bg-zinc-900/80 shrink-0">
                   {getCategoryIcon(item.category)}
                 </div>
 
@@ -119,16 +119,16 @@ export const TimbreCostBreakdown: React.FC<TimbreCostBreakdownProps> = ({ proced
           })}
         </div>
       ) : (
-        <div className="py-6 rounded-xl bg-emerald-500/5 border border-emerald-500/20 text-center">
-          <span className="text-2xl">🎉</span>
-          <p className="text-xs text-emerald-400 font-semibold mt-1">
+        <div className="py-6 rounded-2xl bg-emerald-500/5 border border-emerald-500/20 text-center space-y-1">
+          <Sparkles className="w-5 h-5 text-emerald-400 mx-auto" />
+          <p className="text-xs text-emerald-400 font-semibold">
             {locale === 'ar' ? 'هذا الإجراء مجاني تماماً' : locale === 'en' ? 'This procedure is completely free' : 'Cette démarche est totalement gratuite'}
           </p>
         </div>
       )}
 
       {/* Tip */}
-      <div className="flex items-start space-x-2.5 rtl:space-x-reverse p-3 rounded-xl bg-amber-500/8 border border-amber-500/15">
+      <div className="flex items-start gap-2.5 p-3.5 rounded-2xl bg-amber-500/10 border border-amber-500/20">
         <Lightbulb className="w-3.5 h-3.5 text-amber-400 shrink-0 mt-0.5" />
         <p className="text-[11px] text-amber-300/90 leading-relaxed">{tip}</p>
       </div>
