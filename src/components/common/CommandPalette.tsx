@@ -31,7 +31,7 @@ interface SearchResultItem {
 }
 
 export const CommandPalette: React.FC = () => {
-  const { locale, t } = useLocale();
+  const { locale } = useLocale();
   const router = useRouter();
   const [isOpen, setIsOpen] = useState(false);
   const [query, setQuery] = useState('');
@@ -50,9 +50,7 @@ export const CommandPalette: React.FC = () => {
       }
     };
 
-    const handleCustomOpen = () => {
-      setIsOpen(true);
-    };
+    const handleCustomOpen = () => setIsOpen(true);
 
     window.addEventListener('keydown', handleKeyDown);
     window.addEventListener('open-command-palette', handleCustomOpen);
@@ -80,50 +78,48 @@ export const CommandPalette: React.FC = () => {
       {
         id: 'tool-copilot',
         category: 'tool',
-        title: locale === 'ar' ? 'المساعد الصوتي بالدارجة' : locale === 'en' ? 'Voice Copilot (Derja AI)' : 'Voice Copilot en Derja',
-        subtitle: locale === 'ar' ? 'تحدث بالصوت حول أي إجراء' : locale === 'en' ? 'Speak with AI about any procedure' : 'Posez vos questions par la voix',
+        title: locale === 'ar' ? 'المساعد الذكي بالدارجة' : locale === 'en' ? 'Voice Copilot (Derja AI)' : 'Copilot Vocal en Derja',
+        subtitle: locale === 'ar' ? 'تحدث بالصوت حول أي إجراء' : locale === 'en' ? 'Ask AI about any procedure in any language' : 'Posez vos questions par la voix ou le texte',
         url: '/copilot',
-        badge: 'Voice AI',
+        badge: 'AI',
         icon: Mic,
       },
       {
         id: 'tool-fasserli',
         category: 'tool',
-        title: locale === 'ar' ? 'فسّرلي هالورقة (OCR)' : locale === 'en' ? 'Notice OCR Decoder (Fasserli)' : 'Décrypteur de Courriers (OCR)',
-        subtitle: locale === 'ar' ? 'تحليل الإشعارات الجبائية والاستدعاءات' : locale === 'en' ? 'Scan and decode official letters' : 'Scannez avis fiscaux et convocations',
+        title: locale === 'ar' ? 'فسّرلي هالورقة (OCR)' : locale === 'en' ? 'Notice OCR Decoder' : 'Décrypteur de Courriers (OCR)',
+        subtitle: locale === 'ar' ? 'تحليل الإشعارات الجبائية والاستدعاءات' : locale === 'en' ? 'Scan and decode official Tunisian letters' : 'Scannez avis fiscaux et convocations',
         url: '/fasserli',
-        badge: 'Smart OCR',
+        badge: 'OCR',
         icon: Sparkles,
       },
       {
         id: 'tool-calc',
         category: 'tool',
-        title: locale === 'ar' ? 'حاسبة التنابر الجبائية' : locale === 'en' ? 'Fiscal Stamps & Budget Calculator' : 'Calculateur Timbres & Budget',
-        subtitle: locale === 'ar' ? 'حساب دقيق لتنابر 5د، 15د، 80د' : locale === 'en' ? 'Exact calculation for 5DT, 15DT, 80DT' : 'Calcul des timbres 5DT, 15DT, 80DT',
+        title: locale === 'ar' ? 'حاسبة التنابر الجبائية' : locale === 'en' ? 'Stamp & Budget Calculator' : 'Calculateur Timbres & Budget',
+        subtitle: locale === 'ar' ? 'حساب دقيق لتنابر 5د، 15د، 80د' : locale === 'en' ? 'Exact calculation for 5DT, 15DT, 80DT stamps' : 'Calcul exact des timbres 5DT, 15DT, 80DT',
         url: '/calculator',
-        badge: 'Budget DT',
+        badge: 'DT',
         icon: Calculator,
       },
     ];
 
-    if (!q) {
-      return quickTools;
-    }
+    if (!q) return quickTools;
 
     const matchedProcedures: SearchResultItem[] = proceduresData
       .filter((p) => {
         const title = getLocalized(p.title, locale).toLowerCase();
         const desc = getLocalized(p.shortDescription, locale).toLowerCase();
-        return title.includes(q) || desc.includes(q) || p.slug.includes(q);
+        return title.includes(q) || desc.includes(q) || p.slug.includes(q) || p.tags.some(tag => tag.includes(q));
       })
       .slice(0, 4)
       .map((p) => ({
         id: `proc-${p.id}`,
         category: 'procedure',
         title: getLocalized(p.title, locale),
-        subtitle: `${p.vertical} · ${p.estimatedProcessingTime} · ${p.estimatedTotalCostTND} DT`,
+        subtitle: `${p.estimatedProcessingTime} · ${p.estimatedTotalCostTND.toFixed(3)} DT`,
         url: `/procedures/${p.id}`,
-        badge: 'Guide',
+        badge: locale === 'ar' ? 'دليل' : locale === 'en' ? 'Guide' : 'Guide',
         icon: BookOpen,
       }));
 
@@ -138,7 +134,7 @@ export const CommandPalette: React.FC = () => {
         id: `doc-${d.id}`,
         category: 'document',
         title: getLocalized(d.title, locale),
-        subtitle: `${d.category} · ${d.requiredTimbreTND} DT Timbre`,
+        subtitle: `${d.category} · ${d.requiredTimbreTND} DT`,
         url: `/documents/${d.slug}`,
         badge: 'PDF',
         icon: FileText,
@@ -160,11 +156,15 @@ export const CommandPalette: React.FC = () => {
         title: getLocalized(o.name, locale),
         subtitle: `${o.governorate} · ${o.delegation}`,
         url: `/locator`,
-        badge: o.category,
+        badge: locale === 'ar' ? 'مكتب' : locale === 'en' ? 'Office' : 'Bureau',
         icon: Building2,
       }));
 
-    return [...matchedProcedures, ...matchedDocs, ...matchedOffices, ...quickTools.filter((t) => t.title.toLowerCase().includes(q))];
+    const filteredTools = quickTools.filter((t) =>
+      t.title.toLowerCase().includes(q) || t.subtitle.toLowerCase().includes(q)
+    );
+
+    return [...matchedProcedures, ...matchedDocs, ...matchedOffices, ...filteredTools];
   }, [query, locale]);
 
   // Keyboard navigation
@@ -177,9 +177,7 @@ export const CommandPalette: React.FC = () => {
       setSelectedIndex((prev) => (prev - 1 + results.length) % results.length);
     } else if (e.key === 'Enter') {
       e.preventDefault();
-      if (results[selectedIndex]) {
-        handleSelect(results[selectedIndex].url);
-      }
+      if (results[selectedIndex]) handleSelect(results[selectedIndex].url);
     }
   };
 
@@ -188,21 +186,49 @@ export const CommandPalette: React.FC = () => {
     router.push(url);
   };
 
+  const placeholder =
+    locale === 'ar'
+      ? 'ابحث عن إجراء، عقد، بلدية، أو تنبر...'
+      : locale === 'en'
+      ? 'Search procedures, contracts, municipalities, or stamps...'
+      : 'Rechercher une démarche, contrat, municipalité ou timbre...';
+
+  const navHint =
+    locale === 'ar' ? 'للتنقل' : locale === 'en' ? 'Navigate' : 'Naviguer';
+  const selectHint =
+    locale === 'ar' ? 'للاختيار' : locale === 'en' ? 'Select' : 'Sélectionner';
+
+  const emptyTitle =
+    locale === 'ar' ? 'لا توجد نتائج مطابقة' : locale === 'en' ? 'No results found' : 'Aucun résultat trouvé';
+  const emptyHint =
+    locale === 'ar'
+      ? 'جرب كلمات مثل «جواز» أو «كراء» أو «بلدية»'
+      : locale === 'en'
+      ? 'Try keywords like "passport", "lease", or "carte grise"'
+      : 'Essayez «passeport», «bail» ou «carte grise»';
+
   if (!isOpen) return null;
 
   return (
     <div
       role="dialog"
       aria-modal="true"
-      className="fixed inset-0 z-[100] flex items-start justify-center pt-16 sm:pt-24 px-4 bg-black/75 backdrop-blur-md animate-fade-in-up"
+      className="fixed inset-0 z-[100] flex items-start justify-center pt-16 sm:pt-24 px-4 bg-zinc-950/80 backdrop-blur-xl"
       onClick={() => setIsOpen(false)}
     >
       <div
-        className="relative w-full max-w-2xl bg-zinc-950 border border-zinc-800 rounded-3xl shadow-2xl overflow-hidden glass-panel"
+        className="relative w-full max-w-2xl rounded-3xl overflow-hidden shadow-2xl border border-zinc-800/80"
+        style={{
+          background: 'linear-gradient(135deg, rgba(9,11,14,0.97) 0%, rgba(18,20,25,0.97) 100%)',
+          boxShadow: '0 0 0 1px rgba(16,185,129,0.08), 0 25px 60px rgba(0,0,0,0.6), 0 0 80px rgba(16,185,129,0.05)',
+        }}
         onClick={(e) => e.stopPropagation()}
       >
+        {/* Top emerald accent line */}
+        <div className="h-[1px] w-full bg-gradient-to-r from-transparent via-emerald-500/40 to-transparent" />
+
         {/* Search Input Bar */}
-        <div className="flex items-center px-4 py-3.5 border-b border-zinc-800/80 gap-3">
+        <div className="flex items-center px-5 py-4 border-b border-zinc-800/60 gap-3">
           <Search className="w-5 h-5 text-emerald-400 shrink-0" />
           <input
             ref={inputRef}
@@ -213,30 +239,24 @@ export const CommandPalette: React.FC = () => {
               setSelectedIndex(0);
             }}
             onKeyDown={handleKeyDown}
-            placeholder={
-              locale === 'ar'
-                ? 'ابحث عن إجراء، عقد، بلدية، أو تنبر...'
-                : locale === 'en'
-                ? 'Search a procedure, contract, municipality, or stamp...'
-                : 'Rechercher une démarche, contrat, municipalité...'
-            }
-            className="flex-1 bg-transparent text-sm sm:text-base text-zinc-100 placeholder-zinc-500 focus:outline-none"
+            placeholder={placeholder}
+            className="flex-1 bg-transparent text-sm sm:text-base text-zinc-100 placeholder-zinc-600 focus:outline-none font-medium"
           />
           {query && (
             <button
               onClick={() => setQuery('')}
-              className="p-1 rounded-lg hover:bg-zinc-800 text-zinc-500 hover:text-zinc-300"
+              className="p-1.5 rounded-xl hover:bg-zinc-800 text-zinc-600 hover:text-zinc-300 transition-colors cursor-pointer"
             >
-              <X className="w-4 h-4" />
+              <X className="w-3.5 h-3.5" />
             </button>
           )}
-          <span className="hidden sm:inline-flex items-center px-2 py-0.5 rounded text-[10px] font-mono bg-zinc-900 border border-zinc-700 text-zinc-400">
+          <kbd className="hidden sm:inline-flex items-center px-2 py-1 rounded-lg text-[10px] font-mono bg-zinc-900/80 border border-zinc-700/60 text-zinc-500">
             ESC
-          </span>
+          </kbd>
         </div>
 
         {/* Results List */}
-        <div className="max-h-96 overflow-y-auto p-2 space-y-1">
+        <div className="max-h-[380px] overflow-y-auto p-2.5 space-y-1">
           {results.length > 0 ? (
             results.map((item, idx) => {
               const isSelected = idx === selectedIndex;
@@ -247,30 +267,34 @@ export const CommandPalette: React.FC = () => {
                   key={item.id}
                   onClick={() => handleSelect(item.url)}
                   onMouseEnter={() => setSelectedIndex(idx)}
-                  className={`flex items-center justify-between p-3 rounded-2xl cursor-pointer transition-all duration-150 ${
+                  className={`flex items-center justify-between px-3.5 py-2.5 rounded-2xl cursor-pointer transition-all duration-150 ${
                     isSelected
-                      ? 'bg-emerald-500/15 border border-emerald-500/30 text-zinc-100'
-                      : 'hover:bg-zinc-900/80 border border-transparent text-zinc-300'
+                      ? 'bg-emerald-500/12 border border-emerald-500/25'
+                      : 'hover:bg-zinc-900/60 border border-transparent'
                   }`}
                 >
-                  <div className="flex items-center space-x-3 rtl:space-x-reverse min-w-0">
+                  <div className="flex items-center gap-3 min-w-0">
                     <div
-                      className={`w-9 h-9 rounded-xl flex items-center justify-center shrink-0 ${
+                      className={`w-9 h-9 rounded-xl flex items-center justify-center shrink-0 transition-all ${
                         isSelected
-                          ? 'bg-emerald-500 text-zinc-950 shadow-md shadow-emerald-500/30'
-                          : 'bg-zinc-900 border border-zinc-800 text-emerald-400'
+                          ? 'bg-emerald-500 text-zinc-950 shadow-lg shadow-emerald-500/25'
+                          : 'bg-zinc-900/80 border border-zinc-800 text-emerald-400'
                       }`}
                     >
                       <Icon className="w-4 h-4" />
                     </div>
 
                     <div className="min-w-0">
-                      <div className="flex items-center space-x-2 rtl:space-x-reverse">
-                        <span className="text-xs sm:text-sm font-bold text-white truncate">
+                      <div className="flex items-center gap-2">
+                        <span className={`text-xs sm:text-sm font-bold truncate ${isSelected ? 'text-white' : 'text-zinc-200'}`}>
                           {item.title}
                         </span>
                         {item.badge && (
-                          <span className="text-[9px] font-semibold px-1.5 py-0.5 rounded bg-zinc-900 text-zinc-400 border border-zinc-800 shrink-0 uppercase">
+                          <span className={`text-[9px] font-bold px-1.5 py-0.5 rounded-md uppercase shrink-0 ${
+                            isSelected
+                              ? 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/30'
+                              : 'bg-zinc-900 text-zinc-500 border border-zinc-800'
+                          }`}>
                             {item.badge}
                           </span>
                         )}
@@ -281,40 +305,43 @@ export const CommandPalette: React.FC = () => {
                     </div>
                   </div>
 
-                  <div className="flex items-center space-x-2 text-xs font-semibold text-emerald-400 shrink-0 pl-2">
+                  <div className="flex items-center gap-1.5 shrink-0 pl-3">
                     {isSelected && (
-                      <span className="hidden sm:flex items-center space-x-1 text-[10px] text-zinc-500">
-                        <CornerDownLeft className="w-3 h-3" />
+                      <span className="hidden sm:flex items-center">
+                        <CornerDownLeft className="w-3 h-3 text-zinc-600" />
                       </span>
                     )}
-                    <ArrowRight className="w-3.5 h-3.5 rtl:rotate-180" />
+                    <ArrowRight className={`w-3.5 h-3.5 rtl:rotate-180 ${isSelected ? 'text-emerald-400' : 'text-zinc-700'}`} />
                   </div>
                 </div>
               );
             })
           ) : (
-            <div className="py-12 text-center text-zinc-500">
-              <Search className="w-8 h-8 mx-auto mb-2 opacity-40 text-zinc-600" />
-              <p className="text-xs font-semibold">
-                {locale === 'ar' ? 'لا توجد نتائج مطابقة' : 'Aucun résultat trouvé'}
-              </p>
-              <p className="text-[11px] text-zinc-600 mt-1">
-                {locale === 'ar'
-                  ? 'جرب البحث بكلمات أخرى مثل "جواز"، "كراء"، أو "بلدية"'
-                  : 'Essayez un mot-clé comme "passeport", "bail" ou "carte grise"'}
-              </p>
+            <div className="py-14 text-center">
+              <div className="w-12 h-12 mx-auto mb-3 rounded-2xl bg-zinc-900 border border-zinc-800 flex items-center justify-center">
+                <Search className="w-5 h-5 text-zinc-700" />
+              </div>
+              <p className="text-sm font-semibold text-zinc-400">{emptyTitle}</p>
+              <p className="text-[11px] text-zinc-600 mt-1.5 max-w-xs mx-auto">{emptyHint}</p>
             </div>
           )}
         </div>
 
         {/* Footer Hint */}
-        <div className="px-4 py-2.5 bg-zinc-900/60 border-t border-zinc-800/80 flex items-center justify-between text-[11px] text-zinc-500">
-          <div className="flex items-center space-x-3 rtl:space-x-reverse">
-            <span>↑↓ {locale === 'ar' ? 'للتنقل' : 'Naviguer'}</span>
-            <span>↵ {locale === 'ar' ? 'للاختيار' : 'Sélectionner'}</span>
+        <div className="px-5 py-2.5 border-t border-zinc-800/60 flex items-center justify-between text-[10px] font-mono text-zinc-600">
+          <div className="flex items-center gap-4">
+            <span className="flex items-center gap-1">
+              <kbd className="px-1 py-0.5 rounded bg-zinc-900 border border-zinc-800">↑↓</kbd>
+              <span>{navHint}</span>
+            </span>
+            <span className="flex items-center gap-1">
+              <kbd className="px-1 py-0.5 rounded bg-zinc-900 border border-zinc-800">↵</kbd>
+              <span>{selectHint}</span>
+            </span>
           </div>
-          <div className="flex items-center space-x-1 text-emerald-400">
-            <span>Idaara Instant Search</span>
+          <div className="flex items-center gap-1.5 text-emerald-500/60">
+            <div className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
+            <span>Idaara Search</span>
           </div>
         </div>
       </div>
