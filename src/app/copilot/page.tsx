@@ -363,6 +363,15 @@ export default function CopilotPage() {
       ? 'Posez votre question sur une démarche, un timbre...'
       : 'Ask about any Tunisian procedure, document, or stamp fee...');
 
+  const officialBadgeText =
+    locale === 'ar'
+      ? 'المساعد الإداري الرسمي'
+      : locale === 'derja'
+      ? 'Copilot Idari Tounsi'
+      : locale === 'fr'
+      ? 'IA Civique Officielle'
+      : 'Official Civic AI';
+
   return (
     <div className="fixed inset-x-0 top-14 bottom-0 z-30 flex bg-[#09090b] text-white overflow-hidden font-sans">
 
@@ -370,37 +379,38 @@ export default function CopilotPage() {
           BESPOKE IDAARA SIDEBAR (#121214)
       ══════════════════════════════════════════════════════════════════ */}
       {sidebarOpen && (
-        <aside className="w-64 shrink-0 bg-[#121214] border-r border-white/5 flex flex-col justify-between p-3 select-none z-20 animate-fade-in">
+        <aside className="w-64 shrink-0 bg-[#121214] border-r border-white/5 flex flex-col justify-between select-none z-20 animate-fade-in">
           
           {/* Top Section */}
-          <div className="space-y-3 overflow-y-auto">
-            {/* Header: Idaara Brand + Icons */}
-            <div className="flex items-center justify-between px-2 pt-1">
-              <div className="flex items-center gap-2">
-                <div className="w-6 h-6 rounded-lg bg-emerald-500/20 border border-emerald-500/40 text-emerald-400 font-bold text-xs flex items-center justify-center">
+          <div className="flex flex-col flex-1 overflow-hidden">
+            
+            {/* Sidebar Top Header (Aligned h-14 with main canvas) */}
+            <div className="h-14 px-3 flex items-center justify-between border-b border-white/5 shrink-0">
+              <div className="flex items-center gap-2.5">
+                <div className="w-7 h-7 rounded-xl bg-emerald-500/15 border border-emerald-500/30 text-emerald-400 font-bold text-xs flex items-center justify-center shadow-sm">
                   I
                 </div>
-                <span className="font-bold text-sm text-zinc-100 tracking-tight">Idaara Copilot</span>
+                <span className="font-bold text-sm text-white tracking-tight">Idaara.tn</span>
               </div>
-              <div className="flex items-center gap-1">
-                <button
-                  onClick={() => setSidebarOpen(false)}
-                  className="p-1.5 rounded-lg hover:bg-white/10 text-zinc-400 hover:text-white transition-colors cursor-pointer border-0 outline-none"
-                  title="Close sidebar"
-                >
-                  <PanelLeftClose className="w-4 h-4" />
-                </button>
-              </div>
+              <button
+                onClick={() => setSidebarOpen(false)}
+                className="p-1.5 rounded-lg hover:bg-white/10 text-zinc-400 hover:text-white transition-colors cursor-pointer border-0 outline-none"
+                title="Collapse sidebar"
+              >
+                <PanelLeftClose className="w-4 h-4" />
+              </button>
             </div>
 
-            {/* New Chat Button */}
-            <button
-              onClick={handleNewChat}
-              className="w-full flex items-center gap-2.5 px-3 py-2 rounded-xl bg-emerald-600/20 hover:bg-emerald-600/30 border border-emerald-500/30 text-emerald-300 text-xs font-semibold transition-colors cursor-pointer border-0 outline-none"
-            >
-              <PenSquare className="w-4 h-4 text-emerald-400" />
-              <span>{locale === 'ar' ? 'محادثة جديدة' : locale === 'derja' ? 'M7adtha Jdida' : 'Nouvelle discussion'}</span>
-            </button>
+            {/* Sidebar Scrollable Body */}
+            <div className="p-3 space-y-3 overflow-y-auto flex-1">
+              {/* New Chat Button */}
+              <button
+                onClick={handleNewChat}
+                className="w-full flex items-center gap-2.5 px-3.5 py-2.5 rounded-xl bg-white/[0.06] hover:bg-white/[0.1] border border-white/10 text-zinc-100 text-xs font-semibold transition-all cursor-pointer shadow-sm border-0 outline-none"
+              >
+                <PenSquare className="w-4 h-4 text-emerald-400" />
+                <span>{locale === 'ar' ? 'محادثة جديدة' : locale === 'derja' ? 'M7adtha Jdida' : 'Nouvelle discussion'}</span>
+              </button>
 
             {/* Idaara Civic Navigation Tools */}
             <nav className="space-y-0.5 pt-1">
@@ -474,6 +484,7 @@ export default function CopilotPage() {
                   ))
                 )}
               </div>
+              </div>
             </div>
           </div>
 
@@ -504,8 +515,8 @@ export default function CopilotPage() {
       ══════════════════════════════════════════════════════════════════ */}
       <div className="flex-1 flex flex-col bg-[#09090b] relative overflow-hidden">
         
-        {/* ─── Top Header Bar ─── */}
-        <header className="shrink-0 h-13 px-4 flex items-center justify-between border-b border-white/5 bg-[#09090b]/80 backdrop-blur-xl z-20">
+        {/* ─── Top Header Bar (h-14 aligned) ─── */}
+        <header className="shrink-0 h-14 px-4 flex items-center justify-between border-b border-white/5 bg-[#09090b]/80 backdrop-blur-xl z-20">
           <div className="flex items-center gap-2">
             {!sidebarOpen && (
               <button
@@ -518,11 +529,11 @@ export default function CopilotPage() {
             )}
 
             {/* Model Badge */}
-            <div className="flex items-center gap-2 px-2.5 py-1 text-zinc-100 font-bold text-sm">
-              <div className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
-              <span>Idaara Copilot</span>
-              <span className="text-[10px] font-mono font-normal text-emerald-400/90 bg-emerald-950/60 border border-emerald-800/40 px-2 py-0.5 rounded-full">
-                {locale === 'ar' ? 'المساعد الإداري الرسمي' : 'Official Civic AI'}
+            <div className="flex items-center gap-2 px-2.5 py-1 rounded-xl text-zinc-100 font-semibold text-sm">
+              <div className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse shadow-sm shadow-emerald-400/50" />
+              <span className="tracking-tight">Idaara Copilot</span>
+              <span className="text-[10px] font-medium text-emerald-400 bg-emerald-500/10 border border-emerald-500/20 px-2 py-0.5 rounded-full">
+                {officialBadgeText}
               </span>
             </div>
           </div>
