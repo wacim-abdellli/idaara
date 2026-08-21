@@ -63,7 +63,7 @@ export const ChatMessage: React.FC<ChatMessageProps> = ({ message }) => {
           <span className={`text-[10px] font-semibold mb-1 px-1 ${isAssistant ? 'text-zinc-500' : 'text-right text-zinc-500'}`}>
             {isAssistant
               ? `Idaara AI · ${message.timestamp}`
-              : `Mowaten · ${message.timestamp}`}
+              : `${locale === 'ar' ? 'أنت' : locale === 'en' ? 'You' : locale === 'fr' ? 'Vous' : 'Mowaten'} · ${message.timestamp}`}
           </span>
 
           {/* Bubble */}
@@ -89,7 +89,7 @@ export const ChatMessage: React.FC<ChatMessageProps> = ({ message }) => {
                 <div className="flex items-center justify-between font-bold text-amber-400 mb-2">
                   <span className="flex items-center space-x-1.5 rtl:space-x-reverse">
                     <Stamp className="w-3.5 h-3.5" />
-                    <span>Majmou3 el Timbres :</span>
+                    <span>{locale === 'ar' ? 'مجموع التنابر :' : locale === 'en' ? 'Total Stamp Fees :' : locale === 'fr' ? 'Total Timbres :' : 'Majmou3 el Timbres :'}</span>
                   </span>
                   <span className="px-2 py-0.5 rounded-lg bg-amber-500/20 text-amber-300 font-mono tabular-nums">
                     {message.timbreBreakdown.totalTND.toFixed(3)} DT
@@ -142,12 +142,12 @@ export const ChatMessage: React.FC<ChatMessageProps> = ({ message }) => {
                 {isPlayingAudio ? (
                   <>
                     <VolumeX className="w-3 h-3" />
-                    <span>{locale === 'en' ? 'Stop audio' : '9oss el sout'}</span>
+                    <span>{locale === 'ar' ? 'إيقاف الصوت' : locale === 'fr' ? 'Arrêter' : locale === 'en' ? 'Stop audio' : '9oss el sout'}</span>
                   </>
                 ) : (
                   <>
                     <Volume2 className="w-3 h-3" />
-                    <span>{locale === 'en' ? 'Listen' : 'Isma3 bel Derja'}</span>
+                    <span>{locale === 'ar' ? 'استمع بالصوت' : locale === 'fr' ? 'Écouter' : locale === 'en' ? 'Listen' : 'Isma3 bel Derja'}</span>
                   </>
                 )}
               </button>

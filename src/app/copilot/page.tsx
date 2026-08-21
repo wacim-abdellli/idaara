@@ -13,15 +13,16 @@ export default function CopilotPage() {
 
   const getWelcomeContent = () => {
     if (locale === 'ar') {
-      return "مرحباً بك في المساعد الصوتي لإدارة.تونس 🇹🇳. يمكنك التحدث أو الكتابة بالدارجة التونسية حول أي إجراء، وثيقة، أو استفسار إداري.";
+      return "مرحباً بك في إدارة.تونس. يمكنك الكتابة أو التحدث بالعربية أو الدارجة التونسية للاستفسار عن أي إجراء إداري، وثيقة، أو معلوم جبائي.";
     }
     if (locale === 'en') {
-      return "Welcome to Idaara.tn Voice Copilot. Speak or type in Tunisian Derja, French, or English to ask about any administrative procedure, legal form, or stamp fees.";
+      return "Welcome to Idaara.tn. Ask me in English about any Tunisian administrative procedure, legal document, or stamp fees — I'll guide you step by step.";
     }
     if (locale === 'fr') {
-      return "Bienvenue sur le Voice Copilot Idaara.tn. Posez toutes vos questions administratives en Derja ou Français (Passeport, Carte Grise, Contrat de bail, Patente...).";
+      return "Bienvenue sur Idaara.tn. Posez vos questions en Français sur n'importe quelle démarche administrative tunisienne, document légal ou frais de timbres.";
     }
-    return "3aslema! Mar7ba bik fi Idaara.tn Voice Copilot. Es'elni bel Derja 3la ay war9a, procédure, walla timbre mte3 l'Idara.";
+    // Derja default
+    return "3aslema! Es'elni bel Derja 3la ay war9a, procédure, walla timbre mte3 l'Idara — nreddlek bich t3amel b'saha.";
   };
 
   const [messages, setMessages] = useState<ChatMessageType[]>([
