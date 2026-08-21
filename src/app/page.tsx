@@ -270,13 +270,13 @@ export default function HomePage() {
               <span className="text-zinc-400 font-normal">{ui.jort2026}</span>
             </div>
 
-            {/* Monumental Editorial Headline */}
-            <h1 className="leading-[1.05] tracking-tight">
-              <span className="display-heading block text-4xl sm:text-6xl lg:text-7xl text-[#F5F4F0] font-normal">
+            {/* Monumental Robotic Headline */}
+            <h1 className="leading-[1.1] tracking-tight">
+              <span className="display-heading block text-3xl sm:text-5xl lg:text-6xl text-[#F5F4F0] font-bold">
                 {t('heroHeadline')}
               </span>
               <span
-                className="display-heading block text-4xl sm:text-6xl lg:text-7xl italic mt-1 font-serif"
+                className="display-heading block text-3xl sm:text-5xl lg:text-6xl mt-1 font-extrabold"
                 style={{ color: 'var(--stamp-green)' }}
               >
                 {t('heroHeadlineHighlight')}

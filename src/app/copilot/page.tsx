@@ -148,7 +148,7 @@ export default function CopilotPage() {
           <div>
             <h1 className="text-lg sm:text-xl font-extrabold text-white flex items-center gap-2">
               <span>{headlineMain}</span>
-              <span className="text-emerald-400 italic font-serif">{headlineAccent}</span>
+              <span className="text-emerald-400 font-bold">{headlineAccent}</span>
             </h1>
             <p className="text-xs text-zinc-400">
               {locale === 'en'

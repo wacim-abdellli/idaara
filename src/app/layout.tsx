@@ -35,12 +35,12 @@ export default function RootLayout({
         <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
-        {/* Instrument Serif: ultra-refined editorial display serif */}
-        {/* Plus Jakarta Sans: modern high-craft geometric UI face */}
+        {/* Orbitron: futuristic robotic display typeface */}
+        {/* Space Grotesk: techno-geometric modernist UI typeface */}
         {/* Cairo: Arabic script */}
         {/* JetBrains Mono: data, numbers, amounts */}
         <link
-          href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800;900&family=Instrument+Serif:ital@0;1&family=JetBrains+Mono:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap"
+          href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600;700&family=Orbitron:wght@500;600;700;800;900&family=Space+Grotesk:wght@400;500;600;700&display=swap"
           rel="stylesheet"
         />
       </head>
