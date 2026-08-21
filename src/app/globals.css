@@ -191,6 +191,52 @@ body {
 }
 .animate-pulse-ring { animation: pulse-ring 2s infinite cubic-bezier(0.45,0,0.55,1); }
 
+/* ── Laser Scan Animation ─────────────────── */
+@keyframes laser-sweep {
+  0% {
+    top: 0%;
+    opacity: 0;
+  }
+  15% {
+    opacity: 1;
+  }
+  85% {
+    opacity: 1;
+  }
+  100% {
+    top: 100%;
+    opacity: 0;
+  }
+}
+.animate-laser {
+  animation: laser-sweep 3s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+}
+
+/* ── Smooth Float Animations ──────────────── */
+@keyframes float-slow {
+  0%, 100% { transform: translateY(0px) rotate(0deg); }
+  50% { transform: translateY(-8px) rotate(1deg); }
+}
+@keyframes float-reverse {
+  0%, 100% { transform: translateY(0px) rotate(0deg); }
+  50% { transform: translateY(8px) rotate(-1deg); }
+}
+.animate-float-slow {
+  animation: float-slow 6s ease-in-out infinite;
+}
+.animate-float-reverse {
+  animation: float-reverse 7s ease-in-out infinite;
+}
+
+/* ── Border Glow Pulse ─────────────────────── */
+@keyframes border-pulse {
+  0%, 100% { border-color: rgba(0, 192, 127, 0.2); box-shadow: 0 0 20px rgba(0, 192, 127, 0.05); }
+  50% { border-color: rgba(0, 192, 127, 0.6); box-shadow: 0 0 35px rgba(0, 192, 127, 0.2); }
+}
+.animate-border-glow {
+  animation: border-pulse 4s ease-in-out infinite;
+}
+
 /* ── Styled native select ──────────────────── */
 select {
   appearance: none;
@@ -214,3 +260,4 @@ select {
     transition-duration: 0.01ms !important;
   }
 }
+
