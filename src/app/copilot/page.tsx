@@ -148,26 +148,70 @@ export default function CopilotPage() {
       return;
     }
 
-    const SR = (window as unknown as { SpeechRecognition?: unknown; webkitSpeechRecognition?: unknown }).SpeechRecognition
-            || (window as unknown as { SpeechRecognition?: unknown; webkitSpeechRecognition?: unknown }).webkitSpeechRecognition;
-    if (!SR) return;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const windowObj = typeof window !== 'undefined' ? (window as any) : null;
+    if (!windowObj) return;
 
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const rec = new (SR as any)();
-    speechRecognitionRef.current = rec;
-    rec.lang = locale === 'ar' ? 'ar-TN' : locale === 'fr' ? 'fr-FR' : 'en-US';
-    rec.interimResults = true;
-    rec.onstart = () => setIsRecording(true);
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    rec.onresult = (e: any) => {
-      let t = '';
-      for (let i = 0; i < e.results.length; i++) t += e.results[i][0].transcript;
-      setInputVal(t);
-      if (e.results[e.results.length - 1].isFinal && t.trim()) { setIsRecording(false); handleSendMessage(t.trim()); }
-    };
-    rec.onerror = () => setIsRecording(false);
-    rec.onend = () => setIsRecording(false);
-    rec.start();
+    const SpeechRec = windowObj.SpeechRecognition || windowObj.webkitSpeechRecognition;
+    if (!SpeechRec) {
+      alert(
+        locale === 'ar'
+          ? 'المتصفح لا يدعم التسجيل الصوتي المباشر. يرجى استخدام متصفح Chrome أو Edge.'
+          : locale === 'fr'
+          ? 'La reconnaissance vocale n’est pas supportée sur ce navigateur. Veuillez utiliser Chrome ou Edge.'
+          : locale === 'derja'
+          ? 'El micro ma yemchich 3al browser hedha. Jarreb Chrome walla Edge.'
+          : 'Voice recognition is not supported on this browser. Please use Chrome or Edge.'
+      );
+      return;
+    }
+
+    try {
+      const rec = new SpeechRec();
+      speechRecognitionRef.current = rec;
+      rec.continuous = false;
+      rec.interimResults = true;
+
+      // Set speech recognition dialect: ar-TN for Tunisian Derja/Arabic, fr-FR for French, en-US for English
+      if (locale === 'ar' || locale === 'derja') {
+        rec.lang = 'ar-TN';
+      } else if (locale === 'fr') {
+        rec.lang = 'fr-FR';
+      } else {
+        rec.lang = 'en-US';
+      }
+
+      rec.onstart = () => setIsRecording(true);
+
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      rec.onresult = (e: any) => {
+        let interim = '';
+        for (let i = 0; i < e.results.length; i++) {
+          interim += e.results[i][0].transcript;
+        }
+        setInputVal(interim);
+        if (e.results[e.results.length - 1].isFinal && interim.trim()) {
+          setIsRecording(false);
+          handleSendMessage(interim.trim());
+        }
+      };
+
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      rec.onerror = (e: any) => {
+        console.warn('Speech recognition status/error:', e);
+        setIsRecording(false);
+        // Fallback to standard Arabic if ar-TN locale voice pack is missing on the client OS
+        if (rec.lang === 'ar-TN') {
+          rec.lang = 'ar-SA';
+        }
+      };
+
+      rec.onend = () => setIsRecording(false);
+      rec.start();
+    } catch (err) {
+      console.error('Failed to initialize speech recognition:', err);
+      setIsRecording(false);
+    }
   };
 
   const onTextareaChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
@@ -193,14 +237,47 @@ export default function CopilotPage() {
       : "Comment puis-je vous aider aujourd'hui ?";
 
   const placeholder = isRecording
-    ? (locale === 'ar' ? 'جار الاستماع...' : locale === 'derja' ? '9a3ed nesma3 fik...' : 'Listening...')
+    ? (locale === 'ar'
+        ? 'جارٍ الاستماع... تفضل بالتحدث'
+        : locale === 'derja'
+        ? '9a3ed nesma3 fik... Tkellem tawa'
+        : locale === 'fr'
+        ? 'Écoute en cours... Parlez maintenant'
+        : 'Listening... Speak now')
     : (locale === 'ar'
-      ? 'اسأل عن أي إجراء أو وثيقة...'
+      ? 'اسأل عن أي إجراء، وثيقة، أو معلوم جبائي...'
       : locale === 'derja'
       ? 'Es\'el 3la ay war9a, procédure, walla timbre...'
       : locale === 'fr'
-      ? 'Posez votre question...'
-      : 'Ask anything');
+      ? 'Posez votre question sur une démarche, un timbre...'
+      : 'Ask about any procedure, document, or stamp fee...');
+
+  const disclaimerText =
+    locale === 'ar'
+      ? 'إدارة.تونس AI يقدم معلومات إرشادية. يرجى التثبت من النصوص بالرائد الرسمي.'
+      : locale === 'derja'
+      ? 'Idaara AI ynajjem ya3mel a8lat. Thabbet fel nosous el rasmiya fel JORT.'
+      : locale === 'fr'
+      ? 'Idaara AI peut faire des erreurs. Vérifiez les textes officiels au JORT.'
+      : 'Idaara AI can make mistakes. Verify official texts with JORT.';
+
+  const officialBadgeText =
+    locale === 'ar'
+      ? 'المساعد الإداري الرسمي'
+      : locale === 'derja'
+      ? 'Copilot Idari Tounsi'
+      : locale === 'fr'
+      ? 'IA Civique Officielle'
+      : 'Official Civic AI';
+
+  const newChatText =
+    locale === 'ar'
+      ? 'محادثة جديدة'
+      : locale === 'derja'
+      ? 'M7adtha Jdida'
+      : locale === 'fr'
+      ? 'Nouvelle discussion'
+      : 'New Chat';
 
   return (
     <div className="fixed inset-x-0 top-14 bottom-0 z-30 flex flex-col bg-[#09090b] text-white overflow-hidden">
@@ -213,7 +290,7 @@ export default function CopilotPage() {
           <div className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
           <span className="text-sm font-bold text-white tracking-tight">Idaara Copilot</span>
           <span className="text-[10px] font-mono text-emerald-400/90 bg-emerald-950/60 border border-emerald-800/40 px-2 py-0.5 rounded-full">
-            Official Civic AI
+            {officialBadgeText}
           </span>
         </div>
 
@@ -223,10 +300,10 @@ export default function CopilotPage() {
             <button
               onClick={() => setMessages([])}
               className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl hover:bg-white/10 text-zinc-300 hover:text-white text-xs transition-colors cursor-pointer border-0 outline-none"
-              title="New Chat"
+              title={newChatText}
             >
               <RotateCcw className="w-3.5 h-3.5" />
-              <span>New Chat</span>
+              <span>{newChatText}</span>
             </button>
           )}
         </div>
@@ -251,7 +328,7 @@ export default function CopilotPage() {
                   type="button"
                   onClick={() => setShowPlusMenu((p) => !p)}
                   className="p-1.5 rounded-full hover:bg-white/10 text-zinc-400 hover:text-white transition-colors cursor-pointer border-0 outline-none"
-                  title="Quick Topics"
+                  title={locale === 'ar' ? 'مواضيع شائعة' : 'Quick Topics'}
                 >
                   <Plus className="w-4 h-4" />
                 </button>
@@ -259,7 +336,7 @@ export default function CopilotPage() {
                 {showPlusMenu && (
                   <div className="absolute bottom-full left-0 mb-3 w-72 rounded-2xl bg-[#1e1e1e] border border-white/10 shadow-2xl p-2 z-50 animate-fade-in space-y-1">
                     <div className="px-3 py-1 text-[10px] uppercase font-bold tracking-wider text-zinc-400">
-                      {locale === 'ar' ? 'أسئلة شائعة' : locale === 'derja' ? 'As2ela ma3roufa' : 'Popular Inquiries'}
+                      {locale === 'ar' ? 'أسئلة شائعة' : locale === 'derja' ? 'As2ela ma3roufa' : locale === 'fr' ? 'Questions Fréquentes' : 'Popular Inquiries'}
                     </div>
                     {quickTopics.map((item, idx) => {
                       const Icon = item.icon;
@@ -302,7 +379,7 @@ export default function CopilotPage() {
                   className={`p-2 rounded-full transition-colors cursor-pointer border-0 outline-none ${
                     isRecording ? 'bg-red-500 text-white animate-pulse' : 'text-zinc-400 hover:text-white hover:bg-white/10'
                   }`}
-                  title="Dictate"
+                  title={locale === 'ar' ? 'تسجيل صوتي' : locale === 'fr' ? 'Dicter' : 'Voice Dictate'}
                 >
                   {isRecording ? <MicOff className="w-4 h-4" /> : <Mic className="w-4 h-4" />}
                 </button>
@@ -312,7 +389,7 @@ export default function CopilotPage() {
                   onClick={() => handleSendMessage()}
                   disabled={!inputVal.trim()}
                   className="w-8 h-8 rounded-full bg-white text-black flex items-center justify-center transition-all disabled:opacity-20 disabled:cursor-not-allowed hover:opacity-90 cursor-pointer shadow-md border-0 outline-none"
-                  title="Send"
+                  title={locale === 'ar' ? 'إرسال' : locale === 'fr' ? 'Envoyer' : 'Send'}
                 >
                   <ArrowUp className="w-4 h-4 stroke-[3]" />
                 </button>
@@ -322,9 +399,7 @@ export default function CopilotPage() {
 
             {/* Micro disclaimer */}
             <p className="text-center text-[11px] text-zinc-600 mt-3 font-normal">
-              {locale === 'ar'
-                ? 'إدارة.تونس AI يقدم معلومات إرشادية. يرجى التثبت من النصوص بالرائد الرسمي.'
-                : 'Idaara AI is AI and can make mistakes. Verify official texts with JORT.'}
+              {disclaimerText}
             </p>
           </div>
 
@@ -367,7 +442,7 @@ export default function CopilotPage() {
                     type="button"
                     onClick={() => setShowPlusMenu((p) => !p)}
                     className="p-1.5 rounded-full hover:bg-white/10 text-zinc-400 hover:text-white transition-colors cursor-pointer border-0 outline-none"
-                    title="Quick Topics"
+                    title={locale === 'ar' ? 'مواضيع شائعة' : 'Quick Topics'}
                   >
                     <Plus className="w-4 h-4" />
                   </button>
@@ -375,7 +450,7 @@ export default function CopilotPage() {
                   {showPlusMenu && (
                     <div className="absolute bottom-full left-0 mb-3 w-72 rounded-2xl bg-[#1e1e1e] border border-white/10 shadow-2xl p-2 z-50 animate-fade-in space-y-1">
                       <div className="px-3 py-1 text-[10px] uppercase font-bold tracking-wider text-zinc-400">
-                        {locale === 'ar' ? 'أسئلة شائعة' : locale === 'derja' ? 'As2ela ma3roufa' : 'Popular Inquiries'}
+                        {locale === 'ar' ? 'أسئلة شائعة' : locale === 'derja' ? 'As2ela ma3roufa' : locale === 'fr' ? 'Questions Fréquentes' : 'Popular Inquiries'}
                       </div>
                       {quickTopics.map((item, idx) => {
                         const Icon = item.icon;
@@ -413,7 +488,7 @@ export default function CopilotPage() {
                     className={`p-2 rounded-full transition-colors cursor-pointer border-0 outline-none ${
                       isRecording ? 'bg-red-500 text-white animate-pulse' : 'text-zinc-400 hover:text-white hover:bg-white/10'
                     }`}
-                    title="Dictate"
+                    title={locale === 'ar' ? 'تسجيل صوتي' : locale === 'fr' ? 'Dicter' : 'Voice Dictate'}
                   >
                     {isRecording ? <MicOff className="w-4 h-4" /> : <Mic className="w-4 h-4" />}
                   </button>
@@ -423,7 +498,7 @@ export default function CopilotPage() {
                     onClick={() => handleSendMessage()}
                     disabled={!inputVal.trim() || isProcessing}
                     className="w-8 h-8 rounded-full bg-white text-black flex items-center justify-center transition-all disabled:opacity-20 disabled:cursor-not-allowed hover:opacity-90 cursor-pointer shadow-md border-0 outline-none"
-                    title="Send"
+                    title={locale === 'ar' ? 'إرسال' : locale === 'fr' ? 'Envoyer' : 'Send'}
                   >
                     <ArrowUp className="w-4 h-4 stroke-[3]" />
                   </button>
@@ -433,9 +508,7 @@ export default function CopilotPage() {
 
               {/* Disclaimer */}
               <p className="text-center text-[11px] text-zinc-600">
-                {locale === 'ar'
-                  ? 'إدارة.تونس AI يقدم معلومات إرشادية. يرجى التثبت من النصوص بالرائد الرسمي.'
-                  : 'Idaara AI is AI and can make mistakes. Verify official texts with JORT.'}
+                {disclaimerText}
               </p>
 
             </div>

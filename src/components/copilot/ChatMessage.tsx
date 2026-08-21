@@ -23,6 +23,16 @@ interface ChatMessageProps {
   onSelectPrompt?: (prompt: string) => void;
 }
 
+/** Clean speech string removing markdown symbols and tables for natural TTS reading */
+function cleanTextForSpeech(text: string): string {
+  return text
+    .replace(/[#*`_~]/g, '')
+    .replace(/\|[^|\n]+\|/g, '') // remove markdown table lines
+    .replace(/^[-•*]\s+/gm, '')
+    .replace(/\n+/g, '. ')
+    .trim();
+}
+
 /** Full Markdown & Table Parser for Chat Messages */
 function renderFormattedContent(text: string): React.ReactNode {
   const rawLines = text.split('\n');
@@ -56,7 +66,7 @@ function renderFormattedContent(text: string): React.ReactNode {
 
       if (tableLines.length >= 2) {
         const headerRow = tableLines[0].split('|').filter((_, idx, arr) => idx > 0 && idx < arr.length - 1).map((c) => c.trim());
-        // line 1 is usually separator (|---|---|)
+        // line 1 is separator (|---|---|)
         const bodyRows = tableLines.slice(2).map((row) =>
           row.split('|').filter((_, idx, arr) => idx > 0 && idx < arr.length - 1).map((c) => c.trim())
         );
@@ -207,9 +217,45 @@ export const ChatMessage: React.FC<ChatMessageProps> = ({ message }) => {
       return;
     }
 
-    const utterance = new SpeechSynthesisUtterance(message.content);
-    utterance.lang = locale === 'ar' ? 'ar-SA' : locale === 'en' ? 'en-US' : locale === 'fr' ? 'fr-FR' : 'ar-TN';
-    utterance.rate = 1.0;
+    // Stop any ongoing speech
+    window.speechSynthesis.cancel();
+
+    const cleanSpeech = cleanTextForSpeech(message.content);
+    if (!cleanSpeech) return;
+
+    const utterance = new SpeechSynthesisUtterance(cleanSpeech);
+
+    const isArabicScript = /[\u0600-\u06FF]/.test(message.content);
+    const voices = window.speechSynthesis.getVoices();
+
+    // Select the best voice
+    let selectedVoice: SpeechSynthesisVoice | null = null;
+    if (isArabicScript || locale === 'ar') {
+      selectedVoice =
+        voices.find((v) => v.lang.startsWith('ar') || v.name.toLowerCase().includes('arabic')) || null;
+      utterance.lang = 'ar-SA';
+    } else if (locale === 'fr') {
+      selectedVoice =
+        voices.find((v) => v.lang.startsWith('fr') || v.name.toLowerCase().includes('french')) || null;
+      utterance.lang = 'fr-FR';
+    } else {
+      // For Derja Arabizi or English, French / English voices read Arabizi and administrative terms clearly
+      selectedVoice =
+        voices.find((v) => v.lang.startsWith('fr')) ||
+        voices.find((v) => v.lang.startsWith('en')) ||
+        voices[0] ||
+        null;
+      utterance.lang = selectedVoice ? selectedVoice.lang : 'fr-FR';
+    }
+
+    if (selectedVoice) {
+      utterance.voice = selectedVoice;
+    }
+
+    utterance.rate = 0.95;
+    utterance.pitch = 1.0;
+
+    utterance.onstart = () => setIsPlayingAudio(true);
     utterance.onend = () => setIsPlayingAudio(false);
     utterance.onerror = () => setIsPlayingAudio(false);
 
@@ -242,7 +288,15 @@ export const ChatMessage: React.FC<ChatMessageProps> = ({ message }) => {
           <div className="flex items-center justify-between font-bold text-amber-400 pb-1.5 border-b border-white/10 text-xs">
             <div className="flex items-center gap-1.5">
               <Stamp className="w-3.5 h-3.5 text-amber-400" />
-              <span>{locale === 'ar' ? 'المعاليم الجبائية والتنابر' : 'Statutory Stamp Fees'}</span>
+              <span>
+                {locale === 'ar'
+                  ? 'المعاليم الجبائية والتنابر'
+                  : locale === 'derja'
+                  ? 'El Masrouf wel Timbres'
+                  : locale === 'fr'
+                  ? 'Frais et Timbres Fiscaux'
+                  : 'Statutory Stamp Fees'}
+              </span>
             </div>
             <span className="px-2 py-0.5 rounded-md bg-amber-500/20 text-amber-300 font-mono font-bold tabular-nums">
               {message.timbreBreakdown.totalTND.toFixed(3)} DT
@@ -290,7 +344,7 @@ export const ChatMessage: React.FC<ChatMessageProps> = ({ message }) => {
         <button
           onClick={copyToClipboard}
           className="p-1.5 rounded-lg hover:bg-white/10 text-zinc-400 hover:text-zinc-200 transition-colors cursor-pointer border-0 outline-none"
-          title="Copy"
+          title={locale === 'ar' ? 'نسخ النص' : locale === 'fr' ? 'Copier' : 'Copy'}
         >
           {copied ? <Check className="w-4 h-4 text-emerald-400" /> : <Copy className="w-4 h-4" />}
         </button>
@@ -302,7 +356,7 @@ export const ChatMessage: React.FC<ChatMessageProps> = ({ message }) => {
               ? 'text-red-400 bg-red-500/10'
               : 'text-zinc-400 hover:text-zinc-200 hover:bg-white/10'
           }`}
-          title="Read out loud"
+          title={locale === 'ar' ? 'استماع بالصوت' : locale === 'fr' ? 'Écouter' : 'Read out loud'}
         >
           {isPlayingAudio ? <VolumeX className="w-4 h-4" /> : <Volume2 className="w-4 h-4" />}
         </button>
