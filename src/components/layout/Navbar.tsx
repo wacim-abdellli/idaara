@@ -33,18 +33,19 @@ export const Navbar: React.FC = () => {
   return (
     <header className="sticky top-0 z-50 w-full border-b border-zinc-800/60 bg-zinc-950/95 backdrop-blur-2xl">
       <div className="max-w-[1440px] mx-auto px-3 sm:px-5 lg:px-8">
-        <div className="flex items-center h-14 gap-3">
+        <div className="flex items-center justify-between h-14 gap-3">
 
-          {/* ── Brand logo — sleek typographic signature ── */}
-          <Link href="/" className="flex items-center group shrink-0 pr-1">
-            <span className="font-extrabold text-base sm:text-lg text-white tracking-tight group-hover:opacity-90 transition-opacity">
-              Idaara<span className="text-emerald-400">.tn</span>
-            </span>
-          </Link>
+          {/* Left: Brand Logo & Desktop Navigation */}
+          <div className="flex items-center gap-4 lg:gap-6 min-w-0">
+            {/* Brand logo */}
+            <Link href="/" className="flex items-center group shrink-0">
+              <span className="font-extrabold text-base sm:text-lg text-white tracking-tight group-hover:opacity-90 transition-opacity">
+                Idaara<span className="text-emerald-400">.tn</span>
+              </span>
+            </Link>
 
-          {/* ── Desktop Navigation — text-only, whitespace-nowrap ── */}
-          <nav className="hidden lg:flex items-center flex-1 mx-1 overflow-hidden">
-            <div className="flex items-center gap-0.5">
+            {/* Desktop Navigation */}
+            <nav className="hidden lg:flex items-center gap-1">
               {NAV_LINKS.map(({ href, tKey }) => {
                 const isActive = pathname === href || pathname.startsWith(href);
                 const label = t(tKey);
@@ -62,24 +63,24 @@ export const Navbar: React.FC = () => {
                   </Link>
                 );
               })}
-            </div>
-          </nav>
+            </nav>
+          </div>
 
-          {/* ── Search CTA (desktop) ── */}
-          <button
-            onClick={triggerCommandPalette}
-            className="hidden md:flex items-center gap-2 px-3 py-1.5 rounded-xl bg-zinc-900/80 hover:bg-zinc-800/80 border border-zinc-800 text-zinc-400 hover:text-zinc-200 text-xs transition-colors cursor-pointer shrink-0"
-            title="Search Idaara (Ctrl+K)"
-          >
-            <Search className="w-3.5 h-3.5 text-zinc-500" />
-            <span className="text-xs text-zinc-400">{t('quickSearchPrompt')}</span>
-            <kbd className="hidden lg:inline-block px-1.5 py-0.5 text-[9px] font-mono bg-zinc-800 text-zinc-500 rounded border border-zinc-700">
-              ⌘K
-            </kbd>
-          </button>
+          {/* Right Side: Search, Language Switcher, Voice CTA, Mobile Toggle */}
+          <div className="flex items-center gap-2 shrink-0">
+            {/* Search CTA (visible on xl screens) */}
+            <button
+              onClick={triggerCommandPalette}
+              className="hidden xl:flex items-center gap-2 px-3 py-1.5 rounded-xl bg-zinc-900/80 hover:bg-zinc-800/80 border border-zinc-800 text-zinc-400 hover:text-zinc-200 text-xs transition-colors cursor-pointer shrink-0"
+              title="Search Idaara (Ctrl+K)"
+            >
+              <Search className="w-3.5 h-3.5 text-zinc-500" />
+              <span className="text-xs text-zinc-400">{t('quickSearchPrompt')}</span>
+              <kbd className="inline-block px-1.5 py-0.5 text-[9px] font-mono bg-zinc-800 text-zinc-500 rounded border border-zinc-700">
+                ⌘K
+              </kbd>
+            </button>
 
-          {/* ── Right side controls ── */}
-          <div className="flex items-center gap-2 ml-auto shrink-0">
             {/* Language Switcher */}
             <LanguageSwitcher />
 
@@ -95,7 +96,7 @@ export const Navbar: React.FC = () => {
             {/* Mobile Hamburger Toggle */}
             <button
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              className="lg:hidden p-1.5 rounded-xl text-zinc-400 hover:text-white hover:bg-zinc-900 border border-zinc-800 transition-colors"
+              className="lg:hidden p-1.5 rounded-xl text-zinc-400 hover:text-white hover:bg-zinc-900 border border-zinc-800 transition-colors cursor-pointer"
               aria-label="Toggle menu"
             >
               {mobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
