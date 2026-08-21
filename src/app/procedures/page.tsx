@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useMemo } from 'react';
 import Link from 'next/link';
 import { proceduresData } from '../../data/procedures';
 import { useLocale } from '../../context/LocaleContext';
@@ -10,7 +10,6 @@ import {
   Search,
   ArrowRight,
   Clock,
-  Coins,
   CreditCard,
   Car,
   Briefcase,
@@ -22,12 +21,20 @@ import {
   ChevronRight,
   ShieldCheck,
   Building2,
+  Layers,
+  ArrowUpDown,
+  FileText,
+  Stamp,
+  CheckCircle2,
+  Mic,
+  Zap,
 } from 'lucide-react';
 
 export default function ProceduresPage() {
   const { locale } = useLocale();
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedVertical, setSelectedVertical] = useState<string>('all');
+  const [sortBy, setSortBy] = useState<'default' | 'cost_asc' | 'cost_desc' | 'steps'>('default');
 
   const verticals: Array<{ id: string; label: string; icon: React.ElementType }> = [
     {
@@ -102,20 +109,41 @@ export default function ProceduresPage() {
     },
   ];
 
-  const filteredProcedures = proceduresData.filter((proc) => {
-    const title = getLocalized(proc.title, locale).toLowerCase();
-    const shortDesc = getLocalized(proc.shortDescription, locale).toLowerCase();
-    const q = searchQuery.toLowerCase().trim();
+  const lifeScenarios = [
+    { id: 'passeport-renouvellement', label: 'Renouvellement Passeport', tag: '80 DT' },
+    { id: 'mutation-carte-grise', label: 'Achat Voiture (Carte Grise)', tag: '145 DT' },
+    { id: 'bulletin-numero-3', label: 'Extrait B3 (Casier)', tag: '7.5 DT' },
+    { id: 'auto-entrepreneur-creation', label: 'Statut Auto-Entrepreneur', tag: '0 DT' },
+    { id: 'contrat-location-residentiel', label: 'Contrat de Bail Baladiya', tag: '35 DT' },
+    { id: 'fcr-regime-douanier', label: 'Régime Douanier FCR', tag: '50 DT' },
+  ];
 
-    const matchesVertical =
-      selectedVertical === 'all' || proc.vertical === selectedVertical;
-    const matchesSearch =
-      title.includes(q) ||
-      shortDesc.includes(q) ||
-      proc.tags.some((tag) => tag.toLowerCase().includes(q));
+  const filteredProcedures = useMemo(() => {
+    let procs = proceduresData.filter((proc) => {
+      const title = getLocalized(proc.title, locale).toLowerCase();
+      const shortDesc = getLocalized(proc.shortDescription, locale).toLowerCase();
+      const q = searchQuery.toLowerCase().trim();
 
-    return matchesVertical && matchesSearch;
-  });
+      const matchesVertical =
+        selectedVertical === 'all' || proc.vertical === selectedVertical;
+      const matchesSearch =
+        title.includes(q) ||
+        shortDesc.includes(q) ||
+        proc.tags.some((tag) => tag.toLowerCase().includes(q));
+
+      return matchesVertical && matchesSearch;
+    });
+
+    if (sortBy === 'cost_asc') {
+      procs = [...procs].sort((a, b) => a.estimatedTotalCostTND - b.estimatedTotalCostTND);
+    } else if (sortBy === 'cost_desc') {
+      procs = [...procs].sort((a, b) => b.estimatedTotalCostTND - a.estimatedTotalCostTND);
+    } else if (sortBy === 'steps') {
+      procs = [...procs].sort((a, b) => a.steps.length - b.steps.length);
+    }
+
+    return procs;
+  }, [searchQuery, selectedVertical, sortBy, locale]);
 
   const featuredProcedures = proceduresData.slice(0, 4);
 
@@ -150,12 +178,15 @@ export default function ProceduresPage() {
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-10 space-y-10">
 
-      {/* ── 2-Column Hero Header (Balances Left & Right space) ── */}
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center pb-4 border-b border-zinc-800/80">
+      {/* ── 2-Column Hero Header (Balanced Layout with Glow) ── */}
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center pb-4 border-b border-zinc-800/80 relative">
+        {/* Ambient Glow */}
+        <div className="absolute -top-10 -left-10 w-72 h-72 bg-emerald-500/10 rounded-full blur-3xl pointer-events-none" />
+
         {/* Left: Titles & Context */}
-        <div className="lg:col-span-7 space-y-3">
+        <div className="lg:col-span-7 space-y-3 relative z-10">
           <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-zinc-900 border border-zinc-800 text-[11px] font-semibold text-zinc-400">
-            <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 shrink-0" />
+            <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 shrink-0 animate-pulse" />
             <span>JORT & Code Administratif Tunisien</span>
           </div>
 
@@ -176,16 +207,17 @@ export default function ProceduresPage() {
           </p>
         </div>
 
-        {/* Right: Civic Standards Hub Widget (Fills empty space) */}
-        <div className="lg:col-span-5">
+        {/* Right: Civic Standards Hub Widget */}
+        <div className="lg:col-span-5 relative z-10">
           <div className="glass-panel rounded-3xl p-4 sm:p-5 border border-zinc-800/90 bg-gradient-to-br from-zinc-900/80 via-zinc-900/50 to-zinc-950 shadow-xl space-y-3">
             <div className="flex items-center justify-between text-xs pb-2.5 border-b border-zinc-800">
               <span className="font-bold uppercase tracking-wider text-[10px] text-zinc-400 flex items-center gap-1.5">
                 <Building2 className="w-3.5 h-3.5 text-emerald-400" />
                 <span>{locale === 'en' ? 'Public Service Framework' : 'Garanties Civiques'}</span>
               </span>
-              <span className="text-[10px] font-mono text-emerald-400 bg-emerald-950/60 border border-emerald-800/50 px-2 py-0.5 rounded-full">
-                Mise à jour 2026
+              <span className="text-[10px] font-mono text-emerald-400 bg-emerald-950/60 border border-emerald-800/50 px-2 py-0.5 rounded-full flex items-center gap-1">
+                <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-ping" />
+                <span>JORT 2026</span>
               </span>
             </div>
 
@@ -193,7 +225,7 @@ export default function ProceduresPage() {
               {civicStats.map((stat, idx) => (
                 <div
                   key={idx}
-                  className="p-2.5 rounded-xl bg-zinc-950/60 border border-zinc-800/80 flex flex-col justify-between"
+                  className="p-2.5 rounded-xl bg-zinc-950/60 border border-zinc-800/80 flex flex-col justify-between hover:border-emerald-500/30 transition-colors"
                 >
                   <div className="flex items-center justify-between mb-1">
                     <span className="font-mono font-bold text-xs text-white">
@@ -213,9 +245,9 @@ export default function ProceduresPage() {
         </div>
       </div>
 
-      {/* ── Fast-Track Quick Access Cards ── */}
-      <div>
-        <div className="flex items-center justify-between mb-3 text-xs">
+      {/* ── Life-Event Quick Scenario Pills ── */}
+      <div className="space-y-2">
+        <div className="flex items-center justify-between text-xs">
           <span className="text-[11px] font-bold uppercase tracking-wider text-zinc-500 flex items-center gap-1.5">
             <Sparkles className="w-3.5 h-3.5 text-amber-400" />
             <span>
@@ -223,69 +255,81 @@ export default function ProceduresPage() {
             </span>
           </span>
           <span className="text-[11px] text-zinc-500 font-mono">
-            {proceduresData.length} {locale === 'ar' ? 'إجراء متاح' : 'procédures certifiées'}
+            {proceduresData.length} {locale === 'ar' ? 'إجراء متاح' : 'dossiers homologués'}
           </span>
         </div>
 
-        <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-          {featuredProcedures.map((proc) => {
-            const title = getLocalized(proc.title, locale);
-            return (
-              <Link
-                key={proc.id}
-                href={`/procedures/${proc.id}`}
-                className="p-3.5 rounded-2xl bg-zinc-900/90 border border-zinc-800 hover:border-emerald-500/40 hover:bg-zinc-900 transition-all group flex flex-col justify-between"
-              >
-                <div>
-                  <div className="flex items-center justify-between mb-2">
-                    <span className="text-[9px] font-extrabold uppercase tracking-widest text-emerald-400/90">
-                      {proc.vertical}
-                    </span>
-                    <span className="font-mono text-[10px] text-zinc-500">
-                      {proc.estimatedProcessingTime}
-                    </span>
-                  </div>
-                  <h3 className="text-xs font-bold text-zinc-200 group-hover:text-white leading-snug line-clamp-2">
-                    {title}
-                  </h3>
-                </div>
-                <div className="pt-2.5 mt-2 border-t border-zinc-800/80 flex items-center justify-between text-[11px]">
-                  <span className="font-mono font-bold text-amber-400">
-                    {formatTND(proc.estimatedTotalCostTND, locale)}
-                  </span>
-                  <ChevronRight className="w-3.5 h-3.5 text-zinc-600 group-hover:text-emerald-400 group-hover:translate-x-0.5 transition-all" />
-                </div>
-              </Link>
-            );
-          })}
+        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-2.5">
+          {lifeScenarios.map((scenario) => (
+            <Link
+              key={scenario.id}
+              href={`/procedures/${scenario.id}`}
+              className="p-3 rounded-2xl bg-zinc-900/80 border border-zinc-800 hover:border-emerald-500/40 hover:bg-zinc-900 transition-all duration-200 group flex flex-col justify-between hover:-translate-y-0.5 hover:shadow-lg hover:shadow-emerald-950/30"
+            >
+              <span className="text-xs font-bold text-zinc-200 group-hover:text-emerald-300 transition-colors leading-snug line-clamp-2">
+                {scenario.label}
+              </span>
+              <div className="pt-2 mt-2 border-t border-zinc-800/80 flex items-center justify-between">
+                <span className="text-[10px] font-mono font-bold text-amber-400">
+                  {scenario.tag}
+                </span>
+                <ChevronRight className="w-3 h-3 text-zinc-600 group-hover:text-emerald-400 group-hover:translate-x-0.5 transition-all" />
+              </div>
+            </Link>
+          ))}
+        </div>
+      </div>
+
+      {/* ── Filter & Search Control Bar ── */}
+      <div className="p-3 sm:p-4 rounded-2xl glass-panel border border-zinc-800 flex flex-col md:flex-row items-center justify-between gap-3">
+        {/* Search */}
+        <div className="relative w-full md:w-96">
+          <Search className="w-4 h-4 text-zinc-500 absolute left-3.5 top-1/2 -translate-y-1/2" />
+          <input
+            type="text"
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            placeholder={
+              locale === 'ar'
+                ? 'ابحث عن إجراء (جواز سفر، بطاقة تعريف، كراء...)'
+                : locale === 'en'
+                ? 'Search procedures (e.g. Passport, CIN, Lease...)'
+                : 'Rechercher une démarche (Passeport, CIN, Bail...)'
+            }
+            className="w-full bg-zinc-900 border border-zinc-800 focus:border-emerald-500 rounded-xl pl-10 pr-4 py-2 text-xs text-zinc-100 placeholder-zinc-500 focus:outline-none transition-all"
+          />
+        </div>
+
+        {/* Sort & Quick Filter */}
+        <div className="flex items-center gap-2 w-full md:w-auto justify-between md:justify-end">
+          <div className="flex items-center gap-1.5 text-xs text-zinc-400">
+            <ArrowUpDown className="w-3.5 h-3.5 text-zinc-500 shrink-0" />
+            <span className="text-[11px] uppercase font-bold text-zinc-500">{locale === 'en' ? 'Sort:' : 'Trier :'}</span>
+          </div>
+
+          <select
+            value={sortBy}
+            onChange={(e) => setSortBy(e.target.value as any)}
+            className="bg-zinc-900 border border-zinc-800 focus:border-emerald-500/50 rounded-xl px-3 py-2 text-xs text-zinc-200 focus:outline-none transition-colors cursor-pointer"
+          >
+            <option value="default">{locale === 'en' ? 'Recommended' : 'Par Défaut'}</option>
+            <option value="cost_asc">{locale === 'en' ? 'Budget (Lowest first)' : 'Budget (Moins cher d’abord)'}</option>
+            <option value="cost_desc">{locale === 'en' ? 'Budget (Highest first)' : 'Budget (Plus élevé d’abord)'}</option>
+            <option value="steps">{locale === 'en' ? 'Fewest Steps' : 'Moins d’étapes'}</option>
+          </select>
         </div>
       </div>
 
       {/* ── Main Layout: Sidebar Categories + Procedure Dossiers Grid ── */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
         
-        {/* Left Column: Category Filter Menu + Search */}
+        {/* Left Column: Category Filter Menu */}
         <div className="lg:col-span-4 space-y-4 lg:sticky lg:top-20">
-          {/* Search Box */}
-          <div className="relative">
-            <Search className="w-4 h-4 text-zinc-500 absolute left-3.5 top-1/2 -translate-y-1/2" />
-            <input
-              type="text"
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              placeholder={
-                locale === 'ar'
-                  ? 'ابحث عن إجراء (جواز سفر، بطاقة تعريف...)'
-                  : locale === 'en'
-                  ? 'Search procedures (e.g. Passport, CIN...)'
-                  : 'Rechercher une démarche...'
-              }
-              className="w-full bg-zinc-900 border border-zinc-800 focus:border-emerald-500 rounded-2xl pl-10 pr-4 py-3 text-xs text-zinc-100 placeholder-zinc-500 focus:outline-none transition-all shadow-inner"
-            />
-          </div>
+          <div className="glass-panel rounded-3xl p-3 border border-zinc-800/80 space-y-1">
+            <div className="px-3 py-2 text-[10px] font-bold uppercase tracking-wider text-zinc-500">
+              {locale === 'en' ? 'Filter by Sector' : 'Domaines d’administration'}
+            </div>
 
-          {/* Categories List */}
-          <div className="glass-panel rounded-2xl p-2 border border-zinc-800/80 space-y-1">
             {verticals.map((v) => {
               const Icon = v.icon;
               const isSelected = selectedVertical === v.id;
@@ -298,10 +342,10 @@ export default function ProceduresPage() {
                 <button
                   key={v.id}
                   onClick={() => setSelectedVertical(v.id)}
-                  className={`w-full flex items-center justify-between px-3.5 py-2.5 rounded-xl text-xs font-semibold transition-all cursor-pointer ${
+                  className={`w-full flex items-center justify-between px-3.5 py-2.5 rounded-2xl text-xs font-semibold transition-all cursor-pointer ${
                     isSelected
                       ? 'bg-emerald-500 text-zinc-950 shadow-md shadow-emerald-500/20 font-bold'
-                      : 'text-zinc-400 hover:text-zinc-200 hover:bg-zinc-800/50'
+                      : 'text-zinc-400 hover:text-zinc-200 hover:bg-zinc-800/60'
                   }`}
                 >
                   <div className="flex items-center gap-2.5 min-w-0">
@@ -321,17 +365,37 @@ export default function ProceduresPage() {
               );
             })}
           </div>
+
+          {/* Quick Voice Assistant Banner */}
+          <div className="p-4 rounded-3xl glass-panel border border-emerald-500/20 bg-gradient-to-br from-emerald-950/30 to-zinc-900 space-y-2.5">
+            <div className="flex items-center gap-2 text-emerald-400 text-xs font-bold">
+              <Mic className="w-4 h-4" />
+              <span>{locale === 'en' ? 'Voice Question?' : 'Question vocale ?'}</span>
+            </div>
+            <p className="text-[11px] text-zinc-400 leading-relaxed">
+              {locale === 'en'
+                ? 'Speak in Derja or French and Idaara AI will identify the exact documents and stamp fees.'
+                : 'Posez votre question en Derja ou Français au Voice Copilot pour obtenir les étapes en direct.'}
+            </p>
+            <Link
+              href="/copilot"
+              className="inline-flex items-center gap-1.5 text-xs font-bold text-emerald-300 hover:text-emerald-200 hover:underline pt-1"
+            >
+              <span>{locale === 'en' ? 'Launch Voice Copilot' : 'Ouvrir le Voice Copilot'}</span>
+              <ArrowRight className="w-3.5 h-3.5" />
+            </Link>
+          </div>
         </div>
 
-        {/* Right Column: Procedure Dossier Cards */}
+        {/* Right Column: Procedure Dossier Cards with Interactive Step Timelines */}
         <div className="lg:col-span-8 space-y-4">
           <div className="flex items-center justify-between text-xs text-zinc-500 px-1">
-            <span>
-              {filteredProcedures.length} {locale === 'ar' ? 'إجراء معتمد' : 'procédures trouvées'}
+            <span className="font-semibold text-zinc-400">
+              {filteredProcedures.length} {locale === 'ar' ? 'إجراء معتمد' : 'procédures homologuées'}
             </span>
           </div>
 
-          <div className="space-y-3.5">
+          <div className="space-y-4">
             {filteredProcedures.map((proc) => {
               const title = getLocalized(proc.title, locale);
               const shortDesc = getLocalized(proc.shortDescription, locale);
@@ -340,12 +404,16 @@ export default function ProceduresPage() {
                 <Link
                   key={proc.id}
                   href={`/procedures/${proc.id}`}
-                  className="glass-panel rounded-2xl p-5 sm:p-6 border border-zinc-800/80 hover:border-zinc-700 hover:shadow-xl transition-all duration-200 block group"
+                  className="glass-panel rounded-3xl p-5 sm:p-6 border border-zinc-800/80 hover:border-zinc-700 hover:shadow-2xl transition-all duration-200 block group relative overflow-hidden hover:-translate-y-0.5"
                 >
+                  {/* Top Hover Gradient */}
+                  <div className="absolute top-0 left-0 right-0 h-0.5 bg-gradient-to-r from-transparent via-emerald-500/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
+
+                  {/* Header Row */}
                   <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3.5 border-b border-zinc-800/80">
                     <div className="space-y-1">
                       <div className="flex items-center gap-2">
-                        <span className="text-[9px] font-extrabold uppercase tracking-wider px-2 py-0.5 rounded-md bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
+                        <span className="text-[9px] font-extrabold uppercase tracking-wider px-2.5 py-0.5 rounded-lg bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
                           {proc.vertical}
                         </span>
                         <span className="text-zinc-600 text-xs">·</span>
@@ -354,14 +422,14 @@ export default function ProceduresPage() {
                           <span>{proc.estimatedProcessingTime}</span>
                         </span>
                       </div>
-                      <h3 className="text-base font-bold text-white group-hover:text-emerald-300 transition-colors leading-snug">
+                      <h3 className="text-sm sm:text-base font-bold text-white group-hover:text-emerald-300 transition-colors leading-snug">
                         {title}
                       </h3>
                     </div>
 
-                    <div className="flex items-center gap-3 shrink-0">
+                    <div className="flex items-center gap-3 shrink-0 self-start sm:self-center">
                       <div className="text-right rtl:text-left">
-                        <span className="text-[10px] text-zinc-500 uppercase font-bold block">
+                        <span className="text-[9px] text-zinc-500 uppercase font-bold block">
                           {locale === 'ar' ? 'المصاريف' : 'Budget'}
                         </span>
                         <span className="font-mono font-bold text-sm text-amber-400">
@@ -374,17 +442,46 @@ export default function ProceduresPage() {
                     </div>
                   </div>
 
-                  <div className="pt-3.5 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-                    <p className="text-xs text-zinc-400 leading-relaxed max-w-xl line-clamp-2">
+                  {/* Description & Step Breadcrumbs */}
+                  <div className="pt-3.5 space-y-3">
+                    <p className="text-xs text-zinc-400 leading-relaxed line-clamp-2">
                       {shortDesc}
                     </p>
 
-                    <div className="flex items-center gap-2 text-[11px] text-zinc-500 font-mono shrink-0">
-                      <span className="px-2 py-0.5 rounded bg-zinc-900 border border-zinc-800">
-                        {proc.steps.length} {locale === 'ar' ? 'مراحل' : 'étapes'}
-                      </span>
-                      <span className="px-2 py-0.5 rounded bg-zinc-900 border border-zinc-800">
-                        {proc.requiredDocuments.length} {locale === 'ar' ? 'وثائق' : 'pièces'}
+                    {/* Step Timeline Breadcrumbs */}
+                    <div className="flex flex-wrap items-center gap-1.5 pt-1">
+                      {proc.steps.map((step, sIdx) => {
+                        const stepTitle = getLocalized(step.title, locale);
+                        return (
+                          <div key={sIdx} className="flex items-center gap-1 text-[10px] text-zinc-400">
+                            <span className="px-2 py-0.5 rounded-md bg-zinc-900 border border-zinc-800 flex items-center gap-1 text-zinc-300">
+                              <span className="w-3.5 h-3.5 rounded-full bg-emerald-500/20 text-emerald-400 font-mono text-[9px] flex items-center justify-center font-bold">
+                                {sIdx + 1}
+                              </span>
+                              <span className="truncate max-w-[120px]">{stepTitle}</span>
+                            </span>
+                            {sIdx < proc.steps.length - 1 && (
+                              <ChevronRight className="w-3 h-3 text-zinc-600 shrink-0" />
+                            )}
+                          </div>
+                        );
+                      })}
+                    </div>
+
+                    {/* Bottom Metadata Badges */}
+                    <div className="flex items-center justify-between pt-2 border-t border-zinc-800/60 text-[11px] text-zinc-500 font-mono">
+                      <div className="flex items-center gap-2">
+                        <span className="px-2 py-0.5 rounded bg-zinc-900 border border-zinc-800 text-zinc-400">
+                          {proc.requiredDocuments.length} {locale === 'ar' ? 'وثائق مطلوبة' : 'pièces'}
+                        </span>
+                        <span className="px-2 py-0.5 rounded bg-zinc-900 border border-zinc-800 text-zinc-400">
+                          {proc.costsBreakdown.length} {locale === 'ar' ? 'معاليم/تنابر' : 'frais'}
+                        </span>
+                      </div>
+
+                      <span className="text-emerald-400 font-bold group-hover:translate-x-1 transition-transform flex items-center gap-1 text-xs">
+                        <span>{locale === 'en' ? 'Open Dossier' : 'Consulter le dossier'}</span>
+                        <ArrowRight className="w-3.5 h-3.5" />
                       </span>
                     </div>
                   </div>
