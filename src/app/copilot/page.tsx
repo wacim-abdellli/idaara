@@ -21,7 +21,6 @@ import {
   FileText,
   ShieldCheck,
   Plane,
-  Sparkles,
 } from 'lucide-react';
 
 export default function CopilotPage() {
@@ -70,12 +69,36 @@ export default function CopilotPage() {
   }, [messages, isProcessing]);
 
   const quickTopics = [
-    { label: locale === 'ar' ? 'تجديد جواز السفر 80د' : locale === 'en' ? 'Renew Passport (80 DT)' : 'Renouveler Passeport (80 DT)', q: 'Quels sont les documents et timbres fiscaux pour renouveler mon passeport tunisien ?', icon: FileCheck2 },
-    { label: locale === 'ar' ? 'البطاقة الرمادية للسيارة 145د' : locale === 'en' ? 'Car Registration Transfer' : 'Mutation Carte Grise (145 DT)', q: "Comment faire la mutation de carte grise après achat d'un véhicule d'occasion en Tunisie ?", icon: Car },
-    { label: locale === 'ar' ? 'المبادر الذاتي 1% فريلانس' : locale === 'en' ? 'Auto-Entrepreneur 1% Tax' : 'Statut Auto-Entrepreneur 1%', q: 'Comment fonctionne le régime Auto-Entrepreneur 1% et la facturation en devises en Tunisie ?', icon: Briefcase },
-    { label: locale === 'ar' ? 'عقد كراء سكني قانوني' : locale === 'en' ? 'Legal Lease Contract (COC)' : 'Contrat de Bail Conforme', q: 'Quelles sont les démarches pour un contrat de bail résidentiel légalisé en Tunisie ?', icon: FileText },
-    { label: locale === 'ar' ? 'بطاقة السوابق ب3 عبر الإنترنت' : locale === 'en' ? 'Criminal Record (B3) 7.5 DT' : 'Bulletin N°3 (B3) en ligne', q: 'Comment obtenir le bulletin N°3 (casier judiciaire) en ligne en Tunisie ?', icon: ShieldCheck },
-    { label: locale === 'ar' ? 'امتياز التوريد ن.ت.د (FCR)' : locale === 'en' ? 'FCR Customs Privilege' : 'Régime Douanier FCR', q: 'Quelles sont les conditions pour bénéficier du régime FCR pour les Tunisiens à l’étranger ?', icon: Plane },
+    {
+      label: locale === 'ar' ? 'تجديد جواز السفر 80د' : locale === 'derja' ? 'Passeport tounsi (80 DT)' : locale === 'en' ? 'Renew Passport (80 DT)' : 'Renouveler Passeport (80 DT)',
+      q: locale === 'ar' ? 'شنوة يلزمني باش نجدد جواز السفر التونسي؟' : locale === 'derja' ? "Chnouwa lezemni bech n'badal el passeport mte3i?" : locale === 'en' ? 'What documents and fees do I need to renew my Tunisian passport?' : 'Quels sont les documents et timbres fiscaux pour renouveler mon passeport tunisien ?',
+      icon: FileCheck2,
+    },
+    {
+      label: locale === 'ar' ? 'البطاقة الرمادية للسيارة 145د' : locale === 'derja' ? 'Carte Grise karhba (145 DT)' : locale === 'en' ? 'Car Registration Transfer' : 'Mutation Carte Grise (145 DT)',
+      q: locale === 'ar' ? 'شريت كرهبة مستعملة، كيفاش نبدل البطاقة الرمادية؟' : locale === 'derja' ? "Chrit karhba jdid, kifech nbeddel el carte grise?" : locale === 'en' ? 'How do I transfer a car registration after buying a used vehicle?' : "Comment faire la mutation de carte grise après achat d'un véhicule d'occasion en Tunisie ?",
+      icon: Car,
+    },
+    {
+      label: locale === 'ar' ? 'المبادر الذاتي 1% فريلانس' : locale === 'derja' ? 'Auto-Entrepreneur 1%' : locale === 'en' ? 'Auto-Entrepreneur 1% Tax' : 'Statut Auto-Entrepreneur 1%',
+      q: locale === 'ar' ? 'كيفاش نسجل في المبادر الذاتي وشنوة الامتيازات الجبائية 1%؟' : locale === 'derja' ? "Kifech n9ayed fi statut auto-entrepreneur 1%?" : locale === 'en' ? 'How to register as an Auto-Entrepreneur with 1% tax in Tunisia?' : 'Comment fonctionne le régime Auto-Entrepreneur 1% et la facturation en devises en Tunisie ?',
+      icon: Briefcase,
+    },
+    {
+      label: locale === 'ar' ? 'عقد كراء سكني قانوني' : locale === 'derja' ? 'Contrat de bail Baladiya' : locale === 'en' ? 'Legal Lease Contract (COC)' : 'Contrat de Bail Conforme',
+      q: locale === 'ar' ? 'كيفاش نعمل عقد كراء سكني قانوني؟' : locale === 'derja' ? "A3melli contrat kré sakani mrigel lel baladiya" : locale === 'en' ? 'How to create a legal residential lease contract in Tunisia?' : 'Quelles sont les démarches pour un contrat de bail résidentiel légalisé en Tunisie ?',
+      icon: FileText,
+    },
+    {
+      label: locale === 'ar' ? 'بطاقة السوابق ب3 عبر الإنترنت' : locale === 'derja' ? 'Bita9at B3 (7.5 DT)' : locale === 'en' ? 'Criminal Record (B3) 7.5 DT' : 'Bulletin N°3 (B3) en ligne',
+      q: locale === 'ar' ? 'كيفاش نتحصل على بطاقة السوابق العدلية ب3؟' : locale === 'derja' ? "Awra9 el B3 bita9at sawabi9 3adliya chnowa?" : locale === 'en' ? 'How to get the B3 criminal record certificate in Tunisia?' : 'Comment obtenir le bulletin N°3 (casier judiciaire) en ligne en Tunisie ?',
+      icon: ShieldCheck,
+    },
+    {
+      label: locale === 'ar' ? 'امتياز التوريد ن.ت.د (FCR)' : locale === 'derja' ? 'Avantage FCR tounsi' : locale === 'en' ? 'FCR Customs Privilege' : 'Régime Douanier FCR',
+      q: locale === 'ar' ? 'شنوة شروط امتياز FCR لتوريد سيارة للتونسيين بالخارج؟' : locale === 'derja' ? "Awra9 el FCR lel tounsiya fel kharej chnowa?" : locale === 'en' ? 'What are the FCR customs privilege conditions for Tunisian diaspora?' : 'Quelles sont les conditions pour bénéficier du régime FCR pour les Tunisiens à l’étranger ?',
+      icon: Plane,
+    },
   ];
 
   const handleSendMessage = async (textToSend?: string) => {
@@ -128,7 +151,7 @@ export default function CopilotPage() {
         {
           id: `ai-err-${Date.now()}`,
           sender: 'assistant',
-          content: locale === 'fr' ? 'Erreur de connexion. Réessayez.' : locale === 'ar' ? 'خطأ في الاتصال. أعد المحاولة.' : 'Connection error. Please try again.',
+          content: locale === 'fr' ? 'Erreur de connexion. Réessayez.' : locale === 'ar' ? 'خطأ في الاتصال. أعد المحاولة.' : locale === 'derja' ? 'Kayen mochkel fel connexion. 3awed jarreb.' : 'Connection error. Please try again.',
           timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
         },
       ]);
@@ -188,15 +211,24 @@ export default function CopilotPage() {
     setShowModelDropdown(false);
   };
 
-  const centerHeadline = locale === 'ar'
-    ? "فاش نجم نعاونك اليوم؟"
-    : locale === 'en'
-    ? "What's on the agenda today?"
-    : "Qu'avez-vous à l'ordre du jour aujourd'hui ?";
+  const centerHeadline =
+    locale === 'ar'
+      ? "فاش نجم نعاونك اليوم؟"
+      : locale === 'derja'
+      ? "Chnowa thabb ta3ref lyoum?"
+      : locale === 'en'
+      ? "What's on the agenda today?"
+      : "Comment puis-je vous aider aujourd'hui ?";
 
   const placeholder = isRecording
-    ? (locale === 'ar' ? 'جار الاستماع...' : 'Listening...')
-    : (locale === 'ar' ? 'اسأل عن أي إجراء أو وثيقة...' : 'Ask anything');
+    ? (locale === 'ar' ? 'جار الاستماع...' : locale === 'derja' ? '9a3ed nesma3 fik...' : 'Listening...')
+    : (locale === 'ar'
+      ? 'اسأل عن أي إجراء أو وثيقة...'
+      : locale === 'derja'
+      ? 'Es\'el 3la ay war9a, procédure, walla timbre...'
+      : locale === 'fr'
+      ? 'Posez votre question...'
+      : 'Ask anything');
 
   return (
     <div className="h-[calc(100vh-3.5rem)] flex flex-col bg-[#09090b] text-white overflow-hidden relative">
@@ -292,16 +324,16 @@ export default function CopilotPage() {
             {centerHeadline}
           </h1>
 
-          {/* Centered Floating Prompt Input Bar */}
+          {/* Centered Floating Prompt Input Bar (NO green border, clean ChatGPT style) */}
           <div className="w-full relative">
-            <div className="flex items-center gap-2 bg-[#212121] hover:bg-[#262626] focus-within:bg-[#212121] border border-white/10 focus-within:border-white/20 rounded-full px-4 py-2.5 shadow-2xl transition-all">
+            <div className="flex items-center gap-2 bg-[#212121] hover:bg-[#262626] border border-white/10 rounded-full px-4 py-2.5 shadow-2xl transition-all">
               
               {/* Plus Button with Quick Topics Dropdown */}
               <div className="relative shrink-0">
                 <button
                   type="button"
                   onClick={() => setShowPlusMenu((p) => !p)}
-                  className="p-1.5 rounded-full hover:bg-white/10 text-zinc-400 hover:text-white transition-colors cursor-pointer"
+                  className="p-1.5 rounded-full hover:bg-white/10 text-zinc-400 hover:text-white transition-colors cursor-pointer border-0 outline-none"
                   title="Quick Topics"
                 >
                   <Plus className="w-4 h-4" />
@@ -310,7 +342,7 @@ export default function CopilotPage() {
                 {showPlusMenu && (
                   <div className="absolute bottom-full left-0 mb-3 w-72 rounded-2xl bg-[#1e1e1e] border border-white/10 shadow-2xl p-2 z-50 animate-fade-in space-y-1">
                     <div className="px-3 py-1 text-[10px] uppercase font-bold tracking-wider text-zinc-400">
-                      Popular Inquiries
+                      {locale === 'ar' ? 'أسئلة شائعة' : locale === 'derja' ? 'As2ela ma3roufa' : 'Popular Inquiries'}
                     </div>
                     {quickTopics.map((item, idx) => {
                       const Icon = item.icon;
@@ -329,7 +361,7 @@ export default function CopilotPage() {
                 )}
               </div>
 
-              {/* Text Input */}
+              {/* Text Input (Zero green outline or border) */}
               <input
                 autoFocus
                 type="text"
@@ -342,15 +374,15 @@ export default function CopilotPage() {
                   }
                 }}
                 placeholder={placeholder}
-                className="flex-1 bg-transparent py-1 text-sm sm:text-base text-zinc-100 placeholder-zinc-500 focus:outline-none"
+                className="flex-1 bg-transparent py-1 text-sm sm:text-base text-zinc-100 placeholder-zinc-500 border-0 outline-none ring-0 focus:border-0 focus:outline-none focus:ring-0 focus-visible:border-0 focus-visible:outline-none focus-visible:ring-0 shadow-none"
               />
 
-              {/* Right Action Icons (Mic + Voice/Send) */}
+              {/* Right Action Icons (Mic + Send) */}
               <div className="flex items-center gap-1 shrink-0">
                 <button
                   type="button"
                   onClick={toggleVoice}
-                  className={`p-2 rounded-full transition-colors cursor-pointer ${
+                  className={`p-2 rounded-full transition-colors cursor-pointer border-0 outline-none ${
                     isRecording ? 'bg-red-500 text-white animate-pulse' : 'text-zinc-400 hover:text-white hover:bg-white/10'
                   }`}
                   title="Dictate"
@@ -362,7 +394,7 @@ export default function CopilotPage() {
                   type="button"
                   onClick={() => handleSendMessage()}
                   disabled={!inputVal.trim()}
-                  className="w-8 h-8 rounded-full bg-white text-black flex items-center justify-center transition-all disabled:opacity-20 disabled:cursor-not-allowed hover:opacity-90 cursor-pointer shadow-md"
+                  className="w-8 h-8 rounded-full bg-white text-black flex items-center justify-center transition-all disabled:opacity-20 disabled:cursor-not-allowed hover:opacity-90 cursor-pointer shadow-md border-0 outline-none"
                   title="Send"
                 >
                   <ArrowUp className="w-4 h-4 stroke-[3]" />
@@ -409,15 +441,15 @@ export default function CopilotPage() {
           <footer className="shrink-0 pb-4 pt-2 bg-gradient-to-t from-[#09090b] via-[#09090b]/95 to-transparent z-20 px-4 sm:px-6">
             <div className="max-w-3xl mx-auto space-y-2">
               
-              {/* Bottom Pill Input */}
-              <div className="flex items-end gap-2 bg-[#212121] border border-white/10 focus-within:border-white/25 rounded-3xl px-3 py-2 transition-all shadow-2xl">
+              {/* Bottom Pill Input (NO green border) */}
+              <div className="flex items-end gap-2 bg-[#212121] border border-white/10 rounded-3xl px-3 py-2 transition-all shadow-2xl">
                 
                 {/* Plus Topic Button */}
                 <div className="relative pb-1">
                   <button
                     type="button"
                     onClick={() => setShowPlusMenu((p) => !p)}
-                    className="p-1.5 rounded-full hover:bg-white/10 text-zinc-400 hover:text-white transition-colors cursor-pointer"
+                    className="p-1.5 rounded-full hover:bg-white/10 text-zinc-400 hover:text-white transition-colors cursor-pointer border-0 outline-none"
                     title="Quick Topics"
                   >
                     <Plus className="w-4 h-4" />
@@ -426,7 +458,7 @@ export default function CopilotPage() {
                   {showPlusMenu && (
                     <div className="absolute bottom-full left-0 mb-3 w-72 rounded-2xl bg-[#1e1e1e] border border-white/10 shadow-2xl p-2 z-50 animate-fade-in space-y-1">
                       <div className="px-3 py-1 text-[10px] uppercase font-bold tracking-wider text-zinc-400">
-                        Popular Inquiries
+                        {locale === 'ar' ? 'أسئلة شائعة' : locale === 'derja' ? 'As2ela ma3roufa' : 'Popular Inquiries'}
                       </div>
                       {quickTopics.map((item, idx) => {
                         const Icon = item.icon;
@@ -445,7 +477,7 @@ export default function CopilotPage() {
                   )}
                 </div>
 
-                {/* Auto-growing Textarea */}
+                {/* Auto-growing Textarea (Zero green border) */}
                 <textarea
                   ref={textareaRef}
                   rows={1}
@@ -453,7 +485,7 @@ export default function CopilotPage() {
                   onChange={onTextareaChange}
                   onKeyDown={onKeyDown}
                   placeholder={placeholder}
-                  className="flex-1 bg-transparent py-1 text-sm sm:text-base text-zinc-100 placeholder-zinc-500 focus:outline-none resize-none max-h-36 leading-relaxed"
+                  className="flex-1 bg-transparent py-1 text-sm sm:text-base text-zinc-100 placeholder-zinc-500 border-0 outline-none ring-0 focus:border-0 focus:outline-none focus:ring-0 focus-visible:border-0 focus-visible:outline-none focus-visible:ring-0 shadow-none resize-none max-h-36 leading-relaxed"
                 />
 
                 {/* Mic & Send Buttons */}
@@ -461,7 +493,7 @@ export default function CopilotPage() {
                   <button
                     type="button"
                     onClick={toggleVoice}
-                    className={`p-2 rounded-full transition-colors cursor-pointer ${
+                    className={`p-2 rounded-full transition-colors cursor-pointer border-0 outline-none ${
                       isRecording ? 'bg-red-500 text-white animate-pulse' : 'text-zinc-400 hover:text-white hover:bg-white/10'
                     }`}
                     title="Dictate"
@@ -473,7 +505,7 @@ export default function CopilotPage() {
                     type="button"
                     onClick={() => handleSendMessage()}
                     disabled={!inputVal.trim() || isProcessing}
-                    className="w-8 h-8 rounded-full bg-white text-black flex items-center justify-center transition-all disabled:opacity-20 disabled:cursor-not-allowed hover:opacity-90 cursor-pointer shadow-md"
+                    className="w-8 h-8 rounded-full bg-white text-black flex items-center justify-center transition-all disabled:opacity-20 disabled:cursor-not-allowed hover:opacity-90 cursor-pointer shadow-md border-0 outline-none"
                     title="Send"
                   >
                     <ArrowUp className="w-4 h-4 stroke-[3]" />
@@ -509,7 +541,7 @@ export default function CopilotPage() {
                 <SlidersHorizontal className="w-4 h-4 text-emerald-400" />
                 <h3 className="text-sm font-bold">AI Engine Settings</h3>
               </div>
-              <button onClick={() => setShowSettingsModal(false)} className="p-1 rounded-lg text-zinc-400 hover:text-white hover:bg-white/10 cursor-pointer">
+              <button onClick={() => setShowSettingsModal(false)} className="p-1 rounded-lg text-zinc-400 hover:text-white hover:bg-white/10 cursor-pointer border-0 outline-none">
                 <X className="w-4 h-4" />
               </button>
             </div>
@@ -554,16 +586,16 @@ export default function CopilotPage() {
                 value={customApiKey}
                 onChange={(e) => setCustomApiKey(e.target.value)}
                 placeholder="AIzaSy... (Gemini)  or  gsk_... (Groq)"
-                className="w-full bg-black/40 border border-white/10 rounded-xl px-3 py-2.5 text-xs font-mono text-white placeholder-zinc-600 focus:outline-none focus:border-white/30"
+                className="w-full bg-black/40 border border-white/10 rounded-xl px-3 py-2.5 text-xs font-mono text-white placeholder-zinc-600 border-0 outline-none ring-0 focus:border-0 focus:outline-none focus:ring-0 focus-visible:ring-0"
               />
               <p className="text-[10px] text-zinc-400">Stored locally in your browser storage.</p>
             </div>
 
             <div className="flex justify-end gap-2 pt-2">
-              <button onClick={() => setShowSettingsModal(false)} className="px-4 py-2 rounded-xl text-xs text-zinc-400 hover:text-white cursor-pointer">
+              <button onClick={() => setShowSettingsModal(false)} className="px-4 py-2 rounded-xl text-xs text-zinc-400 hover:text-white cursor-pointer border-0 outline-none">
                 Cancel
               </button>
-              <button onClick={saveSettings} className="px-4 py-2 rounded-xl bg-white hover:bg-zinc-200 text-black font-bold text-xs cursor-pointer shadow-md">
+              <button onClick={saveSettings} className="px-4 py-2 rounded-xl bg-white hover:bg-zinc-200 text-black font-bold text-xs cursor-pointer shadow-md border-0 outline-none">
                 Save
               </button>
             </div>
