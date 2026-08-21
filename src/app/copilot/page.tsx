@@ -376,7 +376,7 @@ export default function CopilotPage() {
     <div className="fixed inset-x-0 top-14 bottom-0 z-30 flex bg-[#09090b] text-white overflow-hidden font-sans">
 
       {/* ═════════════════════════════════════════════════════════════════
-          BESPOKE IDAARA SIDEBAR (#121214)
+          BESPOKE CIVIC SIDEBAR (#121214)
       ══════════════════════════════════════════════════════════════════ */}
       {sidebarOpen && (
         <aside className="w-64 shrink-0 bg-[#121214] border-r border-white/5 flex flex-col justify-between select-none z-20 animate-fade-in">
@@ -384,14 +384,16 @@ export default function CopilotPage() {
           {/* Top Section */}
           <div className="flex flex-col flex-1 overflow-hidden">
             
-            {/* Sidebar Top Header (Aligned h-14 with main canvas) */}
+            {/* Sidebar Top Action Header (h-14 aligned) */}
             <div className="h-14 px-3 flex items-center justify-between border-b border-white/5 shrink-0">
-              <div className="flex items-center gap-2.5">
-                <div className="w-7 h-7 rounded-xl bg-emerald-500/15 border border-emerald-500/30 text-emerald-400 font-bold text-xs flex items-center justify-center shadow-sm">
-                  I
-                </div>
-                <span className="font-bold text-sm text-white tracking-tight">Idaara.tn</span>
-              </div>
+              <button
+                onClick={handleNewChat}
+                className="flex items-center gap-2 px-3 py-1.5 rounded-xl bg-white/[0.06] hover:bg-white/[0.1] text-zinc-100 text-xs font-semibold transition-all cursor-pointer border border-white/10 shadow-sm"
+              >
+                <PenSquare className="w-3.5 h-3.5 text-emerald-400" />
+                <span>{locale === 'ar' ? 'محادثة جديدة' : locale === 'derja' ? 'M7adtha Jdida' : 'Nouveau chat'}</span>
+              </button>
+
               <button
                 onClick={() => setSidebarOpen(false)}
                 className="p-1.5 rounded-lg hover:bg-white/10 text-zinc-400 hover:text-white transition-colors cursor-pointer border-0 outline-none"
@@ -403,100 +405,91 @@ export default function CopilotPage() {
 
             {/* Sidebar Scrollable Body */}
             <div className="p-3 space-y-3 overflow-y-auto flex-1">
-              {/* New Chat Button */}
-              <button
-                onClick={handleNewChat}
-                className="w-full flex items-center gap-2.5 px-3.5 py-2.5 rounded-xl bg-white/[0.06] hover:bg-white/[0.1] border border-white/10 text-zinc-100 text-xs font-semibold transition-all cursor-pointer shadow-sm border-0 outline-none"
-              >
-                <PenSquare className="w-4 h-4 text-emerald-400" />
-                <span>{locale === 'ar' ? 'محادثة جديدة' : locale === 'derja' ? 'M7adtha Jdida' : 'Nouvelle discussion'}</span>
-              </button>
+              {/* Civic Navigation Tools */}
+              <nav className="space-y-0.5">
+                <Link
+                  href="/fasserli"
+                  className="flex items-center gap-3 px-3 py-2 rounded-xl text-zinc-300 hover:text-white hover:bg-white/5 text-xs font-medium transition-colors"
+                >
+                  <ScanText className="w-4 h-4 text-emerald-400" />
+                  <span>{locale === 'ar' ? 'فصّرلي بالذكاء الاصطناعي (OCR)' : 'Fasserli OCR'}</span>
+                </Link>
+                <Link
+                  href="/documents"
+                  className="flex items-center gap-3 px-3 py-2 rounded-xl text-zinc-300 hover:text-white hover:bg-white/5 text-xs font-medium transition-colors"
+                >
+                  <FileCode2 className="w-4 h-4 text-blue-400" />
+                  <span>{locale === 'ar' ? 'نماذج العقود الذكية' : 'Modèles & Contrats'}</span>
+                </Link>
+                <Link
+                  href="/calculator"
+                  className="flex items-center gap-3 px-3 py-2 rounded-xl text-zinc-300 hover:text-white hover:bg-white/5 text-xs font-medium transition-colors"
+                >
+                  <Stamp className="w-4 h-4 text-amber-400" />
+                  <span>{locale === 'ar' ? 'حاسبة التنابر والضرائب' : 'Calculateur Timbres'}</span>
+                </Link>
+                <Link
+                  href="/locator"
+                  className="flex items-center gap-3 px-3 py-2 rounded-xl text-zinc-300 hover:text-white hover:bg-white/5 text-xs font-medium transition-colors"
+                >
+                  <Building2 className="w-4 h-4 text-indigo-400" />
+                  <span>{locale === 'ar' ? 'دليل البلديات والقباضات' : 'Baladiyas & Recettes'}</span>
+                </Link>
+                <Link
+                  href="/procedures"
+                  className="flex items-center gap-3 px-3 py-2 rounded-xl text-zinc-300 hover:text-white hover:bg-white/5 text-xs font-medium transition-colors"
+                >
+                  <Landmark className="w-4 h-4 text-purple-400" />
+                  <span>{locale === 'ar' ? 'دليل الإجراءات الرسمية' : 'Guide des Démarches'}</span>
+                </Link>
+              </nav>
 
-            {/* Idaara Civic Navigation Tools */}
-            <nav className="space-y-0.5 pt-1">
-              <Link
-                href="/fasserli"
-                className="flex items-center gap-3 px-3 py-2 rounded-xl text-zinc-300 hover:text-white hover:bg-white/5 text-xs font-medium transition-colors"
-              >
-                <ScanText className="w-4 h-4 text-emerald-400" />
-                <span>{locale === 'ar' ? 'فصّرلي بالذكاء الاصطناعي (OCR)' : 'Fasserli OCR Scanner'}</span>
-              </Link>
-              <Link
-                href="/documents"
-                className="flex items-center gap-3 px-3 py-2 rounded-xl text-zinc-300 hover:text-white hover:bg-white/5 text-xs font-medium transition-colors"
-              >
-                <FileCode2 className="w-4 h-4 text-blue-400" />
-                <span>{locale === 'ar' ? 'نماذج العقود الذكية' : 'Modèles & Contrats'}</span>
-              </Link>
-              <Link
-                href="/calculator"
-                className="flex items-center gap-3 px-3 py-2 rounded-xl text-zinc-300 hover:text-white hover:bg-white/5 text-xs font-medium transition-colors"
-              >
-                <Stamp className="w-4 h-4 text-amber-400" />
-                <span>{locale === 'ar' ? 'حاسبة التنابر والضرائب' : 'Calculateur de Timbres'}</span>
-              </Link>
-              <Link
-                href="/locator"
-                className="flex items-center gap-3 px-3 py-2 rounded-xl text-zinc-300 hover:text-white hover:bg-white/5 text-xs font-medium transition-colors"
-              >
-                <Building2 className="w-4 h-4 text-indigo-400" />
-                <span>{locale === 'ar' ? 'دليل البلديات والقباضات' : 'Baladiyas & Recettes'}</span>
-              </Link>
-              <Link
-                href="/procedures"
-                className="flex items-center gap-3 px-3 py-2 rounded-xl text-zinc-300 hover:text-white hover:bg-white/5 text-xs font-medium transition-colors"
-              >
-                <Landmark className="w-4 h-4 text-purple-400" />
-                <span>{locale === 'ar' ? 'دليل الإجراءات الرسمية' : 'Guide des Démarches'}</span>
-              </Link>
-            </nav>
-
-            {/* Recents Section */}
-            <div className="pt-3">
-              <div className="px-3 pb-1.5 text-[11px] font-semibold text-zinc-500 uppercase tracking-wider">
-                {locale === 'ar' ? 'المحادثات السابقة' : locale === 'derja' ? 'M7adhathat 9dima' : 'Historique récent'}
-              </div>
-              <div className="space-y-0.5">
-                {sessions.length === 0 ? (
-                  <div className="px-3 py-2 text-xs text-zinc-500 italic">
-                    {locale === 'ar' ? 'لا توجد محادثات سابقة' : 'Aucune discussion récente'}
-                  </div>
-                ) : (
-                  sessions.map((sess) => (
-                    <div
-                      key={sess.id}
-                      onClick={() => loadSession(sess)}
-                      className={`group flex items-center justify-between px-3 py-2 rounded-xl text-sm transition-colors cursor-pointer ${
-                        currentSessionId === sess.id
-                          ? 'bg-white/10 text-white font-medium'
-                          : 'text-zinc-300 hover:bg-white/5 hover:text-white'
-                      }`}
-                    >
-                      <span className="truncate flex-1 text-xs">{sess.title}</span>
-                      <button
-                        onClick={(e) => deleteSession(e, sess.id)}
-                        className="opacity-0 group-hover:opacity-100 p-1 hover:text-red-400 text-zinc-400 transition-opacity cursor-pointer border-0 outline-none"
-                        title="Delete chat"
-                      >
-                        <Trash2 className="w-3 h-3" />
-                      </button>
+              {/* Recents Section */}
+              <div className="pt-2">
+                <div className="px-3 pb-1.5 text-[11px] font-semibold text-zinc-500 uppercase tracking-wider">
+                  {locale === 'ar' ? 'المحادثات السابقة' : locale === 'derja' ? 'M7adhathat 9dima' : 'Historique récent'}
+                </div>
+                <div className="space-y-0.5">
+                  {sessions.length === 0 ? (
+                    <div className="px-3 py-2 text-xs text-zinc-500 italic">
+                      {locale === 'ar' ? 'لا توجد محادثات سابقة' : 'Aucune discussion récente'}
                     </div>
-                  ))
-                )}
-              </div>
+                  ) : (
+                    sessions.map((sess) => (
+                      <div
+                        key={sess.id}
+                        onClick={() => loadSession(sess)}
+                        className={`group flex items-center justify-between px-3 py-2 rounded-xl text-sm transition-colors cursor-pointer ${
+                          currentSessionId === sess.id
+                            ? 'bg-white/10 text-white font-medium'
+                            : 'text-zinc-300 hover:bg-white/5 hover:text-white'
+                        }`}
+                      >
+                        <span className="truncate flex-1 text-xs">{sess.title}</span>
+                        <button
+                          onClick={(e) => deleteSession(e, sess.id)}
+                          className="opacity-0 group-hover:opacity-100 p-1 hover:text-red-400 text-zinc-400 transition-opacity cursor-pointer border-0 outline-none"
+                          title="Delete chat"
+                        >
+                          <Trash2 className="w-3 h-3" />
+                        </button>
+                      </div>
+                    ))
+                  )}
+                </div>
               </div>
             </div>
           </div>
 
           {/* Bottom Profile / Platform Info */}
-          <div className="pt-3 border-t border-white/5 flex items-center justify-between px-2">
+          <div className="p-3 border-t border-white/5 flex items-center justify-between">
             <div className="flex items-center gap-2.5">
-              <div className="w-8 h-8 rounded-full bg-emerald-700/80 text-white flex items-center justify-center font-bold text-xs shadow-inner">
+              <div className="w-7 h-7 rounded-full bg-emerald-700/80 text-white flex items-center justify-center font-bold text-xs shadow-inner">
                 TN
               </div>
               <div className="leading-tight">
-                <div className="text-xs font-semibold text-zinc-200">Idaara.tn</div>
-                <div className="text-[10px] text-emerald-400 font-medium">Civic Intelligence</div>
+                <div className="text-xs font-semibold text-zinc-200">Citoyen</div>
+                <div className="text-[10px] text-emerald-400 font-medium">Idaara Free</div>
               </div>
             </div>
 
@@ -529,12 +522,9 @@ export default function CopilotPage() {
             )}
 
             {/* Model Badge */}
-            <div className="flex items-center gap-2 px-2.5 py-1 rounded-xl text-zinc-100 font-semibold text-sm">
+            <div className="flex items-center gap-2 px-2 py-1 text-zinc-200 font-semibold text-sm">
               <div className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse shadow-sm shadow-emerald-400/50" />
-              <span className="tracking-tight">Idaara Copilot</span>
-              <span className="text-[10px] font-medium text-emerald-400 bg-emerald-500/10 border border-emerald-500/20 px-2 py-0.5 rounded-full">
-                {officialBadgeText}
-              </span>
+              <span className="tracking-tight">{locale === 'ar' ? 'المساعد الإداري' : locale === 'derja' ? 'Copilot Idari' : 'Copilot Civique'}</span>
             </div>
           </div>
 
