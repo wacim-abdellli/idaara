@@ -4,7 +4,18 @@ import React, { useState } from 'react';
 import { publicOfficesData, GOVERNORATES_LIST } from '../../data/offices';
 import { OfficeCard } from '../../components/locator/OfficeCard';
 import { useLocale } from '../../context/LocaleContext';
-import { MapPin, Search, Moon, Sun, Clock, Building2 } from 'lucide-react';
+import { MapPin, Search, Moon, Sun, Clock, Building2, Navigation2 } from 'lucide-react';
+
+const REGIONS = [
+  { id: 'all', label: 'Toutes les Régions (24)' },
+  { id: 'Tunis', label: 'Tunis & Banlieue' },
+  { id: 'Ariana', label: 'Ariana' },
+  { id: 'Sousse', label: 'Sousse & Sahel' },
+  { id: 'Sfax', label: 'Sfax' },
+  { id: 'Nabeul', label: 'Nabeul / Cap Bon' },
+  { id: 'Bizerte', label: 'Bizerte' },
+  { id: 'Medenine', label: 'Djerba / Médenine' },
+];
 
 export default function LocatorPage() {
   const { t, locale } = useLocale();
@@ -74,82 +85,99 @@ export default function LocatorPage() {
       id: 'regular' as const,
       icon: <Clock className="w-3.5 h-3.5" />,
       label: t('regularHours'),
-      active: 'bg-emerald-500/15 text-emerald-400 border border-emerald-500/30',
-      idle: 'text-zinc-500 hover:text-zinc-300',
+      active: 'bg-emerald-500 text-zinc-950 font-bold shadow-md shadow-emerald-500/20',
+      idle: 'text-zinc-400 hover:text-zinc-200 hover:bg-zinc-900',
     },
     {
       id: 'ramadan' as const,
       icon: <Moon className="w-3.5 h-3.5" />,
       label: t('ramadanHours'),
-      active: 'bg-amber-500/15 text-amber-400 border border-amber-500/30',
-      idle: 'text-zinc-500 hover:text-zinc-300',
+      active: 'bg-amber-500 text-zinc-950 font-bold shadow-md shadow-amber-500/20',
+      idle: 'text-zinc-400 hover:text-zinc-200 hover:bg-zinc-900',
     },
     {
       id: 'summer' as const,
       icon: <Sun className="w-3.5 h-3.5" />,
       label: t('summerHours'),
-      active: 'bg-orange-500/15 text-orange-400 border border-orange-500/30',
-      idle: 'text-zinc-500 hover:text-zinc-300',
+      active: 'bg-orange-500 text-zinc-950 font-bold shadow-md shadow-orange-500/20',
+      idle: 'text-zinc-400 hover:text-zinc-200 hover:bg-zinc-900',
     },
   ];
 
-  const headerTitle =
+  const headlineMain =
     locale === 'ar'
       ? 'دليل البلديات والمصالح الإدارية'
       : locale === 'en'
-      ? 'GPS Directory of Municipalities & Public Offices'
-      : 'Guide Baladiyas, Recettes & Organismes';
+      ? 'Municipalities & Public Offices'
+      : 'Annuaire des Municipalités';
 
-  const headerDesc =
+  const headlineAccent =
+    locale === 'ar'
+      ? 'عبر 24 ولاية.'
+      : locale === 'en'
+      ? 'GPS Directory (24 Wilayas).'
+      : '& Services Publics.';
+
+  const subtitle =
     locale === 'ar'
       ? 'ابحث عن عناوين وأرقام هواتف وأوقات عمل أكثر من 350 بلدية ومصلحة عمومية عبر 24 ولاية — بما فيها توقيت رمضان والحصة الواحدة.'
       : locale === 'en'
       ? 'Locate exact GPS coordinates, phone numbers, and official opening hours (including Ramadan & summer single-shift schedules) for over 350 public offices across all 24 governorates.'
-      : "Retrouvez adresses, numéros et horaires réels (Ramadan & Séance Unique d'été) de plus de 350 municipalités et guichets sur les 24 gouvernorats.";
+      : "Retrouvez adresses, numéros de téléphone et horaires réels (Ramadan & Séance Unique d'été) de plus de 350 municipalités et guichets sur les 24 gouvernorats.";
 
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-10 space-y-8">
+    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12 space-y-10">
 
-      {/* Header */}
-      <div>
-        <div className="inline-flex items-center space-x-2 px-3 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-[11px] font-semibold mb-4">
-          <MapPin className="w-3 h-3" />
-          <span>
-            {locale === 'ar'
-              ? 'دليل الإدارات والبلديات التونسية — 24 ولاية'
-              : locale === 'en'
-              ? 'Tunisian Public Services & Baladiya GPS Directory'
-              : 'Annuaire Géolocalisé des Services Publics Tunisiens'}
-          </span>
+      {/* ── Editorial Header ── */}
+      <div className="max-w-3xl space-y-3">
+        <div className="inline-flex items-center space-x-2 rtl:space-x-reverse px-3 py-1 rounded-full bg-zinc-900 border border-zinc-800 text-[11px] font-semibold text-emerald-400">
+          <MapPin className="w-3.5 h-3.5" />
+          <span>24 Gouvernorats · 350+ Guichets Géolocalisés</span>
         </div>
-        <h1 className="text-2xl sm:text-4xl font-extrabold text-white tracking-tight leading-tight mb-3">
-          <span className="text-2xl sm:text-3xl mr-2">📍</span>
-          {headerTitle}
+
+        <h1 className="leading-tight">
+          <span className="display-heading block text-3xl sm:text-5xl text-[#F5F4F0]">
+            {headlineMain}
+          </span>
+          <span
+            className="display-heading block text-3xl sm:text-5xl italic"
+            style={{ color: 'var(--stamp-green)' }}
+          >
+            {headlineAccent}
+          </span>
         </h1>
-        <p className="text-xs sm:text-sm text-zinc-400 max-w-2xl leading-relaxed">
-          {headerDesc}
+
+        <p className="text-xs sm:text-sm text-zinc-400 leading-relaxed max-w-2xl pt-1">
+          {subtitle}
         </p>
       </div>
 
-      {/* Schedule Mode Switcher */}
-      <div className="p-4 rounded-2xl glass-panel border border-zinc-800/80 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-        <div className="flex items-center space-x-2 rtl:space-x-reverse text-xs text-zinc-400 font-medium">
-          <Clock className="w-3.5 h-3.5 text-zinc-500" />
-          <span>
+      {/* ── Schedule Season Control Banner ── */}
+      <div className="p-4 sm:p-5 rounded-2xl glass-panel border border-zinc-800/80 flex flex-col md:flex-row md:items-center justify-between gap-4">
+        <div className="space-y-0.5">
+          <div className="flex items-center space-x-2 rtl:space-x-reverse text-xs font-bold text-zinc-200">
+            <Clock className="w-3.5 h-3.5 text-emerald-400" />
+            <span>
+              {locale === 'ar'
+                ? 'الجداول الزمنية الرسمية حسب الفصل :'
+                : locale === 'en'
+                ? 'Official Operating Hours by Season:'
+                : 'Horaires Officiels selon la Saison :'}
+            </span>
+          </div>
+          <p className="text-[11px] text-zinc-500">
             {locale === 'ar'
-              ? 'عرض الجداول الزمنية حسب الفصل :'
-              : locale === 'en'
-              ? 'Display operating hours by season:'
-              : 'Affichage des horaires selon la saison :'}
-          </span>
+              ? 'تبديل التوقيت الشتوي / توقيت رمضان / توقيت الحصة الواحدة'
+              : 'Affichage en temps réel des séances administratives homologuées'}
+          </p>
         </div>
 
-        <div className="flex items-center space-x-1.5 rtl:space-x-reverse">
+        <div className="flex items-center space-x-1.5 rtl:space-x-reverse bg-zinc-950 p-1.5 rounded-2xl border border-zinc-800">
           {scheduleButtons.map(({ id, icon, label, active, idle }) => (
             <button
               key={id}
               onClick={() => setScheduleMode(id)}
-              className={`px-3 py-1.5 rounded-xl text-xs font-semibold flex items-center space-x-1.5 rtl:space-x-reverse transition-all cursor-pointer ${
+              className={`px-3.5 py-1.5 rounded-xl text-xs font-semibold flex items-center space-x-1.5 rtl:space-x-reverse transition-all cursor-pointer ${
                 scheduleMode === id ? active : idle
               }`}
             >
@@ -160,7 +188,27 @@ export default function LocatorPage() {
         </div>
       </div>
 
-      {/* Filters Grid */}
+      {/* ── Quick Regions Bar ── */}
+      <div className="flex items-center space-x-2 overflow-x-auto pb-1 scrollbar-none">
+        {REGIONS.map((r) => {
+          const isSelected = (r.id === 'all' && selectedGovernorate === 'all') || selectedGovernorate === r.id;
+          return (
+            <button
+              key={r.id}
+              onClick={() => setSelectedGovernorate(r.id)}
+              className={`px-3.5 py-1.5 rounded-xl text-xs font-semibold whitespace-nowrap transition-all border shrink-0 cursor-pointer ${
+                isSelected
+                  ? 'bg-emerald-500 text-zinc-950 border-emerald-400 font-bold shadow-sm'
+                  : 'bg-zinc-900/80 text-zinc-400 hover:text-zinc-200 border-zinc-800 hover:border-zinc-700'
+              }`}
+            >
+              {r.label}
+            </button>
+          );
+        })}
+      </div>
+
+      {/* ── Filter Dropdowns & Search ── */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
         {/* Governorate */}
         <div className="space-y-1.5">
@@ -170,7 +218,7 @@ export default function LocatorPage() {
           <select
             value={selectedGovernorate}
             onChange={(e) => setSelectedGovernorate(e.target.value)}
-            className="w-full bg-zinc-900 border border-zinc-800 focus:border-emerald-500/50 rounded-xl p-2.5 text-xs text-zinc-200 focus:outline-none transition-colors cursor-pointer"
+            className="w-full bg-zinc-900 border border-zinc-800 focus:border-emerald-500/50 rounded-xl p-3 text-xs text-zinc-200 focus:outline-none transition-colors cursor-pointer"
           >
             <option value="all">{t('allGovernorates')}</option>
             {GOVERNORATES_LIST.map((gov) => (
@@ -187,7 +235,7 @@ export default function LocatorPage() {
           <select
             value={selectedCategory}
             onChange={(e) => setSelectedCategory(e.target.value)}
-            className="w-full bg-zinc-900 border border-zinc-800 focus:border-emerald-500/50 rounded-xl p-2.5 text-xs text-zinc-200 focus:outline-none transition-colors cursor-pointer"
+            className="w-full bg-zinc-900 border border-zinc-800 focus:border-emerald-500/50 rounded-xl p-3 text-xs text-zinc-200 focus:outline-none transition-colors cursor-pointer"
           >
             {categories.map((cat) => (
               <option key={cat.id} value={cat.id}>{cat.label}</option>
@@ -201,7 +249,7 @@ export default function LocatorPage() {
             {locale === 'ar' ? 'البحث بالكلمة :' : locale === 'en' ? 'Search Keyword:' : 'Recherche par mot-clé :'}
           </label>
           <div className="relative">
-            <Search className="w-3.5 h-3.5 text-zinc-600 absolute left-3 top-1/2 -translate-y-1/2" />
+            <Search className="w-4 h-4 text-zinc-600 absolute left-3.5 top-1/2 -translate-y-1/2" />
             <input
               type="text"
               value={searchQuery}
@@ -213,26 +261,26 @@ export default function LocatorPage() {
                   ? 'Ex: Kasbah, Sousse, Ariana...'
                   : 'Ex: Kasbah, Houmt Souk, Sousse...'
               }
-              className="w-full bg-zinc-900 border border-zinc-800 focus:border-emerald-500/50 rounded-xl pl-9 pr-4 py-2.5 text-xs text-zinc-200 placeholder-zinc-600 focus:outline-none transition-colors"
+              className="w-full bg-zinc-900 border border-zinc-800 focus:border-emerald-500/50 rounded-xl pl-10 pr-4 py-3 text-xs text-zinc-200 placeholder-zinc-600 focus:outline-none transition-colors"
             />
           </div>
         </div>
       </div>
 
-      {/* Results count */}
-      <div className="flex items-center justify-between">
-        <p className="text-xs text-zinc-500">
+      {/* ── Results Count ── */}
+      <div className="flex items-center justify-between text-xs text-zinc-500 px-1">
+        <span>
           {filteredOffices.length > 0
             ? locale === 'ar'
               ? `${filteredOffices.length} إدارة وجدت`
               : locale === 'en'
-              ? `${filteredOffices.length} office${filteredOffices.length > 1 ? 's' : ''} found`
-              : `${filteredOffices.length} organisme${filteredOffices.length > 1 ? 's' : ''} trouvé${filteredOffices.length > 1 ? 's' : ''}`
+              ? `${filteredOffices.length} public office${filteredOffices.length > 1 ? 's' : ''} listed`
+              : `${filteredOffices.length} organisme${filteredOffices.length > 1 ? 's' : ''} répertorié${filteredOffices.length > 1 ? 's' : ''}`
             : ''}
-        </p>
+        </span>
       </div>
 
-      {/* Offices Grid */}
+      {/* ── Offices Grid ── */}
       {filteredOffices.length > 0 ? (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
           {filteredOffices.map((office) => (
@@ -244,7 +292,7 @@ export default function LocatorPage() {
           ))}
         </div>
       ) : (
-        <div className="glass-panel rounded-2xl p-16 text-center border border-zinc-800">
+        <div className="glass-panel rounded-3xl p-16 text-center border border-zinc-800">
           <Building2 className="w-10 h-10 mx-auto text-zinc-700 mb-4" />
           <h3 className="text-sm font-bold text-zinc-400 mb-1">
             {locale === 'ar' ? 'لا توجد نتائج' : locale === 'en' ? 'No offices found' : 'Aucun organisme trouvé'}

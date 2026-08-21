@@ -7,7 +7,7 @@ import { SampleDocsPicker } from '../../components/fasserli/SampleDocsPicker';
 import { DocumentAnalysisResult } from '../../components/fasserli/DocumentAnalysisResult';
 import { SampleDocItem, sampleDocumentsList } from '../../data/sampleDocuments';
 import { OCRAnalysisResult } from '../../types/chat';
-import { ShieldCheck, Sparkles, FileSearch } from 'lucide-react';
+import { ShieldCheck, FileSearch, Sparkles } from 'lucide-react';
 
 export default function FasserliPage() {
   const { t, locale } = useLocale();
@@ -29,18 +29,19 @@ export default function FasserliPage() {
   const handleCustomUpload = (_file: File | null, _redact: boolean) => {
     setIsAnalyzing(true);
     setTimeout(() => {
-      // Return a realistic custom OCR breakdown
       setAnalysisResult({
         id: `ocr-custom-${Date.now()}`,
         documentType: {
           derja: "Avis d'Imposition & Taxe Foncière (Zebla w Khrouba)",
           fr: "Avis d'Imposition - Taxe sur les Immeubles Bâtis",
           ar: "إعلام بالمعلوم على العقارات المبنية (الزبلة والخروبة)",
+          en: "Municipal Property Tax Notice (Zebla w Khrouba)",
         },
         issuingAuthority: {
           derja: "Baladiyat el Marje3 el Tourabi",
           fr: "Recette Municipale Territoriale",
           ar: "القباضة البلدية المختصة ترابياً",
+          en: "Territorial Municipal Tax Office",
         },
         referenceNumber: "TAX-MUN-2026/9021",
         dateDetected: "Aujourd'hui",
@@ -50,6 +51,7 @@ export default function FasserliPage() {
           derja: "Khnayet 0.75% par mois ba3d fin d'année.",
           fr: "Pénalités de retard de 0.75% par mois à compter de l'échéance légale.",
           ar: "توظيف خطية تأخير بنسبة 0.75% شهرياً بعد انقضاء الأجل القانوني.",
+          en: "Monthly late penalty of 0.75% following the statutory deadline.",
         },
         summary: {
           derja: [
@@ -66,6 +68,11 @@ export default function FasserliPage() {
             "إعلام باستخلاص المعلوم البلدي السنوي على العقارات المبنية.",
             "المبلغ الصافي المستوجب دفعه هو 85 ديناراً عن السنة الجارية.",
             "يمكن الدفع مباشرة بشباك القباضة البلدية أو عن بعد."
+          ],
+          en: [
+            "Annual municipal property and sanitation tax assessment.",
+            "The statutory amount due is 85 TND for the current fiscal year.",
+            "Settlement can be completed directly at the municipal counter or online via debit card."
           ]
         },
         actionItems: [
@@ -73,12 +80,14 @@ export default function FasserliPage() {
             task: {
               derja: "5alles el ma3loum fel 9badha el baladiya.",
               fr: "Régler la taxe à la recette municipale.",
-              ar: "دفع المعلوم البلدي بالقباضة واستلام الوصل."
+              ar: "دفع المعلوم البلدي بالقباضة واستلام الوصل.",
+              en: "Pay the municipal tax at the local tax office and collect receipt."
             },
             office: {
               derja: "Recette Municipale",
               fr: "Recette Municipale / Baladiya",
-              ar: "القباضة البلدية"
+              ar: "القباضة البلدية",
+              en: "Municipal Tax Desk"
             },
             requiredPapers: ["Avis d'imposition", "CIN de l'occupant/propriétaire"],
             feeTND: 85
@@ -87,54 +96,65 @@ export default function FasserliPage() {
         legalContext: {
           derja: "Code de la Fiscalité Locale Tunisien.",
           fr: "Code de la Fiscalité Locale.",
-          ar: "مجلة الجباية المحلية التونسية."
+          ar: "مجلة الجباية المحلية التونسية.",
+          en: "Tunisian Local Taxation Code (Code de la Fiscalité Locale)."
         }
       });
       setIsAnalyzing(false);
     }, 1200);
   };
 
-  const pageTitle =
+  const headlineMain =
     locale === 'ar'
-      ? '📄 فسّرلي هالورقة — قارئ الوثائق الذكي'
+      ? 'فسّرلي هالورقة'
       : locale === 'en'
-      ? '📄 Fasserli · Smart OCR Document Decoder'
-      : locale === 'fr'
-      ? '📄 Fasserli · Décrypteur Administratif IA'
-      : '📄 Fasserli Hal War9a · فسّرلي هالورقة';
+      ? 'Administrative OCR'
+      : 'Décrypteur de Courriers';
 
-  const pageDesc =
+  const headlineAccent =
+    locale === 'ar'
+      ? 'وقارئ الوثائق الذكي.'
+      : locale === 'en'
+      ? '& Legal Decoder.'
+      : '& Avis Officiels.';
+
+  const subtitle =
     locale === 'ar'
       ? 'صوّر أي وثيقة إدارية (إعلام ضريبي، استدعاء، إشعار CNSS) وسيفسّرها لك المساعد بـ 3 نقاط مع الآجال القانونية وما يجب فعله.'
       : locale === 'en'
-      ? 'Scan any official notice (tax warning, court summons, CNSS demand) and Idaara AI will summarize it in 3 clear points with legal deadlines and required actions.'
-      : locale === 'fr'
-      ? "Scannez n'importe quel courrier administratif (avis fiscal, convocation, avis CNSS) et l'IA Idaara vous le résume en 3 points clairs avec les délais légaux."
-      : "Soiwer ay wathi9a idariya (Tanbih dhariba, convocation, avis CNSS, 3a9la) w khalli Idaara AI t'fassarlek chnowa fihom b'loughet el mowaten.";
+      ? 'Scan any official notice (tax adjustment, police summons, CNSS demand) and Idaara AI will summarize it in 3 points with strict statutory deadlines.'
+      : "Scannez n'importe quel courrier officiel (redressement fiscal, convocation, mise en demeure CNSS) et obtenez une synthèse juridique en 3 points.";
 
   return (
-    <div className="max-w-5xl mx-auto px-4 py-8 sm:py-10">
-      {/* Title & Header */}
-      <div className="mb-8">
-        <div className="inline-flex items-center space-x-2 px-3 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-[11px] font-semibold mb-4">
-          <Sparkles className="w-3 h-3" />
-          <span>
-            {locale === 'ar'
-              ? 'قارئ الوثائق الإدارية بالذكاء الاصطناعي'
-              : 'Smart OCR · Décrypteur Administratif IA'}
-          </span>
+    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12 space-y-10">
+
+      {/* ── Editorial Header ── */}
+      <div className="max-w-3xl space-y-3">
+        <div className="inline-flex items-center space-x-2 rtl:space-x-reverse px-3 py-1 rounded-full bg-zinc-900 border border-zinc-800 text-[11px] font-semibold text-emerald-400">
+          <Sparkles className="w-3.5 h-3.5" />
+          <span>OCR Juridique Tunisien · Confidentialité 100% Locale</span>
         </div>
-        <h1 className="text-2xl sm:text-4xl font-extrabold text-white tracking-tight leading-tight mb-3">
-          {pageTitle}
+
+        <h1 className="leading-tight">
+          <span className="display-heading block text-3xl sm:text-5xl text-[#F5F4F0]">
+            {headlineMain}
+          </span>
+          <span
+            className="display-heading block text-3xl sm:text-5xl italic"
+            style={{ color: 'var(--stamp-green)' }}
+          >
+            {headlineAccent}
+          </span>
         </h1>
-        <p className="text-xs sm:text-sm text-zinc-400 max-w-2xl leading-relaxed">
-          {pageDesc}
+
+        <p className="text-xs sm:text-sm text-zinc-400 leading-relaxed max-w-2xl pt-1">
+          {subtitle}
         </p>
       </div>
 
-      {/* Zero Storage Reassurance */}
-      <div className="mb-6 p-4 rounded-xl bg-zinc-900/60 border border-zinc-800 flex items-center justify-between">
-        <div className="flex items-center space-x-3 text-xs text-zinc-300">
+      {/* ── Zero Storage Privacy Guarantee ── */}
+      <div className="p-4 rounded-2xl glass-panel border border-emerald-500/20 flex items-center justify-between bg-emerald-950/20">
+        <div className="flex items-center space-x-3 rtl:space-x-reverse text-xs text-zinc-300">
           <ShieldCheck className="w-5 h-5 text-emerald-400 shrink-0" />
           <div>
             <span className="font-semibold text-zinc-100">{t('zeroStorageBanner')} : </span>
@@ -143,9 +163,9 @@ export default function FasserliPage() {
         </div>
       </div>
 
-      {/* Main Grid: Upload & Samples */}
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 mb-10">
-        {/* Left Col: Upload zone */}
+      {/* ── Main Grid: Upload & Sample Documents ── */}
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+        {/* Left: Upload zone */}
         <div className="lg:col-span-6 space-y-6">
           <DocumentUploader
             onAnalyze={handleCustomUpload}
@@ -153,7 +173,7 @@ export default function FasserliPage() {
           />
         </div>
 
-        {/* Right Col: Samples */}
+        {/* Right: Samples */}
         <div className="lg:col-span-6 space-y-4">
           <SampleDocsPicker
             onSelectSample={handleSelectSample}
@@ -162,9 +182,9 @@ export default function FasserliPage() {
         </div>
       </div>
 
-      {/* Result Section */}
+      {/* ── Result Section ── */}
       {analysisResult && (
-        <div className="mt-8">
+        <div className="pt-6 border-t border-zinc-800/80">
           <div className="flex items-center space-x-2 rtl:space-x-reverse text-xs font-bold text-zinc-400 uppercase tracking-wider mb-4">
             <FileSearch className="w-4 h-4 text-emerald-400" />
             <span>
