@@ -19,7 +19,7 @@ export const DocumentCard: React.FC<DocumentCardProps> = ({ template }) => {
   const description = getLocalized(template.description, locale);
 
   const fillBtnText =
-    locale === 'ar' ? 'تعبئة واستخراج PDF' : locale === 'en' ? 'Fill & Generate PDF' : 'Remplir le PDF';
+    locale === 'ar' ? 'تعبئة النموذج' : locale === 'en' ? 'Fill PDF' : 'Remplir le PDF';
 
   return (
     <div className="glass-panel rounded-2xl p-5 sm:p-6 border border-zinc-800/80 flex flex-col justify-between hover:border-zinc-700 hover:shadow-2xl transition-all duration-200 group relative overflow-hidden">
@@ -29,7 +29,7 @@ export const DocumentCard: React.FC<DocumentCardProps> = ({ template }) => {
       <div>
         {/* Top Meta Bar */}
         <div className="flex items-center justify-between gap-2 mb-4">
-          <div className="flex items-center space-x-1.5 rtl:space-x-reverse">
+          <div className="flex items-center gap-2 min-w-0">
             <div className="w-8 h-8 rounded-xl bg-zinc-900 border border-zinc-800 flex items-center justify-center text-emerald-400 group-hover:scale-105 transition-transform shrink-0">
               <FileText className="w-4 h-4" />
             </div>
@@ -38,9 +38,9 @@ export const DocumentCard: React.FC<DocumentCardProps> = ({ template }) => {
             </span>
           </div>
 
-          <div className="flex items-center space-x-1.5 rtl:space-x-reverse shrink-0">
+          <div className="flex items-center gap-1.5 shrink-0">
             {template.requiresLegalisation && (
-              <span className="text-[10px] font-bold px-2 py-0.5 rounded-lg bg-amber-500/10 text-amber-300 border border-amber-500/25 flex items-center space-x-1 rtl:space-x-reverse">
+              <span className="text-[10px] font-bold px-2 py-0.5 rounded-lg bg-amber-500/10 text-amber-300 border border-amber-500/25 flex items-center gap-1">
                 <Stamp className="w-3 h-3" />
                 <span>Baladiya</span>
               </span>
@@ -63,8 +63,8 @@ export const DocumentCard: React.FC<DocumentCardProps> = ({ template }) => {
 
         {/* Legal basis badge */}
         {template.legalBasis && (
-          <div className="mb-4 text-[10px] text-zinc-500 font-mono flex items-center space-x-1 rtl:space-x-reverse truncate">
-            <ShieldCheck className="w-3 h-3 text-zinc-600 shrink-0" />
+          <div className="mb-4 text-[10px] text-zinc-500 font-mono flex items-center gap-1.5 truncate">
+            <ShieldCheck className="w-3.5 h-3.5 text-zinc-600 shrink-0" />
             <span className="truncate">{template.legalBasis}</span>
           </div>
         )}
@@ -78,10 +78,10 @@ export const DocumentCard: React.FC<DocumentCardProps> = ({ template }) => {
 
         <Link
           href={`/documents/${template.slug}`}
-          className="inline-flex items-center space-x-1.5 rtl:space-x-reverse px-3.5 py-1.5 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-zinc-950 font-bold text-xs shadow-md shadow-emerald-500/20 transition-all hover:scale-105 cursor-pointer"
+          className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-zinc-950 font-bold text-xs shadow-md shadow-emerald-500/20 transition-all hover:scale-105 cursor-pointer"
         >
           <span>{fillBtnText}</span>
-          <ArrowRight className="w-3.5 h-3.5 rtl:rotate-180" />
+          <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-0.5 transition-transform" />
         </Link>
       </div>
     </div>

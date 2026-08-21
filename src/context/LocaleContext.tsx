@@ -31,7 +31,7 @@ export function LocaleProvider({ children }: { children: React.ReactNode }) {
       document.documentElement.setAttribute('lang', 'ar');
     } else {
       document.documentElement.setAttribute('dir', 'ltr');
-      document.documentElement.setAttribute('lang', l === 'fr' ? 'fr' : l === 'en' ? 'en' : 'ar-TN');
+      document.documentElement.setAttribute('lang', l === 'fr' ? 'fr' : l === 'en' ? 'en' : 'fr-TN');
     }
   };
 
