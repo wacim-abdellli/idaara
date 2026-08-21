@@ -313,3 +313,110 @@ button:focus-visible {
   }
 }
 
+/* ─────────────────────────────────────────────
+   PRINT STYLESHEET (Clean High-Quality Official A4 Export)
+   ───────────────────────────────────────────── */
+@media print {
+  @page {
+    size: A4 portrait;
+    margin: 10mm 12mm;
+  }
+
+  /* Reset body and hide dark background artifacts */
+  html, body {
+    background: #ffffff !important;
+    color: #111827 !important;
+    font-family: var(--font-body), system-ui, sans-serif !important;
+    font-size: 10pt !important;
+    line-height: 1.4 !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    background-image: none !important;
+  }
+
+  /* Hide navigation, footers, floating widgets, buttons, and decorative elements */
+  header,
+  footer,
+  nav,
+  button,
+  .no-print,
+  [role="navigation"],
+  .glass-panel-hover,
+  input[type="range"],
+  .spotlight-overlay,
+  .laser-beam {
+    display: none !important;
+  }
+
+  /* Force background printing on white */
+  * {
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+    box-shadow: none !important;
+    text-shadow: none !important;
+  }
+
+  /* Clean up card containers */
+  .glass-panel,
+  .rounded-3xl,
+  .rounded-2xl {
+    background: #ffffff !important;
+    border: 1px solid #e5e7eb !important;
+    color: #111827 !important;
+    box-shadow: none !important;
+  }
+
+  /* Text color fixes for printing */
+  .text-white,
+  .text-zinc-100,
+  .text-zinc-200,
+  .text-zinc-300 {
+    color: #111827 !important;
+  }
+
+  .text-zinc-400,
+  .text-zinc-500 {
+    color: #4b5563 !important;
+  }
+
+  .text-emerald-400,
+  .text-emerald-300 {
+    color: #047857 !important;
+  }
+
+  .text-amber-400,
+  .text-amber-300 {
+    color: #b45309 !important;
+  }
+
+  .text-cyan-400,
+  .text-cyan-300 {
+    color: #0e7490 !important;
+  }
+
+  /* Ensure official document canvas prints centered and full-width */
+  #official-doc-render,
+  #export-invoice-render,
+  #printable-procedure-dossier {
+    display: block !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    margin: 0 auto !important;
+    padding: 0 !important;
+    background: #ffffff !important;
+    color: #000000 !important;
+    box-shadow: none !important;
+    border: none !important;
+    page-break-inside: avoid;
+  }
+
+  /* Page break rules */
+  h1, h2, h3, h4 {
+    page-break-after: avoid;
+  }
+
+  tr, .print-row {
+    page-break-inside: avoid;
+  }
+}
+

@@ -60,14 +60,24 @@ export const ExportInvoiceGen: React.FC = () => {
           </p>
         </div>
 
-        <button
-          onClick={handleDownloadInvoice}
-          disabled={isGenerating}
-          className="flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-zinc-950 font-bold text-xs shadow-md shadow-emerald-500/20 transition-all self-start sm:self-auto shrink-0 cursor-pointer disabled:opacity-40"
-        >
-          {isGenerating ? <Loader2 className="w-4 h-4 animate-spin" /> : <Download className="w-4 h-4" />}
-          <span>{btnText}</span>
-        </button>
+        <div className="flex items-center gap-2 self-start sm:self-auto shrink-0">
+          <button
+            onClick={() => typeof window !== 'undefined' && window.print()}
+            className="flex items-center justify-center gap-1.5 px-3.5 py-2.5 rounded-xl bg-zinc-800 hover:bg-zinc-700 text-zinc-200 font-bold text-xs transition-all cursor-pointer border border-zinc-700"
+            title="Imprimer la facture"
+          >
+            <span>{locale === 'ar' ? 'طباعة' : locale === 'en' ? 'Print' : 'Imprimer'}</span>
+          </button>
+
+          <button
+            onClick={handleDownloadInvoice}
+            disabled={isGenerating}
+            className="flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-zinc-950 font-bold text-xs shadow-md shadow-emerald-500/20 transition-all cursor-pointer disabled:opacity-40"
+          >
+            {isGenerating ? <Loader2 className="w-4 h-4 animate-spin" /> : <Download className="w-4 h-4" />}
+            <span>{btnText}</span>
+          </button>
+        </div>
       </div>
 
       {/* Input controls */}

@@ -1,11 +1,12 @@
 'use client';
 
-import React from 'react';
+import React, { useState } from 'react';
 import { Procedure } from '../../types/procedure';
 import { useLocale } from '../../context/LocaleContext';
 import { getLocalized } from '../../lib/locale-utils';
-import { formatTND } from '../../lib/utils';
-import { Printer, Stamp, Clock, FileCheck2 } from 'lucide-react';
+import { formatTND, triggerConfetti } from '../../lib/utils';
+import { generatePDFFromElement } from '../../lib/pdf-generator';
+import { Printer, Stamp, Clock, FileCheck2, Download, Building2, CheckCircle2, ShieldCheck, Loader2 } from 'lucide-react';
 
 interface DossierKitExportProps {
   procedure: Procedure;
@@ -16,6 +17,7 @@ export const DossierKitExport: React.FC<DossierKitExportProps> = ({
   procedure,
 }) => {
   const { locale } = useLocale();
+  const [isGenerating, setIsGenerating] = useState(false);
 
   const title = getLocalized(procedure.title, locale);
   const total = procedure.costsBreakdown.reduce(
@@ -26,6 +28,21 @@ export const DossierKitExport: React.FC<DossierKitExportProps> = ({
   const handlePrint = () => {
     if (typeof window !== 'undefined') {
       window.print();
+    }
+  };
+
+  const handleDownloadPDF = async () => {
+    setIsGenerating(true);
+    try {
+      await generatePDFFromElement(
+        'printable-procedure-dossier',
+        `Dossier-Idaara-${procedure.id}.pdf`
+      );
+      triggerConfetti();
+    } catch (err) {
+      console.error('PDF export error:', err);
+    } finally {
+      setIsGenerating(false);
     }
   };
 
@@ -40,7 +57,7 @@ export const DossierKitExport: React.FC<DossierKitExportProps> = ({
       : `${procedure.costsBreakdown.length} frais & timbres`;
 
   return (
-    <div className="p-4 sm:p-5 rounded-3xl bg-zinc-900/90 border border-zinc-800 space-y-4">
+    <div className="p-4 sm:p-5 rounded-3xl bg-[#0d0e12] border border-white/[0.08] space-y-4 shadow-xl">
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 border-b border-zinc-800">
         <div>
           <h4 className="text-xs sm:text-sm font-bold text-white flex items-center gap-2">
@@ -62,20 +79,32 @@ export const DossierKitExport: React.FC<DossierKitExportProps> = ({
           </p>
         </div>
 
-        <button
-          onClick={handlePrint}
-          className="flex items-center justify-center gap-2 px-4 py-2 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-zinc-950 font-bold text-xs shadow-md shadow-emerald-500/20 transition-all hover:scale-105 shrink-0 cursor-pointer"
-        >
-          <Printer className="w-4 h-4" />
-          <span>{locale === 'ar' ? 'طباعة / حفظ PDF' : locale === 'en' ? 'Print / Save PDF' : 'Imprimer / PDF'}</span>
-        </button>
+        <div className="flex items-center gap-2 shrink-0">
+          <button
+            onClick={handlePrint}
+            className="flex items-center justify-center gap-1.5 px-3.5 py-2 rounded-xl bg-zinc-800 hover:bg-zinc-700 text-zinc-200 font-bold text-xs transition-all cursor-pointer border border-zinc-700"
+            title="Print sheet"
+          >
+            <Printer className="w-4 h-4 text-zinc-400" />
+            <span>{locale === 'ar' ? 'طباعة' : locale === 'en' ? 'Print' : 'Imprimer'}</span>
+          </button>
+
+          <button
+            onClick={handleDownloadPDF}
+            disabled={isGenerating}
+            className="flex items-center justify-center gap-1.5 px-4 py-2 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-zinc-950 font-bold text-xs shadow-md shadow-emerald-500/20 transition-all hover:scale-105 cursor-pointer disabled:opacity-50"
+          >
+            {isGenerating ? <Loader2 className="w-4 h-4 animate-spin" /> : <Download className="w-4 h-4" />}
+            <span>{locale === 'ar' ? 'حفظ PDF' : locale === 'en' ? 'Export PDF' : 'Télécharger PDF'}</span>
+          </button>
+        </div>
       </div>
 
       {/* Mini Visual Printable Sheet Preview */}
-      <div className="p-4 rounded-2xl bg-zinc-950/70 border border-zinc-800/80 space-y-3 text-xs font-mono">
+      <div className="p-4 rounded-2xl bg-zinc-950/80 border border-zinc-800 space-y-3 text-xs font-mono">
         <div className="flex items-center justify-between text-zinc-300">
-          <span className="font-bold text-white">{title}</span>
-          <span className="px-2 py-0.5 rounded bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 font-bold">
+          <span className="font-bold text-white truncate max-w-[200px] sm:max-w-none">{title}</span>
+          <span className="px-2 py-0.5 rounded bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 font-bold shrink-0">
             {formatTND(total, locale)}
           </span>
         </div>
@@ -89,6 +118,150 @@ export const DossierKitExport: React.FC<DossierKitExportProps> = ({
             <Stamp className="w-3.5 h-3.5 text-amber-400" />
             <span>{feesCountLabel}</span>
           </div>
+        </div>
+      </div>
+
+      {/* ── HIDDEN HIGH-RES A4 OFFICIAL DOSSIER CONTAINER (FOR PDF & PRINT ONLY) ── */}
+      <div className="hidden">
+        <div
+          id="printable-procedure-dossier"
+          className="w-[210mm] min-h-[297mm] bg-white text-zinc-900 p-8 sm:p-12 font-sans space-y-6"
+          style={{ fontFamily: 'system-ui, -apple-system, sans-serif' }}
+        >
+          {/* Republic Header */}
+          <div className="flex items-start justify-between border-b-2 border-zinc-900 pb-4">
+            <div className="text-left text-xs space-y-0.5">
+              <p className="font-bold uppercase tracking-wider text-xs text-zinc-950">République Tunisienne</p>
+              <p className="text-[11px] text-zinc-600">Portail National des Démarches Administratives</p>
+              <p className="text-[10px] text-zinc-500 font-mono">Idaara.tn · Homologation JORT 2026</p>
+            </div>
+
+            <div className="text-center px-4 py-1.5 rounded-lg border border-zinc-300 bg-zinc-50">
+              <span className="text-[10px] font-bold uppercase tracking-widest text-zinc-500 block">FICHE OFFICIELLE</span>
+              <span className="text-xs font-extrabold text-emerald-800 uppercase">{procedure.vertical}</span>
+            </div>
+
+            <div className="text-right text-xs space-y-0.5" dir="rtl">
+              <p className="font-bold text-xs text-zinc-950">الجمهورية التونسية</p>
+              <p className="text-[11px] text-zinc-600">البوابة الوطنية للإجراءات الإدارية</p>
+              <p className="text-[10px] text-zinc-500 font-mono">إدارة.تونس</p>
+            </div>
+          </div>
+
+          {/* Procedure Title & Meta */}
+          <div className="bg-zinc-50 p-4 rounded-xl border border-zinc-200 flex items-center justify-between">
+            <div className="space-y-1">
+              <span className="text-[10px] font-mono uppercase text-zinc-500 font-bold tracking-wider">
+                Dossier Administratif / الملف الإداري
+              </span>
+              <h1 className="text-lg font-extrabold text-zinc-950">{title}</h1>
+              <p className="text-xs text-zinc-600">
+                {getLocalized(procedure.shortDescription, locale)}
+              </p>
+            </div>
+
+            <div className="text-right shrink-0 pl-4 border-l border-zinc-200">
+              <span className="text-[10px] uppercase font-bold text-zinc-500 block">Total Estimé / المجموع</span>
+              <span className="text-lg font-mono font-extrabold text-emerald-700">
+                {formatTND(total, locale)}
+              </span>
+              <span className="text-[10px] text-zinc-500 block">Délai : {procedure.estimatedProcessingTime}</span>
+            </div>
+          </div>
+
+          {/* Grid: Required Documents & Costs */}
+          <div className="grid grid-cols-2 gap-6">
+            
+            {/* Required Documents */}
+            <div className="space-y-3">
+              <h3 className="text-xs font-bold uppercase tracking-wider text-zinc-950 pb-1.5 border-b border-zinc-200 flex items-center gap-1.5">
+                <CheckCircle2 className="w-3.5 h-3.5 text-emerald-700" />
+                <span>Pièces Requises (الأوراق المطلوبة)</span>
+              </h3>
+
+              <div className="space-y-2 text-xs">
+                {procedure.requiredDocuments.map((doc, idx) => (
+                  <div key={doc.id || idx} className="p-2 rounded-lg bg-zinc-50 border border-zinc-200 flex items-start gap-2">
+                    <div className="w-4 h-4 rounded border border-zinc-400 shrink-0 mt-0.5" />
+                    <div>
+                      <p className="font-semibold text-zinc-900 text-xs leading-tight">{getLocalized(doc.name, locale)}</p>
+                      {doc.description && (
+                        <p className="text-[10px] text-zinc-500 mt-0.5">{getLocalized(doc.description, locale)}</p>
+                      )}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* Fees & Stamp Breakdown */}
+            <div className="space-y-3">
+              <h3 className="text-xs font-bold uppercase tracking-wider text-zinc-950 pb-1.5 border-b border-zinc-200 flex items-center gap-1.5">
+                <Stamp className="w-3.5 h-3.5 text-amber-700" />
+                <span>Timbres & Frais (المعاليم والتنابر)</span>
+              </h3>
+
+              <table className="w-full text-xs border border-zinc-200 rounded-lg overflow-hidden">
+                <thead className="bg-zinc-100 text-zinc-700 font-bold">
+                  <tr>
+                    <th className="p-2 text-left">Désignation</th>
+                    <th className="p-2 text-right">Tarif</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-zinc-200">
+                  {procedure.costsBreakdown.map((item, idx) => (
+                    <tr key={idx}>
+                      <td className="p-2 text-zinc-800">{getLocalized(item.label, locale)}</td>
+                      <td className="p-2 text-right font-mono font-bold text-zinc-950">{item.amountTND.toFixed(3)} DT</td>
+                    </tr>
+                  ))}
+                  <tr className="bg-zinc-100 font-bold">
+                    <td className="p-2 text-zinc-900">Total / المجموع</td>
+                    <td className="p-2 text-right font-mono text-emerald-800">{total.toFixed(3)} DT</td>
+                  </tr>
+                </tbody>
+              </table>
+
+              {/* Municipal Stamp Placement Box */}
+              <div className="mt-4 p-3 border-2 border-dashed border-zinc-300 rounded-xl bg-zinc-50 flex items-center justify-between">
+                <div>
+                  <span className="text-[10px] font-bold uppercase text-zinc-700 block">Cadre Réservé aux Timbres</span>
+                  <span className="text-[9px] text-zinc-500">Recette des Finances / Baladiya</span>
+                </div>
+                <div className="w-14 h-14 border border-zinc-400 rounded flex items-center justify-center text-[8px] text-zinc-400 text-center uppercase">
+                  Cachet
+                </div>
+              </div>
+            </div>
+
+          </div>
+
+          {/* Procedure Steps Roadmap */}
+          <div className="space-y-2 pt-2 border-t border-zinc-200">
+            <h3 className="text-xs font-bold uppercase tracking-wider text-zinc-950">
+              Démarches & Guichets (مسار الإيداع)
+            </h3>
+            <div className="grid grid-cols-3 gap-2">
+              {procedure.steps.map((step) => (
+                <div key={step.stepNumber} className="p-2 rounded-lg bg-zinc-50 border border-zinc-200 text-xs">
+                  <div className="flex items-center gap-1.5 mb-1">
+                    <span className="w-4 h-4 rounded-full bg-zinc-900 text-white font-bold text-[9px] flex items-center justify-center">
+                      {step.stepNumber}
+                    </span>
+                    <span className="font-bold text-zinc-900 truncate">{getLocalized(step.title, locale)}</span>
+                  </div>
+                  <p className="text-[10px] text-emerald-700 font-semibold">{step.targetOffice}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* Footer certification */}
+          <div className="pt-4 border-t border-zinc-200 flex items-center justify-between text-[10px] text-zinc-500">
+            <span>Généré par Idaara.tn — BCT & JORT Conforme</span>
+            <span>Signature du Citoyen / إمضاء المواطن : ___________________</span>
+          </div>
+
         </div>
       </div>
     </div>
