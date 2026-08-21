@@ -18,11 +18,10 @@ import {
   ShieldCheck,
   Plane,
   Loader2,
-  Image as ImageIcon,
-  Library,
-  Puzzle,
-  FolderKanban,
-  MoreHorizontal,
+  ScanText,
+  FileCode2,
+  Calculator,
+  Building2,
   Search,
   PanelLeftClose,
   PanelLeft,
@@ -34,7 +33,8 @@ import {
   Trash2,
   PenSquare,
   Globe,
-  Compass,
+  Landmark,
+  Stamp,
 } from 'lucide-react';
 
 interface ChatSession {
@@ -72,14 +72,12 @@ export default function CopilotPage() {
   useEffect(() => {
     if (typeof window !== 'undefined') {
       try {
-        // Load sessions list
         const savedSessions = localStorage.getItem(STORAGE_SESSIONS_KEY);
         if (savedSessions) {
           const parsed = JSON.parse(savedSessions);
           if (Array.isArray(parsed)) setSessions(parsed);
         }
 
-        // Load active current messages
         const savedCurrent = localStorage.getItem(STORAGE_CURRENT_KEY);
         if (savedCurrent) {
           const parsed = JSON.parse(savedCurrent);
@@ -106,7 +104,6 @@ export default function CopilotPage() {
       if (messages.length > 0) {
         localStorage.setItem(STORAGE_CURRENT_KEY, JSON.stringify(messages));
 
-        // Auto-update or create title for the session in recents
         const firstUserMsg = messages.find((m) => m.sender === 'user')?.content || 'Discussion';
         const title = firstUserMsg.slice(0, 32) + (firstUserMsg.length > 32 ? '...' : '');
 
@@ -149,12 +146,12 @@ export default function CopilotPage() {
 
   const quickTopics = [
     {
-      label: locale === 'ar' ? 'تجديد جواز السفر 80د' : locale === 'derja' ? 'Passeport tounsi (80 DT)' : locale === 'en' ? 'Renew Passport (80 DT)' : 'Renouveler Passeport (80 DT)',
+      label: locale === 'ar' ? 'تجديد جواز السفر (80 د.ت)' : locale === 'derja' ? 'Passeport tounsi (80 DT)' : locale === 'en' ? 'Renew Passport (80 DT)' : 'Renouveler Passeport (80 DT)',
       q: locale === 'ar' ? 'شنوة يلزمني باش نجدد جواز السفر التونسي؟' : locale === 'derja' ? "Chnouwa lezemni bech n'badal el passeport mte3i?" : locale === 'en' ? 'What documents and fees do I need to renew my Tunisian passport?' : 'Quels sont les documents et timbres fiscaux pour renouveler mon passeport tunisien ?',
       icon: FileCheck2,
     },
     {
-      label: locale === 'ar' ? 'البطاقة الرمادية للسيارة 145د' : locale === 'derja' ? 'Carte Grise karhba (145 DT)' : locale === 'en' ? 'Car Registration Transfer' : 'Mutation Carte Grise (145 DT)',
+      label: locale === 'ar' ? 'البطاقة الرمادية للسيارة (145 د.ت)' : locale === 'derja' ? 'Carte Grise karhba (145 DT)' : locale === 'en' ? 'Car Registration Transfer' : 'Mutation Carte Grise (145 DT)',
       q: locale === 'ar' ? 'شريت كرهبة مستعملة، كيفاش نبدل البطاقة الرمادية؟' : locale === 'derja' ? "Chrit karhba jdid, kifech nbeddel el carte grise?" : locale === 'en' ? 'How do I transfer a car registration after buying a used vehicle?' : "Comment faire la mutation de carte grise après achat d'un véhicule d'occasion en Tunisie ?",
       icon: Car,
     },
@@ -347,47 +344,45 @@ export default function CopilotPage() {
 
   const centerHeadline =
     locale === 'ar'
-      ? "جاهز وقت ما تحب."
+      ? "شنوة تحب تعرف اليوم في إدارة.تونس؟"
       : locale === 'derja'
-      ? "7adher wa9t ma t7eb."
+      ? "Chnowa thabb ta3ref lyoum fi Tounes?"
       : locale === 'fr'
-      ? "Prêt quand vous l'êtes."
-      : "Ready when you are.";
+      ? "Comment puis-je vous aider dans vos démarches ?"
+      : "What Tunisian procedure do you need help with?";
 
   const placeholder = isRecording
-    ? (locale === 'ar' ? 'جارٍ الاستماع...' : locale === 'derja' ? '9a3ed nesma3 fik...' : 'Listening...')
+    ? (locale === 'ar' ? 'جارٍ الاستماع... تفضل بالتحدث' : locale === 'derja' ? '9a3ed nesma3 fik... Tkellem tawa' : 'Listening... Speak now')
     : isTranscribing
-    ? (locale === 'ar' ? 'جارٍ المعالجة...' : 'Transcribing...')
+    ? (locale === 'ar' ? 'جارٍ معالجة الصوت...' : locale === 'derja' ? '9a3ed ntarjem...' : 'Transcribing voice...')
     : (locale === 'ar'
-      ? 'اسأل عن أي شيء...'
+      ? 'اسأل عن أي إجراء، وثيقة، أو معلوم جبائي...'
       : locale === 'derja'
-      ? 'Es\'el 3la ay 7aja...'
+      ? 'Es\'el 3la ay war9a, procédure, walla timbre...'
       : locale === 'fr'
-      ? 'Posez n\'importe quelle question...'
-      : 'Ask anything');
+      ? 'Posez votre question sur une démarche, un timbre...'
+      : 'Ask about any Tunisian procedure, document, or stamp fee...');
 
   return (
-    <div className="fixed inset-x-0 top-14 bottom-0 z-30 flex bg-[#0d0d0d] text-white overflow-hidden font-sans">
+    <div className="fixed inset-x-0 top-14 bottom-0 z-30 flex bg-[#09090b] text-white overflow-hidden font-sans">
 
       {/* ═════════════════════════════════════════════════════════════════
-          LEFT SIDEBAR (Exact ChatGPT Collapsible Dark Sidebar #171717)
+          BESPOKE IDAARA SIDEBAR (#121214)
       ══════════════════════════════════════════════════════════════════ */}
       {sidebarOpen && (
-        <aside className="w-64 shrink-0 bg-[#171717] border-r border-white/5 flex flex-col justify-between p-3 select-none z-20 animate-fade-in">
+        <aside className="w-64 shrink-0 bg-[#121214] border-r border-white/5 flex flex-col justify-between p-3 select-none z-20 animate-fade-in">
           
           {/* Top Section */}
           <div className="space-y-3 overflow-y-auto">
-            {/* Header: Brand + Icons */}
+            {/* Header: Idaara Brand + Icons */}
             <div className="flex items-center justify-between px-2 pt-1">
-              <span className="font-semibold text-base text-zinc-100 tracking-tight">ChatGPT</span>
+              <div className="flex items-center gap-2">
+                <div className="w-6 h-6 rounded-lg bg-emerald-500/20 border border-emerald-500/40 text-emerald-400 font-bold text-xs flex items-center justify-center">
+                  I
+                </div>
+                <span className="font-bold text-sm text-zinc-100 tracking-tight">Idaara Copilot</span>
+              </div>
               <div className="flex items-center gap-1">
-                <button
-                  onClick={() => handleNewChat()}
-                  className="p-1.5 rounded-lg hover:bg-white/10 text-zinc-400 hover:text-white transition-colors cursor-pointer border-0 outline-none"
-                  title="Search chats"
-                >
-                  <Search className="w-4 h-4" />
-                </button>
                 <button
                   onClick={() => setSidebarOpen(false)}
                   className="p-1.5 rounded-lg hover:bg-white/10 text-zinc-400 hover:text-white transition-colors cursor-pointer border-0 outline-none"
@@ -401,59 +396,61 @@ export default function CopilotPage() {
             {/* New Chat Button */}
             <button
               onClick={handleNewChat}
-              className="w-full flex items-center gap-2.5 px-3 py-2 rounded-xl bg-white/[0.08] hover:bg-white/[0.12] text-zinc-100 text-sm font-medium transition-colors cursor-pointer border-0 outline-none"
+              className="w-full flex items-center gap-2.5 px-3 py-2 rounded-xl bg-emerald-600/20 hover:bg-emerald-600/30 border border-emerald-500/30 text-emerald-300 text-xs font-semibold transition-colors cursor-pointer border-0 outline-none"
             >
-              <PenSquare className="w-4 h-4 text-zinc-300" />
-              <span>New chat</span>
+              <PenSquare className="w-4 h-4 text-emerald-400" />
+              <span>{locale === 'ar' ? 'محادثة جديدة' : locale === 'derja' ? 'M7adtha Jdida' : 'Nouvelle discussion'}</span>
             </button>
 
-            {/* Navigation Shortcuts */}
+            {/* Idaara Civic Navigation Tools */}
             <nav className="space-y-0.5 pt-1">
               <Link
                 href="/fasserli"
-                className="flex items-center gap-3 px-3 py-2 rounded-xl text-zinc-300 hover:text-white hover:bg-white/5 text-sm transition-colors"
+                className="flex items-center gap-3 px-3 py-2 rounded-xl text-zinc-300 hover:text-white hover:bg-white/5 text-xs font-medium transition-colors"
               >
-                <ImageIcon className="w-4 h-4 text-zinc-400" />
-                <span>Images</span>
+                <ScanText className="w-4 h-4 text-emerald-400" />
+                <span>{locale === 'ar' ? 'فصّرلي بالذكاء الاصطناعي (OCR)' : 'Fasserli OCR Scanner'}</span>
               </Link>
               <Link
                 href="/documents"
-                className="flex items-center gap-3 px-3 py-2 rounded-xl text-zinc-300 hover:text-white hover:bg-white/5 text-sm transition-colors"
+                className="flex items-center gap-3 px-3 py-2 rounded-xl text-zinc-300 hover:text-white hover:bg-white/5 text-xs font-medium transition-colors"
               >
-                <Library className="w-4 h-4 text-zinc-400" />
-                <span>Library</span>
+                <FileCode2 className="w-4 h-4 text-blue-400" />
+                <span>{locale === 'ar' ? 'نماذج العقود الذكية' : 'Modèles & Contrats'}</span>
               </Link>
               <Link
                 href="/calculator"
-                className="flex items-center gap-3 px-3 py-2 rounded-xl text-zinc-300 hover:text-white hover:bg-white/5 text-sm transition-colors"
+                className="flex items-center gap-3 px-3 py-2 rounded-xl text-zinc-300 hover:text-white hover:bg-white/5 text-xs font-medium transition-colors"
               >
-                <Puzzle className="w-4 h-4 text-zinc-400" />
-                <span>Plugins</span>
+                <Stamp className="w-4 h-4 text-amber-400" />
+                <span>{locale === 'ar' ? 'حاسبة التنابر والضرائب' : 'Calculateur de Timbres'}</span>
+              </Link>
+              <Link
+                href="/locator"
+                className="flex items-center gap-3 px-3 py-2 rounded-xl text-zinc-300 hover:text-white hover:bg-white/5 text-xs font-medium transition-colors"
+              >
+                <Building2 className="w-4 h-4 text-indigo-400" />
+                <span>{locale === 'ar' ? 'دليل البلديات والقباضات' : 'Baladiyas & Recettes'}</span>
               </Link>
               <Link
                 href="/procedures"
-                className="flex items-center gap-3 px-3 py-2 rounded-xl text-zinc-300 hover:text-white hover:bg-white/5 text-sm transition-colors"
+                className="flex items-center gap-3 px-3 py-2 rounded-xl text-zinc-300 hover:text-white hover:bg-white/5 text-xs font-medium transition-colors"
               >
-                <FolderKanban className="w-4 h-4 text-zinc-400" />
-                <span>Projects</span>
+                <Landmark className="w-4 h-4 text-purple-400" />
+                <span>{locale === 'ar' ? 'دليل الإجراءات الرسمية' : 'Guide des Démarches'}</span>
               </Link>
-              <button
-                onClick={() => setShowPlusMenu((p) => !p)}
-                className="w-full flex items-center gap-3 px-3 py-2 rounded-xl text-zinc-400 hover:text-white hover:bg-white/5 text-sm transition-colors cursor-pointer border-0 outline-none"
-              >
-                <MoreHorizontal className="w-4 h-4" />
-                <span>More</span>
-              </button>
             </nav>
 
             {/* Recents Section */}
             <div className="pt-3">
               <div className="px-3 pb-1.5 text-[11px] font-semibold text-zinc-500 uppercase tracking-wider">
-                Recents
+                {locale === 'ar' ? 'المحادثات السابقة' : locale === 'derja' ? 'M7adhathat 9dima' : 'Historique récent'}
               </div>
               <div className="space-y-0.5">
                 {sessions.length === 0 ? (
-                  <div className="px-3 py-2 text-xs text-zinc-500 italic">No recent chats</div>
+                  <div className="px-3 py-2 text-xs text-zinc-500 italic">
+                    {locale === 'ar' ? 'لا توجد محادثات سابقة' : 'Aucune discussion récente'}
+                  </div>
                 ) : (
                   sessions.map((sess) => (
                     <div
@@ -480,35 +477,35 @@ export default function CopilotPage() {
             </div>
           </div>
 
-          {/* Bottom Profile Pill (User / Free Plan) */}
+          {/* Bottom Profile / Platform Info */}
           <div className="pt-3 border-t border-white/5 flex items-center justify-between px-2">
             <div className="flex items-center gap-2.5">
-              <div className="w-8 h-8 rounded-full bg-emerald-700/80 text-white flex items-center justify-center font-bold text-xs">
-                W
+              <div className="w-8 h-8 rounded-full bg-emerald-700/80 text-white flex items-center justify-center font-bold text-xs shadow-inner">
+                TN
               </div>
               <div className="leading-tight">
-                <div className="text-xs font-semibold text-zinc-200">Wacim</div>
-                <div className="text-[10px] text-zinc-500 font-medium">Free</div>
+                <div className="text-xs font-semibold text-zinc-200">Idaara.tn</div>
+                <div className="text-[10px] text-emerald-400 font-medium">Civic Intelligence</div>
               </div>
             </div>
 
             <Link
               href="/launchpad"
-              className="px-2.5 py-1 rounded-lg bg-white/10 hover:bg-white/15 text-[11px] font-semibold text-zinc-200 transition-colors"
+              className="px-2.5 py-1 rounded-lg bg-emerald-500/10 hover:bg-emerald-500/20 border border-emerald-500/30 text-[11px] font-semibold text-emerald-300 transition-colors"
             >
-              Upgrade
+              Freelance
             </Link>
           </div>
         </aside>
       )}
 
       {/* ═════════════════════════════════════════════════════════════════
-          MAIN CANVAS AREA
+          MAIN CANVAS AREA (#09090b)
       ══════════════════════════════════════════════════════════════════ */}
-      <div className="flex-1 flex flex-col bg-[#000000] relative overflow-hidden">
+      <div className="flex-1 flex flex-col bg-[#09090b] relative overflow-hidden">
         
         {/* ─── Top Header Bar ─── */}
-        <header className="shrink-0 h-13 px-4 flex items-center justify-between border-b border-white/5 bg-[#000000]/80 backdrop-blur-xl z-20">
+        <header className="shrink-0 h-13 px-4 flex items-center justify-between border-b border-white/5 bg-[#09090b]/80 backdrop-blur-xl z-20">
           <div className="flex items-center gap-2">
             {!sidebarOpen && (
               <button
@@ -521,35 +518,40 @@ export default function CopilotPage() {
             )}
 
             {/* Model Badge */}
-            <button className="flex items-center gap-1 px-2.5 py-1 rounded-xl hover:bg-white/10 text-zinc-200 font-semibold text-sm transition-colors cursor-pointer border-0 outline-none">
-              <span>ChatGPT</span>
-              <ChevronDown className="w-3.5 h-3.5 text-zinc-400" />
-            </button>
+            <div className="flex items-center gap-2 px-2.5 py-1 text-zinc-100 font-bold text-sm">
+              <div className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
+              <span>Idaara Copilot</span>
+              <span className="text-[10px] font-mono font-normal text-emerald-400/90 bg-emerald-950/60 border border-emerald-800/40 px-2 py-0.5 rounded-full">
+                {locale === 'ar' ? 'المساعد الإداري الرسمي' : 'Official Civic AI'}
+              </span>
+            </div>
           </div>
 
           <div className="flex items-center gap-2">
-            <Link
-              href="/launchpad"
-              className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-white/10 hover:bg-white/15 text-zinc-200 text-xs font-semibold transition-colors"
-            >
-              <Sparkles className="w-3 h-3 text-emerald-400" />
-              <span>Upgrade</span>
-            </Link>
+            {messages.length > 0 && (
+              <button
+                onClick={handleNewChat}
+                className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl hover:bg-white/10 text-zinc-300 hover:text-white text-xs font-semibold transition-colors cursor-pointer border-0 outline-none"
+              >
+                <RotateCcw className="w-3.5 h-3.5" />
+                <span>{locale === 'ar' ? 'جديد' : 'Nouveau'}</span>
+              </button>
+            )}
           </div>
         </header>
 
-        {/* ─── Empty State: Exact ChatGPT Center View ─── */}
+        {/* ─── Empty State: Clean Native Canvas ─── */}
         {messages.length === 0 && !isProcessing && (
           <div className="flex-1 flex flex-col items-center justify-center px-4 sm:px-6 max-w-2xl mx-auto w-full -mt-6">
             
             {/* Center Headline */}
-            <h1 className="text-3xl sm:text-4xl font-semibold text-white tracking-tight mb-7 text-center">
+            <h1 className="text-2xl sm:text-4xl font-semibold text-white tracking-tight mb-7 text-center">
               {centerHeadline}
             </h1>
 
-            {/* Prompt Input Bar (ChatGPT pill bar) */}
+            {/* Prompt Input Bar */}
             <div className="w-full relative">
-              <div className="flex items-center gap-2 bg-[#212121] hover:bg-[#262626] border border-white/10 rounded-full px-4 py-2.5 shadow-2xl transition-all">
+              <div className="flex items-center gap-2 bg-[#1c1c1f] hover:bg-[#222226] border border-white/10 rounded-full px-4 py-2.5 shadow-2xl transition-all">
                 
                 {/* Plus Attach Button */}
                 <div className="relative shrink-0">
@@ -557,7 +559,7 @@ export default function CopilotPage() {
                     type="button"
                     onClick={() => setShowPlusMenu((p) => !p)}
                     className="p-1.5 rounded-full hover:bg-white/10 text-zinc-400 hover:text-white transition-colors cursor-pointer border-0 outline-none"
-                    title="Add attachment"
+                    title="Quick Topics"
                   >
                     <Plus className="w-4 h-4" />
                   </button>
@@ -656,7 +658,7 @@ export default function CopilotPage() {
                     <button
                       type="button"
                       onClick={toggleVoice}
-                      className="w-8 h-8 rounded-full bg-[#1e66f5] hover:bg-[#1b5bdc] text-white flex items-center justify-center transition-all cursor-pointer shadow-md border-0 outline-none"
+                      className="w-8 h-8 rounded-full bg-emerald-600 hover:bg-emerald-500 text-white flex items-center justify-center transition-all cursor-pointer shadow-md border-0 outline-none"
                       title="Voice AI"
                     >
                       <AudioLines className="w-4 h-4" />
@@ -666,45 +668,48 @@ export default function CopilotPage() {
 
               </div>
 
-              {/* ── Suggestions Row below input (Create image, Write, Search) ── */}
+              {/* Suggestions Row below input (Tunisian civic cards) */}
               <div className="flex flex-wrap items-center justify-center gap-2 mt-5 text-xs text-zinc-300">
                 <button
                   onClick={() => handleSendMessage('Kifech n5arej awra9 el passeport tounsi?')}
                   className="flex items-center gap-2 px-3.5 py-2 rounded-full bg-white/[0.04] hover:bg-white/[0.08] border border-white/5 transition-colors cursor-pointer border-0 outline-none"
                 >
-                  <FileText className="w-3.5 h-3.5 text-zinc-400" />
-                  <span>{locale === 'ar' ? 'استخراج أوراق الجواز' : 'Passeport & Timbres'}</span>
+                  <FileCheck2 className="w-3.5 h-3.5 text-emerald-400" />
+                  <span>{locale === 'ar' ? 'جواز السفر 80د' : 'Passeport & Timbres 80 DT'}</span>
                 </button>
 
                 <button
                   onClick={() => handleSendMessage('A3melli contrat de bail kré sakani mrigel')}
                   className="flex items-center gap-2 px-3.5 py-2 rounded-full bg-white/[0.04] hover:bg-white/[0.08] border border-white/5 transition-colors cursor-pointer border-0 outline-none"
                 >
-                  <PenSquare className="w-3.5 h-3.5 text-zinc-400" />
-                  <span>{locale === 'ar' ? 'تحرير عقد كراء' : 'Write a lease contract'}</span>
+                  <FileText className="w-3.5 h-3.5 text-blue-400" />
+                  <span>{locale === 'ar' ? 'عقد كراء سكني' : 'Contrat de bail conforme'}</span>
                 </button>
 
                 <button
                   onClick={() => handleSendMessage('Kifech na3mel mutation carte grise fi Tounes?')}
                   className="flex items-center gap-2 px-3.5 py-2 rounded-full bg-white/[0.04] hover:bg-white/[0.08] border border-white/5 transition-colors cursor-pointer border-0 outline-none"
                 >
-                  <Globe className="w-3.5 h-3.5 text-zinc-400" />
-                  <span>{locale === 'ar' ? 'إجراءات البطاقة الرمادية' : 'Search procedures'}</span>
+                  <Car className="w-3.5 h-3.5 text-amber-400" />
+                  <span>{locale === 'ar' ? 'البطاقة الرمادية 145د' : 'Carte Grise & ATTT'}</span>
                 </button>
               </div>
             </div>
 
-            {/* ── Bottom Floating Voice Banner (Exact ChatGPT "Meet the new Voice" card) ── */}
+            {/* Bottom Floating Voice Banner (Personalized for Idaara Voice AI) */}
             {showVoiceBanner && (
-              <div className="absolute bottom-6 inset-x-4 max-w-xl mx-auto rounded-3xl bg-[#1c1c1e] border border-white/10 p-3.5 px-4 flex items-center justify-between shadow-2xl animate-fade-in z-30">
+              <div className="absolute bottom-6 inset-x-4 max-w-xl mx-auto rounded-3xl bg-[#18181b] border border-emerald-500/20 p-3.5 px-4 flex items-center justify-between shadow-2xl animate-fade-in z-30">
                 <div className="flex items-center gap-3.5">
-                  {/* Glowing Animated Orb */}
-                  <div className="w-9 h-9 rounded-full bg-gradient-to-tr from-blue-400 via-indigo-400 to-purple-300 animate-pulse shrink-0 shadow-lg shadow-indigo-500/20" />
+                  <div className="w-9 h-9 rounded-full bg-gradient-to-tr from-emerald-500 via-teal-400 to-cyan-300 animate-pulse shrink-0 shadow-lg shadow-emerald-500/20" />
                   
                   <div>
-                    <div className="text-xs font-bold text-white tracking-tight">Meet the new Voice</div>
+                    <div className="text-xs font-bold text-white tracking-tight">Idaara Voice AI</div>
                     <div className="text-[11px] text-zinc-400 leading-tight">
-                      More natural conversations, powered by our next-generation voice model
+                      {locale === 'ar'
+                        ? 'تحدث بالدارجة التونسية أو الفرنسية مع نموذج الصوت الذكي'
+                        : locale === 'derja'
+                        ? 'Tkellem bel Derja m3a el Copilot el Idari el thaki'
+                        : 'Discutez en Derja tunisienne avec notre modèle vocal civique'}
                     </div>
                   </div>
                 </div>
@@ -712,9 +717,9 @@ export default function CopilotPage() {
                 <div className="flex items-center gap-2 shrink-0">
                   <button
                     onClick={toggleVoice}
-                    className="px-3 py-1.5 rounded-full bg-white text-black text-xs font-semibold hover:bg-zinc-200 transition-colors cursor-pointer border-0 outline-none shadow-sm"
+                    className="px-3 py-1.5 rounded-full bg-emerald-500 text-black text-xs font-semibold hover:bg-emerald-400 transition-colors cursor-pointer border-0 outline-none shadow-sm"
                   >
-                    Start Voice
+                    {locale === 'ar' ? 'بدء الصوت' : locale === 'derja' ? 'Bda el Sout' : 'Démarrer la voix'}
                   </button>
                   <button
                     onClick={() => setShowVoiceBanner(false)}
@@ -754,11 +759,11 @@ export default function CopilotPage() {
             </div>
 
             {/* ─── Pinned Bottom Prompt Bar (Active Chat) ─── */}
-            <footer className="shrink-0 pb-4 pt-2 bg-gradient-to-t from-[#000000] via-[#000000]/95 to-transparent z-20 px-4 sm:px-6">
+            <footer className="shrink-0 pb-4 pt-2 bg-gradient-to-t from-[#09090b] via-[#09090b]/95 to-transparent z-20 px-4 sm:px-6">
               <div className="max-w-3xl mx-auto space-y-2">
                 
                 {/* Bottom Pill Input */}
-                <div className="flex items-end gap-2 bg-[#212121] border border-white/10 rounded-3xl px-3 py-2 transition-all shadow-2xl">
+                <div className="flex items-end gap-2 bg-[#1c1c1f] border border-white/10 rounded-3xl px-3 py-2 transition-all shadow-2xl">
                   
                   {/* Plus Topic Button */}
                   <div className="relative pb-1">
@@ -766,7 +771,7 @@ export default function CopilotPage() {
                       type="button"
                       onClick={() => setShowPlusMenu((p) => !p)}
                       className="p-1.5 rounded-full hover:bg-white/10 text-zinc-400 hover:text-white transition-colors cursor-pointer border-0 outline-none"
-                      title="Add attachment"
+                      title="Quick Topics"
                     >
                       <Plus className="w-4 h-4" />
                     </button>
