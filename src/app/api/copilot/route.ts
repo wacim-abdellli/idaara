@@ -1,31 +1,74 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { parseAndReason } from '../../../lib/ai-engine';
+import { proceduresData } from '../../../data/procedures';
+import { documentTemplatesData } from '../../../data/documentTemplates';
+import { getLocalized } from '../../../lib/locale-utils';
 
-const SYSTEM_PROMPT = `You are Idaara AI (إدارة.تونس), the premier civic intelligence assistant for Tunisian administrative procedures, paperwork, and public services.
+function buildGroundingContext(query: string, locale: string): string {
+  const q = query.toLowerCase();
+  
+  // Find top matching procedures
+  const matchedProcedures = proceduresData.filter((p) => {
+    const title = (p.title.fr + ' ' + (p.title.ar || '') + ' ' + (p.title.derja || '')).toLowerCase();
+    const tags = p.tags.join(' ').toLowerCase();
+    const slug = p.slug.toLowerCase();
+    return q.split(/\s+/).some((word) => word.length > 2 && (title.includes(word) || tags.includes(word) || slug.includes(word)));
+  }).slice(0, 3);
 
-You respond naturally, warmly, and accurately to ANY user message — from simple greetings (3aslema, bonjour, hi) to complex legal inquiries.
+  if (matchedProcedures.length === 0) return '';
 
-LANGUAGE MATCHING:
-- If user speaks/writes in Tunisian Derja (Arabic script or Arabizi/Latin) → Respond in warm, authentic Tunisian Derja.
-- If user writes in French → Respond in professional, clear French.
-- If user writes in Standard Arabic → Respond in formal, precise Arabic.
-- If user writes in English → Respond in crisp, helpful English.
+  let context = '\n\nOFFICIAL VERIFIED PROCEDURAL DATA FROM IDAARA.TN DATABASE:\n';
+  for (const proc of matchedProcedures) {
+    const title = getLocalized(proc.title, locale);
+    const docs = proc.requiredDocuments.map((d) => `- ${getLocalized(d.name, locale)}`).join('\n');
+    const costs = proc.costsBreakdown.map((c) => `- ${getLocalized(c.label, locale)}: ${c.amountTND.toFixed(3)} DT`).join('\n');
+    const steps = proc.steps.map((s) => `${s.stepNumber}. ${getLocalized(s.title, locale)} (${s.targetOffice})`).join('\n');
 
-CORE EXPERTISE & TUNISIAN LEGAL KNOWLEDGE:
-1. Passports (Passeport tunisien): 80 DT fiscal stamp (25 DT for students/pupils), 4 photos, CIN copy, old passport. Handled at Police/Garde Nationale (7-15 days).
-2. National ID (CIN / بطاقة التعريف): 3 DT stamp (10 DT renewal/lost), birth certificate (Madhmoun), 3 photos.
-3. Criminal Record Bulletin N°3 (B3 / بطاقة السوابق العدلية): 7.500 DT stamp. Available online at b3.interieur.gov.tn or police station.
-4. Car Registration & Sale (Mutation Carte Grise): Sale contract legalized at Baladiya + registered at Recette des Finances (~30-50 DT) + technical inspection (Visite ATTT) + Vignette tax receipt. Total ~145 DT.
-5. Auto-Entrepreneur (المبادر الذاتي): 1% flat revenue tax for services, 0.5% for commerce/industry, 0% VAT, legal foreign currency repatriation via BCT. Free national platform registration.
-6. Rental Lease (Contrat de bail): Must comply with COC (Code des Obligations et des Contrats), 5 DT municipal stamp per copy at Baladiya, 30 DT registration at Recette des Finances.
-7. Customs & FCR (امتياز ن.ت.د): Return privilege for Tunisians abroad, duty discounts, vehicle import criteria.
-8. Statutory Fiscal Stamps (Timbres fiscaux): 5 DT (municipality/Baladiya), 15 DT (courts/certificates), 80 DT (passports), 100-300 DT (specialized licenses).
+    context += `
+--- PROCEDURE: ${title} ---
+- Total Estimated Cost: ${proc.estimatedTotalCostTND.toFixed(3)} TND (DT)
+- Estimated Timeframe: ${proc.estimatedProcessingTime}
+- Required Documents:
+${docs}
+- Costs Breakdown:
+${costs}
+- Official Steps:
+${steps}
+`;
+  }
 
-STYLE & FORMATTING:
-- Structure answers clearly with bullet points and bold highlights.
-- Always include: (1) Required documents list, (2) Total estimated budget in TND/DT, (3) Competent public office, (4) Estimated timeframe.
-- If greeting (hi / 3aslema / bonjour), greet back enthusiastically and suggest 3-4 popular topics they can ask about.
-- Never invent non-existent laws or unverified costs.`;
+  return context;
+}
+
+const BASE_SYSTEM_PROMPT = `You are Idaara AI (إدارة.تونس), the premier specialized civic intelligence assistant for the Tunisian administrative ecosystem.
+
+YOUR MISSION & ROLE:
+You help Tunisian citizens and residents navigate all bureaucracy, government paperwork, and legal procedures with supreme precision, clarity, and empathy.
+
+LANGUAGE RULES (STRICT):
+1. If the user writes in Tunisian Derja (Arabizi Latin like "chnowa awra9 el passeport" or Arabic script "شنوة أوراق الباسبور") → Respond in warm, authentic, fluent Tunisian Derja.
+2. If the user writes in French → Respond in crisp, professional French.
+3. If the user writes in Standard Arabic → Respond in clear, formal Arabic.
+4. If the user writes in English → Respond in professional, helpful English.
+
+KNOWLEDGE PILLARS (TUNISIA):
+- Passports: 80 DT fiscal stamp (25 DT for pupils/students), 4 photos (fond blanc), CIN copy + original, old passport. Handled at Police/Garde Nationale (7-15 days).
+- National ID (CIN): 3 DT fiscal stamp (10 DT lost/renewal), birth certificate (Madhmoun), 3 photos.
+- Criminal Record B3 (بطاقة السوابق العدلية): 7.500 DT stamp. Available online at b3.interieur.gov.tn or police station.
+- Car Registration Transfer (Mutation Carte Grise): Legalized sales contract at Baladiya, registration at Recette des Finances (~30-50 DT), technical inspection at ATTT, Vignette tax receipt. Total ~145 DT.
+- Auto-Entrepreneur (المبادر الذاتي): 1% flat revenue tax for services/freelance, 0.5% for commerce/industry, 0% VAT, legal foreign currency repatriation via BCT. Free national platform registration.
+- Residential Lease (Contrat de bail): Governed by COC (Code des Obligations et des Contrats). Must be legalized at Baladiya (5 DT per copy) and registered at Recette des Finances (30 DT).
+- Customs FCR (امتياز ن.ت.د): Duty-free car import and household effects for Tunisians returning from abroad.
+
+OUTPUT STRUCTURE:
+When asked about any procedure, format your response cleanly:
+1. Short overview of the procedure
+2. Required documents list (bullet points)
+3. Total estimated cost in DT (Tunisian Dinars) with breakdown
+4. Competent authority / office to visit (Baladiya, Recette des Finances, ATTT, Police, etc.)
+5. Estimated processing delay
+
+Always be accurate, encouraging, and respectful. Never invent non-existent laws or fees.`;
 
 export async function POST(req: NextRequest) {
   try {
@@ -35,6 +78,9 @@ export async function POST(req: NextRequest) {
     if (!prompt || typeof prompt !== 'string') {
       return NextResponse.json({ error: 'Prompt string is required' }, { status: 400 });
     }
+
+    const groundingContext = buildGroundingContext(prompt, locale);
+    const completeSystemPrompt = BASE_SYSTEM_PROMPT + groundingContext;
 
     const geminiKey = userApiKey?.startsWith('AIza')
       ? userApiKey
@@ -51,7 +97,7 @@ export async function POST(req: NextRequest) {
         const genAI = new GoogleGenerativeAI(geminiKey);
         const model = genAI.getGenerativeModel({
           model: 'gemini-1.5-flash',
-          systemInstruction: SYSTEM_PROMPT,
+          systemInstruction: completeSystemPrompt,
         });
 
         const chatHistory = history.map((msg: { role: string; content: string }) => ({
@@ -80,7 +126,7 @@ export async function POST(req: NextRequest) {
     if (groqKey && (provider === 'auto' || provider === 'groq')) {
       try {
         const messages = [
-          { role: 'system', content: SYSTEM_PROMPT },
+          { role: 'system', content: completeSystemPrompt },
           ...history.map((m: { role: string; content: string }) => ({
             role: m.role === 'user' ? 'user' : 'assistant',
             content: m.content,
@@ -97,7 +143,7 @@ export async function POST(req: NextRequest) {
           body: JSON.stringify({
             model: 'llama-3.3-70b-versatile',
             messages,
-            temperature: 0.6,
+            temperature: 0.5,
             max_tokens: 1024,
           }),
         });
