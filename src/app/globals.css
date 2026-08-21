@@ -62,12 +62,15 @@ body {
 [dir="rtl"] body {
   font-family: var(--font-arabic);
   letter-spacing: 0;
+  text-align: right;
+  direction: rtl;
 }
 
 [dir="rtl"] .font-mono {
   font-family: var(--font-mono);
   direction: ltr;
   display: inline-block;
+  unicode-bidi: embed;
 }
 
 /* ── Display / Headline type ───────────────── */

@@ -35,6 +35,7 @@ function cleanTextForSpeech(text: string): string {
 
 /** Full Markdown & Table Parser for Chat Messages */
 function renderFormattedContent(text: string): React.ReactNode {
+  const hasArabic = /[\u0600-\u06FF]/.test(text);
   const rawLines = text.split('\n');
   const blocks: React.ReactNode[] = [];
   let i = 0;
@@ -56,6 +57,10 @@ function renderFormattedContent(text: string): React.ReactNode {
       continue;
     }
 
+    const isLineArabic = /[\u0600-\u06FF]/.test(line);
+    const lineDir = isLineArabic ? 'rtl' : hasArabic ? 'rtl' : 'ltr';
+    const lineAlign = isLineArabic ? 'text-right' : hasArabic ? 'text-right' : 'text-left';
+
     // 3. Markdown Table Detection (| Header 1 | Header 2 |)
     if (line.startsWith('|') && line.endsWith('|')) {
       const tableLines: string[] = [];
@@ -72,8 +77,8 @@ function renderFormattedContent(text: string): React.ReactNode {
         );
 
         blocks.push(
-          <div key={`table-${i}`} className="my-3 overflow-x-auto rounded-xl border border-white/10 bg-[#161618] shadow-md">
-            <table className="w-full text-left text-xs sm:text-sm">
+          <div key={`table-${i}`} dir={lineDir} className="my-3 overflow-x-auto rounded-xl border border-white/10 bg-[#161618] shadow-md">
+            <table className={`w-full text-xs sm:text-sm ${lineAlign}`}>
               <thead className="bg-white/5 border-b border-white/10 font-bold text-white">
                 <tr>
                   {headerRow.map((h, hIdx) => (
@@ -105,7 +110,7 @@ function renderFormattedContent(text: string): React.ReactNode {
     if (line.startsWith('#')) {
       const headerText = line.replace(/^#+\s*/, '');
       blocks.push(
-        <h4 key={`h-${i}`} dir="auto" className="text-base sm:text-lg font-bold text-white tracking-tight pt-2 pb-0.5 flex items-center gap-2">
+        <h4 key={`h-${i}`} dir={lineDir} className={`text-base sm:text-lg font-bold text-white tracking-tight pt-2 pb-0.5 flex items-center gap-2 ${lineAlign}`}>
           <span className="w-1 h-3.5 rounded-full bg-emerald-400 inline-block shrink-0" />
           <span>{renderInlineStyles(headerText)}</span>
         </h4>
@@ -118,9 +123,9 @@ function renderFormattedContent(text: string): React.ReactNode {
     const boldHeaderMatch = line.match(/^\*\*([^*]+)\*\*:?$/);
     if (boldHeaderMatch) {
       blocks.push(
-        <h5 key={`bh-${i}`} dir="auto" className="text-sm sm:text-base font-bold text-emerald-400 tracking-tight pt-2 pb-0.5 flex items-center gap-2">
+        <h5 key={`bh-${i}`} dir={lineDir} className={`text-sm sm:text-base font-bold text-emerald-400 tracking-tight pt-2 pb-0.5 flex items-center gap-2 ${lineAlign}`}>
           <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 inline-block shrink-0" />
-          <bdi>{boldHeaderMatch[1]}</bdi>
+          <span>{boldHeaderMatch[1]}</span>
         </h5>
       );
       i++;
@@ -131,7 +136,7 @@ function renderFormattedContent(text: string): React.ReactNode {
     const numberedMatch = line.match(/^(\d+)\.\s+(.+)$/);
     if (numberedMatch) {
       blocks.push(
-        <div key={`num-${i}`} dir="auto" className="flex items-start gap-2.5 pl-1 my-1">
+        <div key={`num-${i}`} dir={lineDir} className={`flex items-start gap-2.5 my-1 ${lineAlign}`}>
           <span className="flex items-center justify-center w-5 h-5 rounded-full bg-white/10 text-emerald-400 text-xs font-mono font-bold shrink-0 mt-0.5">
             {numberedMatch[1]}
           </span>
@@ -148,7 +153,7 @@ function renderFormattedContent(text: string): React.ReactNode {
     if (line.startsWith('- ') || line.startsWith('* ') || line.startsWith('• ')) {
       const bulletText = line.replace(/^[-*•]\s+/, '');
       blocks.push(
-        <div key={`bullet-${i}`} dir="auto" className="flex items-start gap-2.5 pl-2 my-1">
+        <div key={`bullet-${i}`} dir={lineDir} className={`flex items-start gap-2.5 my-1 ${lineAlign}`}>
           <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 shrink-0 mt-2" />
           <span className="text-zinc-200 flex-1 leading-relaxed">
             {renderInlineStyles(bulletText)}
@@ -159,37 +164,46 @@ function renderFormattedContent(text: string): React.ReactNode {
       continue;
     }
 
-    // 8. Normal paragraph with BiDi auto-direction
+    // 8. Normal paragraph
     blocks.push(
-      <p key={`p-${i}`} dir="auto" className="leading-relaxed text-zinc-100">
+      <p key={`p-${i}`} dir={lineDir} className={`leading-relaxed text-zinc-100 ${lineAlign} font-normal`}>
         {renderInlineStyles(line)}
       </p>
     );
     i++;
   }
 
-  return <div dir="auto" className="space-y-1.5 text-[15px] sm:text-base leading-relaxed text-zinc-100 font-normal">{blocks}</div>;
+  return (
+    <div
+      dir={hasArabic ? 'rtl' : 'ltr'}
+      className={`space-y-2 text-[15px] sm:text-base leading-relaxed text-zinc-100 font-normal ${
+        hasArabic ? 'text-right' : 'text-left'
+      }`}
+    >
+      {blocks}
+    </div>
+  );
 }
 
-/** Inline bold, code, and bidirectional text isolation */
+/** Inline bold, code, and token styling */
 function renderInlineStyles(text: string): React.ReactNode {
   const parts = text.split(/(\*\*[^*]+\*\*|`[^`]+`)/g);
   return parts.map((part, i) => {
     if (part.startsWith('**') && part.endsWith('**')) {
       return (
         <strong key={i} className="font-bold text-white">
-          <bdi>{part.slice(2, -2)}</bdi>
+          {part.slice(2, -2)}
         </strong>
       );
     }
     if (part.startsWith('`') && part.endsWith('`')) {
       return (
-        <code key={i} className="px-1.5 py-0.5 rounded bg-white/10 text-emerald-300 font-mono text-xs">
-          <bdi>{part.slice(1, -1)}</bdi>
+        <code key={i} className="px-1.5 py-0.5 rounded bg-white/10 text-emerald-300 font-mono text-xs" dir="ltr">
+          {part.slice(1, -1)}
         </code>
       );
     }
-    return <bdi key={i}>{part}</bdi>;
+    return part;
   });
 }
 
@@ -199,6 +213,7 @@ export const ChatMessage: React.FC<ChatMessageProps> = ({ message }) => {
   const [copied, setCopied] = useState(false);
 
   const isAssistant = message.sender === 'assistant';
+  const isArabicScript = /[\u0600-\u06FF]/.test(message.content);
 
   const copyToClipboard = async () => {
     try {
@@ -224,8 +239,6 @@ export const ChatMessage: React.FC<ChatMessageProps> = ({ message }) => {
     if (!cleanSpeech) return;
 
     const utterance = new SpeechSynthesisUtterance(cleanSpeech);
-
-    const isArabicScript = /[\u0600-\u06FF]/.test(message.content);
     const voices = window.speechSynthesis.getVoices();
 
     // Select the best voice
@@ -267,7 +280,12 @@ export const ChatMessage: React.FC<ChatMessageProps> = ({ message }) => {
   if (!isAssistant) {
     return (
       <div className="w-full py-2 flex justify-end">
-        <div dir="auto" className="max-w-[85%] sm:max-w-[75%] px-4 py-2.5 rounded-3xl bg-[#2f2f2f] text-white text-sm sm:text-[15px] leading-relaxed shadow-sm">
+        <div
+          dir={isArabicScript ? 'rtl' : 'ltr'}
+          className={`max-w-[85%] sm:max-w-[75%] px-4 py-2.5 rounded-3xl bg-[#2f2f2f] text-white text-sm sm:text-[15px] leading-relaxed shadow-sm ${
+            isArabicScript ? 'text-right font-["Cairo",sans-serif]' : 'text-left'
+          }`}
+        >
           {message.content}
         </div>
       </div>
@@ -276,9 +294,12 @@ export const ChatMessage: React.FC<ChatMessageProps> = ({ message }) => {
 
   // ── ASSISTANT MESSAGE (Clean spacious canvas layout) ──
   return (
-    <div className="w-full py-3 space-y-3">
+    <div
+      dir={isArabicScript ? 'rtl' : 'ltr'}
+      className={`w-full py-3 space-y-3 ${isArabicScript ? 'text-right' : 'text-left'}`}
+    >
       {/* Content directly on canvas with rich markdown & table rendering */}
-      <div dir="auto" className="prose-chat text-zinc-100">
+      <div className={`prose-chat text-zinc-100 ${isArabicScript ? 'font-["Cairo",sans-serif]' : ''}`}>
         {renderFormattedContent(message.content)}
       </div>
 
