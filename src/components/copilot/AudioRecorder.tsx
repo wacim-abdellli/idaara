@@ -1,7 +1,7 @@
 'use client';
 
-import React, { useState } from 'react';
-import { Mic, MicOff, Loader2, Radio, Volume2 } from 'lucide-react';
+import React, { useState, useRef, useEffect } from 'react';
+import { Mic, MicOff, Loader2, Radio } from 'lucide-react';
 import { VoiceVisualizer } from './VoiceVisualizer';
 import { useLocale } from '../../context/LocaleContext';
 
@@ -17,23 +17,28 @@ export const AudioRecorder: React.FC<AudioRecorderProps> = ({
   const { t, locale } = useLocale();
   const [isRecording, setIsRecording] = useState(false);
   const [interimText, setInterimText] = useState('');
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
-  const sampleDerjaQueries = [
-    "Chnouwa lezemni bech n'badal el passeport mte3i?",
-    "Chrit karhba jdid, kifech nbeddel el carte grise?",
-    "A3melli contrat kré sakani mrigel lel baladiya",
-    "Kifech n9ayed fi statut auto-entrepreneur 0.5%?",
-    "Wathi9at el B3 bita9at sawabi9 3adliya chnouma?",
-  ];
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const recognitionRef = useRef<any>(null);
+  const mediaStreamRef = useRef<MediaStream | null>(null);
 
-  const toggleRecording = () => {
-    if (isRecording) {
-      setIsRecording(false);
-      return;
-    }
+  useEffect(() => {
+    return () => {
+      if (recognitionRef.current) {
+        try {
+          recognitionRef.current.stop();
+        } catch {}
+      }
+      if (mediaStreamRef.current) {
+        mediaStreamRef.current.getTracks().forEach((track) => track.stop());
+      }
+    };
+  }, []);
 
-    setIsRecording(true);
-    setInterimText(t('voiceListening'));
+  const startRecording = async () => {
+    setErrorMessage(null);
+    setInterimText('');
 
     const SpeechRecognition =
       (window as unknown as { SpeechRecognition?: unknown; webkitSpeechRecognition?: unknown })
@@ -41,86 +46,161 @@ export const AudioRecorder: React.FC<AudioRecorderProps> = ({
       (window as unknown as { SpeechRecognition?: unknown; webkitSpeechRecognition?: unknown })
         .webkitSpeechRecognition;
 
-    if (SpeechRecognition) {
-      try {
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        const recognition = new (SpeechRecognition as any)();
-        recognition.lang = locale === 'ar' ? 'ar-TN' : locale === 'fr' ? 'fr-FR' : 'ar-TN';
-        recognition.interimResults = true;
-        recognition.continuous = false;
-
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        recognition.onresult = (event: any) => {
-          const current = event.resultIndex;
-          const transcript = event.results[current][0].transcript;
-          setInterimText(transcript);
-          if (event.results[current].isFinal) {
-            setIsRecording(false);
-            onTranscript(transcript);
-          }
-        };
-
-        recognition.onerror = () => {
-          simulateDerjaVoiceInput();
-        };
-
-        recognition.onend = () => {
-          setIsRecording(false);
-        };
-
-        recognition.start();
-        return;
-      } catch {
-        simulateDerjaVoiceInput();
-        return;
-      }
+    if (!SpeechRecognition) {
+      setErrorMessage(
+        locale === 'ar'
+          ? 'المتصفح لا يدعم التسجيل الصوتي المباشر. يمكنك كتابة سؤالك في المربع.'
+          : locale === 'en'
+          ? 'Speech recognition is not supported in this browser. Please type your query.'
+          : 'La reconnaissance vocale n’est pas supportée sur ce navigateur. Veuillez taper votre question.'
+      );
+      return;
     }
 
-    simulateDerjaVoiceInput();
+    try {
+      // Request mic permission
+      const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+      mediaStreamRef.current = stream;
+
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const recognition = new (SpeechRecognition as any)();
+      recognitionRef.current = recognition;
+
+      // Language selection: ar-TN for Derja/Arabic, fr-TN/fr-FR for French, en-US for English
+      recognition.lang = locale === 'ar' ? 'ar-TN' : locale === 'fr' ? 'fr-TN' : 'en-US';
+      recognition.interimResults = true;
+      recognition.continuous = false;
+      recognition.maxAlternatives = 1;
+
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      recognition.onstart = () => {
+        setIsRecording(true);
+        setInterimText(
+          locale === 'ar'
+            ? 'تحدث الآن...'
+            : locale === 'en'
+            ? 'Listening now... speak your question'
+            : 'Écoute active... posez votre question'
+        );
+      };
+
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      recognition.onresult = (event: any) => {
+        let currentTranscript = '';
+        for (let i = event.resultIndex; i < event.results.length; i++) {
+          currentTranscript += event.results[i][0].transcript;
+        }
+
+        if (currentTranscript.trim()) {
+          setInterimText(currentTranscript);
+        }
+
+        const isFinal = event.results[event.results.length - 1].isFinal;
+        if (isFinal && currentTranscript.trim()) {
+          setIsRecording(false);
+          stopMicStream();
+          onTranscript(currentTranscript.trim());
+        }
+      };
+
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      recognition.onerror = (event: any) => {
+        setIsRecording(false);
+        stopMicStream();
+        if (event.error === 'no-speech') {
+          setErrorMessage(
+            locale === 'ar'
+              ? 'لم يتم التقاط صوت. يرجى إعادة المحاولة أو الكتابة.'
+              : locale === 'en'
+              ? 'No speech detected. Please speak closer to your mic or type.'
+              : 'Aucune parole détectée. Veuillez parler plus près du micro ou taper votre message.'
+          );
+        } else if (event.error === 'not-allowed') {
+          setErrorMessage(
+            locale === 'ar'
+              ? 'تم رفض الإذن باستخدام الميكروفون.'
+              : locale === 'en'
+              ? 'Microphone permission was denied.'
+              : 'L’autorisation d’accès au microphone a été refusée.'
+          );
+        }
+      };
+
+      recognition.onend = () => {
+        setIsRecording(false);
+        stopMicStream();
+      };
+
+      recognition.start();
+    } catch {
+      setIsRecording(false);
+      stopMicStream();
+      setErrorMessage(
+        locale === 'ar'
+          ? 'تعذر تشغيل الميكروفون. يرجى التأكد من صلاحيات الصوت.'
+          : locale === 'en'
+          ? 'Unable to access microphone. Please check browser permissions.'
+          : 'Impossible d’accéder au micro. Veuillez vérifier vos autorisations.'
+      );
+    }
   };
 
-  const simulateDerjaVoiceInput = () => {
-    const randomQuery =
-      sampleDerjaQueries[Math.floor(Math.random() * sampleDerjaQueries.length)];
+  const stopMicStream = () => {
+    if (mediaStreamRef.current) {
+      mediaStreamRef.current.getTracks().forEach((t) => t.stop());
+      mediaStreamRef.current = null;
+    }
+  };
 
-    let index = 0;
-    const interval = setInterval(() => {
-      index += 3;
-      setInterimText(randomQuery.slice(0, index));
-      if (index >= randomQuery.length) {
-        clearInterval(interval);
-        setTimeout(() => {
-          setIsRecording(false);
-          onTranscript(randomQuery);
-          setInterimText('');
-        }, 600);
-      }
-    }, 80);
+  const stopRecording = () => {
+    if (recognitionRef.current) {
+      try {
+        recognitionRef.current.stop();
+      } catch {}
+    }
+    stopMicStream();
+    setIsRecording(false);
+  };
+
+  const toggleRecording = () => {
+    if (isRecording) {
+      stopRecording();
+    } else {
+      startRecording();
+    }
   };
 
   const promptText =
     isRecording
       ? locale === 'ar'
-        ? 'جار الاستماع إلى صوتك بالدارجة...'
+        ? 'جار الاستماع إلى صوتك...'
         : locale === 'en'
-        ? 'Listening in Tunisian Derja...'
-        : 'Écoute active en Derja / Français...'
+        ? 'Listening to your voice...'
+        : 'Écoute active en cours...'
       : isProcessing
       ? locale === 'ar'
         ? 'المساعد يحلل طلبك الإداري...'
         : locale === 'en'
         ? 'Idaara AI is analyzing your civic request...'
-        : "Idaara AI analyse votre demande..."
+        : 'Idaara AI analyse votre demande...'
       : locale === 'ar'
       ? 'اضغط على الميكروفون وتكلم بالدارجة أو الفرنسية'
       : locale === 'en'
-      ? 'Tap microphone & speak in Derja or English'
+      ? 'Tap microphone & speak in Derja, French, or English'
       : 'Appuyez sur le micro et parlez en Derja ou Français';
 
   const actionHint =
     isRecording
-      ? locale === 'ar' ? 'انقر لإيقاف التسجيل' : locale === 'en' ? 'Tap to stop recording' : "Cliquez pour arrêter l'enregistrement"
-      : locale === 'ar' ? 'تحدث مباشرة بالدارجة التونسية' : locale === 'en' ? 'Speak directly in Tunisian Derja' : 'Parlez directement en Derja tunisienne';
+      ? locale === 'ar'
+        ? 'انقر لإيقاف التسجيل'
+        : locale === 'en'
+        ? 'Tap to stop recording'
+        : "Cliquez pour arrêter l'enregistrement"
+      : locale === 'ar'
+      ? 'تحدث مباشرة بالدارجة التونسية'
+      : locale === 'en'
+      ? 'Speak directly in Tunisian Derja'
+      : 'Parlez directement en Derja tunisienne';
 
   return (
     <div className="glass-panel rounded-3xl p-5 sm:p-6 border border-zinc-800/80 relative overflow-hidden flex flex-col items-center justify-between text-center group h-full min-h-[300px]">
@@ -158,7 +238,11 @@ export const AudioRecorder: React.FC<AudioRecorderProps> = ({
 
       {/* Dynamic Transcript / Listening Prompt */}
       <div className="min-h-[36px] w-full my-2 flex items-center justify-center px-2 z-10">
-        {isRecording && interimText ? (
+        {errorMessage ? (
+          <p className="text-amber-400 text-xs font-semibold max-w-xs leading-snug">
+            {errorMessage}
+          </p>
+        ) : isRecording && interimText ? (
           <p className="text-emerald-300 font-bold text-xs sm:text-sm animate-pulse tracking-wide line-clamp-2">
             "{interimText}"
           </p>

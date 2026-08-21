@@ -66,6 +66,15 @@ export default function CopilotPage() {
 
   useEffect(() => {
     window.scrollTo(0, 0);
+
+    // If query string exists in URL, execute it automatically
+    if (typeof window !== 'undefined') {
+      const urlParams = new URLSearchParams(window.location.search);
+      const q = urlParams.get('q');
+      if (q && q.trim()) {
+        handleSendMessage(q.trim());
+      }
+    }
   }, []);
 
   useEffect(() => {
