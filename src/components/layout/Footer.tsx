@@ -104,10 +104,8 @@ export const Footer: React.FC = () => {
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8 mb-12">
           {/* Col 1: Brand & Mission */}
           <div className="space-y-4 md:col-span-1">
-            <Link href="/" className="flex items-center space-x-2 rtl:space-x-reverse">
-              <span className="font-extrabold text-sm text-white tracking-tight">Idaara<span className="text-emerald-400">.tn</span></span>
-              <span className="text-zinc-600">·</span>
-              <span className="text-xs text-zinc-400 font-medium">إدارة.تونس</span>
+            <Link href="/" className="flex items-center">
+              <span className="font-extrabold text-base text-white tracking-tight">Idaara<span className="text-emerald-400">.tn</span></span>
             </Link>
             <p className="text-zinc-500 text-xs leading-relaxed">
               {t('heroSubheadline')}

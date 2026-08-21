@@ -35,17 +35,11 @@ export const Navbar: React.FC = () => {
       <div className="max-w-[1440px] mx-auto px-3 sm:px-5 lg:px-8">
         <div className="flex items-center h-14 gap-3">
 
-          {/* ── Brand logo — sleek typographic signature like the footer ── */}
-          <Link href="/" className="flex items-center gap-2 group shrink-0 pr-1">
-            <div className="flex items-baseline gap-1.5">
-              <span className="font-extrabold text-base sm:text-lg text-white tracking-tight group-hover:opacity-90 transition-opacity">
-                Idaara<span className="text-emerald-400">.tn</span>
-              </span>
-              <span className="text-zinc-600 font-light text-xs">·</span>
-              <span className="text-[11px] text-zinc-400 font-medium tracking-wide">
-                إدارة.تونس
-              </span>
-            </div>
+          {/* ── Brand logo — sleek typographic signature ── */}
+          <Link href="/" className="flex items-center group shrink-0 pr-1">
+            <span className="font-extrabold text-base sm:text-lg text-white tracking-tight group-hover:opacity-90 transition-opacity">
+              Idaara<span className="text-emerald-400">.tn</span>
+            </span>
           </Link>
 
           {/* ── Desktop Navigation — text-only, whitespace-nowrap ── */}
