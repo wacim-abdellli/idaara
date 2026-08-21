@@ -8,9 +8,20 @@ import { CommandPalette } from '../components/common/CommandPalette';
 import { MobileBottomNav } from '../components/layout/MobileBottomNav';
 
 export const metadata: Metadata = {
-  title: "Idaara.tn · إدارة.تونس — Tunisia's First Voice AI Bureaucracy Copilot",
-  description: "Fasserli, 3abbi w a3tini l'awra9 — Conquer Tunisian administrative red tape in seconds with Derja voice AI, document OCR, and auto-filled official PDF forms.",
+  title: {
+    default: "Idaara.tn — Voice AI & Smart Administrative Services",
+    template: "%s | Idaara.tn",
+  },
+  description: "Fasserli, 3abbi w a3tini l'awra9 — Conquer Tunisian administrative red tape with Derja voice AI, document OCR, and certified PDF forms.",
   keywords: ['Idaara', 'Baladiya', 'Tunisie', 'Derja AI', 'Passeport Tunisien', 'Carte Grise', 'Timbres Fiscaux', 'Auto-Entrepreneur'],
+  icons: {
+    icon: [
+      { url: '/favicon.svg', type: 'image/svg+xml' },
+      { url: '/icon.svg', type: 'image/svg+xml' },
+    ],
+    shortcut: '/favicon.svg',
+    apple: '/icon.svg',
+  },
 };
 
 export default function RootLayout({
@@ -21,6 +32,7 @@ export default function RootLayout({
   return (
     <html lang="fr" className="dark scroll-smooth">
       <head>
+        <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
         {/* DM Serif Display: characterful display face for hero headlines */}
