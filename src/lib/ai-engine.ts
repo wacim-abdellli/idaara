@@ -187,14 +187,56 @@ export function parseAndReason(prompt: string, locale: SupportedLanguage | strin
     };
   }
 
+  // Check for greetings (hi, hello, 3aslema, bonjour, salam, ahla)
+  if (
+    query === 'hi' ||
+    query === 'hello' ||
+    query === 'hey' ||
+    query === '3aslema' ||
+    query === 'ahla' ||
+    query === 'bonjour' ||
+    query === 'salut' ||
+    query === 'salam' ||
+    query === 'مرحبا' ||
+    query === 'سلام' ||
+    query.startsWith('3aslema') ||
+    query.startsWith('bonjour') ||
+    query.startsWith('salam')
+  ) {
+    return {
+      content:
+        lang === 'ar'
+          ? "مرحباً بك في إدارة.تونس! اسألني عن أي إجراء إداري، وثيقة رسمية، أو معلوم جبائي (جواز سفر، بطاقة رمادية، بطاقة ب3، عقد كراء، مبادر ذاتي...)."
+          : lang === 'en'
+          ? "Hello! Welcome to Idaara.tn. Ask me anything in English, French, or Derja about Tunisian administrative procedures, paperwork, or stamp fees."
+          : lang === 'derja'
+          ? "3aslema! Mar7ba bik fi Idaara.tn. Es'elni bel Derja 3la ay war9a, procédure, walla timbre mte3 l'Idara (Passeport, Carte Grise, B3, Contrat de bail, Auto-Entrepreneur...)."
+          : "Bonjour ! Bienvenue sur Idaara.tn. Posez toutes vos questions sur les démarches administratives tunisiennes, dossiers et timbres fiscaux.",
+      actions: [
+        {
+          label: { derja: '📋 Guide des Démarches', fr: 'Toutes les démarches', ar: 'جميع الإجراءات', en: 'All Procedures' },
+          type: 'procedure_link',
+          payload: '/procedures',
+        },
+        {
+          label: { derja: '🧮 Calculateur de Timbres', fr: 'Calculateur de Timbres', ar: 'حاسبة التنابر', en: 'Stamp Calculator' },
+          type: 'calculator_link',
+          payload: '/calculator',
+        },
+      ],
+    };
+  }
+
   // 3. Fallback Contextual AI Assistant Response
   return {
     content:
       lang === 'ar'
-        ? `شكراً على استفسارك. يمكنك سؤالي بالدارجة التونسية، الفرنسية، أو الإنجليزية عن أي وثيقة إدارية (مثل: تجديد جواز السفر، تحويل ملكية سيارة، بطاقة التعريف، بطاقة عدد 3، عقود الكراء، المبادر الذاتي، أو معاليم التنابر).`
+        ? "شكراً على استفسارك. يمكنك سؤالي بالدارجة التونسية، الفرنسية، أو الإنجليزية عن أي وثيقة إدارية (مثل: تجديد جواز السفر، تحويل ملكية سيارة، بطاقة التعريف، بطاقة عدد 3، عقود الكراء، المبادر الذاتي، أو معاليم التنابر)."
         : lang === 'en'
-        ? `Thank you for your question. You can ask me in Tunisian Derja, French, or English about any administrative paperwork (e.g. Passport renewal, Car registration, National ID, Criminal record B3, Lease contracts, Auto-Entrepreneur 1% tax, or statutory fiscal stamp costs).`
-        : `Merci pour votre demande. Posez votre question en Derja tunisienne ou Français concernant n'importe quel dossier administratif (Renouvellement passeport, Mutation carte grise, CIN, Bulletin N°3, Contrat de bail, Statut Auto-Entrepreneur 1%, ou timbres fiscaux).`,
+        ? "Thank you for your question. You can ask me in Tunisian Derja, French, or English about any administrative paperwork (e.g. Passport renewal, Car registration, National ID, Criminal record B3, Lease contracts, Auto-Entrepreneur 1% tax, or statutory fiscal stamp costs)."
+        : lang === 'derja'
+        ? "Mar7ba bik! Tnejjem tes'elni bel Derja 3la ay war9a idariya (Passeport, Carte Grise, CIN, B3, Contrat de bail, Statut Auto-Entrepreneur 1%, walla timbres fiscaux)."
+        : "Merci pour votre demande. Posez votre question en Derja tunisienne ou Français concernant n'importe quel dossier administratif (Renouvellement passeport, Mutation carte grise, CIN, Bulletin N°3, Contrat de bail, Statut Auto-Entrepreneur 1%, ou timbres fiscaux).",
     actions: [
       {
         label: { derja: '📋 Guide des Démarches', fr: 'Toutes les démarches', ar: 'جميع الإجراءات', en: 'All Procedures' },

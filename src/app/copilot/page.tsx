@@ -21,6 +21,7 @@ import {
   FileText,
   ShieldCheck,
   Plane,
+  ExternalLink,
 } from 'lucide-react';
 
 export default function CopilotPage() {
@@ -35,7 +36,7 @@ export default function CopilotPage() {
   const [showSettingsModal, setShowSettingsModal] = useState<boolean>(false);
   const [showPlusMenu, setShowPlusMenu] = useState<boolean>(false);
   const [showModelDropdown, setShowModelDropdown] = useState<boolean>(false);
-  const [providerBadge, setProviderBadge] = useState<string>('Gemini 1.5 Flash');
+  const [providerBadge, setProviderBadge] = useState<string>('Auto-Smart');
 
   const messagesContainerRef = useRef<HTMLDivElement | null>(null);
   const textareaRef = useRef<HTMLTextAreaElement | null>(null);
@@ -48,9 +49,12 @@ export default function CopilotPage() {
       const savedProvider = localStorage.getItem('idaara_ai_provider') || 'auto';
       setCustomApiKey(savedKey);
       setActiveProvider(savedProvider);
-      if (savedProvider === 'gemini') setProviderBadge('Gemini 1.5 Flash');
+      if (savedProvider === 'nvidia') setProviderBadge('NVIDIA NIM');
       else if (savedProvider === 'groq') setProviderBadge('Groq Llama 3.3');
+      else if (savedProvider === 'gemini') setProviderBadge('Gemini 1.5 Flash');
+      else if (savedProvider === 'openrouter') setProviderBadge('OpenRouter Free');
       else if (savedProvider === 'local') setProviderBadge('Civic Engine');
+      else setProviderBadge('Auto-Smart');
 
       const urlParams = new URLSearchParams(window.location.search);
       const q = urlParams.get('q');
@@ -205,7 +209,14 @@ export default function CopilotPage() {
   const saveSettings = () => {
     localStorage.setItem('idaara_custom_api_key', customApiKey.trim());
     localStorage.setItem('idaara_ai_provider', activeProvider);
-    const map: Record<string, string> = { auto: 'Auto-Smart', gemini: 'Gemini 1.5 Flash', groq: 'Groq Llama 3.3', local: 'Civic Engine' };
+    const map: Record<string, string> = {
+      auto: 'Auto-Smart',
+      nvidia: 'NVIDIA NIM (70B)',
+      groq: 'Groq Llama 3.3',
+      gemini: 'Gemini 1.5 Flash',
+      openrouter: 'OpenRouter Free',
+      local: 'Civic Engine',
+    };
     setProviderBadge(map[activeProvider] || 'Auto-Smart');
     setShowSettingsModal(false);
     setShowModelDropdown(false);
@@ -249,19 +260,21 @@ export default function CopilotPage() {
 
           {/* Model Dropdown Menu */}
           {showModelDropdown && (
-            <div className="absolute top-full left-0 mt-1.5 w-64 rounded-2xl bg-[#1e1e1e] border border-white/10 shadow-2xl p-2 z-50 animate-fade-in space-y-1">
+            <div className="absolute top-full left-0 mt-1.5 w-72 rounded-2xl bg-[#1e1e1e] border border-white/10 shadow-2xl p-2 z-50 animate-fade-in space-y-1">
               {[
-                { id: 'auto', name: 'Auto-Smart', desc: 'Best available model' },
-                { id: 'gemini', name: 'Gemini 1.5 Flash', desc: 'Google Free Tier' },
-                { id: 'groq', name: 'Groq Llama 3.3', desc: 'Ultra-fast 70B' },
-                { id: 'local', name: 'Civic Engine', desc: 'Built-in JORT data' },
+                { id: 'auto', name: '⚡ Auto-Smart', desc: 'Auto-detects best free key' },
+                { id: 'groq', name: '🚀 Groq Llama 3.3', desc: 'Ultra-fast 70B (console.groq.com)' },
+                { id: 'nvidia', name: '🟢 NVIDIA NIM 70B', desc: 'Free build.nvidia.com key' },
+                { id: 'gemini', name: '✨ Google Gemini 1.5', desc: 'Free aistudio.google.com' },
+                { id: 'openrouter', name: '🌐 OpenRouter Free', desc: 'Free Llama/DeepSeek models' },
+                { id: 'local', name: '🏛️ Civic Engine', desc: 'No API key needed (Offline)' },
               ].map((m) => (
                 <button
                   key={m.id}
                   onClick={() => {
                     setActiveProvider(m.id);
                     localStorage.setItem('idaara_ai_provider', m.id);
-                    setProviderBadge(m.name);
+                    setProviderBadge(m.name.replace(/^[^\s]+\s/, ''));
                     setShowModelDropdown(false);
                   }}
                   className={`w-full flex items-center justify-between px-3 py-2 rounded-xl text-left text-xs transition-colors cursor-pointer border-0 outline-none ${
@@ -285,7 +298,7 @@ export default function CopilotPage() {
                   className="w-full flex items-center gap-2 px-3 py-2 rounded-xl text-xs text-zinc-400 hover:text-white hover:bg-white/5 transition-colors cursor-pointer border-0 outline-none"
                 >
                   <Settings className="w-3.5 h-3.5" />
-                  <span>Configure API Key...</span>
+                  <span>Enter Free API Key...</span>
                 </button>
               </div>
             </div>
@@ -533,13 +546,13 @@ export default function CopilotPage() {
           onClick={() => setShowSettingsModal(false)}
         >
           <div
-            className="w-full max-w-md bg-[#1e1e1e] border border-white/10 rounded-2xl p-6 shadow-2xl space-y-4 text-white"
+            className="w-full max-w-lg bg-[#1e1e1e] border border-white/10 rounded-2xl p-6 shadow-2xl space-y-4 text-white"
             onClick={(e) => e.stopPropagation()}
           >
             <div className="flex items-center justify-between border-b border-white/10 pb-3">
               <div className="flex items-center gap-2">
                 <SlidersHorizontal className="w-4 h-4 text-emerald-400" />
-                <h3 className="text-sm font-bold">AI Engine Settings</h3>
+                <h3 className="text-sm font-bold">AI Providers & Free API Keys</h3>
               </div>
               <button onClick={() => setShowSettingsModal(false)} className="p-1 rounded-lg text-zinc-400 hover:text-white hover:bg-white/10 cursor-pointer border-0 outline-none">
                 <X className="w-4 h-4" />
@@ -547,13 +560,15 @@ export default function CopilotPage() {
             </div>
 
             <div className="space-y-2">
-              <p className="text-xs text-zinc-400 font-semibold">Choose AI Model</p>
+              <p className="text-xs text-zinc-400 font-semibold">Choose Your Free AI Provider</p>
               <div className="grid grid-cols-2 gap-2">
                 {[
-                  { id: 'auto',   label: '⚡ Auto-Smart',        sub: 'Best available'      },
-                  { id: 'gemini', label: '✨ Gemini 1.5 Flash',  sub: 'Google free tier'    },
-                  { id: 'groq',   label: '🚀 Groq Llama 3.3',   sub: 'Ultra-fast 70B'      },
-                  { id: 'local',  label: '🏛️ Civic Engine',     sub: 'No key needed'       },
+                  { id: 'auto',       label: '⚡ Auto-Smart',         sub: 'Auto-detect key' },
+                  { id: 'groq',       label: '🚀 Groq Llama 3.3',    sub: 'Ultra-fast 70B' },
+                  { id: 'nvidia',     label: '🟢 NVIDIA NIM 70B',    sub: '1000 free calls' },
+                  { id: 'gemini',     label: '✨ Google Gemini 1.5', sub: '15 RPM free' },
+                  { id: 'openrouter', label: '🌐 OpenRouter Free',   sub: 'Free models pool' },
+                  { id: 'local',      label: '🏛️ Civic Engine',      sub: 'Built-in (No key)' },
                 ].map(({ id, label, sub }) => (
                   <button
                     key={id}
@@ -574,21 +589,33 @@ export default function CopilotPage() {
               </div>
             </div>
 
-            <div className="space-y-1.5">
+            {/* API Key Input */}
+            <div className="space-y-2">
               <div className="flex items-center justify-between">
-                <p className="text-xs text-zinc-400 font-semibold">API Key (Optional)</p>
-                <a href="https://aistudio.google.com/app/apikey" target="_blank" rel="noreferrer" className="text-[11px] text-emerald-400 hover:underline">
-                  Get free key →
-                </a>
+                <p className="text-xs text-zinc-400 font-semibold">Paste Your Free API Key</p>
+                <div className="flex items-center gap-2 text-[11px] text-emerald-400">
+                  <a href="https://console.groq.com/keys" target="_blank" rel="noreferrer" className="hover:underline flex items-center gap-0.5">
+                    Groq <ExternalLink className="w-2.5 h-2.5" />
+                  </a>
+                  <span>·</span>
+                  <a href="https://build.nvidia.com" target="_blank" rel="noreferrer" className="hover:underline flex items-center gap-0.5">
+                    NVIDIA <ExternalLink className="w-2.5 h-2.5" />
+                  </a>
+                  <span>·</span>
+                  <a href="https://aistudio.google.com/app/apikey" target="_blank" rel="noreferrer" className="hover:underline flex items-center gap-0.5">
+                    Gemini <ExternalLink className="w-2.5 h-2.5" />
+                  </a>
+                </div>
               </div>
+
               <input
                 type="password"
                 value={customApiKey}
                 onChange={(e) => setCustomApiKey(e.target.value)}
-                placeholder="AIzaSy... (Gemini)  or  gsk_... (Groq)"
+                placeholder="gsk_... (Groq) or nvapi-... (NVIDIA) or AIzaSy... (Gemini) or sk-or-... (OpenRouter)"
                 className="w-full bg-black/40 border border-white/10 rounded-xl px-3 py-2.5 text-xs font-mono text-white placeholder-zinc-600 border-0 outline-none ring-0 focus:border-0 focus:outline-none focus:ring-0 focus-visible:ring-0"
               />
-              <p className="text-[10px] text-zinc-400">Stored locally in your browser storage.</p>
+              <p className="text-[10px] text-zinc-400">Saved only inside your browser local storage.</p>
             </div>
 
             <div className="flex justify-end gap-2 pt-2">
@@ -596,7 +623,7 @@ export default function CopilotPage() {
                 Cancel
               </button>
               <button onClick={saveSettings} className="px-4 py-2 rounded-xl bg-white hover:bg-zinc-200 text-black font-bold text-xs cursor-pointer shadow-md border-0 outline-none">
-                Save
+                Save & Apply
               </button>
             </div>
           </div>

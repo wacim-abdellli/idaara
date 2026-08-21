@@ -1,13 +1,11 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { parseAndReason } from '../../../lib/ai-engine';
 import { proceduresData } from '../../../data/procedures';
-import { documentTemplatesData } from '../../../data/documentTemplates';
 import { getLocalized } from '../../../lib/locale-utils';
 
 function buildGroundingContext(query: string, locale: string): string {
   const q = query.toLowerCase();
   
-  // Find top matching procedures
   const matchedProcedures = proceduresData.filter((p) => {
     const title = (p.title.fr + ' ' + (p.title.ar || '') + ' ' + (p.title.derja || '')).toLowerCase();
     const tags = p.tags.join(' ').toLowerCase();
@@ -46,10 +44,10 @@ YOUR MISSION & ROLE:
 You help Tunisian citizens and residents navigate all bureaucracy, government paperwork, and legal procedures with supreme precision, clarity, and empathy.
 
 LANGUAGE RULES (STRICT):
-1. If the user writes in Tunisian Derja (Arabizi Latin like "chnowa awra9 el passeport" or Arabic script "شنوة أوراق الباسبور") → Respond in warm, authentic, fluent Tunisian Derja.
-2. If the user writes in French → Respond in crisp, professional French.
-3. If the user writes in Standard Arabic → Respond in clear, formal Arabic.
-4. If the user writes in English → Respond in professional, helpful English.
+1. If user writes in Tunisian Derja (Arabizi Latin like "3aslema", "chnowa awra9 el passeport" or Arabic script "شنوة أوراق الباسبور") → Respond in warm, authentic, fluent Tunisian Derja.
+2. If user writes in French → Respond in crisp, professional French.
+3. If user writes in Standard Arabic → Respond in clear, formal Arabic.
+4. If user writes in English → Respond in professional, helpful English.
 
 KNOWLEDGE PILLARS (TUNISIA):
 - Passports: 80 DT fiscal stamp (25 DT for pupils/students), 4 photos (fond blanc), CIN copy + original, old passport. Handled at Police/Garde Nationale (7-15 days).
@@ -82,15 +80,106 @@ export async function POST(req: NextRequest) {
     const groundingContext = buildGroundingContext(prompt, locale);
     const completeSystemPrompt = BASE_SYSTEM_PROMPT + groundingContext;
 
-    const geminiKey = userApiKey?.startsWith('AIza')
+    // Keys detection (user-provided or environment variables)
+    const nvidiaKey = userApiKey?.startsWith('nvapi-')
       ? userApiKey
-      : process.env.GEMINI_API_KEY || process.env.AI_PROVIDER_API_KEY || '';
+      : process.env.NVIDIA_API_KEY || '';
 
     const groqKey = userApiKey?.startsWith('gsk_')
       ? userApiKey
       : process.env.GROQ_API_KEY || '';
 
-    // 1. Try Google Gemini (1.5 Flash / 2.0 Flash)
+    const geminiKey = userApiKey?.startsWith('AIza')
+      ? userApiKey
+      : process.env.GEMINI_API_KEY || process.env.AI_PROVIDER_API_KEY || '';
+
+    const openRouterKey = userApiKey?.startsWith('sk-or-')
+      ? userApiKey
+      : process.env.OPENROUTER_API_KEY || '';
+
+    // Standard OpenAI-compatible conversation message array
+    const chatMessages = [
+      { role: 'system', content: completeSystemPrompt },
+      ...history.map((m: { role: string; content: string }) => ({
+        role: m.role === 'user' ? 'user' : 'assistant',
+        content: m.content,
+      })),
+      { role: 'user', content: prompt },
+    ];
+
+    // ─── 1. NVIDIA NIM (Llama 3.3 70B / Mistral Large - Free build.nvidia.com) ───
+    if (nvidiaKey && (provider === 'auto' || provider === 'nvidia')) {
+      try {
+        const nvRes = await fetch('https://integrate.api.nvidia.com/v1/chat/completions', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${nvidiaKey}`,
+          },
+          body: JSON.stringify({
+            model: 'meta/llama-3.3-70b-instruct',
+            messages: chatMessages,
+            temperature: 0.5,
+            max_tokens: 1024,
+          }),
+        });
+
+        if (nvRes.ok) {
+          const data = await nvRes.json();
+          const reply = data.choices?.[0]?.message?.content;
+          if (reply) {
+            return NextResponse.json({
+              success: true,
+              result: {
+                content: reply,
+                source: 'nvidia-nim-llama-70b',
+                providerName: 'NVIDIA NIM (Llama 3.3 70B)',
+              },
+            });
+          }
+        }
+      } catch (nvErr) {
+        console.warn('NVIDIA NIM API call failed:', nvErr);
+      }
+    }
+
+    // ─── 2. Groq (Llama 3.3 70B Versatile - Free console.groq.com) ───
+    if (groqKey && (provider === 'auto' || provider === 'groq')) {
+      try {
+        const groqRes = await fetch('https://api.groq.com/openai/v1/chat/completions', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${groqKey}`,
+          },
+          body: JSON.stringify({
+            model: 'llama-3.3-70b-versatile',
+            messages: chatMessages,
+            temperature: 0.5,
+            max_tokens: 1024,
+          }),
+        });
+
+        if (groqRes.ok) {
+          const data = await groqRes.json();
+          const reply = data.choices?.[0]?.message?.content;
+          if (reply) {
+            return NextResponse.json({
+              success: true,
+              result: {
+                content: reply,
+                source: 'llama-3.3-70b-groq',
+                providerName: 'Groq Llama 3.3 70B',
+              },
+            });
+          }
+        }
+      } catch (groqErr) {
+        console.warn('Groq API call failed:', groqErr);
+      }
+    }
+
+    // ─── 3. Google Gemini (1.5 Flash / 2.0 Flash - Free aistudio.google.com) ───
     if (geminiKey && (provider === 'auto' || provider === 'gemini')) {
       try {
         const { GoogleGenerativeAI } = await import('@google/generative-ai');
@@ -118,56 +207,47 @@ export async function POST(req: NextRequest) {
           },
         });
       } catch (geminiErr) {
-        console.warn('Gemini API call failed, falling to secondary provider:', geminiErr);
+        console.warn('Gemini API call failed:', geminiErr);
       }
     }
 
-    // 2. Try Groq (Llama 3.3 70B Versatile - fast, free tier)
-    if (groqKey && (provider === 'auto' || provider === 'groq')) {
+    // ─── 4. OpenRouter (Free models: openrouter.ai) ───
+    if (openRouterKey && (provider === 'auto' || provider === 'openrouter')) {
       try {
-        const messages = [
-          { role: 'system', content: completeSystemPrompt },
-          ...history.map((m: { role: string; content: string }) => ({
-            role: m.role === 'user' ? 'user' : 'assistant',
-            content: m.content,
-          })),
-          { role: 'user', content: prompt },
-        ];
-
-        const groqRes = await fetch('https://api.groq.com/openai/v1/chat/completions', {
+        const orRes = await fetch('https://openrouter.ai/api/v1/chat/completions', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
-            Authorization: `Bearer ${groqKey}`,
+            Authorization: `Bearer ${openRouterKey}`,
           },
           body: JSON.stringify({
-            model: 'llama-3.3-70b-versatile',
-            messages,
+            model: 'meta-llama/llama-3.3-70b-instruct:free',
+            messages: chatMessages,
             temperature: 0.5,
             max_tokens: 1024,
           }),
         });
 
-        if (groqRes.ok) {
-          const data = await groqRes.json();
+        if (orRes.ok) {
+          const data = await orRes.json();
           const reply = data.choices?.[0]?.message?.content;
           if (reply) {
             return NextResponse.json({
               success: true,
               result: {
                 content: reply,
-                source: 'llama-3.3-70b-groq',
-                providerName: 'Groq Llama 3.3 70B',
+                source: 'openrouter-llama-free',
+                providerName: 'OpenRouter Llama 3.3 Free',
               },
             });
           }
         }
-      } catch (groqErr) {
-        console.warn('Groq API call failed:', groqErr);
+      } catch (orErr) {
+        console.warn('OpenRouter API call failed:', orErr);
       }
     }
 
-    // 3. Guaranteed High-Precision Tunisian Reasoning Fallback Engine
+    // ─── 5. Guaranteed Local Tunisian Civic Intelligence Fallback Engine ───
     const localResult = parseAndReason(prompt, locale);
     return NextResponse.json({
       success: true,
