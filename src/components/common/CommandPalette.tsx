@@ -16,6 +16,7 @@ import {
   Calculator,
   ArrowRight,
   Sparkles,
+  Briefcase,
   X,
   CornerDownLeft,
 } from 'lucide-react';
@@ -143,6 +144,29 @@ export const CommandPalette: React.FC = () => {
         url: '/calculator',
         badge: 'DT',
         icon: Calculator,
+      },
+      {
+        id: 'tool-concours',
+        category: 'tool',
+        title:
+          locale === 'ar'
+            ? 'المناظرات الوطنية (الوظيفة العمومية)'
+            : locale === 'derja'
+            ? 'Radar el Concourat (STEG, SONEDE, CAPES...)'
+            : locale === 'en'
+            ? 'National Concours Tracker (Public Sector)'
+            : 'Concours Publics (STEG, SONEDE, CAPES)',
+        subtitle:
+          locale === 'ar'
+            ? 'متابعة انتدابات الدولة مع الوثائق والتسجيل'
+            : locale === 'derja'
+            ? 'Suivi des intidhabat m3a l’awra9 w lien d’inscription'
+            : locale === 'en'
+            ? 'Real-time job notices and exam dossiers'
+            : 'Suivi des recrutements de l’État et constitution du dossier',
+        url: '/concours',
+        badge: '2026',
+        icon: Briefcase,
       },
     ];
 

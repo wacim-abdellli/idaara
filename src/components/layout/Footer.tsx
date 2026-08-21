@@ -87,6 +87,17 @@ export const Footer: React.FC = () => {
           ? 'Fiscal Stamp & Budget Calculator'
           : 'Calculateur de Timbres Fiscaux',
     },
+    {
+      href: '/concours',
+      label:
+        locale === 'ar'
+          ? 'رادار المناظرات الوطنية (الوظيفة العمومية)'
+          : locale === 'derja'
+          ? 'Radar el Concourat (STEG, SONEDE, CAPES)'
+          : locale === 'en'
+          ? 'National Public Concours Radar'
+          : 'Radar des Concours Nationaux (STEG, CAPES)',
+    },
   ];
 
   const directoryLinks = [

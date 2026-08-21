@@ -7,13 +7,14 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { useLocale } from '../../context/LocaleContext';
 import { LanguageSwitcher } from './LanguageSwitcher';
 import { BrandLogo } from './BrandLogo';
-import { Mic, FileSearch, FileText, Calculator, MapPin, Rocket, BookOpen, Menu, X, Zap, Search } from 'lucide-react';
+import { Mic, FileSearch, FileText, Calculator, MapPin, Rocket, BookOpen, Briefcase, Menu, X, Zap, Search } from 'lucide-react';
 
 const NAV_LINKS = [
   { href: '/copilot',    tKey: 'copilotNav',    icon: Mic },
   { href: '/fasserli',   tKey: 'fasserliNav',   icon: FileSearch },
   { href: '/documents',  tKey: 'documentsNav',  icon: FileText },
   { href: '/calculator', tKey: 'calculatorNav', icon: Calculator },
+  { href: '/concours',   tKey: 'concoursNav',   icon: Briefcase },
   { href: '/locator',    tKey: 'locatorNav',    icon: MapPin },
   { href: '/launchpad',  tKey: 'launchpadNav',  icon: Rocket },
   { href: '/procedures', tKey: 'proceduresNav', icon: BookOpen },

@@ -4,6 +4,7 @@ import path from 'path';
 import { parseAndReason } from '../../../lib/ai-engine';
 import { proceduresData } from '../../../data/procedures';
 import { queryCivicKnowledge } from '../../../lib/tunisian-civic-knowledge';
+import { buildConcoursGroundingPrompt } from '../../../lib/concours-knowledge';
 import { getLocalized } from '../../../lib/locale-utils';
 
 function getGroqKey(): string {
@@ -96,6 +97,12 @@ ${steps}
     }
   }
 
+  // Inject real-time public concours & job notices grounding
+  const concoursContext = buildConcoursGroundingPrompt(query, locale);
+  if (concoursContext) {
+    context += '\n' + concoursContext;
+  }
+
   return context;
 }
 
@@ -107,7 +114,8 @@ STRICT CIVIC DOMAIN BOUNDARY & GUARDRAILS (ABSOLUTE MANDATORY RULE):
   1. Tunisian administrative procedures (Passports, CIN, Permis, Carte Grise, B3, Madhmoun, Visa, FCR, Certificat de résidence, etc.)
   2. Legal contracts & civil status in Tunisia (Contrat de bail, Mariage civil, Divorce, Héritage, Statut Auto-Entrepreneur 1%, SUARL/SARL, etc.)
   3. Fiscal stamps & taxes (Timbres fiscaux JORT 2025/2026, Vignette, Baladiya fees, Recette des Finances, etc.)
-  4. Public institutions & public services in Tunisia (Baladiya, Recette des Finances, ATTT, CNSS, CNAM, Douane, Poste tunisienne, Ministères, etc.)
+  4. Public civil service exams and recruitment competitions (المناظرات الوطنية بالوظيفة العمومية, concours.gov.tn, STEG, SONEDE, Éducation CAPES, Santé, Finances, Douane, Protection Civile).
+  5. Public institutions & public services in Tunisia (Baladiya, Recette des Finances, ATTT, CNSS, CNAM, Douane, Poste tunisienne, Ministères, etc.)
 
 STRICT REFUSAL OF OUT-OF-SCOPE TOPICS (RELIGION, POLITICS, MEDICAL, GENERAL):
 - If the user asks ANY question outside Tunisian administration/civic/legal/fiscal topics (e.g. Religion, Faith, "هل أنا مسلم؟", Theology, Politics, Medical advice, Personal counseling, General programming outside civic tools, Gaming, Sports, Jokes, Homework, Random trivia):
