@@ -5,6 +5,7 @@ import { parseAndReason } from '../../../lib/ai-engine';
 import { proceduresData } from '../../../data/procedures';
 import { queryCivicKnowledge } from '../../../lib/tunisian-civic-knowledge';
 import { buildConcoursGroundingPrompt } from '../../../lib/concours-knowledge';
+import { buildLiveGroundingFeed } from '../../../lib/live-civic-fetcher';
 import { getLocalized } from '../../../lib/locale-utils';
 
 function getGroqKey(): string {
@@ -168,11 +169,15 @@ export async function POST(req: NextRequest) {
 
     const temporalDirective = `\nREAL-TIME TEMPORAL DIRECTIVE:
 - Today's date is: ${currentDateIso} (${currentFormattedDate}).
-- We are currently in August 2026. The active recruitment cycle is the 2026/2027 session (Session Automne / Rentrée 2026 - Septembre / Octobre / Novembre 2026).
-- NEVER cite expired past dates (like March or April 2026) as upcoming deadlines. All active concours refer to the current upcoming 2026/2027 deadlines.`;
+- We are currently in August 2026. The active recruitment cycle is the 2026/2027 session.
+- Always use the real-time live official feed below from Tunisian government servers (concours.gov.tn / edunet.tn).`;
 
-    const groundingContext = buildGroundingContext(prompt, locale);
-    const completeSystemPrompt = `${IDAARA_MASTER_SYSTEM_PROMPT}\n${temporalDirective}\n\n${groundingContext}`;
+    const [groundingContext, liveFeed] = await Promise.all([
+      buildGroundingContext(prompt, locale),
+      buildLiveGroundingFeed(),
+    ]);
+
+    const completeSystemPrompt = `${IDAARA_MASTER_SYSTEM_PROMPT}\n${temporalDirective}\n${liveFeed}\n\n${groundingContext}`;
 
     const apiKey = getGroqKey();
 
