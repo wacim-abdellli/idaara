@@ -316,17 +316,35 @@ export const ChatMessage: React.FC<ChatMessageProps> = ({ message }) => {
     window.speechSynthesis.speak(utterance);
   };
 
-  // ── USER MESSAGE BUBBLE (Clean right-aligned ChatGPT pill) ──
+  // ── USER MESSAGE BUBBLE (Clean right-aligned pill with Copy action) ──
   if (!isAssistant) {
     return (
-      <div className="w-full py-2 flex justify-end">
+      <div className="w-full py-2 flex flex-col items-end group">
         <div
           dir={isArabicScript ? 'rtl' : 'ltr'}
-          className={`max-w-[85%] sm:max-w-[75%] px-4 py-2.5 rounded-3xl bg-[#2f2f2f] text-white text-sm sm:text-[15px] leading-relaxed shadow-sm ${
+          className={`max-w-[85%] sm:max-w-[75%] px-4 py-2.5 rounded-3xl bg-[#26282e] hover:bg-[#2c2f36] border border-white/[0.04] text-white text-sm sm:text-[15px] leading-relaxed shadow-sm transition-colors ${
             isArabicScript ? 'text-right font-["Cairo",sans-serif]' : 'text-left'
           }`}
         >
           {message.content}
+        </div>
+
+        {/* Minimalist Action toolbar (Copy) on hover / mobile */}
+        <div className="flex items-center gap-1.5 pt-1 pr-1 opacity-0 group-hover:opacity-100 transition-opacity">
+          <button
+            onClick={copyToClipboard}
+            className="p-1 rounded-lg hover:bg-white/10 text-zinc-500 hover:text-zinc-300 transition-colors cursor-pointer border-0 outline-none flex items-center gap-1 text-[11px]"
+            title={locale === 'ar' ? 'نسخ الرسالة' : locale === 'fr' ? 'Copier' : 'Copy'}
+          >
+            {copied ? (
+              <>
+                <Check className="w-3.5 h-3.5 text-emerald-400" />
+                <span className="text-emerald-400 text-[10px]">{locale === 'ar' ? 'تم النسخ' : 'Copié'}</span>
+              </>
+            ) : (
+              <Copy className="w-3.5 h-3.5" />
+            )}
+          </button>
         </div>
       </div>
     );
