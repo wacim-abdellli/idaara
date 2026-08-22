@@ -256,7 +256,11 @@ function renderFormattedContent(text: string): React.ReactNode {
     if (numberedMatch) {
       blocks.push(
         <div key={`num-${i}`} dir={lineDir} className={`flex items-center gap-3 mt-4 mb-2 ${lineAlign}`}>
-          <span className="flex items-center justify-center w-6 h-6 rounded-lg bg-emerald-500/20 border border-emerald-500/40 text-emerald-300 text-xs font-mono font-bold shrink-0 shadow-sm">
+          <span
+            dir="ltr"
+            style={{ unicodeBidi: 'isolate' }}
+            className="inline-flex items-center justify-center text-center w-6 h-6 rounded-lg bg-emerald-500/20 border border-emerald-500/40 text-emerald-300 text-xs font-bold leading-none shrink-0 shadow-sm select-none"
+          >
             {numberedMatch[1]}
           </span>
           <span className="text-white font-bold text-sm sm:text-base leading-snug flex-1">
@@ -273,7 +277,11 @@ function renderFormattedContent(text: string): React.ReactNode {
       const bulletText = line.replace(/^[-*•]\s+/, '');
       blocks.push(
         <div key={`bullet-${i}`} dir={lineDir} className={`flex items-start gap-2.5 my-1.5 ms-7 sm:ms-8 ${lineAlign}`}>
-          <span className="flex items-center justify-center w-4 h-4 rounded-full bg-emerald-500/15 text-emerald-400 shrink-0 mt-1 text-[10px] font-bold">
+          <span
+            dir="ltr"
+            style={{ unicodeBidi: 'isolate' }}
+            className="inline-flex items-center justify-center text-center w-4 h-4 rounded-full bg-emerald-500/15 text-emerald-400 shrink-0 mt-1 text-[10px] font-bold leading-none select-none"
+          >
             ✓
           </span>
           <span className="text-zinc-300 flex-1 leading-relaxed text-xs sm:text-[14px]">

@@ -88,7 +88,11 @@ export const DocumentAnalysisResult: React.FC<DocumentAnalysisResultProps> = ({
               key={idx}
               className="flex items-start gap-3 p-3.5 rounded-2xl bg-white/[0.03] border border-white/[0.05] text-sm text-zinc-200 leading-relaxed"
             >
-              <span className="flex h-5 w-5 rounded-full bg-emerald-500/20 text-emerald-300 items-center justify-center font-mono font-bold text-xs shrink-0 mt-0.5">
+              <span
+                dir="ltr"
+                style={{ unicodeBidi: 'isolate' }}
+                className="inline-flex items-center justify-center text-center h-5 w-5 rounded-full bg-emerald-500/20 text-emerald-300 font-bold text-xs leading-none shrink-0 mt-0.5 select-none"
+              >
                 {idx + 1}
               </span>
               <span>{bullet}</span>
