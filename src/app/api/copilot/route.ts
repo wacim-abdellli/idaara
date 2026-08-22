@@ -157,7 +157,7 @@ CRITICAL INSTRUCTIONS & INTELLIGENT ROUTING:
 export async function POST(req: NextRequest) {
   try {
     const body = await req.json();
-    const { prompt, locale = 'derja', history = [] } = body;
+    const { prompt, locale = 'derja', history = [], think = false } = body;
 
     if (!prompt || typeof prompt !== 'string') {
       return NextResponse.json({ error: 'Prompt string is required' }, { status: 400 });
@@ -172,12 +172,18 @@ export async function POST(req: NextRequest) {
 - We are currently in August 2026. The active recruitment cycle is the 2026/2027 session.
 - Always use the real-time live official feed below from Tunisian government servers (concours.gov.tn / edunet.tn).`;
 
+    const thinkDirective = think
+      ? `\n🧠 DEEP CIVIC THINKING & LEGAL REASONING MODE ACTIVATED:
+- Perform an exhaustive, step-by-step statutory breakdown.
+- Mention specific official decrees, legal deadlines, compound fiscal stamp breakdowns, exemptions, appeal processes, and potential pitfalls.`
+      : '';
+
     const [groundingContext, liveFeed] = await Promise.all([
       buildGroundingContext(prompt, locale),
       buildLiveGroundingFeed(),
     ]);
 
-    const completeSystemPrompt = `${IDAARA_MASTER_SYSTEM_PROMPT}\n${temporalDirective}\n${liveFeed}\n\n${groundingContext}`;
+    const completeSystemPrompt = `${IDAARA_MASTER_SYSTEM_PROMPT}\n${temporalDirective}${thinkDirective}\n${liveFeed}\n\n${groundingContext}`;
 
     const apiKey = getGroqKey();
 
@@ -208,8 +214,8 @@ export async function POST(req: NextRequest) {
             body: JSON.stringify({
               model,
               messages: chatMessages,
-              temperature: 0.15,
-              max_tokens: 1100,
+              temperature: think ? 0.08 : 0.15,
+              max_tokens: think ? 1400 : 1100,
               top_p: 0.95,
             }),
           });
