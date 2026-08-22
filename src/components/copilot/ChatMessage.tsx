@@ -206,11 +206,12 @@ function renderFormattedContent(text: string): React.ReactNode {
   );
 }
 
-/** Inline bold, code, DT currency tokens, and keyword styling */
+/** Inline bold, code, DT currency tokens, and BiDi-isolated Arabic phrases */
 function renderInlineStyles(text: string): React.ReactNode {
-  // Matches bold **text**, code `text`, and DT amounts (e.g. 80 DT, 145 DT, 7.500 DT)
-  const parts = text.split(/(\*\*[^*]+\*\*|`[^`]+`|\b\d+(?:[.,]\d+)?\s*(?:DT|TND|د\.ت)\b)/gi);
+  // Matches bold **text**, code `text`, DT amounts, and embedded Arabic phrases
+  const parts = text.split(/(\*\*[^*]+\*\*|`[^`]+`|\b\d+(?:[.,]\d+)?\s*(?:DT|TND|د\.ت)\b|[\u0600-\u06FF\u0750-\u077F\u08A0-\u08FF]+(?:[^\x00-\x7F\s]*\s+[\u0600-\u06FF\u0750-\u077F\u08A0-\u08FF]+)*)/gi);
   return parts.map((part, i) => {
+    if (!part) return null;
     if (part.startsWith('**') && part.endsWith('**')) {
       return (
         <strong key={i} className="font-bold text-white">
@@ -232,7 +233,15 @@ function renderInlineStyles(text: string): React.ReactNode {
         </span>
       );
     }
-    return part;
+    // Embedded Arabic phrase inside Latin text: wrap in isolated <bdi> to prevent reverse sentence shuffling
+    if (/[\u0600-\u06FF]/.test(part)) {
+      return (
+        <bdi key={i} dir="rtl" className="inline-block font-['Cairo',sans-serif] px-0.5">
+          {part}
+        </bdi>
+      );
+    }
+    return <span key={i}>{part}</span>;
   });
 }
 
@@ -330,7 +339,10 @@ export const ChatMessage: React.FC<ChatMessageProps> = ({ message }) => {
       className={`w-full py-3 space-y-3 ${isArabicScript ? 'text-right' : 'text-left'}`}
     >
       {/* Content directly on canvas with rich markdown & table rendering */}
-      <div className={`prose-chat text-zinc-100 ${isArabicScript ? 'font-["Cairo",sans-serif]' : ''}`}>
+      <div
+        style={{ unicodeBidi: 'plaintext' }}
+        className={`prose-chat text-zinc-100 ${isArabicScript ? 'font-["Cairo",sans-serif]' : ''}`}
+      >
         {renderFormattedContent(message.content)}
       </div>
 

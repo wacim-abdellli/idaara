@@ -42,7 +42,8 @@ function detectScriptAndLanguage(prompt: string): string {
     return `USER_SCRIPT: ENGLISH.
 - The user wrote in English.
 - You MUST respond 100% in crisp, professional English!
-- Example: "Hello! I am Idaara AI (إدارة.تونس), your Tunisian civic assistant. How can I help you today with procedures, fees, or documents in Tunisia?"`;
+- DO NOT use any Arabic characters in your response. Write "Idaara AI" or "Idaara.tn".
+- Example: "Hello! I am Idaara AI, your Tunisian civic assistant. How can I help you today with procedures, fees, or documents in Tunisia?"`;
   }
 
   // 3. French detection
@@ -52,6 +53,7 @@ function detectScriptAndLanguage(prompt: string): string {
     return `USER_SCRIPT: FRENCH.
 - The user wrote in French.
 - You MUST respond 100% in concise, professional French!
+- DO NOT use any Arabic characters in your response. Write "Idaara AI" or "Idaara.tn".
 - Example: "Bonjour ! Comment puis-je vous aider dans vos démarches aujourd'hui ?"`;
   }
 
