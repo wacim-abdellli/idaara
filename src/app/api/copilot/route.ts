@@ -162,8 +162,17 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: 'Prompt string is required' }, { status: 400 });
     }
 
+    const now = new Date();
+    const currentDateIso = now.toISOString().split('T')[0]; // "2026-08-22"
+    const currentFormattedDate = now.toLocaleDateString('ar-TN', { year: 'numeric', month: 'long', day: 'numeric' });
+
+    const temporalDirective = `\nREAL-TIME TEMPORAL DIRECTIVE:
+- Today's date is: ${currentDateIso} (${currentFormattedDate}).
+- We are currently in August 2026. The active recruitment cycle is the 2026/2027 session (Session Automne / Rentrée 2026 - Septembre / Octobre / Novembre 2026).
+- NEVER cite expired past dates (like March or April 2026) as upcoming deadlines. All active concours refer to the current upcoming 2026/2027 deadlines.`;
+
     const groundingContext = buildGroundingContext(prompt, locale);
-    const completeSystemPrompt = `${IDAARA_MASTER_SYSTEM_PROMPT}\n\n${groundingContext}`;
+    const completeSystemPrompt = `${IDAARA_MASTER_SYSTEM_PROMPT}\n${temporalDirective}\n\n${groundingContext}`;
 
     const apiKey = getGroqKey();
 

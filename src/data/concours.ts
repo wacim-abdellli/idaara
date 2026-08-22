@@ -8,7 +8,7 @@ export const concoursData: ConcoursItem[] = [
     category: 'energy_industry',
     educationLevel: 'ingenieur',
     positionsCount: 180,
-    deadlineDate: '2026-03-25',
+    deadlineDate: '2026-09-30',
     status: 'open',
     officialPortalUrl: 'https://www.concours.gov.tn',
     estimatedSalaryRangeTND: '1 650 - 2 100 DT',
@@ -25,10 +25,10 @@ export const concoursData: ConcoursItem[] = [
       en: "Ministry of Industry, Mines and Energy",
     },
     deadlineDisplay: {
-      fr: "25 Mars 2026",
-      ar: "25 مارس 2026",
-      derja: "25 Mars 2026",
-      en: "March 25, 2026",
+      fr: "30 Septembre 2026",
+      ar: "30 سبتمبر 2026",
+      derja: "30 Septembre 2026",
+      en: "September 30, 2026",
     },
     conditions: [
       {
@@ -99,7 +99,7 @@ export const concoursData: ConcoursItem[] = [
     category: 'education',
     educationLevel: 'master',
     positionsCount: 1250,
-    deadlineDate: '2026-04-10',
+    deadlineDate: '2026-10-15',
     status: 'open',
     officialPortalUrl: 'https://www.concours.gov.tn',
     estimatedSalaryRangeTND: '1 400 - 1 800 DT',
@@ -116,10 +116,10 @@ export const concoursData: ConcoursItem[] = [
       en: "Ministry of Education",
     },
     deadlineDisplay: {
-      fr: "10 Avril 2026",
-      ar: "10 أفريل 2026",
-      derja: "10 Avril 2026",
-      en: "April 10, 2026",
+      fr: "15 Octobre 2026",
+      ar: "15 أكتوبر 2026",
+      derja: "15 Octobre 2026",
+      en: "October 15, 2026",
     },
     conditions: [
       {
@@ -175,8 +175,8 @@ export const concoursData: ConcoursItem[] = [
     category: 'energy_industry',
     educationLevel: 'technicien',
     positionsCount: 95,
-    deadlineDate: '2026-03-30',
-    status: 'closing_soon',
+    deadlineDate: '2026-10-05',
+    status: 'open',
     officialPortalUrl: 'https://www.sonede.com.tn',
     estimatedSalaryRangeTND: '1 200 - 1 450 DT',
     title: {
@@ -192,10 +192,10 @@ export const concoursData: ConcoursItem[] = [
       en: "Ministry of Agriculture and Water Resources",
     },
     deadlineDisplay: {
-      fr: "30 Mars 2026",
-      ar: "30 مارس 2026",
-      derja: "30 Mars 2026",
-      en: "March 30, 2026",
+      fr: "05 Octobre 2026",
+      ar: "05 أكتوبر 2026",
+      derja: "05 Octobre 2026",
+      en: "October 05, 2026",
     },
     conditions: [
       {
@@ -246,7 +246,7 @@ export const concoursData: ConcoursItem[] = [
     category: 'finance',
     educationLevel: 'master',
     positionsCount: 110,
-    deadlineDate: '2026-04-18',
+    deadlineDate: '2026-10-25',
     status: 'open',
     officialPortalUrl: 'https://www.concours.gov.tn',
     estimatedSalaryRangeTND: '1 500 - 1 950 DT',
@@ -263,10 +263,10 @@ export const concoursData: ConcoursItem[] = [
       en: "Ministry of Finance",
     },
     deadlineDisplay: {
-      fr: "18 Avril 2026",
-      ar: "18 أفريل 2026",
-      derja: "18 Avril 2026",
-      en: "April 18, 2026",
+      fr: "25 Octobre 2026",
+      ar: "25 أكتوبر 2026",
+      derja: "25 Octobre 2026",
+      en: "October 25, 2026",
     },
     conditions: [
       {
@@ -322,7 +322,7 @@ export const concoursData: ConcoursItem[] = [
     category: 'health',
     educationLevel: 'licence',
     positionsCount: 350,
-    deadlineDate: '2026-04-05',
+    deadlineDate: '2026-11-10',
     status: 'open',
     officialPortalUrl: 'https://www.santetunisie.rns.tn',
     estimatedSalaryRangeTND: '1 350 - 2 400 DT',
@@ -339,10 +339,10 @@ export const concoursData: ConcoursItem[] = [
       en: "Ministry of Health",
     },
     deadlineDisplay: {
-      fr: "05 Avril 2026",
-      ar: "05 أفريل 2026",
-      derja: "05 Avril 2026",
-      en: "April 05, 2026",
+      fr: "10 Novembre 2026",
+      ar: "10 نوفمبر 2026",
+      derja: "10 Novembre 2026",
+      en: "November 10, 2026",
     },
     conditions: [
       {
@@ -393,7 +393,7 @@ export const concoursData: ConcoursItem[] = [
     category: 'tech_telecom',
     educationLevel: 'ingenieur',
     positionsCount: 45,
-    deadlineDate: '2026-04-22',
+    deadlineDate: '2026-11-20',
     status: 'open',
     officialPortalUrl: 'https://www.concours.gov.tn',
     estimatedSalaryRangeTND: '1 800 - 2 500 DT',
@@ -410,10 +410,10 @@ export const concoursData: ConcoursItem[] = [
       en: "Ministry of Communication Technologies",
     },
     deadlineDisplay: {
-      fr: "22 Avril 2026",
-      ar: "22 أفريل 2026",
-      derja: "22 Avril 2026",
-      en: "April 22, 2026",
+      fr: "20 Novembre 2026",
+      ar: "20 نوفمبر 2026",
+      derja: "20 Novembre 2026",
+      en: "November 20, 2026",
     },
     conditions: [
       {
@@ -464,8 +464,8 @@ export const concoursData: ConcoursItem[] = [
     category: 'interior_security',
     educationLevel: 'bac',
     positionsCount: 220,
-    deadlineDate: '2026-03-28',
-    status: 'closing_soon',
+    deadlineDate: '2026-10-10',
+    status: 'open',
     officialPortalUrl: 'https://www.concours.gov.tn',
     estimatedSalaryRangeTND: '1 100 - 1 400 DT',
     title: {
@@ -481,10 +481,10 @@ export const concoursData: ConcoursItem[] = [
       en: "Ministry of Interior",
     },
     deadlineDisplay: {
-      fr: "28 Mars 2026",
-      ar: "28 مارس 2026",
-      derja: "28 Mars 2026",
-      en: "March 28, 2026",
+      fr: "10 Octobre 2026",
+      ar: "10 أكتوبر 2026",
+      derja: "10 Octobre 2026",
+      en: "October 10, 2026",
     },
     conditions: [
       {
@@ -550,7 +550,7 @@ export const concoursData: ConcoursItem[] = [
     category: 'transport_postal',
     educationLevel: 'bac',
     positionsCount: 85,
-    deadlineDate: '2026-04-15',
+    deadlineDate: '2026-09-25',
     status: 'open',
     officialPortalUrl: 'https://www.poste.tn',
     estimatedSalaryRangeTND: '1 150 - 1 450 DT',
@@ -567,10 +567,10 @@ export const concoursData: ConcoursItem[] = [
       en: "Ministry of Communication Technologies",
     },
     deadlineDisplay: {
-      fr: "15 Avril 2026",
-      ar: "15 أفريل 2026",
-      derja: "15 Avril 2026",
-      en: "April 15, 2026",
+      fr: "25 Septembre 2026",
+      ar: "25 سبتمبر 2026",
+      derja: "25 Septembre 2026",
+      en: "September 25, 2026",
     },
     conditions: [
       {

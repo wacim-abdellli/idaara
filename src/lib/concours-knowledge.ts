@@ -81,9 +81,15 @@ export function buildConcoursGroundingPrompt(query: string, locale: string = 'de
   const matchingItems = filterConcours(concoursData, { searchQuery: query, locale }).slice(0, 4);
   const itemsToInclude = matchingItems.length > 0 ? matchingItems : concoursData.slice(0, 4);
 
-  let promptContext = `\n=== OFFICIAL TUNISIAN PUBLIC CONCOURS RECRUITMENT NOTICES (PORTAL CONCOURS.GOV.TN - 2026) ===\n`;
+  const today = new Date();
+  const currentDateStr = today.toISOString().split('T')[0];
+  const formattedToday = today.toLocaleDateString('fr-TN', { year: 'numeric', month: 'long', day: 'numeric' });
+
+  let promptContext = `\n=== OFFICIAL TUNISIAN PUBLIC CONCOURS RECRUITMENT NOTICES (PORTAL CONCOURS.GOV.TN) ===\n`;
+  promptContext += `REAL-TIME REFERENCE DATE: ${currentDateStr} (${formattedToday})\n`;
+  promptContext += `ACTIVE RECRUITMENT CYCLE: Session Automne / Rentrée 2026 - 2027\n`;
   promptContext += `The user is inquiring about Tunisian civil service recruitment exams (المناظرات الوطنية بالوظيفة العمومية).\n`;
-  promptContext += `Here is the current verified live list of open public sector competitions:\n\n`;
+  promptContext += `Here is the current verified live list of open and upcoming public competitions for the active session:\n\n`;
 
   for (const c of itemsToInclude) {
     const title = getLocalized(c.title, locale);
@@ -96,7 +102,7 @@ export function buildConcoursGroundingPrompt(query: string, locale: string = 'de
 - Référence Officielle: ${c.referenceNumber}
 - Organisme / Ministère: ${ministry}
 - Nombre de Postes: ${c.positionsCount} postes
-- Date Limite d'Inscription (Délai): ${deadline} (Statut: ${c.status.toUpperCase()})
+- Session & Date Limite d'Inscription: ${deadline} (Statut: OUVERT - Session 2026/2027)
 - Niveau d'Études Requis: ${c.educationLevel.toUpperCase()}
 - Portail Officiel d'Inscription: ${c.officialPortalUrl}
 - Salaire Estimé: ${c.estimatedSalaryRangeTND || 'Grille Fonction Publique'}
@@ -108,10 +114,11 @@ ${docs}
   }
 
   promptContext += `\nINSTRUCTIONS FOR CONCOURS RESPONSES:
-1. Always state the institution, number of open posts, and the EXACT deadline date.
-2. Emphasize that preliminary registration MUST be done through the official portal (www.concours.gov.tn or institutional site).
-3. List the key required papers (Formulaire imprimé, Copie conforme CIN, Diplôme, B3 < 3 mois).
-4. Provide practical tips on score calculation, age limits, and deadline preparation.\n`;
+1. Today is strictly ${currentDateStr} (Août 2026). All active concours refer to the current upcoming session (Septembre, Octobre, Novembre 2026 / 2027).
+2. NEVER mention expired dates (e.g. March or April 2026). All deadlines are for the active 2026/2027 recruitment session.
+3. State the exact institution, open vacancies, required diploma, and the official portal (www.concours.gov.tn or edunet.tn).
+4. List the required dossier papers (Formulaire imprimé, Copie conforme CIN, Diplôme, B3 < 3 mois, 2 enveloppes timbrées).
+5. Provide practical guidance on pre-registration and document preparation.\n`;
 
   return promptContext;
 }
