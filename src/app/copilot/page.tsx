@@ -597,244 +597,287 @@ export default function CopilotPage() {
       )}
 
       {/* ═════════════════════════════════════════════════════════════════
-          MAIN CANVAS AREA (#09090b)
+          MAIN CANVAS AREA: CIVIC INTELLIGENCE COCKPIT
       ══════════════════════════════════════════════════════════════════ */}
-      <div className="flex-1 flex flex-col bg-[#09090b] relative overflow-hidden">
+      <div className="flex-1 flex flex-col bg-[#07080a] relative overflow-hidden">
         
-        {/* ─── Top Header Bar (h-14 aligned) ─── */}
-        <header className="shrink-0 h-14 px-4 flex items-center justify-between border-b border-white/5 bg-[#09090b]/80 backdrop-blur-xl z-20">
-          <div className="flex items-center gap-2">
+        {/* ─── Top Telemetry Header Bar ─── */}
+        <header className="shrink-0 h-14 px-4 sm:px-6 flex items-center justify-between border-b border-white/[0.07] bg-[#0c0d11]/80 backdrop-blur-xl z-20">
+          <div className="flex items-center gap-3">
             {!sidebarOpen && (
               <button
                 onClick={() => setSidebarOpen(true)}
-                className="p-1.5 rounded-lg hover:bg-white/10 text-zinc-400 hover:text-white transition-colors cursor-pointer border-0 outline-none"
+                className="p-2 rounded-xl bg-white/[0.04] hover:bg-white/[0.08] text-zinc-400 hover:text-white transition-colors cursor-pointer border border-white/5"
                 title={locale === 'ar' ? 'فتح القائمة' : locale === 'en' ? 'Open sidebar' : 'Ouvrir le menu'}
               >
                 <PanelLeft className="w-4 h-4" />
               </button>
             )}
 
-            {/* Model Badge */}
-            <div className="flex items-center gap-2 px-2 py-1 text-zinc-200 font-semibold text-sm">
-              <div className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse shadow-sm shadow-emerald-400/50" />
-              <span className="tracking-tight">
-                {locale === 'ar'
-                  ? 'المساعد الإداري الذكي'
-                  : locale === 'en'
-                  ? 'Idaara AI (Civic Assistant)'
-                  : locale === 'derja'
-                  ? 'Idaara AI'
-                  : 'Idaara AI (Assistant Civique)'}
+            {/* Civic Status Telemetry Pill */}
+            <div className="flex items-center gap-2.5 px-3 py-1.5 rounded-xl bg-emerald-950/40 border border-emerald-500/30 text-emerald-300 font-mono text-xs">
+              <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse shadow-sm shadow-emerald-400" />
+              <span className="font-bold tracking-wider">
+                {locale === 'ar' ? 'الرادار الإداري الوطني · JORT 2026' : 'RADAR CIVIQUE NATIONAL · JORT 2026'}
               </span>
             </div>
           </div>
 
+          {/* Quick Hub Navigation & New Chat */}
           <div className="flex items-center gap-2">
+            <Link
+              href="/concours"
+              className="hidden sm:inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-white/[0.04] hover:bg-white/[0.08] border border-white/10 text-xs font-semibold text-zinc-300 hover:text-teal-300 transition-colors"
+            >
+              <Briefcase className="w-3.5 h-3.5 text-teal-400" />
+              <span>{locale === 'ar' ? 'المناظرات' : 'Concours'}</span>
+            </Link>
+
+            <Link
+              href="/calculator"
+              className="hidden sm:inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-white/[0.04] hover:bg-white/[0.08] border border-white/10 text-xs font-semibold text-zinc-300 hover:text-amber-300 transition-colors"
+            >
+              <Stamp className="w-3.5 h-3.5 text-amber-400" />
+              <span>{locale === 'ar' ? 'التنابر' : 'Timbres'}</span>
+            </Link>
+
             {messages.length > 0 && (
               <button
                 onClick={handleNewChat}
-                className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl hover:bg-white/10 text-zinc-300 hover:text-white text-xs font-semibold transition-colors cursor-pointer border-0 outline-none"
+                className="flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-zinc-950 text-xs font-bold transition-all shadow-md shadow-emerald-500/20 cursor-pointer border-0 outline-none"
               >
                 <RotateCcw className="w-3.5 h-3.5" />
                 <span>
-                  {locale === 'ar' ? 'جديد' : locale === 'en' ? 'New' : locale === 'derja' ? 'Jdid' : 'Nouveau'}
+                  {locale === 'ar' ? 'جلسة جديدة' : locale === 'en' ? 'New Docket' : locale === 'derja' ? 'Dossier Jdid' : 'Nouveau Dossier'}
                 </span>
               </button>
             )}
           </div>
         </header>
 
-        {/* ─── Empty State: Clean Native Canvas ─── */}
+        {/* ─── Empty State: Executive Civic Command Cockpit ─── */}
         {messages.length === 0 && !isProcessing && (
-          <div className="flex-1 flex flex-col items-center justify-center px-4 sm:px-6 max-w-2xl mx-auto w-full -mt-6">
+          <div className="flex-1 overflow-y-auto px-4 sm:px-6 py-8 max-w-4xl mx-auto w-full flex flex-col justify-center space-y-6">
             
-            {/* Center Headline */}
-            <h1 className="text-2xl sm:text-4xl font-semibold text-white tracking-tight mb-7 text-center">
-              {centerHeadline}
-            </h1>
+            {/* Monumental Civic Intelligence Banner */}
+            <div className="p-6 sm:p-8 rounded-3xl bg-gradient-to-br from-[#0e1217] via-[#090b0e] to-[#07080a] border border-white/[0.08] shadow-2xl relative overflow-hidden space-y-4">
+              <div className="absolute top-0 right-0 w-80 h-80 bg-emerald-500/5 rounded-full blur-3xl pointer-events-none" />
+              
+              <div className="flex items-center gap-2">
+                <span className="text-[10px] font-mono font-bold uppercase tracking-widest text-emerald-400 px-2.5 py-0.5 rounded-md bg-emerald-950/80 border border-emerald-700/40">
+                  {locale === 'ar' ? 'المنظومة الذكية الأولى في تونس' : 'CIVIC INTELLIGENCE COCKPIT'}
+                </span>
+                <span className="text-[11px] font-mono text-zinc-400">
+                  {locale === 'ar' ? 'تحديث فوري للقوانين والمعاليم' : '100% Legal Grounding · 24 Wilayas'}
+                </span>
+              </div>
 
-            {/* Prompt Input Bar */}
-            <div className="w-full relative">
-              <div className="flex items-center gap-2 bg-[#1c1c1f] hover:bg-[#222226] border border-white/10 rounded-full px-4 py-2.5 shadow-2xl transition-all">
-                
-                {/* Plus Attach Button */}
-                <div className="relative shrink-0">
-                  <button
-                    type="button"
-                    onClick={() => setShowPlusMenu((p) => !p)}
-                    className="p-1.5 rounded-full hover:bg-white/10 text-zinc-400 hover:text-white transition-colors cursor-pointer border-0 outline-none"
-                    title="Quick Topics"
-                  >
-                    <Plus className="w-4 h-4" />
-                  </button>
+              <h1 className="text-xl sm:text-3xl font-extrabold text-white tracking-tight leading-tight">
+                {centerHeadline}
+              </h1>
 
-                  {showPlusMenu && (
-                    <div className="absolute bottom-full left-0 mb-3 w-72 rounded-2xl bg-[#1e1e1e] border border-white/10 shadow-2xl p-2 z-50 animate-fade-in space-y-1">
-                      <div className="px-3 py-1 text-[10px] uppercase font-bold tracking-wider text-zinc-400">
-                        {locale === 'ar' ? 'أسئلة شائعة' : locale === 'derja' ? 'As2ela ma3roufa' : 'Popular Inquiries'}
-                      </div>
-                      {quickTopics.map((item, idx) => {
-                        const Icon = item.icon;
-                        return (
-                          <button
-                            key={idx}
-                            onClick={() => handleSendMessage(item.q)}
-                            className="w-full flex items-center gap-2.5 px-3 py-2 rounded-xl text-left hover:bg-white/10 text-xs text-zinc-200 transition-colors cursor-pointer border-0 outline-none"
-                          >
-                            <Icon className="w-3.5 h-3.5 text-emerald-400 shrink-0" />
-                            <span className="truncate">{item.label}</span>
-                          </button>
-                        );
-                      })}
-                    </div>
-                  )}
+              <p className="text-xs sm:text-sm text-zinc-400 max-w-2xl leading-relaxed">
+                {locale === 'ar'
+                  ? 'احسب معاليم التنابر الجبائية بدقة، حضّر ملفات جواز السفر والبطاقة الرمادية، وتابع المناظرات الوطنية المفتوحة فورياً.'
+                  : locale === 'derja'
+                  ? 'E7seb el timbres mte3ek bel frank, 7adhir dossier el passeport walla el carte grise, w taba3 el concours el ma7loulin tawa.'
+                  : 'Calculez vos timbres au millime près, préparez vos démarches de passeport ou mutation de carte grise, et suivez les recrutements publics officiels.'}
+              </p>
+            </div>
+
+            {/* 4 Interactive Civic Radar Launch Tiles */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
+              
+              {/* Tile 1: Passport & CIN */}
+              <button
+                onClick={() => handleSendMessage('Kifech n5arej awra9 el passeport tounsi w el CIN?')}
+                className="p-4 rounded-2xl bg-[#0c0e12] hover:bg-[#12151b] border border-white/[0.07] hover:border-emerald-500/40 transition-all text-left rtl:text-right group cursor-pointer shadow-lg relative overflow-hidden"
+              >
+                <div className="flex items-center justify-between gap-2 pb-2">
+                  <div className="p-2 rounded-xl bg-emerald-500/10 border border-emerald-500/25 text-emerald-400 group-hover:scale-105 transition-transform">
+                    <FileCheck2 className="w-4 h-4" />
+                  </div>
+                  <span className="text-[10px] font-mono font-bold text-amber-400 bg-amber-950/50 border border-amber-800/40 px-2 py-0.5 rounded-md">
+                    80 DT / 3 DT
+                  </span>
+                </div>
+                <div className="text-sm font-bold text-white group-hover:text-emerald-300 transition-colors">
+                  {locale === 'ar' ? 'جواز السفر وبطاقة التعريف (CIN)' : 'Passeport & Carte d’Identité (CIN)'}
+                </div>
+                <p className="text-[11px] text-zinc-400 mt-1 leading-relaxed">
+                  {locale === 'ar'
+                    ? 'الوثائق المطلوبة، الصور، التنابر 80د (25د للطلبة)، والآجال.'
+                    : 'Awra9 el dossier, 4 tsawer, timbres 80 DT (25 DT étudiants), w délaist.'}
+                </p>
+              </button>
+
+              {/* Tile 2: Car Registration & ATTT */}
+              <button
+                onClick={() => handleSendMessage('Kifech na3mel mutation carte grise w visite technique fi Tounes?')}
+                className="p-4 rounded-2xl bg-[#0c0e12] hover:bg-[#12151b] border border-white/[0.07] hover:border-amber-500/40 transition-all text-left rtl:text-right group cursor-pointer shadow-lg relative overflow-hidden"
+              >
+                <div className="flex items-center justify-between gap-2 pb-2">
+                  <div className="p-2 rounded-xl bg-amber-500/10 border border-amber-500/25 text-amber-400 group-hover:scale-105 transition-transform">
+                    <Car className="w-4 h-4" />
+                  </div>
+                  <span className="text-[10px] font-mono font-bold text-amber-400 bg-amber-950/50 border border-amber-800/40 px-2 py-0.5 rounded-md">
+                    145 DT
+                  </span>
+                </div>
+                <div className="text-sm font-bold text-white group-hover:text-amber-300 transition-colors">
+                  {locale === 'ar' ? 'البطاقة الرمادية والفحص الفني (ATTT)' : 'Mutation Carte Grise & Visite ATTT'}
+                </div>
+                <p className="text-[11px] text-zinc-400 mt-1 leading-relaxed">
+                  {locale === 'ar'
+                    ? 'عقد البيع المعرّف بالإمضاء، خلاص القباضة، ومراكز الفحص الفني.'
+                    : 'Contrat légalisé baladiya, khlas el 9badha, w agence ATTT.'}
+                </p>
+              </button>
+
+              {/* Tile 3: Legal Lease & Contract */}
+              <button
+                onClick={() => handleSendMessage('A3melli modèle contrat de bail kré sakani mrigel conforme COC')}
+                className="p-4 rounded-2xl bg-[#0c0e12] hover:bg-[#12151b] border border-white/[0.07] hover:border-blue-500/40 transition-all text-left rtl:text-right group cursor-pointer shadow-lg relative overflow-hidden"
+              >
+                <div className="flex items-center justify-between gap-2 pb-2">
+                  <div className="p-2 rounded-xl bg-blue-500/10 border border-blue-500/25 text-blue-400 group-hover:scale-105 transition-transform">
+                    <FileText className="w-4 h-4" />
+                  </div>
+                  <span className="text-[10px] font-mono font-bold text-blue-400 bg-blue-950/50 border border-blue-800/40 px-2 py-0.5 rounded-md">
+                    Modèle PDF
+                  </span>
+                </div>
+                <div className="text-sm font-bold text-white group-hover:text-blue-300 transition-colors">
+                  {locale === 'ar' ? 'عقود الكراء والوثائق الرسمية' : 'Contrats de Bail & Actes Juridiques'}
+                </div>
+                <p className="text-[11px] text-zinc-400 mt-1 leading-relaxed">
+                  {locale === 'ar'
+                    ? 'صياغة قانونية مطابقة لمجلة الالتزامات والعقود مع التعريف بالإمضاء.'
+                    : 'Conforme COC, 5 DT timbre baladiya, w enregistrement recette.'}
+                </p>
+              </button>
+
+              {/* Tile 4: Public Concours */}
+              <button
+                onClick={() => handleSendMessage('Chnowa les concours el maftou7in tawa fi Tounes? (STEG, CAPES, SONEDE...)')}
+                className="p-4 rounded-2xl bg-[#0c0e12] hover:bg-[#12151b] border border-white/[0.07] hover:border-teal-500/40 transition-all text-left rtl:text-right group cursor-pointer shadow-lg relative overflow-hidden"
+              >
+                <div className="flex items-center justify-between gap-2 pb-2">
+                  <div className="p-2 rounded-xl bg-teal-500/10 border border-teal-500/25 text-teal-400 group-hover:scale-105 transition-transform">
+                    <Briefcase className="w-4 h-4" />
+                  </div>
+                  <span className="text-[10px] font-mono font-bold text-emerald-400 bg-emerald-950/50 border border-emerald-800/40 px-2 py-0.5 rounded-md">
+                    Session 2026
+                  </span>
+                </div>
+                <div className="text-sm font-bold text-white group-hover:text-teal-300 transition-colors">
+                  {locale === 'ar' ? 'مناظرات الوظيفة العمومية والشركات' : 'Radar Concours Nationaux (Jobs)'}
+                </div>
+                <p className="text-[11px] text-zinc-400 mt-1 leading-relaxed">
+                  {locale === 'ar'
+                    ? 'مناظرات الستاغ، الصوناد، وزارة التربية، وإعداد ملف الترشح.'
+                    : 'STEG, SONEDE, CAPES, DGI, w chourout el intidhab.'}
+                </p>
+              </button>
+
+            </div>
+
+            {/* Bespoke Command Studio Prompt Terminal */}
+            <div className="rounded-3xl bg-[#0e1015] border border-emerald-500/30 p-4 shadow-2xl space-y-3 relative z-10 focus-within:border-emerald-400 focus-within:shadow-[0_0_30px_rgba(16,185,129,0.15)] transition-all">
+              
+              {/* Terminal Header Mode Bar */}
+              <div className="flex items-center justify-between pb-2 border-b border-white/[0.06] text-xs">
+                <div className="flex items-center gap-2">
+                  <Sparkles className="w-3.5 h-3.5 text-emerald-400" />
+                  <span className="font-bold text-white text-xs">
+                    {locale === 'ar' ? 'موجه الأوامر الإدارية' : 'Civic Command Terminal'}
+                  </span>
                 </div>
 
-                {/* Main Text Input */}
-                <input
+                <div className="flex items-center gap-1.5 text-[11px] font-mono text-zinc-400">
+                  <span>{locale === 'ar' ? 'عربي / Derja / Français' : 'Derja · FR · AR · EN'}</span>
+                </div>
+              </div>
+
+              {/* Main Input Area */}
+              <div className="flex items-start gap-2 pt-1">
+                <textarea
                   autoFocus
-                  type="text"
+                  rows={2}
                   value={inputVal}
-                  onChange={(e) => setInputVal(e.target.value)}
-                  onKeyDown={(e) => {
-                    if (e.key === 'Enter') {
-                      e.preventDefault();
-                      handleSendMessage();
-                    }
-                  }}
+                  onChange={onTextareaChange}
+                  onKeyDown={onKeyDown}
                   placeholder={placeholder}
                   disabled={isTranscribing}
-                  className="flex-1 bg-transparent py-1 text-sm sm:text-base text-zinc-100 placeholder-zinc-500 border-0 outline-none ring-0 focus:border-0 focus:outline-none focus:ring-0 focus-visible:border-0 focus-visible:outline-none focus-visible:ring-0 shadow-none"
+                  className="flex-1 bg-transparent text-sm sm:text-base text-zinc-100 placeholder-zinc-500 border-0 outline-none ring-0 focus:outline-none focus:ring-0 resize-none max-h-36 leading-relaxed"
                 />
+              </div>
 
-                {/* Right Action Buttons */}
-                <div className="flex items-center gap-1.5 shrink-0">
-                  
-                  {/* Think Button */}
+              {/* Terminal Bottom Controls Toolbar */}
+              <div className="flex items-center justify-between pt-2 border-t border-white/[0.06]">
+                <div className="flex items-center gap-2">
+                  <Link
+                    href="/fasserli"
+                    className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-white/[0.04] hover:bg-white/[0.08] border border-white/10 text-xs font-semibold text-zinc-300 hover:text-white transition-colors"
+                  >
+                    <ScanText className="w-3.5 h-3.5 text-emerald-400" />
+                    <span className="hidden sm:inline">{locale === 'ar' ? 'فحص ورقة (OCR)' : 'Scanner OCR'}</span>
+                  </Link>
+
                   <button
                     type="button"
                     onClick={() => setThinkMode((p) => !p)}
-                    className={`flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium transition-colors cursor-pointer border-0 outline-none ${
+                    className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-semibold transition-colors cursor-pointer border ${
                       thinkMode
-                        ? 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/40'
-                        : 'text-zinc-400 hover:text-white hover:bg-white/10'
+                        ? 'bg-emerald-500/20 text-emerald-300 border-emerald-500/40'
+                        : 'bg-white/[0.04] hover:bg-white/[0.08] text-zinc-400 hover:text-white border-white/10'
                     }`}
-                    title="Deep Think mode"
                   >
-                    <Brain className="w-3.5 h-3.5" />
-                    <span className="hidden sm:inline">Think</span>
+                    <Brain className="w-3.5 h-3.5 text-emerald-400" />
+                    <span>{thinkMode ? 'Deep Legal Analysis' : 'Mode Approfondi'}</span>
                   </button>
+                </div>
 
-                  {/* Mic Button */}
+                <div className="flex items-center gap-2">
+                  {/* Voice Button */}
                   <button
                     type="button"
                     onClick={toggleVoice}
                     disabled={isTranscribing}
-                    className={`p-1.5 rounded-full transition-colors cursor-pointer border-0 outline-none ${
+                    className={`flex items-center gap-1.5 px-3.5 py-2 rounded-xl text-xs font-bold transition-all cursor-pointer border ${
                       isRecording
-                        ? 'bg-red-500 text-white animate-pulse'
+                        ? 'bg-red-600 text-white border-red-500 animate-pulse'
                         : isTranscribing
-                        ? 'text-emerald-400'
-                        : 'text-zinc-400 hover:text-white hover:bg-white/10'
+                        ? 'bg-emerald-950 text-emerald-400 border-emerald-800'
+                        : 'bg-white/[0.06] hover:bg-white/[0.12] text-zinc-200 border-white/10'
                     }`}
-                    title="Dictate"
                   >
                     {isTranscribing ? (
-                      <Loader2 className="w-4 h-4 animate-spin" />
+                      <Loader2 className="w-3.5 h-3.5 animate-spin" />
                     ) : isRecording ? (
-                      <MicOff className="w-4 h-4" />
+                      <MicOff className="w-3.5 h-3.5" />
                     ) : (
-                      <Mic className="w-4 h-4" />
+                      <Mic className="w-3.5 h-3.5 text-emerald-400" />
                     )}
+                    <span className="hidden sm:inline">
+                      {isRecording ? 'Enregistrement...' : isTranscribing ? 'Transcription...' : 'Dicter'}
+                    </span>
                   </button>
 
-                  {/* Send or Voice Circle Button */}
-                  {inputVal.trim() ? (
-                    <button
-                      type="button"
-                      onClick={() => handleSendMessage()}
-                      className="w-8 h-8 rounded-full bg-white text-black flex items-center justify-center transition-all hover:opacity-90 cursor-pointer shadow-md border-0 outline-none"
-                      title="Send"
-                    >
-                      <ArrowUp className="w-4 h-4 stroke-[3]" />
-                    </button>
-                  ) : (
-                    <button
-                      type="button"
-                      onClick={toggleVoice}
-                      className="w-8 h-8 rounded-full bg-emerald-600 hover:bg-emerald-500 text-white flex items-center justify-center transition-all cursor-pointer shadow-md border-0 outline-none"
-                      title="Voice AI"
-                    >
-                      <AudioLines className="w-4 h-4" />
-                    </button>
-                  )}
+                  {/* Send Button */}
+                  <button
+                    type="button"
+                    onClick={() => handleSendMessage()}
+                    disabled={!inputVal.trim() || isProcessing || isTranscribing}
+                    className="flex items-center gap-2 px-5 py-2 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-zinc-950 text-xs font-extrabold shadow-lg shadow-emerald-500/25 transition-all disabled:opacity-30 disabled:cursor-not-allowed cursor-pointer"
+                  >
+                    <span>{locale === 'ar' ? 'إرسال' : 'Consulter'}</span>
+                    <ArrowUp className="w-3.5 h-3.5 stroke-[3]" />
+                  </button>
                 </div>
-
               </div>
 
-              {/* Suggestions Row below input (Tunisian civic cards) */}
-              <div className="flex flex-wrap items-center justify-center gap-2 mt-5 text-xs text-zinc-300">
-                <button
-                  onClick={() => handleSendMessage('Kifech n5arej awra9 el passeport tounsi?')}
-                  className="flex items-center gap-2 px-3.5 py-2 rounded-full bg-white/[0.04] hover:bg-white/[0.08] border border-white/5 transition-colors cursor-pointer border-0 outline-none"
-                >
-                  <FileCheck2 className="w-3.5 h-3.5 text-emerald-400" />
-                  <span>{locale === 'ar' ? 'جواز السفر 80د' : 'Passeport & Timbres 80 DT'}</span>
-                </button>
-
-                <button
-                  onClick={() => handleSendMessage('A3melli contrat de bail kré sakani mrigel')}
-                  className="flex items-center gap-2 px-3.5 py-2 rounded-full bg-white/[0.04] hover:bg-white/[0.08] border border-white/5 transition-colors cursor-pointer border-0 outline-none"
-                >
-                  <FileText className="w-3.5 h-3.5 text-blue-400" />
-                  <span>{locale === 'ar' ? 'عقد كراء سكني' : 'Contrat de bail conforme'}</span>
-                </button>
-
-                <button
-                  onClick={() => handleSendMessage('Kifech na3mel mutation carte grise fi Tounes?')}
-                  className="flex items-center gap-2 px-3.5 py-2 rounded-full bg-white/[0.04] hover:bg-white/[0.08] border border-white/5 transition-colors cursor-pointer border-0 outline-none"
-                >
-                  <Car className="w-3.5 h-3.5 text-amber-400" />
-                  <span>{locale === 'ar' ? 'البطاقة الرمادية 145د' : 'Carte Grise & ATTT'}</span>
-                </button>
-              </div>
             </div>
-
-            {/* Bottom Floating Voice Banner (Personalized for Idaara Voice AI) */}
-            {showVoiceBanner && (
-              <div className="absolute bottom-6 inset-x-4 max-w-xl mx-auto rounded-3xl bg-[#18181b] border border-emerald-500/20 p-3.5 px-4 flex items-center justify-between shadow-2xl animate-fade-in z-30">
-                <div className="flex items-center gap-3.5">
-                  <div className="w-9 h-9 rounded-full bg-gradient-to-tr from-emerald-500 via-teal-400 to-cyan-300 animate-pulse shrink-0 shadow-lg shadow-emerald-500/20" />
-                  
-                  <div>
-                    <div className="text-xs font-bold text-white tracking-tight">Idaara Voice AI</div>
-                    <div className="text-[11px] text-zinc-400 leading-tight">
-                      {locale === 'ar'
-                        ? 'تحدث بالدارجة التونسية أو الفرنسية مع نموذج الصوت الذكي'
-                        : locale === 'derja'
-                        ? 'Tkellem bel Derja m3a l’assistant el idari el thaki'
-                        : 'Discutez en Derja tunisienne avec notre modèle vocal civique'}
-                    </div>
-                  </div>
-                </div>
-
-                <div className="flex items-center gap-2 shrink-0">
-                  <button
-                    onClick={toggleVoice}
-                    className="px-3 py-1.5 rounded-full bg-emerald-500 text-black text-xs font-semibold hover:bg-emerald-400 transition-colors cursor-pointer border-0 outline-none shadow-sm"
-                  >
-                    {locale === 'ar' ? 'بدء الصوت' : locale === 'derja' ? 'Bda el Sout' : 'Démarrer la voix'}
-                  </button>
-                  <button
-                    onClick={() => setShowVoiceBanner(false)}
-                    className="p-1 rounded-full text-zinc-500 hover:text-white hover:bg-white/10 transition-colors cursor-pointer border-0 outline-none"
-                    title="Dismiss"
-                  >
-                    <X className="w-3.5 h-3.5" />
-                  </button>
-                </div>
-              </div>
-            )}
 
           </div>
         )}
@@ -853,35 +896,38 @@ export default function CopilotPage() {
 
                 {/* Typing / Thinking Indicator */}
                 {isProcessing && (
-                  <div className="w-full py-2 animate-fade-in flex items-center gap-2 text-zinc-400 text-sm">
-                    <span className="w-2 h-2 rounded-full bg-emerald-400 animate-bounce" style={{ animationDelay: '0ms' }} />
-                    <span className="w-2 h-2 rounded-full bg-emerald-400 animate-bounce" style={{ animationDelay: '150ms' }} />
-                    <span className="w-2 h-2 rounded-full bg-emerald-400 animate-bounce" style={{ animationDelay: '300ms' }} />
+                  <div className="w-full py-3 animate-fade-in flex items-center gap-2.5 text-emerald-400 text-xs font-mono font-bold bg-emerald-950/30 border border-emerald-500/20 rounded-2xl p-3 max-w-md">
+                    <Loader2 className="w-4 h-4 animate-spin text-emerald-400" />
+                    <span>
+                      {locale === 'ar'
+                        ? 'جارٍ فحص القوانين والتنابر الرسمية...'
+                        : locale === 'derja'
+                        ? '9a3ed nthabbet fel awra9 wel 9anoun...'
+                        : 'Vérification des textes officiels JORT et barèmes...'}
+                    </span>
                   </div>
                 )}
               </div>
             </div>
 
-            {/* ─── Pinned Bottom Prompt Bar (Active Chat) ─── */}
-            <footer className="shrink-0 pb-4 pt-2 bg-gradient-to-t from-[#09090b] via-[#09090b]/95 to-transparent z-20 px-4 sm:px-6">
+            {/* Sticky Bottom Dock Input (When chatting) */}
+            <footer className="p-4 bg-[#090b0e]/95 backdrop-blur-xl border-t border-white/[0.08] shrink-0 z-20">
               <div className="max-w-3xl mx-auto space-y-2">
-                
-                {/* Bottom Pill Input */}
-                <div className="flex items-end gap-2 bg-[#1c1c1f] border border-white/10 rounded-3xl px-3 py-2 transition-all shadow-2xl">
+                <div className="flex items-center gap-2.5 bg-[#12141a] border border-white/[0.08] focus-within:border-emerald-500/50 rounded-2xl p-2 px-3 shadow-2xl transition-all">
                   
-                  {/* Plus Topic Button */}
-                  <div className="relative pb-1">
+                  {/* Plus Quick Topics */}
+                  <div className="relative shrink-0">
                     <button
                       type="button"
                       onClick={() => setShowPlusMenu((p) => !p)}
-                      className="p-1.5 rounded-full hover:bg-white/10 text-zinc-400 hover:text-white transition-colors cursor-pointer border-0 outline-none"
+                      className="p-2 rounded-xl hover:bg-white/10 text-zinc-400 hover:text-white transition-colors cursor-pointer border-0 outline-none"
                       title="Quick Topics"
                     >
                       <Plus className="w-4 h-4" />
                     </button>
 
                     {showPlusMenu && (
-                      <div className="absolute bottom-full left-0 mb-3 w-72 rounded-2xl bg-[#1e1e1e] border border-white/10 shadow-2xl p-2 z-50 animate-fade-in space-y-1">
+                      <div className="absolute bottom-full left-0 mb-3 w-72 rounded-2xl bg-[#161820] border border-white/10 shadow-2xl p-2 z-50 animate-fade-in space-y-1">
                         <div className="px-3 py-1 text-[10px] uppercase font-bold tracking-wider text-zinc-400">
                           {locale === 'ar' ? 'أسئلة شائعة' : locale === 'derja' ? 'As2ela ma3roufa' : 'Popular Inquiries'}
                         </div>
@@ -915,17 +961,17 @@ export default function CopilotPage() {
                   />
 
                   {/* Mic & Send Buttons */}
-                  <div className="flex items-center gap-1 pb-0.5 shrink-0">
+                  <div className="flex items-center gap-1.5 pb-0.5 shrink-0">
                     <button
                       type="button"
                       onClick={toggleVoice}
                       disabled={isTranscribing}
-                      className={`p-2 rounded-full transition-colors cursor-pointer border-0 outline-none ${
+                      className={`p-2 rounded-xl transition-colors cursor-pointer border border-white/5 ${
                         isRecording
-                          ? 'bg-red-500 text-white animate-pulse'
+                          ? 'bg-red-600 text-white animate-pulse'
                           : isTranscribing
-                          ? 'text-emerald-400'
-                          : 'text-zinc-400 hover:text-white hover:bg-white/10'
+                          ? 'text-emerald-400 bg-emerald-950'
+                          : 'text-zinc-400 hover:text-white bg-white/[0.04] hover:bg-white/[0.08]'
                       }`}
                       title="Voice Dictate"
                     >
@@ -934,7 +980,7 @@ export default function CopilotPage() {
                       ) : isRecording ? (
                         <MicOff className="w-4 h-4" />
                       ) : (
-                        <Mic className="w-4 h-4" />
+                        <Mic className="w-4 h-4 text-emerald-400" />
                       )}
                     </button>
 
@@ -942,7 +988,7 @@ export default function CopilotPage() {
                       type="button"
                       onClick={() => handleSendMessage()}
                       disabled={!inputVal.trim() || isProcessing || isTranscribing}
-                      className="w-8 h-8 rounded-full bg-white text-black flex items-center justify-center transition-all disabled:opacity-20 disabled:cursor-not-allowed hover:opacity-90 cursor-pointer shadow-md border-0 outline-none"
+                      className="px-3.5 py-2 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-zinc-950 flex items-center justify-center transition-all disabled:opacity-20 disabled:cursor-not-allowed cursor-pointer shadow-md font-bold text-xs"
                       title="Send"
                     >
                       <ArrowUp className="w-4 h-4 stroke-[3]" />
