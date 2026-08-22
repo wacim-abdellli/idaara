@@ -822,8 +822,8 @@ export default function HomePage() {
                     href="/copilot"
                     className="flex items-center gap-2 px-5 py-2.5 rounded-xl font-bold text-xs bg-emerald-500 hover:bg-emerald-400 text-zinc-950 shrink-0 shadow-lg shadow-emerald-500/30 transition-all cursor-pointer"
                   >
-                    <Mic className="w-3.5 h-3.5" />
-                    <span>{locale === 'ar' ? 'المساعد الصوتي' : locale === 'en' ? 'Voice AI' : 'Voice AI'}</span>
+                    <Sparkles className="w-3.5 h-3.5 fill-current" />
+                    <span>{locale === 'ar' ? 'المساعد الذكي' : 'Idaara AI'}</span>
                   </Link>
                 </motion.div>
               </form>

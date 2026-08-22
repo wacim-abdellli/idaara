@@ -525,7 +525,7 @@ export default function ProceduresPage() {
                 href="/copilot"
                 className="inline-flex items-center gap-1.5 text-xs font-bold text-emerald-300 hover:text-emerald-200 hover:underline pt-1"
               >
-                <span>{locale === 'en' ? 'Launch Voice AI' : 'Ouvrir Voice AI'}</span>
+                <span>{locale === 'ar' ? 'استشارة المساعد الذكي' : locale === 'en' ? 'Ask Idaara AI' : 'Consulter Idaara AI'}</span>
                 <ArrowRight className="w-3.5 h-3.5 rtl:rotate-180" />
               </Link>
             </motion.div>

@@ -7,10 +7,10 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { useLocale } from '../../context/LocaleContext';
 import { LanguageSwitcher } from './LanguageSwitcher';
 import { BrandLogo } from './BrandLogo';
-import { Mic, FileSearch, FileText, Calculator, MapPin, Rocket, BookOpen, Briefcase, Menu, X, Zap, Search } from 'lucide-react';
+import { Sparkles, FileSearch, FileText, Calculator, MapPin, Rocket, BookOpen, Briefcase, Menu, X, Search } from 'lucide-react';
 
 const NAV_LINKS = [
-  { href: '/copilot',    tKey: 'copilotNav',    icon: Mic },
+  { href: '/copilot',    tKey: 'copilotNav',    icon: Sparkles },
   { href: '/fasserli',   tKey: 'fasserliNav',   icon: FileSearch },
   { href: '/documents',  tKey: 'documentsNav',  icon: FileText },
   { href: '/calculator', tKey: 'calculatorNav', icon: Calculator },
@@ -25,7 +25,7 @@ export const Navbar: React.FC = () => {
   const pathname = usePathname();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
-  const voiceLabel = locale === 'ar' ? 'صوتي' : 'Voice AI';
+  const copilotLabel = locale === 'ar' ? 'المساعد الذكي' : 'Idaara AI';
 
   const triggerCommandPalette = () => {
     if (typeof window !== 'undefined') {
@@ -72,7 +72,7 @@ export const Navbar: React.FC = () => {
             </nav>
           </div>
 
-          {/* Right Side: Search, Language Switcher, Voice CTA, Mobile Toggle */}
+          {/* Right Side: Search, Language Switcher, AI Copilot CTA, Mobile Toggle */}
           <div className="flex items-center gap-2 shrink-0">
             {/* Search CTA (visible on xl screens) */}
             <motion.button
@@ -92,14 +92,14 @@ export const Navbar: React.FC = () => {
             {/* Language Switcher */}
             <LanguageSwitcher />
 
-            {/* Voice CTA Button */}
+            {/* AI Copilot CTA Button */}
             <motion.div whileHover={{ scale: 1.06 }} whileTap={{ scale: 0.95 }}>
               <Link
                 href="/copilot"
-                className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-emerald-500 hover:bg-emerald-400 text-zinc-950 font-bold text-xs shadow-md shadow-emerald-500/20 transition-all shrink-0 cursor-pointer"
+                className="flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-emerald-500 hover:bg-emerald-400 text-zinc-950 font-bold text-xs shadow-md shadow-emerald-500/20 transition-all shrink-0 cursor-pointer"
               >
-                <Zap className="w-3.5 h-3.5 fill-current" />
-                <span>{voiceLabel}</span>
+                <Sparkles className="w-3.5 h-3.5 fill-current" />
+                <span>{copilotLabel}</span>
               </Link>
             </motion.div>
 

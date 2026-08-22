@@ -101,7 +101,7 @@ export const DocumentAnalysisResult: React.FC<DocumentAnalysisResultProps> = ({
     locale === 'en' ? 'Legal Framework:' : locale === 'ar' ? 'الإطار القانوني :' : locale === 'fr' ? 'Cadre juridique :' : 'Cadre juridique :';
 
   const copilotBtn =
-    locale === 'en' ? 'Ask Voice AI about this notice' : locale === 'ar' ? 'اسأل المساعد الصوتي عن هذه الوثيقة' : locale === 'fr' ? 'Poser une question à l’IA' : 'Es2el Idaara AI 3la hal war9a';
+    locale === 'en' ? 'Ask Idaara AI about this notice' : locale === 'ar' ? 'اسأل المساعد الذكي عن هذه الوثيقة' : locale === 'fr' ? 'Poser une question à l’IA Idaara' : 'Es2el Idaara AI 3la hal war9a';
 
   return (
     <div className="space-y-6 glass-panel rounded-3xl p-6 sm:p-8 border border-zinc-800 shadow-2xl">

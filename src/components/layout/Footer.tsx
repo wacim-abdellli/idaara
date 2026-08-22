@@ -47,12 +47,12 @@ export const Footer: React.FC = () => {
       href: '/copilot',
       label:
         locale === 'ar'
-          ? 'المساعد الصوتي بالدارجة'
+          ? 'المساعد الذكي (Idaara AI)'
           : locale === 'derja'
-          ? 'Voice AI bel Derja'
+          ? 'Idaara AI bel Derja'
           : locale === 'en'
-          ? 'Voice AI (Derja AI)'
-          : 'Voice AI (Derja AI)',
+          ? 'Idaara AI (Civic Copilot)'
+          : 'Idaara AI (Copilote Civique)',
     },
     {
       href: '/fasserli',

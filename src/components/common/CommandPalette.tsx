@@ -81,23 +81,23 @@ export const CommandPalette: React.FC = () => {
         category: 'tool',
         title:
           locale === 'ar'
-            ? 'المساعد الذكي بالدارجة'
+            ? 'المساعد الإداري الذكي (Idaara AI)'
             : locale === 'derja'
-            ? 'Voice AI bel Derja'
+            ? 'Idaara AI bel Derja'
             : locale === 'en'
-            ? 'Voice AI (Derja AI)'
-            : 'Assistant Vocal en Derja',
+            ? 'Idaara AI (Civic Chat)'
+            : 'Idaara AI (Copilote Civique)',
         subtitle:
           locale === 'ar'
-            ? 'تحدث بالصوت حول أي إجراء'
+            ? 'مساعد إداري وقانوني متكامل للإجراءات والمناظرات'
             : locale === 'derja'
-            ? 'Tkallem bel sout 3la ay war9a walla démarche'
+            ? 'Assistant idari w 9anouni lel awra9 wel démarches'
             : locale === 'en'
-            ? 'Ask AI about any procedure in any language'
-            : 'Posez vos questions par la voix ou le texte',
+            ? 'Full civic & legal AI chat for Tunisian procedures & concours'
+            : 'Assistant IA complet pour les démarches et concours tunisiens',
         url: '/copilot',
         badge: 'AI',
-        icon: Mic,
+        icon: Sparkles,
       },
       {
         id: 'tool-fasserli',

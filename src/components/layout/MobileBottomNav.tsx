@@ -4,14 +4,14 @@ import React from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useLocale } from '../../context/LocaleContext';
-import { Mic, FileSearch, FileText, Calculator, MapPin } from 'lucide-react';
+import { Sparkles, FileSearch, FileText, Calculator, MapPin } from 'lucide-react';
 
 export const MobileBottomNav: React.FC = () => {
   const { t, locale } = useLocale();
   const pathname = usePathname();
 
   const items = [
-    { href: '/copilot', label: locale === 'ar' ? 'صوتي' : locale === 'en' ? 'Voice' : 'Voice AI', icon: Mic },
+    { href: '/copilot', label: locale === 'ar' ? 'المساعد' : 'Idaara AI', icon: Sparkles },
     { href: '/fasserli', label: locale === 'ar' ? 'فسّرلي' : locale === 'en' ? 'OCR' : 'Fasserli', icon: FileSearch },
     { href: '/documents', label: locale === 'ar' ? 'عقود' : locale === 'en' ? 'Forms' : 'PDFs', icon: FileText },
     { href: '/calculator', label: locale === 'ar' ? 'تنابر' : locale === 'en' ? 'Stamps' : 'Timbres', icon: Calculator },

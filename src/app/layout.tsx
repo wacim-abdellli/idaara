@@ -9,11 +9,11 @@ import { MobileBottomNav } from '../components/layout/MobileBottomNav';
 
 export const metadata: Metadata = {
   title: {
-    default: "Idaara.tn — Voice AI & Smart Administrative Services",
+    default: "Idaara.tn — AI Copilot & Smart Administrative Services",
     template: "%s | Idaara.tn",
   },
-  description: "Fasserli, 3abbi w a3tini l'awra9 — Conquer Tunisian administrative red tape with Derja voice AI, document OCR, and certified PDF forms.",
-  keywords: ['Idaara', 'Baladiya', 'Tunisie', 'Derja AI', 'Passeport Tunisien', 'Carte Grise', 'Timbres Fiscaux', 'Auto-Entrepreneur'],
+  description: "Fasserli, 3abbi w a3tini l'awra9 — Conquer Tunisian administrative red tape with Derja AI Copilot, live concours radar, document OCR, and certified PDF forms.",
+  keywords: ['Idaara', 'Baladiya', 'Tunisie', 'Derja AI', 'AI Copilot', 'Passeport Tunisien', 'Carte Grise', 'Timbres Fiscaux', 'Auto-Entrepreneur'],
   icons: {
     icon: [
       { url: '/favicon.svg', type: 'image/svg+xml' },
