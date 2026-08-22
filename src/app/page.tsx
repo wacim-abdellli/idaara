@@ -815,7 +815,7 @@ export default function HomePage() {
                   value={searchVal}
                   onChange={(e) => setSearchVal(e.target.value)}
                   placeholder={t('voiceSearchBarPlaceholder')}
-                  className="flex-1 bg-transparent text-xs sm:text-sm text-zinc-100 placeholder-zinc-500 focus:outline-none py-2 min-w-0"
+                  className="flex-1 bg-transparent text-xs sm:text-sm text-zinc-100 placeholder-zinc-500 focus:outline-none py-2 min-w-0 pr-3 rtl:pl-3 rtl:pr-0"
                 />
                 <motion.div whileHover={{ scale: 1.04 }} whileTap={{ scale: 0.96 }}>
                   <Link
