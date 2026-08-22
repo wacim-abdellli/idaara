@@ -972,12 +972,35 @@ export default function CopilotPage() {
                   <ChatMessage key={msg.id} message={msg} onSelectPrompt={(p) => handleSendMessage(p)} />
                 ))}
 
-                {/* Minimalist ChatGPT-style Loading Dots */}
+                {/* Modern Ultra-Sleek AI Processing Indicator */}
                 {isProcessing && (
-                  <div className="w-full py-4 px-1 flex items-center gap-1.5 animate-fade-in">
-                    <span className="w-2.5 h-2.5 rounded-full bg-zinc-400 animate-bounce" style={{ animationDelay: '0ms' }} />
-                    <span className="w-2.5 h-2.5 rounded-full bg-zinc-400 animate-bounce" style={{ animationDelay: '150ms' }} />
-                    <span className="w-2.5 h-2.5 rounded-full bg-zinc-400 animate-bounce" style={{ animationDelay: '300ms' }} />
+                  <div className="w-full py-3 space-y-2.5 animate-fade-in">
+                    <div className="flex items-center gap-2.5">
+                      {/* Pulsing Glowing Aura Orb */}
+                      <div className="relative flex items-center justify-center w-4 h-4 shrink-0">
+                        <span className="absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-40 animate-ping" />
+                        <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-400 shadow-[0_0_10px_rgba(52,211,153,0.9)]" />
+                      </div>
+
+                      <span className="text-xs text-zinc-400 font-medium tracking-wide">
+                        {thinkMode
+                          ? (locale === 'ar' ? 'جارِ التفكير والتحليل القانوني المعمق...' : locale === 'derja' ? 'N5ammem w n7allel fel 9anoun...' : 'Analyse juridique approfondie...')
+                          : (locale === 'ar' ? 'جارِ البحث والتحضير من المصادر الرسمية...' : locale === 'derja' ? 'Nlawwej w n7adher fel ijaba...' : 'Recherche et traitement officiel...')}
+                      </span>
+
+                      {/* Smooth Glowing Shimmer Dots */}
+                      <div className="flex items-center gap-1">
+                        <span className="w-1.5 h-1.5 rounded-full bg-emerald-400/80 animate-pulse" style={{ animationDelay: '0ms' }} />
+                        <span className="w-1.5 h-1.5 rounded-full bg-emerald-400/80 animate-pulse" style={{ animationDelay: '200ms' }} />
+                        <span className="w-1.5 h-1.5 rounded-full bg-emerald-400/80 animate-pulse" style={{ animationDelay: '400ms' }} />
+                      </div>
+                    </div>
+
+                    {/* Subtle Shimmer Skeleton Wave */}
+                    <div className="space-y-1.5 pl-6 rtl:pl-0 rtl:pr-6 opacity-60">
+                      <div className="h-2 rounded-full bg-gradient-to-r from-white/[0.08] via-emerald-500/20 to-white/[0.04] w-3/5 animate-pulse" />
+                      <div className="h-2 rounded-full bg-gradient-to-r from-white/[0.06] via-white/[0.03] to-transparent w-2/5 animate-pulse" style={{ animationDelay: '150ms' }} />
+                    </div>
                   </div>
                 )}
               </div>
