@@ -209,18 +209,60 @@ export default function CopilotPage() {
 
       const data = await res.json();
       const response = data.result || {};
+      const fullText = (response.content || '').trim();
 
+      if (!fullText) {
+        setIsProcessing(false);
+        return;
+      }
+
+      const aiMsgId = `ai-${Date.now()}`;
+
+      // Insert initial assistant message shell
       setMessages((prev) => [
         ...prev,
         {
-          id: `ai-${Date.now()}`,
+          id: aiMsgId,
           sender: 'assistant',
-          content: response.content || '',
+          content: '',
           timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
           actions: response.actions,
           timbreBreakdown: response.timbreBreakdown,
         },
       ]);
+      setIsProcessing(false);
+
+      // Progressive line-by-line & word-by-word streaming effect
+      const lines = fullText.split('\n');
+      let currentText = '';
+
+      for (let i = 0; i < lines.length; i++) {
+        const line = lines[i];
+        if (i > 0) currentText += '\n';
+
+        if (!line.trim()) {
+          const snapshot = currentText;
+          setMessages((prev) =>
+            prev.map((m) => (m.id === aiMsgId ? { ...m, content: snapshot } : m))
+          );
+          await new Promise((r) => setTimeout(r, 20));
+          continue;
+        }
+
+        const words = line.split(' ');
+        for (let j = 0; j < words.length; j++) {
+          currentText += (j === 0 ? '' : ' ') + words[j];
+          const snapshot = currentText;
+          setMessages((prev) =>
+            prev.map((m) => (m.id === aiMsgId ? { ...m, content: snapshot } : m))
+          );
+          // Fast, silky smooth typing speed (16ms per token)
+          await new Promise((r) => setTimeout(r, 16));
+        }
+
+        // Brief natural pause between lines/paragraphs
+        await new Promise((r) => setTimeout(r, 40));
+      }
     } catch {
       setMessages((prev) => [
         ...prev,
