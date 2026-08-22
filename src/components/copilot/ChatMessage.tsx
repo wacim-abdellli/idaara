@@ -49,6 +49,7 @@ function renderInlineStyles(text: string): React.ReactNode {
           target="_blank"
           rel="noopener noreferrer"
           dir="ltr"
+          style={{ unicodeBidi: 'isolate' }}
           className="inline-flex items-center gap-1 px-2 py-0.5 mx-1 rounded-lg bg-emerald-500/15 hover:bg-emerald-500/25 border border-emerald-500/30 text-emerald-400 font-mono text-xs font-semibold hover:underline transition-colors align-baseline"
         >
           <span>{mdLinkMatch[1]}</span>
@@ -69,7 +70,7 @@ function renderInlineStyles(text: string): React.ReactNode {
     // 3. Code `text`
     if (part.startsWith('`') && part.endsWith('`')) {
       return (
-        <code key={i} className="px-1.5 py-0.5 rounded-md bg-white/10 text-emerald-300 font-mono text-xs" dir="ltr">
+        <code key={i} className="px-1.5 py-0.5 rounded-md bg-white/10 text-emerald-300 font-mono text-xs inline-block" dir="ltr" style={{ unicodeBidi: 'isolate' }}>
           {part.slice(1, -1)}
         </code>
       );
@@ -85,6 +86,7 @@ function renderInlineStyles(text: string): React.ReactNode {
           target="_blank"
           rel="noopener noreferrer"
           dir="ltr"
+          style={{ unicodeBidi: 'isolate' }}
           className="inline-flex items-center gap-1 px-2 py-0.5 mx-1 rounded-lg bg-emerald-500/15 hover:bg-emerald-500/25 border border-emerald-500/30 text-emerald-400 font-mono text-xs font-semibold hover:underline transition-colors align-baseline"
         >
           <span className="truncate max-w-[200px]">{part.replace(/^https?:\/\//, '')}</span>
@@ -96,7 +98,7 @@ function renderInlineStyles(text: string): React.ReactNode {
     // 5. Currency amounts (e.g. 80 DT, 25 د.ت, 145 DT)
     if (/\b\d+(?:[.,]\d+)?\s*(?:DT|TND|د\.ت|دينار)\b/i.test(part)) {
       return (
-        <span key={i} className="inline-block px-2 py-0.5 mx-1 rounded-md bg-amber-500/15 border border-amber-500/30 text-amber-300 font-mono font-bold text-xs shadow-inner align-baseline" dir="ltr">
+        <span key={i} className="inline-block px-2 py-0.5 mx-1 rounded-md bg-amber-500/15 border border-amber-500/30 text-amber-300 font-mono font-bold text-xs shadow-inner align-baseline" dir="ltr" style={{ unicodeBidi: 'isolate' }}>
           {part}
         </span>
       );
@@ -105,7 +107,7 @@ function renderInlineStyles(text: string): React.ReactNode {
     // 6. Latin Acronyms (e.g. CIN, B3, CAPES, ATTT, JORT, PDF)
     if (/^[A-Z0-9]{2,}$/.test(part)) {
       return (
-        <span key={i} className="inline-block px-1.5 py-0.5 mx-1 rounded-md bg-zinc-800/90 border border-white/10 text-emerald-300 font-mono font-bold text-xs shadow-sm align-baseline" dir="ltr">
+        <span key={i} className="inline-block px-1.5 py-0.5 mx-1 rounded-md bg-zinc-800/90 border border-white/10 text-emerald-300 font-mono font-bold text-xs shadow-sm align-baseline" dir="ltr" style={{ unicodeBidi: 'isolate' }}>
           {part}
         </span>
       );
@@ -239,7 +241,7 @@ function renderFormattedContent(text: string): React.ReactNode {
     if (line.startsWith('#') || /^(\*{2})?(📑|🎯|💰|🏛️|📍|📋|✅|🔑)/.test(line)) {
       const headerText = line.replace(/^#+\s*/, '');
       blocks.push(
-        <div key={`h-${i}`} dir={lineDir} className={`pt-4 pb-1.5 mb-1.5 flex items-center gap-2 border-b border-white/[0.06] ${lineAlign}`}>
+        <div key={`h-${i}`} dir={lineDir} className={`pt-4 pb-2 mb-2 flex items-center gap-2 border-b border-white/[0.06] ${lineAlign}`}>
           <h4 className="text-sm sm:text-base font-bold text-white tracking-wide flex items-center gap-2">
             <span>{renderInlineStyles(headerText)}</span>
           </h4>
@@ -249,15 +251,15 @@ function renderFormattedContent(text: string): React.ReactNode {
       continue;
     }
 
-    // 5. Numbered List (1. 2. 3.)
+    // 5. Numbered List (1. 2. 3.) -> Main Step Headers
     const numberedMatch = line.match(/^(\d+)\.\s+(.+)$/);
     if (numberedMatch) {
       blocks.push(
-        <div key={`num-${i}`} dir={lineDir} className={`flex items-start gap-2.5 my-1.5 ${lineAlign}`}>
-          <span className="flex items-center justify-center min-w-[22px] h-[22px] rounded-full bg-emerald-500/15 border border-emerald-500/30 text-emerald-300 text-xs font-mono font-bold shrink-0 mt-0.5">
+        <div key={`num-${i}`} dir={lineDir} className={`flex items-center gap-3 mt-4 mb-2 ${lineAlign}`}>
+          <span className="flex items-center justify-center w-6 h-6 rounded-lg bg-emerald-500/20 border border-emerald-500/40 text-emerald-300 text-xs font-mono font-bold shrink-0 shadow-sm">
             {numberedMatch[1]}
           </span>
-          <span className="text-zinc-200 flex-1 leading-relaxed text-sm sm:text-[15px]">
+          <span className="text-white font-bold text-sm sm:text-base leading-snug flex-1">
             {renderInlineStyles(numberedMatch[2])}
           </span>
         </div>
@@ -266,15 +268,15 @@ function renderFormattedContent(text: string): React.ReactNode {
       continue;
     }
 
-    // 6. Bullet Points (- or * or •)
+    // 6. Sub-Bullet Points (- or * or •) -> Indented under steps
     if (line.startsWith('- ') || line.startsWith('* ') || line.startsWith('• ')) {
       const bulletText = line.replace(/^[-*•]\s+/, '');
       blocks.push(
-        <div key={`bullet-${i}`} dir={lineDir} className={`flex items-start gap-2.5 my-1.5 ${lineAlign}`}>
-          <span className="flex items-center justify-center w-4 h-4 rounded-full bg-emerald-500/20 text-emerald-400 shrink-0 mt-1 text-[10px] font-bold">
+        <div key={`bullet-${i}`} dir={lineDir} className={`flex items-start gap-2.5 my-1.5 ms-7 sm:ms-8 ${lineAlign}`}>
+          <span className="flex items-center justify-center w-4 h-4 rounded-full bg-emerald-500/15 text-emerald-400 shrink-0 mt-1 text-[10px] font-bold">
             ✓
           </span>
-          <span className="text-zinc-200 flex-1 leading-relaxed text-sm sm:text-[15px]">
+          <span className="text-zinc-300 flex-1 leading-relaxed text-xs sm:text-[14px]">
             {renderInlineStyles(bulletText)}
           </span>
         </div>
