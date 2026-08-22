@@ -180,70 +180,46 @@ export async function POST(req: NextRequest) {
       { role: 'user', content: prompt },
     ];
 
-    // ─── PRIMARY ENGINE: Groq 120B / Qwen ───
+    // ─── PRIMARY ENGINE: Multi-Model Groq Cascade ───
     if (apiKey) {
-      try {
-        const groqRes = await fetch('https://api.groq.com/openai/v1/chat/completions', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            Authorization: `Bearer ${apiKey}`,
-          },
-          body: JSON.stringify({
-            model: 'openai/gpt-oss-120b',
-            messages: chatMessages,
-            temperature: 0.2,
-            max_tokens: 1200,
-          }),
-        });
-
-        if (groqRes.ok) {
-          const data = await groqRes.json();
-          const reply = data.choices?.[0]?.message?.content;
-          if (reply) {
-            return NextResponse.json({
-              success: true,
-              result: {
-                content: reply,
-                source: 'idaara-native-ai',
-                providerName: 'Idaara AI',
-              },
-            });
-          }
-        } else {
-          // Fallback to Qwen on Groq
-          const qwenRes = await fetch('https://api.groq.com/openai/v1/chat/completions', {
+      const groqModels = ['openai/gpt-oss-120b', 'qwen/qwen3.6-27b', 'openai/gpt-oss-20b'];
+      for (const model of groqModels) {
+        try {
+          const groqRes = await fetch('https://api.groq.com/openai/v1/chat/completions', {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json',
               Authorization: `Bearer ${apiKey}`,
             },
             body: JSON.stringify({
-              model: 'qwen/qwen3.6-27b',
+              model,
               messages: chatMessages,
               temperature: 0.2,
-              max_tokens: 1024,
+              max_tokens: 1200,
             }),
           });
-          if (qwenRes.ok) {
-            const data = await qwenRes.json();
+
+          if (groqRes.ok) {
+            const data = await groqRes.json();
             let reply = data.choices?.[0]?.message?.content;
-            if (reply) {
-              // Strip any <think> tags if present
+            if (reply && reply.trim()) {
+              // Strip any <think> tags if reasoning model returns chain-of-thought
               reply = reply.replace(/<think>[\s\S]*?<\/think>/g, '').trim();
-              return NextResponse.json({
-                success: true,
-                result: {
-                  content: reply,
-                  source: 'idaara-native-ai',
-                  providerName: 'Idaara AI',
-                },
-              });
+              if (reply) {
+                return NextResponse.json({
+                  success: true,
+                  result: {
+                    content: reply,
+                    source: 'idaara-native-ai',
+                    providerName: 'Idaara AI',
+                  },
+                });
+              }
             }
           }
+        } catch (groqErr) {
+          console.warn(`Idaara AI call to ${model} failed, trying next fallback:`, groqErr);
         }
-      } catch (groqErr) {
-        console.warn('Idaara AI network call failed:', groqErr);
       }
     }
 

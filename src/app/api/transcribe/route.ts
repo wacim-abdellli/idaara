@@ -36,7 +36,7 @@ export async function POST(req: NextRequest) {
     groqFormData.append('file', audioFile, 'recording.webm');
     groqFormData.append('model', 'whisper-large-v3-turbo');
     groqFormData.append('response_format', 'json');
-    groqFormData.append('language', 'ar'); // Supports Arabic and Tunisian Derja seamlessly
+    groqFormData.append('prompt', 'Idaara.tn, Tunisian administration, Derja, Français, Arabic, Passeport, Carte Grise, CIN, Timbres, Concours.');
 
     const groqRes = await fetch('https://api.groq.com/openai/v1/audio/transcriptions', {
       method: 'POST',

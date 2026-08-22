@@ -270,6 +270,9 @@ export default function CopilotPage() {
   const toggleVoice = async () => {
     if (isRecording) {
       if (mediaRecorderRef.current && mediaRecorderRef.current.state !== 'inactive') {
+        try {
+          mediaRecorderRef.current.requestData();
+        } catch {}
         mediaRecorderRef.current.stop();
       }
       setIsRecording(false);
@@ -280,7 +283,9 @@ export default function CopilotPage() {
       const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
       audioChunksRef.current = [];
 
-      const mimeType = MediaRecorder.isTypeSupported('audio/webm')
+      const mimeType = MediaRecorder.isTypeSupported('audio/webm;codecs=opus')
+        ? 'audio/webm;codecs=opus'
+        : MediaRecorder.isTypeSupported('audio/webm')
         ? 'audio/webm'
         : MediaRecorder.isTypeSupported('audio/mp4')
         ? 'audio/mp4'
@@ -295,7 +300,10 @@ export default function CopilotPage() {
 
       recorder.onstop = async () => {
         stream.getTracks().forEach((track) => track.stop());
-        if (audioChunksRef.current.length === 0) return;
+        if (audioChunksRef.current.length === 0) {
+          setIsTranscribing(false);
+          return;
+        }
 
         const audioBlob = new Blob(audioChunksRef.current, { type: recorder.mimeType || 'audio/webm' });
         setIsTranscribing(true);
@@ -322,7 +330,7 @@ export default function CopilotPage() {
         }
       };
 
-      recorder.start();
+      recorder.start(100);
       setIsRecording(true);
     } catch (err) {
       console.warn('Mic permission error:', err);
