@@ -47,14 +47,14 @@ interface ChatSession {
 }
 
 const STORAGE_SESSIONS_KEY = 'idaara_copilot_saved_sessions';
-const STORAGE_CURRENT_KEY = 'idaara_copilot_chat_history';
+const STORAGE_ACTIVE_ID_KEY = 'idaara_copilot_active_session_id';
 
 export default function CopilotPage() {
   const { locale } = useLocale();
 
   const [messages, setMessages] = useState<ChatMessageType[]>([]);
   const [sessions, setSessions] = useState<ChatSession[]>([]);
-  const [currentSessionId, setCurrentSessionId] = useState<string>('current');
+  const [currentSessionId, setCurrentSessionId] = useState<string>(() => `session-${Date.now()}`);
   const [inputVal, setInputVal] = useState('');
   const [isProcessing, setIsProcessing] = useState(false);
   const [isRecording, setIsRecording] = useState(false);
@@ -73,21 +73,39 @@ export default function CopilotPage() {
   const mediaRecorderRef = useRef<MediaRecorder | null>(null);
   const audioChunksRef = useRef<Blob[]>([]);
 
-  // ── 1. Load Chat Sessions & Current Thread ──
+  // ── 1. Load Chat Sessions & Active Thread with Auto-Deduplication ──
   useEffect(() => {
     if (typeof window !== 'undefined') {
       try {
         const savedSessions = localStorage.getItem(STORAGE_SESSIONS_KEY);
+        let loadedSessions: ChatSession[] = [];
         if (savedSessions) {
           const parsed = JSON.parse(savedSessions);
-          if (Array.isArray(parsed)) setSessions(parsed);
+          if (Array.isArray(parsed)) {
+            // Deduplicate sessions by ID and clean duplicate ghost threads
+            const seenIds = new Set<string>();
+            const seenSignatures = new Set<string>();
+            for (const s of parsed) {
+              if (s && s.id && !seenIds.has(s.id)) {
+                const signature = `${s.title}_${s.messages?.length || 0}`;
+                if (!seenSignatures.has(signature)) {
+                  seenSignatures.add(signature);
+                  seenIds.add(s.id);
+                  loadedSessions.push(s);
+                }
+              }
+            }
+            setSessions(loadedSessions);
+            localStorage.setItem(STORAGE_SESSIONS_KEY, JSON.stringify(loadedSessions));
+          }
         }
 
-        const savedCurrent = localStorage.getItem(STORAGE_CURRENT_KEY);
-        if (savedCurrent) {
-          const parsed = JSON.parse(savedCurrent);
-          if (Array.isArray(parsed) && parsed.length > 0) {
-            setMessages(parsed);
+        const savedActiveId = localStorage.getItem(STORAGE_ACTIVE_ID_KEY);
+        if (savedActiveId && loadedSessions.length > 0) {
+          const activeSession = loadedSessions.find((s) => s.id === savedActiveId);
+          if (activeSession) {
+            setCurrentSessionId(activeSession.id);
+            setMessages(activeSession.messages || []);
           }
         }
       } catch (err) {
@@ -102,37 +120,36 @@ export default function CopilotPage() {
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  // ── 2. Persist Active Messages & Sessions ──
+  // ── 2. Persist Active Messages & Sessions (No Duplicate Clones) ──
   useEffect(() => {
     if (!isInitialized || typeof window === 'undefined') return;
     try {
       if (messages.length > 0) {
-        localStorage.setItem(STORAGE_CURRENT_KEY, JSON.stringify(messages));
+        localStorage.setItem(STORAGE_ACTIVE_ID_KEY, currentSessionId);
 
         const firstUserMsg = messages.find((m) => m.sender === 'user')?.content || 'Discussion';
-        const title = firstUserMsg.slice(0, 32) + (firstUserMsg.length > 32 ? '...' : '');
+        const defaultTitle = firstUserMsg.slice(0, 32) + (firstUserMsg.length > 32 ? '...' : '');
 
         setSessions((prev) => {
           const exists = prev.find((s) => s.id === currentSessionId);
           let updated: ChatSession[];
           if (exists) {
-            updated = prev.map((s) => (s.id === currentSessionId ? { ...s, title, messages } : s));
+            const preservedTitle = exists.title && exists.title !== 'Discussion' ? exists.title : defaultTitle;
+            updated = prev.map((s) => (s.id === currentSessionId ? { ...s, title: preservedTitle, messages } : s));
           } else {
             updated = [
               {
                 id: currentSessionId,
-                title,
+                title: defaultTitle,
                 timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
                 messages,
               },
-              ...prev.slice(0, 15),
+              ...prev.slice(0, 20),
             ];
           }
           localStorage.setItem(STORAGE_SESSIONS_KEY, JSON.stringify(updated));
           return updated;
         });
-      } else {
-        localStorage.removeItem(STORAGE_CURRENT_KEY);
       }
     } catch (err) {
       console.warn('Failed to persist messages:', err);
@@ -289,14 +306,16 @@ export default function CopilotPage() {
   };
 
   const handleNewChat = () => {
+    const newId = `session-${Date.now()}`;
+    setCurrentSessionId(newId);
     setMessages([]);
-    setCurrentSessionId(`session-${Date.now()}`);
-    localStorage.removeItem(STORAGE_CURRENT_KEY);
+    localStorage.setItem(STORAGE_ACTIVE_ID_KEY, newId);
   };
 
   const loadSession = (session: ChatSession) => {
     setCurrentSessionId(session.id);
-    setMessages(session.messages);
+    setMessages(session.messages || []);
+    localStorage.setItem(STORAGE_ACTIVE_ID_KEY, session.id);
   };
 
   const promptDeleteSession = (e: React.MouseEvent, sess: ChatSession) => {
