@@ -10,10 +10,9 @@ import {
   FileText,
   X,
   Sparkles,
-  CheckCircle2,
-  AlertCircle,
-  FileCheck,
   RefreshCw,
+  Eye,
+  Check,
 } from 'lucide-react';
 import { useLocale } from '../../context/LocaleContext';
 
@@ -63,19 +62,19 @@ export const DocumentUploader: React.FC<DocumentUploaderProps> = ({ onAnalyze, i
     locale === 'en'
       ? 'Mask sensitive CIN & bank account numbers'
       : locale === 'ar'
-      ? 'حجب أرقام بطاقة التعريف ورقم الحساب البنكي'
+      ? 'حجب أرقام بطاقة التعريف والحساب البنكي'
       : locale === 'fr'
-      ? 'Masquer les numéros CIN & RIB'
+      ? 'Masquer les numéros sensibles (CIN & RIB)'
       : 'Imser les numéros CIN & RIB';
 
   const analyzeBtnText =
     locale === 'en'
-      ? 'Scan & Decode Document'
+      ? 'Scan & Decode Notice'
       : locale === 'ar'
-      ? 'تحليل وفك رموز الوثيقة فورياً'
+      ? 'تحليل وفك رموز الوثيقة'
       : locale === 'fr'
-      ? 'Analyser & Décoder la Notice'
-      : 'Fasserli Hal War9a bel AI';
+      ? 'Lancer le Décryptage IA'
+      : 'Fasserli Hal War9a';
 
   return (
     <div className="w-full">
@@ -90,107 +89,99 @@ export const DocumentUploader: React.FC<DocumentUploaderProps> = ({ onAnalyze, i
 
       {selectedFile ? (
         /* ═════════════════════════════════════════════════════════════════
-           UNIFIED SELECTED DOCUMENT INSPECTOR (CLEAN & COMPACT)
+           MINIMALIST, SLEEK DOCUMENT INSPECTION CARD
         ══════════════════════════════════════════════════════════════════ */
-        <div className="rounded-3xl bg-[#12141a] border border-emerald-500/30 p-5 sm:p-6 shadow-2xl space-y-5 relative overflow-hidden ring-1 ring-emerald-500/20">
+        <div className="rounded-3xl bg-[#14161d] border border-white/[0.08] p-5 sm:p-7 shadow-2xl space-y-5 relative">
           
-          {/* Top Status Header */}
-          <div className="flex items-center justify-between pb-3 border-b border-white/[0.08]">
-            <div className="flex items-center gap-2">
-              <span className="relative flex h-2.5 w-2.5">
-                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75" />
-                <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-emerald-400" />
-              </span>
-              <span className="text-xs font-mono font-bold text-emerald-400 uppercase tracking-wider">
-                {locale === 'ar' ? 'تم تحميل الوثيقة · جاهزة للتحليل' : 'DOCUMENT CHARGÉ · PRÊT POUR LE DÉCODAGE'}
-              </span>
-            </div>
-
-            <button
-              onClick={clearFile}
-              className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-white/5 hover:bg-white/10 text-zinc-300 hover:text-white text-xs font-medium border border-white/10 transition-colors cursor-pointer"
-            >
-              <RefreshCw className="w-3 h-3" />
-              <span>{locale === 'ar' ? 'تغيير الوثيقة' : 'Changer'}</span>
-            </button>
-          </div>
-
-          {/* Main Visual Row: Image Preview + Metadata & Privacy */}
-          <div className="flex flex-col sm:flex-row items-center sm:items-stretch gap-5">
-            {/* Visual Preview Container */}
-            <div className="relative shrink-0 w-32 h-36 sm:w-36 sm:h-40 rounded-2xl overflow-hidden border border-white/10 bg-black/60 flex items-center justify-center shadow-xl">
-              {previewUrl && !isPdf ? (
-                <>
-                  {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img
-                    src={previewUrl}
-                    alt="Document preview"
-                    className={`w-full h-full object-cover ${redactSensitiveData ? 'blur-[1.2px]' : ''}`}
-                  />
-                  {redactSensitiveData && (
-                    <div className="absolute inset-0 flex items-end justify-center p-2 bg-gradient-to-t from-black/80 via-transparent to-transparent">
-                      <span className="text-[9px] px-2 py-0.5 rounded-md bg-emerald-950/90 text-emerald-300 border border-emerald-500/30 flex items-center gap-1 font-bold shadow-sm">
-                        <ShieldCheck className="w-2.5 h-2.5 text-emerald-400" />
-                        <span>{t('uploadPrivacy')}</span>
-                      </span>
-                    </div>
-                  )}
-                </>
-              ) : (
-                <div className="flex flex-col items-center gap-2 text-center p-3">
-                  <div className="p-3 rounded-2xl bg-rose-500/10 text-rose-400 border border-rose-500/20">
-                    <FileText className="w-8 h-8" />
+          {/* Main Horizontal Preview & Info */}
+          <div className="flex flex-col sm:flex-row items-center sm:items-center justify-between gap-5">
+            
+            <div className="flex items-center gap-4 min-w-0 w-full sm:w-auto">
+              {/* Document Thumbnail Preview */}
+              <div className="relative shrink-0 w-20 h-24 sm:w-24 sm:h-28 rounded-2xl overflow-hidden border border-white/10 bg-black/40 shadow-md">
+                {previewUrl && !isPdf ? (
+                  <>
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img
+                      src={previewUrl}
+                      alt="Document preview"
+                      className={`w-full h-full object-cover ${redactSensitiveData ? 'blur-[1px]' : ''}`}
+                    />
+                    {redactSensitiveData && (
+                      <div className="absolute inset-0 bg-black/30 flex items-center justify-center">
+                        <Lock className="w-4 h-4 text-emerald-400" />
+                      </div>
+                    )}
+                  </>
+                ) : (
+                  <div className="w-full h-full flex flex-col items-center justify-center gap-1 bg-white/[0.02]">
+                    <FileText className="w-7 h-7 text-rose-400" />
+                    <span className="text-[9px] font-mono font-bold text-zinc-400">PDF</span>
                   </div>
-                  <span className="text-[10px] font-mono font-bold text-zinc-400">PDF FORMAT</span>
-                </div>
-              )}
+                )}
 
-              {/* Laser Scanner Beam */}
-              {isAnalyzing && (
-                <div className="absolute inset-0 bg-emerald-500/15 pointer-events-none flex flex-col justify-between overflow-hidden z-20">
-                  <div className="w-full h-1 bg-emerald-400 shadow-[0_0_16px_rgba(52,211,153,1)] animate-bounce" />
-                  <div className="w-full text-[8px] font-mono font-bold text-emerald-300 text-center bg-black/85 py-0.5 tracking-widest">
-                    ANALYSE EN COURS...
+                {/* Laser Scanning Line */}
+                {isAnalyzing && (
+                  <div className="absolute inset-0 bg-emerald-500/10 pointer-events-none flex flex-col justify-between overflow-hidden">
+                    <div className="w-full h-1 bg-emerald-400 shadow-[0_0_12px_rgba(52,211,153,1)] animate-bounce" />
                   </div>
-                </div>
-              )}
-            </div>
+                )}
+              </div>
 
-            {/* Document Details & Privacy Controls */}
-            <div className="flex-1 flex flex-col justify-between space-y-3 text-center sm:text-left rtl:sm:text-right min-w-0">
-              <div className="space-y-1">
-                <span className="text-[10px] font-mono uppercase tracking-wider text-zinc-400 font-bold block">
-                  NOM DU FICHIER :
-                </span>
-                <h3 className="text-sm sm:text-base font-bold text-white truncate max-w-md">
+              {/* Document Info */}
+              <div className="space-y-1 min-w-0 flex-1">
+                <div className="flex items-center gap-2">
+                  <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse shrink-0" />
+                  <span className="text-[11px] font-mono uppercase text-emerald-400 font-bold tracking-wider">
+                    {locale === 'ar' ? 'جاهز للتحليل' : 'Prêt pour l’analyse'}
+                  </span>
+                </div>
+
+                <h3 className="text-sm sm:text-base font-bold text-white truncate max-w-[260px] sm:max-w-xs">
                   {selectedFile.name}
                 </h3>
+
                 <p className="text-xs text-zinc-400 font-mono">
                   {(selectedFile.size / 1024).toFixed(0)} KB · {selectedFile.type.split('/')[1]?.toUpperCase() || 'DOCUMENT'}
                 </p>
               </div>
-
-              {/* Privacy Redaction Toggle Box */}
-              <label className="flex items-center gap-2.5 p-2.5 rounded-xl bg-white/[0.03] border border-white/[0.06] hover:bg-white/[0.05] cursor-pointer select-none transition-colors">
-                <input
-                  type="checkbox"
-                  checked={redactSensitiveData}
-                  onChange={(e) => setRedactSensitiveData(e.target.checked)}
-                  className="w-4 h-4 rounded border-zinc-700 text-emerald-500 focus:ring-emerald-500 bg-zinc-900 shrink-0 cursor-pointer"
-                />
-                <div className="flex items-center gap-1.5 min-w-0 text-zinc-300 text-xs font-medium">
-                  <Lock className="w-3.5 h-3.5 text-emerald-400 shrink-0" />
-                  <span className="truncate">{redactLabel}</span>
-                </div>
-              </label>
             </div>
+
+            {/* Change / Replace Button */}
+            <button
+              onClick={clearFile}
+              className="px-3.5 py-2 rounded-xl bg-white/5 hover:bg-white/10 text-zinc-300 hover:text-white text-xs font-medium border border-white/10 transition-colors cursor-pointer flex items-center gap-1.5 shrink-0 self-end sm:self-center"
+            >
+              <RefreshCw className="w-3.5 h-3.5" />
+              <span>{locale === 'ar' ? 'تغيير الوثيقة' : 'Remplacer'}</span>
+            </button>
           </div>
 
-          {/* Integrated High-Impact Scan Action Button */}
+          {/* Privacy Redaction Toggle */}
+          <div className="flex items-center justify-between p-3 rounded-2xl bg-white/[0.02] border border-white/[0.05]">
+            <label className="flex items-center gap-2.5 cursor-pointer select-none">
+              <input
+                type="checkbox"
+                checked={redactSensitiveData}
+                onChange={(e) => setRedactSensitiveData(e.target.checked)}
+                className="w-4 h-4 rounded border-zinc-700 text-emerald-500 focus:ring-emerald-500 bg-zinc-900 shrink-0 cursor-pointer"
+              />
+              <span className="text-xs text-zinc-300 font-medium">
+                {redactLabel}
+              </span>
+            </label>
+
+            <span className="text-[11px] font-mono text-emerald-400/90 hidden sm:inline-flex items-center gap-1">
+              <ShieldCheck className="w-3 h-3" />
+              <span>100% Local</span>
+            </span>
+          </div>
+
+          {/* Full-Width Vibrant Scan Action */}
           <button
             onClick={() => onAnalyze(selectedFile, redactSensitiveData)}
             disabled={isAnalyzing}
-            className="w-full flex items-center justify-center gap-2.5 py-3.5 px-6 rounded-2xl bg-emerald-500 hover:bg-emerald-400 text-zinc-950 font-bold text-sm shadow-xl shadow-emerald-500/25 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer hover:scale-[1.01] active:scale-[0.99]"
+            className="w-full flex items-center justify-center gap-2.5 py-3.5 rounded-2xl bg-emerald-500 hover:bg-emerald-400 text-zinc-950 font-bold text-sm shadow-xl shadow-emerald-500/25 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer hover:scale-[1.01] active:scale-[0.99]"
           >
             {isAnalyzing ? (
               <>
@@ -199,7 +190,7 @@ export const DocumentUploader: React.FC<DocumentUploaderProps> = ({ onAnalyze, i
               </>
             ) : (
               <>
-                <Sparkles className="w-4 h-4 fill-zinc-950" />
+                <Sparkles className="w-4 h-4 fill-zinc-950 shrink-0" />
                 <span>{analyzeBtnText}</span>
               </>
             )}
@@ -207,7 +198,7 @@ export const DocumentUploader: React.FC<DocumentUploaderProps> = ({ onAnalyze, i
         </div>
       ) : (
         /* ═════════════════════════════════════════════════════════════════
-           EMPTY STATE DROPZONE CANVAS
+           CLEAN MINIMALIST DROPZONE
         ══════════════════════════════════════════════════════════════════ */
         <div
           onDragOver={(e) => {
