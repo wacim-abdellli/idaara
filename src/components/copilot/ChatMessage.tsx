@@ -33,10 +33,18 @@ function cleanTextForSpeech(text: string): string {
     .trim();
 }
 
-/** Full Markdown & Table Parser for Chat Messages */
+/** Full Markdown & Table Parser for Chat Messages with High-End Civic Card Styling */
 function renderFormattedContent(text: string): React.ReactNode {
-  const hasArabic = /[\u0600-\u06FF]/.test(text);
-  const rawLines = text.split('\n');
+  // 1. Sanitize any thinking or chain-of-thought blocks
+  let cleanText = text.replace(/<think>[\s\S]*?(?:<\/think>|$)/gi, '').trim();
+  cleanText = cleanText.replace(/^(?:Here's a thinking process|Analyze User Input|Check Constraints)[\s\S]*?\n\n/i, '').trim();
+
+  // 2. Accurate script direction detection: only RTL if Arabic letters significantly exceed Latin letters
+  const arabicCount = (cleanText.match(/[\u0600-\u06FF]/g) || []).length;
+  const latinCount = (cleanText.match(/[a-zA-Z]/g) || []).length;
+  const isMessageRTL = arabicCount > latinCount && arabicCount > 10;
+
+  const rawLines = cleanText.split('\n');
   const blocks: React.ReactNode[] = [];
   let i = 0;
 
@@ -57,9 +65,12 @@ function renderFormattedContent(text: string): React.ReactNode {
       continue;
     }
 
-    const isLineArabic = /[\u0600-\u06FF]/.test(line);
-    const lineDir = isLineArabic ? 'rtl' : hasArabic ? 'rtl' : 'ltr';
-    const lineAlign = isLineArabic ? 'text-right' : hasArabic ? 'text-right' : 'text-left';
+    const lineArabicCount = (line.match(/[\u0600-\u06FF]/g) || []).length;
+    const lineLatinCount = (line.match(/[a-zA-Z]/g) || []).length;
+    const isLineRTL = lineArabicCount > lineLatinCount && lineArabicCount > 3;
+
+    const lineDir = isLineRTL ? 'rtl' : isMessageRTL ? 'rtl' : 'ltr';
+    const lineAlign = isLineRTL ? 'text-right' : isMessageRTL ? 'text-right' : 'text-left';
 
     // 3. Markdown Table Detection (| Header 1 | Header 2 |)
     if (line.startsWith('|') && line.endsWith('|')) {
@@ -77,7 +88,7 @@ function renderFormattedContent(text: string): React.ReactNode {
         );
 
         blocks.push(
-          <div key={`table-${i}`} dir={lineDir} className="my-3 overflow-x-auto rounded-xl border border-white/10 bg-[#161618] shadow-md">
+          <div key={`table-${i}`} dir={lineDir} className="my-3 overflow-x-auto rounded-2xl border border-white/10 bg-[#161618] shadow-md">
             <table className={`w-full text-xs sm:text-sm ${lineAlign}`}>
               <thead className="bg-white/5 border-b border-white/10 font-bold text-white">
                 <tr>
@@ -110,8 +121,8 @@ function renderFormattedContent(text: string): React.ReactNode {
     if (line.startsWith('#')) {
       const headerText = line.replace(/^#+\s*/, '');
       blocks.push(
-        <h4 key={`h-${i}`} dir={lineDir} className={`text-base sm:text-lg font-bold text-white tracking-tight pt-2 pb-0.5 flex items-center gap-2 ${lineAlign}`}>
-          <span className="w-1 h-3.5 rounded-full bg-emerald-400 inline-block shrink-0" />
+        <h4 key={`h-${i}`} dir={lineDir} className={`text-base sm:text-lg font-bold text-white tracking-tight pt-3 pb-1 flex items-center gap-2 ${lineAlign}`}>
+          <span className="w-1.5 h-4 rounded-full bg-emerald-400 inline-block shrink-0" />
           <span>{renderInlineStyles(headerText)}</span>
         </h4>
       );
@@ -119,14 +130,24 @@ function renderFormattedContent(text: string): React.ReactNode {
       continue;
     }
 
-    // 5. Bold Title Lines (e.g. **Awra9 el Matlouba:**)
-    const boldHeaderMatch = line.match(/^\*\*([^*]+)\*\*:?$/);
+    // 5. Bold Title / Category Lines (e.g. **Awra9 el Matlouba:** or **1. Direct Answer:**)
+    const boldHeaderMatch = line.match(/^\*\*([^*]+)\*\*:?(.*)$/);
     if (boldHeaderMatch) {
+      const title = boldHeaderMatch[1];
+      const rest = boldHeaderMatch[2]?.trim();
+
       blocks.push(
-        <h5 key={`bh-${i}`} dir={lineDir} className={`text-sm sm:text-base font-bold text-emerald-400 tracking-tight pt-2 pb-0.5 flex items-center gap-2 ${lineAlign}`}>
-          <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 inline-block shrink-0" />
-          <span>{boldHeaderMatch[1]}</span>
-        </h5>
+        <div key={`bh-${i}`} dir={lineDir} className={`pt-2.5 pb-1 ${lineAlign}`}>
+          <div className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-emerald-500/10 border border-emerald-500/25 text-emerald-300 font-bold text-xs sm:text-sm">
+            <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 inline-block" />
+            <span>{title}</span>
+          </div>
+          {rest && (
+            <p className="mt-1.5 text-zinc-200 leading-relaxed pl-1">
+              {renderInlineStyles(rest)}
+            </p>
+          )}
+        </div>
       );
       i++;
       continue;
@@ -136,8 +157,8 @@ function renderFormattedContent(text: string): React.ReactNode {
     const numberedMatch = line.match(/^(\d+)\.\s+(.+)$/);
     if (numberedMatch) {
       blocks.push(
-        <div key={`num-${i}`} dir={lineDir} className={`flex items-start gap-2.5 my-1 ${lineAlign}`}>
-          <span className="flex items-center justify-center w-5 h-5 rounded-full bg-white/10 text-emerald-400 text-xs font-mono font-bold shrink-0 mt-0.5">
+        <div key={`num-${i}`} dir={lineDir} className={`flex items-start gap-2.5 my-1.5 ${lineAlign}`}>
+          <span className="flex items-center justify-center w-5 h-5 rounded-full bg-emerald-500/15 border border-emerald-500/30 text-emerald-300 text-xs font-mono font-bold shrink-0 mt-0.5">
             {numberedMatch[1]}
           </span>
           <span className="text-zinc-200 flex-1 leading-relaxed">
@@ -153,8 +174,8 @@ function renderFormattedContent(text: string): React.ReactNode {
     if (line.startsWith('- ') || line.startsWith('* ') || line.startsWith('• ')) {
       const bulletText = line.replace(/^[-*•]\s+/, '');
       blocks.push(
-        <div key={`bullet-${i}`} dir={lineDir} className={`flex items-start gap-2.5 my-1 ${lineAlign}`}>
-          <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 shrink-0 mt-2" />
+        <div key={`bullet-${i}`} dir={lineDir} className={`flex items-start gap-2.5 my-1.5 ${lineAlign}`}>
+          <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 shrink-0 mt-2.5" />
           <span className="text-zinc-200 flex-1 leading-relaxed">
             {renderInlineStyles(bulletText)}
           </span>
@@ -166,7 +187,7 @@ function renderFormattedContent(text: string): React.ReactNode {
 
     // 8. Normal paragraph
     blocks.push(
-      <p key={`p-${i}`} dir={lineDir} className={`leading-relaxed text-zinc-100 ${lineAlign} font-normal`}>
+      <p key={`p-${i}`} dir={lineDir} className={`leading-relaxed text-zinc-200 ${lineAlign} font-normal`}>
         {renderInlineStyles(line)}
       </p>
     );
@@ -175,9 +196,9 @@ function renderFormattedContent(text: string): React.ReactNode {
 
   return (
     <div
-      dir={hasArabic ? 'rtl' : 'ltr'}
+      dir={isMessageRTL ? 'rtl' : 'ltr'}
       className={`space-y-2 text-[15px] sm:text-base leading-relaxed text-zinc-100 font-normal ${
-        hasArabic ? 'text-right' : 'text-left'
+        isMessageRTL ? 'text-right' : 'text-left'
       }`}
     >
       {blocks}
@@ -185,9 +206,10 @@ function renderFormattedContent(text: string): React.ReactNode {
   );
 }
 
-/** Inline bold, code, and token styling */
+/** Inline bold, code, DT currency tokens, and keyword styling */
 function renderInlineStyles(text: string): React.ReactNode {
-  const parts = text.split(/(\*\*[^*]+\*\*|`[^`]+`)/g);
+  // Matches bold **text**, code `text`, and DT amounts (e.g. 80 DT, 145 DT, 7.500 DT)
+  const parts = text.split(/(\*\*[^*]+\*\*|`[^`]+`|\b\d+(?:[.,]\d+)?\s*(?:DT|TND|د\.ت)\b)/gi);
   return parts.map((part, i) => {
     if (part.startsWith('**') && part.endsWith('**')) {
       return (
@@ -198,9 +220,16 @@ function renderInlineStyles(text: string): React.ReactNode {
     }
     if (part.startsWith('`') && part.endsWith('`')) {
       return (
-        <code key={i} className="px-1.5 py-0.5 rounded bg-white/10 text-emerald-300 font-mono text-xs" dir="ltr">
+        <code key={i} className="px-1.5 py-0.5 rounded-md bg-white/10 text-emerald-300 font-mono text-xs" dir="ltr">
           {part.slice(1, -1)}
         </code>
+      );
+    }
+    if (/\b\d+(?:[.,]\d+)?\s*(?:DT|TND|د\.ت)\b/i.test(part)) {
+      return (
+        <span key={i} className="inline-block px-1.5 py-0.5 mx-0.5 rounded-md bg-amber-500/15 border border-amber-500/30 text-amber-300 font-mono font-bold text-xs" dir="ltr">
+          {part}
+        </span>
       );
     }
     return part;
@@ -213,7 +242,9 @@ export const ChatMessage: React.FC<ChatMessageProps> = ({ message }) => {
   const [copied, setCopied] = useState(false);
 
   const isAssistant = message.sender === 'assistant';
-  const isArabicScript = /[\u0600-\u06FF]/.test(message.content);
+  const arabicChars = (message.content.match(/[\u0600-\u06FF]/g) || []).length;
+  const latinChars = (message.content.match(/[a-zA-Z]/g) || []).length;
+  const isArabicScript = arabicChars > latinChars && arabicChars > 5;
 
   const copyToClipboard = async () => {
     try {
