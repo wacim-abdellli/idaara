@@ -233,7 +233,7 @@ export default function CopilotPage() {
       ]);
       setIsProcessing(false);
 
-      // Progressive line-by-line & word-by-word streaming effect
+      // Rapid, silky smooth ChatGPT-speed progressive streaming
       const lines = fullText.split('\n');
       let currentText = '';
 
@@ -246,23 +246,23 @@ export default function CopilotPage() {
           setMessages((prev) =>
             prev.map((m) => (m.id === aiMsgId ? { ...m, content: snapshot, isStreaming: true } : m))
           );
-          await new Promise((r) => setTimeout(r, 20));
+          await new Promise((r) => setTimeout(r, 6));
           continue;
         }
 
+        // Stream in rapid chunks of 2 words (matches 60 tokens/sec ChatGPT speed)
         const words = line.split(' ');
-        for (let j = 0; j < words.length; j++) {
-          currentText += (j === 0 ? '' : ' ') + words[j];
+        for (let j = 0; j < words.length; j += 2) {
+          const chunk = words.slice(j, j + 2).join(' ');
+          currentText += (j === 0 ? '' : ' ') + chunk;
           const snapshot = currentText;
           setMessages((prev) =>
             prev.map((m) => (m.id === aiMsgId ? { ...m, content: snapshot, isStreaming: true } : m))
           );
-          // Fast, silky smooth typing speed (14ms per word)
-          await new Promise((r) => setTimeout(r, 14));
+          await new Promise((r) => setTimeout(r, 6));
         }
 
-        // Brief natural pause between lines
-        await new Promise((r) => setTimeout(r, 35));
+        await new Promise((r) => setTimeout(r, 10));
       }
 
       // Mark streaming as complete so toolbar & badges reveal smoothly
