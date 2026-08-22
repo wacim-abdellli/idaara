@@ -4,8 +4,6 @@ import React, { useState } from 'react';
 import Link from 'next/link';
 import { ChatMessage as ChatMessageType } from '../../types/chat';
 import {
-  Volume2,
-  VolumeX,
   FileText,
   ExternalLink,
   Calculator,
@@ -22,16 +20,6 @@ import { getLocalized } from '../../lib/locale-utils';
 interface ChatMessageProps {
   message: ChatMessageType;
   onSelectPrompt?: (prompt: string) => void;
-}
-
-/** Clean speech string removing markdown symbols and tables for natural TTS reading */
-function cleanTextForSpeech(text: string): string {
-  return text
-    .replace(/[#*`_~]/g, '')
-    .replace(/\|[^|\n]+\|/g, '')
-    .replace(/^[-•*]\s+/gm, '')
-    .replace(/\n+/g, '. ')
-    .trim();
 }
 
 /** Inline bold, links, code, DT currency tokens, and isolated Latin/URL tokens */
@@ -318,7 +306,6 @@ function renderFormattedContent(text: string): React.ReactNode {
 
 export const ChatMessage: React.FC<ChatMessageProps> = ({ message }) => {
   const { locale } = useLocale();
-  const [isPlayingAudio, setIsPlayingAudio] = useState(false);
   const [copied, setCopied] = useState(false);
 
   const isAssistant = message.sender === 'assistant';
@@ -332,56 +319,6 @@ export const ChatMessage: React.FC<ChatMessageProps> = ({ message }) => {
       setCopied(true);
       setTimeout(() => setCopied(false), 2000);
     } catch {}
-  };
-
-  const speakMessage = () => {
-    if (typeof window === 'undefined' || !('speechSynthesis' in window)) return;
-
-    if (isPlayingAudio) {
-      window.speechSynthesis.cancel();
-      setIsPlayingAudio(false);
-      return;
-    }
-
-    window.speechSynthesis.cancel();
-
-    const cleanSpeech = cleanTextForSpeech(message.content);
-    if (!cleanSpeech) return;
-
-    const utterance = new SpeechSynthesisUtterance(cleanSpeech);
-    const voices = window.speechSynthesis.getVoices();
-
-    let selectedVoice: SpeechSynthesisVoice | null = null;
-    if (isArabicScript || locale === 'ar') {
-      selectedVoice =
-        voices.find((v) => v.lang.startsWith('ar') || v.name.toLowerCase().includes('arabic')) || null;
-      utterance.lang = 'ar-SA';
-    } else if (locale === 'fr') {
-      selectedVoice =
-        voices.find((v) => v.lang.startsWith('fr') || v.name.toLowerCase().includes('french')) || null;
-      utterance.lang = 'fr-FR';
-    } else {
-      selectedVoice =
-        voices.find((v) => v.lang.startsWith('fr')) ||
-        voices.find((v) => v.lang.startsWith('en')) ||
-        voices[0] ||
-        null;
-      utterance.lang = selectedVoice ? selectedVoice.lang : 'fr-FR';
-    }
-
-    if (selectedVoice) {
-      utterance.voice = selectedVoice;
-    }
-
-    utterance.rate = 0.95;
-    utterance.pitch = 1.0;
-
-    utterance.onstart = () => setIsPlayingAudio(true);
-    utterance.onend = () => setIsPlayingAudio(false);
-    utterance.onerror = () => setIsPlayingAudio(false);
-
-    setIsPlayingAudio(true);
-    window.speechSynthesis.speak(utterance);
   };
 
   // ── USER MESSAGE BUBBLE ──
@@ -490,27 +427,22 @@ export const ChatMessage: React.FC<ChatMessageProps> = ({ message }) => {
         </div>
       )}
 
-      {/* ChatGPT-style Icon Toolbar (Copy, Listen) */}
+      {/* ChatGPT-style Icon Toolbar (Copy) */}
       {!message.isStreaming && message.content && (
         <div className="flex items-center gap-2 pt-1 text-zinc-500 animate-fade-in">
           <button
             onClick={copyToClipboard}
-            className="p-1.5 rounded-lg hover:bg-white/10 text-zinc-400 hover:text-zinc-200 transition-colors cursor-pointer border-0 outline-none"
+            className="p-1.5 rounded-lg hover:bg-white/10 text-zinc-400 hover:text-zinc-200 transition-colors cursor-pointer border-0 outline-none flex items-center gap-1 text-xs"
             title={locale === 'ar' ? 'نسخ النص' : locale === 'fr' ? 'Copier' : 'Copy'}
           >
-            {copied ? <Check className="w-4 h-4 text-emerald-400" /> : <Copy className="w-4 h-4" />}
-          </button>
-
-          <button
-            onClick={speakMessage}
-            className={`p-1.5 rounded-lg transition-colors cursor-pointer border-0 outline-none ${
-              isPlayingAudio
-                ? 'text-red-400 bg-red-500/10'
-                : 'text-zinc-400 hover:text-zinc-200 hover:bg-white/10'
-            }`}
-            title={locale === 'ar' ? 'استماع بالصوت' : locale === 'fr' ? 'Écouter' : 'Read out loud'}
-          >
-            {isPlayingAudio ? <VolumeX className="w-4 h-4" /> : <Volume2 className="w-4 h-4" />}
+            {copied ? (
+              <>
+                <Check className="w-3.5 h-3.5 text-emerald-400" />
+                <span className="text-emerald-400 text-[11px] font-medium">{locale === 'ar' ? 'تم النسخ' : 'Copié'}</span>
+              </>
+            ) : (
+              <Copy className="w-3.5 h-3.5" />
+            )}
           </button>
         </div>
       )}
