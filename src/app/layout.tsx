@@ -6,6 +6,7 @@ import { Navbar } from '../components/layout/Navbar';
 import { Footer } from '../components/layout/Footer';
 import { CommandPalette } from '../components/common/CommandPalette';
 import { MobileBottomNav } from '../components/layout/MobileBottomNav';
+import { ScrollToTop } from '../components/common/ScrollToTop';
 
 export const metadata: Metadata = {
   title: {
@@ -34,6 +35,7 @@ export default function RootLayout({
       <body className="antialiased min-h-screen flex flex-col selection:bg-emerald-500/30 selection:text-emerald-200 pb-16 lg:pb-0" suppressHydrationWarning>
         <LocaleProvider>
           <ChecklistProvider>
+            <ScrollToTop />
             <Navbar />
             <CommandPalette />
             <main className="flex-1 w-full relative">{children}</main>
