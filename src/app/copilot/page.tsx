@@ -32,6 +32,8 @@ import {
   X,
   Trash2,
   PenSquare,
+  Pencil,
+  Check,
   Globe,
   Landmark,
   Stamp,
@@ -60,6 +62,8 @@ export default function CopilotPage() {
   const [showPlusMenu, setShowPlusMenu] = useState<boolean>(false);
   const [showVoiceBanner, setShowVoiceBanner] = useState<boolean>(true);
   const [sessionToDelete, setSessionToDelete] = useState<ChatSession | null>(null);
+  const [editingSessionId, setEditingSessionId] = useState<string | null>(null);
+  const [editingTitle, setEditingTitle] = useState<string>('');
   const [sidebarOpen, setSidebarOpen] = useState<boolean>(true);
   const [thinkMode, setThinkMode] = useState<boolean>(false);
   const [isInitialized, setIsInitialized] = useState(false);
@@ -312,6 +316,33 @@ export default function CopilotPage() {
       handleNewChat();
     }
     setSessionToDelete(null);
+  };
+
+  const startRenaming = (e: React.MouseEvent, sess: ChatSession) => {
+    e.stopPropagation();
+    setEditingSessionId(sess.id);
+    setEditingTitle(sess.title);
+  };
+
+  const saveRenamedTitle = (e?: React.FormEvent | React.MouseEvent | React.KeyboardEvent, id?: string) => {
+    if (e) e.stopPropagation();
+    const targetId = id || editingSessionId;
+    if (!targetId) return;
+
+    const trimmed = editingTitle.trim();
+    if (trimmed) {
+      setSessions((prev) => {
+        const updated = prev.map((s) => (s.id === targetId ? { ...s, title: trimmed } : s));
+        localStorage.setItem(STORAGE_SESSIONS_KEY, JSON.stringify(updated));
+        return updated;
+      });
+    }
+    setEditingSessionId(null);
+  };
+
+  const cancelRenaming = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    setEditingSessionId(null);
   };
 
   // ── Voice Dictation via MediaRecorder + Groq Whisper ──
@@ -594,26 +625,70 @@ export default function CopilotPage() {
                         : 'Aucune discussion récente'}
                     </div>
                   ) : (
-                    sessions.map((sess) => (
-                      <div
-                        key={sess.id}
-                        onClick={() => loadSession(sess)}
-                        className={`group flex items-center justify-between px-3 py-2 rounded-xl text-sm transition-colors cursor-pointer ${
-                          currentSessionId === sess.id
-                            ? 'bg-white/10 text-white font-medium'
-                            : 'text-zinc-300 hover:bg-white/5 hover:text-white'
-                        }`}
-                      >
-                        <span className="truncate flex-1 text-xs">{sess.title}</span>
-                        <button
-                          onClick={(e) => promptDeleteSession(e, sess)}
-                          className="opacity-0 group-hover:opacity-100 p-1 hover:text-red-400 text-zinc-400 transition-opacity cursor-pointer border-0 outline-none"
-                          title={locale === 'ar' ? 'حذف المحادثة' : locale === 'en' ? 'Delete chat' : 'Supprimer la discussion'}
+                    sessions.map((sess) => {
+                      const isEditing = editingSessionId === sess.id;
+                      return (
+                        <div
+                          key={sess.id}
+                          onClick={() => !isEditing && loadSession(sess)}
+                          className={`group flex items-center justify-between px-3 py-2 rounded-xl text-sm transition-colors cursor-pointer ${
+                            currentSessionId === sess.id
+                              ? 'bg-white/10 text-white font-medium'
+                              : 'text-zinc-300 hover:bg-white/5 hover:text-white'
+                          }`}
                         >
-                          <Trash2 className="w-3 h-3" />
-                        </button>
-                      </div>
-                    ))
+                          {isEditing ? (
+                            <div className="flex items-center gap-1.5 w-full" onClick={(e) => e.stopPropagation()}>
+                              <input
+                                autoFocus
+                                type="text"
+                                value={editingTitle}
+                                onChange={(e) => setEditingTitle(e.target.value)}
+                                onKeyDown={(e) => {
+                                  if (e.key === 'Enter') saveRenamedTitle(e, sess.id);
+                                  if (e.key === 'Escape') setEditingSessionId(null);
+                                }}
+                                className="flex-1 bg-black/60 border border-emerald-500 rounded-lg px-2 py-1 text-xs text-white outline-none focus:ring-1 focus:ring-emerald-400"
+                              />
+                              <button
+                                onClick={(e) => saveRenamedTitle(e, sess.id)}
+                                className="p-1 rounded-md bg-emerald-500/20 text-emerald-400 hover:bg-emerald-500/30 transition-colors cursor-pointer border-0"
+                                title="Save"
+                              >
+                                <Check className="w-3 h-3" />
+                              </button>
+                              <button
+                                onClick={cancelRenaming}
+                                className="p-1 rounded-md text-zinc-400 hover:text-white hover:bg-white/10 transition-colors cursor-pointer border-0"
+                                title="Cancel"
+                              >
+                                <X className="w-3 h-3" />
+                              </button>
+                            </div>
+                          ) : (
+                            <>
+                              <span className="truncate flex-1 text-xs">{sess.title}</span>
+                              <div className="flex items-center gap-0.5 opacity-0 group-hover:opacity-100 transition-opacity">
+                                <button
+                                  onClick={(e) => startRenaming(e, sess)}
+                                  className="p-1 hover:text-emerald-400 text-zinc-400 transition-colors cursor-pointer border-0 outline-none"
+                                  title={locale === 'ar' ? 'تغيير الاسم' : locale === 'fr' ? 'Renommer' : 'Rename'}
+                                >
+                                  <Pencil className="w-3 h-3" />
+                                </button>
+                                <button
+                                  onClick={(e) => promptDeleteSession(e, sess)}
+                                  className="p-1 hover:text-red-400 text-zinc-400 transition-colors cursor-pointer border-0 outline-none"
+                                  title={locale === 'ar' ? 'حذف المحادثة' : locale === 'en' ? 'Delete chat' : 'Supprimer la discussion'}
+                                >
+                                  <Trash2 className="w-3 h-3" />
+                                </button>
+                              </div>
+                            </>
+                          )}
+                        </div>
+                      );
+                    })
                   )}
                 </div>
               </div>
