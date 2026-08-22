@@ -209,7 +209,7 @@ function renderFormattedContent(text: string): React.ReactNode {
     }
 
     // 4. Section Headers with Bespoke Idaara Cards (e.g. 📌 الخلاصة, 📑 الأوراق المطلوبة, 🎯 شروط الترشح, 💰 المصاريف, 🏛️ وين تمشي, 💡 نصيحة)
-    const cardHeaderMatch = line.match(/^(?:###|##|#)?\s*(📌|📑|🎯|💰|🏛️|📍|💡)\s*\*{0,2}([^:*]+)\*{0,2}:?\s*(.*)$/);
+    const cardHeaderMatch = line.match(/^(?:###|##|#)?\s*(📌|📑|🎯|💰|🏛️|📍|💡|⚡|🔑|📋|✅)\s*\*{0,2}([^:*]+)\*{0,2}:?\s*(.*)$/);
     if (cardHeaderMatch) {
       const icon = cardHeaderMatch[1];
       const title = cardHeaderMatch[2].trim();
@@ -226,7 +226,7 @@ function renderFormattedContent(text: string): React.ReactNode {
           j++;
           break;
         }
-        if (/^(?:###|##|#)?\s*(?:📌|📑|🎯|💰|🏛️|📍|💡)/.test(nextLine)) {
+        if (/^(?:###|##|#)?\s*(?:📌|📑|🎯|💰|🏛️|📍|💡|⚡|🔑|📋|✅)/.test(nextLine)) {
           break;
         }
         cardChildren.push(nextLine);
@@ -264,26 +264,95 @@ function renderFormattedContent(text: string): React.ReactNode {
           dir={lineDir}
           className={`rounded-2xl border p-4 my-2.5 space-y-2.5 transition-all ${cardStyle} ${lineAlign}`}
         >
+          {/* Card Header */}
           <div className="flex items-center gap-2 font-bold text-sm sm:text-[15px]">
-            <span className="text-base">{icon}</span>
+            <span className="text-lg leading-none">{icon}</span>
             <span className={`px-2.5 py-1 rounded-xl border text-xs sm:text-sm font-bold tracking-wide ${badgeStyle}`}>
               {title}
             </span>
           </div>
 
-          <div className="space-y-1.5 pt-1 text-sm sm:text-[15px] leading-relaxed">
+          {/* Card Body */}
+          <div className={`space-y-1.5 pt-1 text-sm sm:text-[15px] leading-relaxed ${icon === '📑' ? 'space-y-2' : ''}`}>
             {cardChildren.map((cLine, cIdx) => {
+              // Numbered list items inside cards (1. 2. 3.)
+              const numMatch = cLine.match(/^(\d+)\.\s+(.+)$/);
+              if (numMatch) {
+                return (
+                  <div key={cIdx} className="flex items-start gap-2.5 py-0.5">
+                    <span className={`flex items-center justify-center min-w-[22px] h-[22px] rounded-full border text-[11px] font-bold shrink-0 mt-0.5 font-mono ${badgeStyle}`}>
+                      {numMatch[1]}
+                    </span>
+                    <span className="flex-1 text-zinc-200">{renderInlineStyles(numMatch[2])}</span>
+                  </div>
+                );
+              }
+
+              // Bullet / doc / fee list items
               if (cLine.startsWith('- ') || cLine.startsWith('* ') || cLine.startsWith('• ')) {
                 const bullet = cLine.replace(/^[-*•]\s+/, '');
+
+                // Fee lines: detect "Label: XX DT" pattern → two-column row
+                const feeMatch = bullet.match(/^(.+):\s*(\d[\d.,]*\s*(?:DT|TND|د\.ت|دينار)(?:\s*.*)?)/i);
+                if (icon === '💰' && feeMatch) {
+                  return (
+                    <div key={cIdx} className="flex items-center justify-between gap-2 py-1 border-b border-amber-500/10 last:border-0">
+                      <span className="text-zinc-300 text-sm">{renderInlineStyles(feeMatch[1].trim())}</span>
+                      <span className="shrink-0 px-2 py-0.5 rounded-lg bg-amber-500/20 border border-amber-500/30 text-amber-200 font-mono font-bold text-xs" dir="ltr">
+                        {feeMatch[2].trim()}
+                      </span>
+                    </div>
+                  );
+                }
+
+                // Document checklist items (📑 card)
+                if (icon === '📑') {
+                  return (
+                    <div key={cIdx} className="flex items-start gap-2 py-0.5">
+                      <span className="flex items-center justify-center w-5 h-5 rounded-md bg-teal-500/20 border border-teal-500/30 text-teal-300 shrink-0 mt-0.5 text-[11px] font-bold">
+                        {cIdx + 1}
+                      </span>
+                      <span className="flex-1 text-zinc-200">{renderInlineStyles(bullet)}</span>
+                    </div>
+                  );
+                }
+
+                // 🎯 Eligibility criteria items
+                if (icon === '🎯') {
+                  return (
+                    <div key={cIdx} className="flex items-start gap-2 py-0.5">
+                      <span className="flex items-center justify-center w-4 h-4 rounded-full bg-blue-500/20 border border-blue-500/30 text-blue-300 shrink-0 mt-1 text-[10px] font-bold">
+                        ✓
+                      </span>
+                      <span className="flex-1 text-zinc-200">{renderInlineStyles(bullet)}</span>
+                    </div>
+                  );
+                }
+
+                // Default bullet
                 return (
                   <div key={cIdx} className="flex items-start gap-2 py-0.5">
-                    <span className="flex items-center justify-center w-4 h-4 rounded-full bg-emerald-500/20 text-emerald-400 shrink-0 mt-1 text-[10px] font-bold">
+                    <span className="flex items-center justify-center w-4 h-4 rounded-full bg-emerald-500/20 border border-emerald-500/30 text-emerald-400 shrink-0 mt-1 text-[10px] font-bold">
                       ✓
                     </span>
                     <span className="flex-1 text-zinc-200">{renderInlineStyles(bullet)}</span>
                   </div>
                 );
               }
+
+              // 💡 tip card: render as a callout paragraph with left accent
+              if (icon === '💡') {
+                return (
+                  <div key={cIdx} className="flex gap-3 items-start">
+                    <div className="w-1 shrink-0 self-stretch rounded-full bg-amber-400/60 mt-0.5" />
+                    <p className="flex-1 text-amber-100/90 font-medium leading-relaxed">
+                      {renderInlineStyles(cLine)}
+                    </p>
+                  </div>
+                );
+              }
+
+              // Plain paragraph inside card
               return (
                 <p key={cIdx} className="text-zinc-200 leading-relaxed">
                   {renderInlineStyles(cLine)}
