@@ -21,91 +21,51 @@ export default function FasserliPage() {
     sampleDocumentsList[0].simulatedOCRResult
   );
 
-  const handleSelectSample = (sample: SampleDocItem) => {
+  const handleSelectSample = async (sample: SampleDocItem) => {
     setSelectedSample(sample);
     setIsAnalyzing(true);
-    setTimeout(() => {
+    try {
+      const formData = new FormData();
+      formData.append('sampleId', sample.id);
+      formData.append('documentName', sample.id);
+      const res = await fetch('/api/ocr', {
+        method: 'POST',
+        body: formData,
+      });
+      const data = await res.json();
+      if (data.success && data.analysis) {
+        setAnalysisResult(data.analysis);
+      } else {
+        setAnalysisResult(sample.simulatedOCRResult);
+      }
+    } catch (e) {
       setAnalysisResult(sample.simulatedOCRResult);
+    } finally {
       setIsAnalyzing(false);
-    }, 500);
+    }
   };
 
-  const handleCustomUpload = (_file: File | null, _redact: boolean) => {
+  const handleCustomUpload = async (file: File | null, redact: boolean) => {
+    if (!file) return;
     setIsAnalyzing(true);
-    setTimeout(() => {
-      setAnalysisResult({
-        id: `ocr-custom-${Date.now()}`,
-        documentType: {
-          derja: "Avis d'Imposition & Taxe Foncière (Zebla w Khrouba)",
-          fr: "Avis d'Imposition - Taxe sur les Immeubles Bâtis",
-          ar: "إعلام بالمعلوم على العقارات المبنية (الزبلة والخروبة)",
-          en: "Municipal Property Tax Notice (Zebla w Khrouba)",
-        },
-        issuingAuthority: {
-          derja: "Baladiyat el Marje3 el Tourabi",
-          fr: "Recette Municipale Territoriale",
-          ar: "القباضة البلدية المختصة ترابياً",
-          en: "Territorial Municipal Tax Office",
-        },
-        referenceNumber: "TAX-MUN-2026/9021",
-        dateDetected: "Aujourd'hui",
-        urgency: "medium",
-        deadlineDate: "Avant le 31 Décembre 2026",
-        penaltyRisk: {
-          derja: "Khnayet 0.75% par mois ba3d fin d'année.",
-          fr: "Pénalités de retard de 0.75% par mois à compter de l'échéance légale.",
-          ar: "توظيف خطية تأخير بنسبة 0.75% شهرياً بعد انقضاء الأجل القانوني.",
-          en: "Monthly late penalty of 0.75% following the statutory deadline.",
-        },
-        summary: {
-          derja: [
-            "Wathi9at khalas dharibet el baladiya (Zebla w khrouba) mte3 el dar.",
-            "El mablagh el matloub houwa 85 DT lel 3am el 7ali.",
-            "Tnajjem t5allas direct fel Baladiya walla en ligne bel carte bancaire."
-          ],
-          fr: [
-            "Avis de taxe municipale annuelle sur les immeubles bâtis pour le logement.",
-            "Le montant net exigible est de 85 TND au titre de l'année en cours.",
-            "Le règlement peut être effectué au guichet municipal ou en ligne."
-          ],
-          ar: [
-            "إعلام باستخلاص المعلوم البلدي السنوي على العقارات المبنية.",
-            "المبلغ الصافي المستوجب دفعه هو 85 ديناراً عن السنة الجارية.",
-            "يمكن الدفع مباشرة بشباك القباضة البلدية أو عن بعد."
-          ],
-          en: [
-            "Annual municipal property and sanitation tax assessment.",
-            "The statutory amount due is 85 TND for the current fiscal year.",
-            "Settlement can be completed directly at the municipal counter or online via debit card."
-          ]
-        },
-        actionItems: [
-          {
-            task: {
-              derja: "5alles el ma3loum fel 9badha el baladiya.",
-              fr: "Régler la taxe à la recette municipale.",
-              ar: "دفع المعلوم البلدي بالقباضة واستلام الوصل.",
-              en: "Pay the municipal tax at the local tax office and collect receipt."
-            },
-            office: {
-              derja: "Recette Municipale",
-              fr: "Recette Municipale / Baladiya",
-              ar: "القباضة البلدية",
-              en: "Municipal Tax Desk"
-            },
-            requiredPapers: ["Avis d'imposition", "CIN de l'occupant/propriétaire"],
-            feeTND: 85
-          }
-        ],
-        legalContext: {
-          derja: "Code de la Fiscalité Locale Tunisien.",
-          fr: "Code de la Fiscalité Locale.",
-          ar: "مجلة الجباية المحلية التونسية.",
-          en: "Tunisian Local Taxation Code (Code de la Fiscalité Locale)."
-        }
+    try {
+      const formData = new FormData();
+      formData.append('file', file);
+      formData.append('documentName', file.name);
+      formData.append('redact', String(redact));
+      const res = await fetch('/api/ocr', {
+        method: 'POST',
+        body: formData,
       });
+      const data = await res.json();
+      if (data.success && data.analysis) {
+        setAnalysisResult(data.analysis);
+      }
+    } catch (e) {
+      console.error('OCR custom upload error:', e);
+    } finally {
       setIsAnalyzing(false);
-    }, 1200);
+    }
   };
 
   const headlineMain =
