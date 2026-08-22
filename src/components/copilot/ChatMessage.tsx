@@ -14,6 +14,7 @@ import {
   Copy,
   Check,
   Stamp,
+  Lightbulb,
 } from 'lucide-react';
 import { useLocale } from '../../context/LocaleContext';
 import { getLocalized } from '../../lib/locale-utils';
@@ -27,7 +28,7 @@ interface ChatMessageProps {
 function cleanTextForSpeech(text: string): string {
   return text
     .replace(/[#*`_~]/g, '')
-    .replace(/\|[^|\n]+\|/g, '') // remove markdown table lines
+    .replace(/\|[^|\n]+\|/g, '')
     .replace(/^[-•*]\s+/gm, '')
     .replace(/\n+/g, '. ')
     .trim();
@@ -41,7 +42,7 @@ function renderInlineStyles(text: string): React.ReactNode {
   // 3. Code: `code`
   // 4. Raw URLs: https://... or www.... or *.tn / *.gov.tn / *.edu.tn / *.com / *.org
   // 5. Currency amounts: 80 DT, 25 د.ت, 145 TND
-  // 6. Latin Acronyms & words inside Arabic: CIN, B3, CAPES, ATTT, JORT, PDF, STEG, SONEDE, CNSS, CNAM, SMS, QCM
+  // 6. Latin Acronyms: CIN, B3, CAPES, ATTT, JORT, PDF, STEG, SONEDE, CNSS, CNAM, SMS, RNE
   const tokenRegex = /(\[[^\]]+\]\([^\s)]+\)|\*\*[^*]+\*\*|`[^`]+`|https?:\/\/[^\s<]+|www\.[a-zA-Z0-9.\-_/]+|[a-zA-Z0-9.-]+\.(?:tn|gov\.tn|edu\.tn|com|org|net)(?:\/[^\s<]*)?|\b\d+(?:[.,]\d+)?\s*(?:DT|TND|د\.ت|دينار)\b|\b[A-Z0-9]{2,}\b)/gi;
 
   const parts = text.split(tokenRegex);
@@ -60,7 +61,7 @@ function renderInlineStyles(text: string): React.ReactNode {
           target="_blank"
           rel="noopener noreferrer"
           dir="ltr"
-          className="inline-flex items-center gap-1 px-2 py-0.5 mx-1 rounded-lg bg-emerald-500/15 hover:bg-emerald-500/25 border border-emerald-500/30 text-emerald-400 font-mono text-xs font-semibold hover:underline transition-colors"
+          className="inline-flex items-center gap-1 px-2 py-0.5 mx-1 rounded-lg bg-emerald-500/15 hover:bg-emerald-500/25 border border-emerald-500/30 text-emerald-400 font-mono text-xs font-semibold hover:underline transition-colors align-baseline"
         >
           <span>{mdLinkMatch[1]}</span>
           <ExternalLink className="w-3 h-3 shrink-0" />
@@ -96,7 +97,7 @@ function renderInlineStyles(text: string): React.ReactNode {
           target="_blank"
           rel="noopener noreferrer"
           dir="ltr"
-          className="inline-flex items-center gap-1 px-2 py-0.5 mx-1 rounded-lg bg-emerald-500/15 hover:bg-emerald-500/25 border border-emerald-500/30 text-emerald-400 font-mono text-xs font-semibold hover:underline transition-colors"
+          className="inline-flex items-center gap-1 px-2 py-0.5 mx-1 rounded-lg bg-emerald-500/15 hover:bg-emerald-500/25 border border-emerald-500/30 text-emerald-400 font-mono text-xs font-semibold hover:underline transition-colors align-baseline"
         >
           <span className="truncate max-w-[200px]">{part.replace(/^https?:\/\//, '')}</span>
           <ExternalLink className="w-3 h-3 shrink-0" />
@@ -107,7 +108,7 @@ function renderInlineStyles(text: string): React.ReactNode {
     // 5. Currency amounts (e.g. 80 DT, 25 د.ت, 145 DT)
     if (/\b\d+(?:[.,]\d+)?\s*(?:DT|TND|د\.ت|دينار)\b/i.test(part)) {
       return (
-        <span key={i} className="inline-block px-2 py-0.5 mx-1 rounded-md bg-amber-500/15 border border-amber-500/30 text-amber-300 font-mono font-bold text-xs shadow-inner" dir="ltr">
+        <span key={i} className="inline-block px-2 py-0.5 mx-1 rounded-md bg-amber-500/15 border border-amber-500/30 text-amber-300 font-mono font-bold text-xs shadow-inner align-baseline" dir="ltr">
           {part}
         </span>
       );
@@ -116,7 +117,7 @@ function renderInlineStyles(text: string): React.ReactNode {
     // 6. Latin Acronyms (e.g. CIN, B3, CAPES, ATTT, JORT, PDF)
     if (/^[A-Z0-9]{2,}$/.test(part)) {
       return (
-        <span key={i} className="inline-block px-1.5 py-0.5 mx-1 rounded-md bg-zinc-800/90 border border-white/10 text-emerald-300 font-mono font-bold text-xs shadow-sm" dir="ltr">
+        <span key={i} className="inline-block px-1.5 py-0.5 mx-1 rounded-md bg-zinc-800/90 border border-white/10 text-emerald-300 font-mono font-bold text-xs shadow-sm align-baseline" dir="ltr">
           {part}
         </span>
       );
@@ -126,7 +127,7 @@ function renderInlineStyles(text: string): React.ReactNode {
   });
 }
 
-/** Full Markdown & Bespoke Idaara Civic Card Parser */
+/** Modern, Clean Markdown & Civic Element Parser (ChatGPT/Claude Grade) */
 function renderFormattedContent(text: string): React.ReactNode {
   // 1. Sanitize any thinking or chain-of-thought blocks
   let cleanText = text.replace(/<think>[\s\S]*?(?:<\/think>|$)/gi, '').trim();
@@ -135,7 +136,7 @@ function renderFormattedContent(text: string): React.ReactNode {
   // 2. Accurate script direction detection
   const arabicCount = (cleanText.match(/[\u0600-\u06FF]/g) || []).length;
   const latinCount = (cleanText.match(/[a-zA-Z]/g) || []).length;
-  const isMessageRTL = arabicCount > latinCount && arabicCount > 10;
+  const isMessageRTL = arabicCount > latinCount && arabicCount > 5;
 
   const rawLines = cleanText.split('\n');
   const blocks: React.ReactNode[] = [];
@@ -144,13 +145,13 @@ function renderFormattedContent(text: string): React.ReactNode {
   while (i < rawLines.length) {
     const line = rawLines[i].trim();
 
-    // 1. Skip empty lines with a clean spacer
+    // Skip empty lines
     if (!line) {
       i++;
       continue;
     }
 
-    // 2. Horizontal divider (--- or ***)
+    // Horizontal divider
     if (line === '---' || line === '***' || line === '___') {
       blocks.push(<hr key={`hr-${i}`} className="border-t border-white/10 my-4" />);
       i++;
@@ -159,12 +160,12 @@ function renderFormattedContent(text: string): React.ReactNode {
 
     const lineArabicCount = (line.match(/[\u0600-\u06FF]/g) || []).length;
     const lineLatinCount = (line.match(/[a-zA-Z]/g) || []).length;
-    const isLineRTL = lineArabicCount > lineLatinCount && lineArabicCount > 3;
+    const isLineRTL = lineArabicCount > lineLatinCount && lineArabicCount > 2;
 
     const lineDir = isLineRTL ? 'rtl' : isMessageRTL ? 'rtl' : 'ltr';
     const lineAlign = isLineRTL ? 'text-right' : isMessageRTL ? 'text-right' : 'text-left';
 
-    // 3. Markdown Table Detection (| Header 1 | Header 2 |)
+    // 1. Markdown Table Detection
     if (line.startsWith('|') && line.endsWith('|')) {
       const tableLines: string[] = [];
       while (i < rawLines.length && rawLines[i].trim().startsWith('|') && rawLines[i].trim().endsWith('|')) {
@@ -208,185 +209,67 @@ function renderFormattedContent(text: string): React.ReactNode {
       }
     }
 
-    // 4. Section Headers with Bespoke Idaara Cards (e.g. 📌 الخلاصة, 📑 الأوراق المطلوبة, 🎯 شروط الترشح, 💰 المصاريف, 🏛️ وين تمشي, 💡 نصيحة)
-    const cardHeaderMatch = line.match(/^(?:###|##|#)?\s*(📌|📑|🎯|💰|🏛️|📍|💡|⚡|🔑|📋|✅)\s*\*{0,2}([^:*]+)\*{0,2}:?\s*(.*)$/);
-    if (cardHeaderMatch) {
-      const icon = cardHeaderMatch[1];
-      const title = cardHeaderMatch[2].trim();
-      const directBody = cardHeaderMatch[3]?.trim();
-
-      // Collect any subsequent lines belonging to this card until next card or empty break
-      const cardChildren: string[] = [];
-      if (directBody) cardChildren.push(directBody);
-
-      let j = i + 1;
-      while (j < rawLines.length) {
-        const nextLine = rawLines[j].trim();
-        if (!nextLine) {
-          j++;
-          break;
-        }
-        if (/^(?:###|##|#)?\s*(?:📌|📑|🎯|💰|🏛️|📍|💡|⚡|🔑|📋|✅)/.test(nextLine)) {
-          break;
-        }
-        cardChildren.push(nextLine);
-        j++;
-      }
-      i = j;
-
-      // Color scheme based on card type
-      let cardStyle = 'bg-[#12141a]/95 border-white/[0.08] text-zinc-200';
-      let badgeStyle = 'bg-emerald-500/15 border-emerald-500/30 text-emerald-300';
-
-      if (icon === '📌') {
-        cardStyle = 'bg-[#0f1715]/95 border-emerald-500/30 text-zinc-100 shadow-lg shadow-emerald-950/20';
-        badgeStyle = 'bg-emerald-500/20 border-emerald-500/40 text-emerald-300';
-      } else if (icon === '🎯') {
-        cardStyle = 'bg-[#0d141e]/95 border-blue-500/30 text-zinc-100 shadow-lg shadow-blue-950/20';
-        badgeStyle = 'bg-blue-500/20 border-blue-500/40 text-blue-300';
-      } else if (icon === '📑') {
-        cardStyle = 'bg-[#14161f]/95 border-teal-500/25 text-zinc-100 shadow-lg shadow-teal-950/20';
-        badgeStyle = 'bg-teal-500/20 border-teal-500/40 text-teal-300';
-      } else if (icon === '💰') {
-        cardStyle = 'bg-[#191610]/95 border-amber-500/30 text-zinc-100 shadow-lg shadow-amber-950/20';
-        badgeStyle = 'bg-amber-500/20 border-amber-500/40 text-amber-300';
-      } else if (icon === '🏛️' || icon === '📍') {
-        cardStyle = 'bg-[#131520]/95 border-indigo-500/30 text-zinc-100 shadow-lg shadow-indigo-950/20';
-        badgeStyle = 'bg-indigo-500/20 border-indigo-500/40 text-indigo-300';
-      } else if (icon === '💡') {
-        cardStyle = 'bg-[#1c1810]/95 border-amber-400/40 text-amber-100 shadow-xl shadow-amber-950/30';
-        badgeStyle = 'bg-amber-400/20 border-amber-400/50 text-amber-300';
-      }
-
+    // 2. Summary Card: 📌 **الخلاصة**...
+    if (/^(?:###|##|#)?\s*📌/.test(line)) {
+      const summaryText = line.replace(/^(?:###|##|#)?\s*📌\s*:?\s*/, '');
       blocks.push(
         <div
-          key={`card-${i}`}
+          key={`summary-${i}`}
           dir={lineDir}
-          className={`rounded-2xl border p-4 my-2.5 space-y-2.5 transition-all ${cardStyle} ${lineAlign}`}
+          className={`p-3.5 my-2.5 rounded-2xl bg-emerald-500/[0.08] border border-emerald-500/20 text-emerald-100 flex items-start gap-3 shadow-sm ${lineAlign}`}
         >
-          {/* Card Header */}
-          <div className="flex items-center gap-2 font-bold text-sm sm:text-[15px]">
-            <span className="text-lg leading-none">{icon}</span>
-            <span className={`px-2.5 py-1 rounded-xl border text-xs sm:text-sm font-bold tracking-wide ${badgeStyle}`}>
-              {title}
-            </span>
-          </div>
-
-          {/* Card Body */}
-          <div className={`space-y-1.5 pt-1 text-sm sm:text-[15px] leading-relaxed ${icon === '📑' ? 'space-y-2' : ''}`}>
-            {cardChildren.map((cLine, cIdx) => {
-              // Numbered list items inside cards (1. 2. 3.)
-              const numMatch = cLine.match(/^(\d+)\.\s+(.+)$/);
-              if (numMatch) {
-                return (
-                  <div key={cIdx} className="flex items-start gap-2.5 py-0.5">
-                    <span className={`flex items-center justify-center min-w-[22px] h-[22px] rounded-full border text-[11px] font-bold shrink-0 mt-0.5 font-mono ${badgeStyle}`}>
-                      {numMatch[1]}
-                    </span>
-                    <span className="flex-1 text-zinc-200">{renderInlineStyles(numMatch[2])}</span>
-                  </div>
-                );
-              }
-
-              // Bullet / doc / fee list items
-              if (cLine.startsWith('- ') || cLine.startsWith('* ') || cLine.startsWith('• ')) {
-                const bullet = cLine.replace(/^[-*•]\s+/, '');
-
-                // Fee lines: detect "Label: XX DT" pattern → two-column row
-                const feeMatch = bullet.match(/^(.+):\s*(\d[\d.,]*\s*(?:DT|TND|د\.ت|دينار)(?:\s*.*)?)/i);
-                if (icon === '💰' && feeMatch) {
-                  return (
-                    <div key={cIdx} className="flex items-center justify-between gap-2 py-1 border-b border-amber-500/10 last:border-0">
-                      <span className="text-zinc-300 text-sm">{renderInlineStyles(feeMatch[1].trim())}</span>
-                      <span className="shrink-0 px-2 py-0.5 rounded-lg bg-amber-500/20 border border-amber-500/30 text-amber-200 font-mono font-bold text-xs" dir="ltr">
-                        {feeMatch[2].trim()}
-                      </span>
-                    </div>
-                  );
-                }
-
-                // Document checklist items (📑 card)
-                if (icon === '📑') {
-                  return (
-                    <div key={cIdx} className="flex items-start gap-2 py-0.5">
-                      <span className="flex items-center justify-center w-5 h-5 rounded-md bg-teal-500/20 border border-teal-500/30 text-teal-300 shrink-0 mt-0.5 text-[11px] font-bold">
-                        {cIdx + 1}
-                      </span>
-                      <span className="flex-1 text-zinc-200">{renderInlineStyles(bullet)}</span>
-                    </div>
-                  );
-                }
-
-                // 🎯 Eligibility criteria items
-                if (icon === '🎯') {
-                  return (
-                    <div key={cIdx} className="flex items-start gap-2 py-0.5">
-                      <span className="flex items-center justify-center w-4 h-4 rounded-full bg-blue-500/20 border border-blue-500/30 text-blue-300 shrink-0 mt-1 text-[10px] font-bold">
-                        ✓
-                      </span>
-                      <span className="flex-1 text-zinc-200">{renderInlineStyles(bullet)}</span>
-                    </div>
-                  );
-                }
-
-                // Default bullet
-                return (
-                  <div key={cIdx} className="flex items-start gap-2 py-0.5">
-                    <span className="flex items-center justify-center w-4 h-4 rounded-full bg-emerald-500/20 border border-emerald-500/30 text-emerald-400 shrink-0 mt-1 text-[10px] font-bold">
-                      ✓
-                    </span>
-                    <span className="flex-1 text-zinc-200">{renderInlineStyles(bullet)}</span>
-                  </div>
-                );
-              }
-
-              // 💡 tip card: render as a callout paragraph with left accent
-              if (icon === '💡') {
-                return (
-                  <div key={cIdx} className="flex gap-3 items-start">
-                    <div className="w-1 shrink-0 self-stretch rounded-full bg-amber-400/60 mt-0.5" />
-                    <p className="flex-1 text-amber-100/90 font-medium leading-relaxed">
-                      {renderInlineStyles(cLine)}
-                    </p>
-                  </div>
-                );
-              }
-
-              // Plain paragraph inside card
-              return (
-                <p key={cIdx} className="text-zinc-200 leading-relaxed">
-                  {renderInlineStyles(cLine)}
-                </p>
-              );
-            })}
+          <span className="text-lg shrink-0 mt-0.5">📌</span>
+          <div className="flex-1 leading-relaxed text-zinc-100 font-medium text-sm sm:text-[15px]">
+            {renderInlineStyles(summaryText)}
           </div>
         </div>
-      );
-      continue;
-    }
-
-    // 5. Standard Section Headers (### or ##)
-    if (line.startsWith('#')) {
-      const headerText = line.replace(/^#+\s*/, '');
-      blocks.push(
-        <h4 key={`h-${i}`} dir={lineDir} className={`text-base sm:text-lg font-bold text-white tracking-tight pt-3 pb-1 flex items-center gap-2 ${lineAlign}`}>
-          <span className="w-1.5 h-4 rounded-full bg-emerald-400 inline-block shrink-0" />
-          <span>{renderInlineStyles(headerText)}</span>
-        </h4>
       );
       i++;
       continue;
     }
 
-    // 6. Numbered List (1. 2. 3.)
+    // 3. Tip / Pro-Advice Callout: > 💡 or 💡 **نصيحة...
+    if (/^(?:>|###|##|#)?\s*💡/.test(line)) {
+      const tipText = line.replace(/^(?:>|###|##|#)?\s*💡\s*:?\s*/, '');
+      blocks.push(
+        <div
+          key={`tip-${i}`}
+          dir={lineDir}
+          className={`p-3.5 my-3 rounded-2xl bg-amber-500/[0.07] border border-amber-500/20 border-s-4 border-s-amber-400 flex items-start gap-3 shadow-sm ${lineAlign}`}
+        >
+          <Lightbulb className="w-5 h-5 text-amber-400 shrink-0 mt-0.5" />
+          <div className="flex-1 text-sm sm:text-[14.5px] leading-relaxed text-amber-100/90 font-medium">
+            {renderInlineStyles(tipText)}
+          </div>
+        </div>
+      );
+      i++;
+      continue;
+    }
+
+    // 4. Section Headers (### or ## or # or bold category line like 📑 **الأوراق المطلوبة**)
+    if (line.startsWith('#') || /^(\*{2})?(📑|🎯|💰|🏛️|📍|📋|✅|🔑)/.test(line)) {
+      const headerText = line.replace(/^#+\s*/, '');
+      blocks.push(
+        <div key={`h-${i}`} dir={lineDir} className={`pt-4 pb-1.5 mb-1.5 flex items-center gap-2 border-b border-white/[0.06] ${lineAlign}`}>
+          <h4 className="text-sm sm:text-base font-bold text-white tracking-wide flex items-center gap-2">
+            <span>{renderInlineStyles(headerText)}</span>
+          </h4>
+        </div>
+      );
+      i++;
+      continue;
+    }
+
+    // 5. Numbered List (1. 2. 3.)
     const numberedMatch = line.match(/^(\d+)\.\s+(.+)$/);
     if (numberedMatch) {
       blocks.push(
         <div key={`num-${i}`} dir={lineDir} className={`flex items-start gap-2.5 my-1.5 ${lineAlign}`}>
-          <span className="flex items-center justify-center w-5 h-5 rounded-full bg-emerald-500/15 border border-emerald-500/30 text-emerald-300 text-xs font-mono font-bold shrink-0 mt-0.5">
+          <span className="flex items-center justify-center min-w-[22px] h-[22px] rounded-full bg-emerald-500/15 border border-emerald-500/30 text-emerald-300 text-xs font-mono font-bold shrink-0 mt-0.5">
             {numberedMatch[1]}
           </span>
-          <span className="text-zinc-200 flex-1 leading-relaxed">
+          <span className="text-zinc-200 flex-1 leading-relaxed text-sm sm:text-[15px]">
             {renderInlineStyles(numberedMatch[2])}
           </span>
         </div>
@@ -395,13 +278,15 @@ function renderFormattedContent(text: string): React.ReactNode {
       continue;
     }
 
-    // 7. Bullet Points (- or * or •)
+    // 6. Bullet Points (- or * or •)
     if (line.startsWith('- ') || line.startsWith('* ') || line.startsWith('• ')) {
       const bulletText = line.replace(/^[-*•]\s+/, '');
       blocks.push(
         <div key={`bullet-${i}`} dir={lineDir} className={`flex items-start gap-2.5 my-1.5 ${lineAlign}`}>
-          <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 shrink-0 mt-2.5" />
-          <span className="text-zinc-200 flex-1 leading-relaxed">
+          <span className="flex items-center justify-center w-4 h-4 rounded-full bg-emerald-500/20 text-emerald-400 shrink-0 mt-1 text-[10px] font-bold">
+            ✓
+          </span>
+          <span className="text-zinc-200 flex-1 leading-relaxed text-sm sm:text-[15px]">
             {renderInlineStyles(bulletText)}
           </span>
         </div>
@@ -410,9 +295,9 @@ function renderFormattedContent(text: string): React.ReactNode {
       continue;
     }
 
-    // 8. Normal paragraph
+    // 7. Normal paragraph
     blocks.push(
-      <p key={`p-${i}`} dir={lineDir} className={`leading-relaxed text-zinc-200 ${lineAlign} font-normal my-1`}>
+      <p key={`p-${i}`} dir={lineDir} className={`leading-relaxed text-zinc-200 ${lineAlign} font-normal my-1.5 text-sm sm:text-[15px]`}>
         {renderInlineStyles(line)}
       </p>
     );
@@ -422,7 +307,7 @@ function renderFormattedContent(text: string): React.ReactNode {
   return (
     <div
       dir={isMessageRTL ? 'rtl' : 'ltr'}
-      className={`space-y-1.5 text-[15px] sm:text-base leading-relaxed text-zinc-100 font-normal ${
+      className={`space-y-1 text-sm sm:text-[15px] leading-relaxed text-zinc-100 font-normal ${
         isMessageRTL ? 'text-right font-["Cairo",sans-serif]' : 'text-left'
       }`}
     >
@@ -458,7 +343,6 @@ export const ChatMessage: React.FC<ChatMessageProps> = ({ message }) => {
       return;
     }
 
-    // Stop any ongoing speech
     window.speechSynthesis.cancel();
 
     const cleanSpeech = cleanTextForSpeech(message.content);
@@ -467,7 +351,6 @@ export const ChatMessage: React.FC<ChatMessageProps> = ({ message }) => {
     const utterance = new SpeechSynthesisUtterance(cleanSpeech);
     const voices = window.speechSynthesis.getVoices();
 
-    // Select the best voice
     let selectedVoice: SpeechSynthesisVoice | null = null;
     if (isArabicScript || locale === 'ar') {
       selectedVoice =
@@ -478,7 +361,6 @@ export const ChatMessage: React.FC<ChatMessageProps> = ({ message }) => {
         voices.find((v) => v.lang.startsWith('fr') || v.name.toLowerCase().includes('french')) || null;
       utterance.lang = 'fr-FR';
     } else {
-      // For Derja Arabizi or English, French / English voices read Arabizi and administrative terms clearly
       selectedVoice =
         voices.find((v) => v.lang.startsWith('fr')) ||
         voices.find((v) => v.lang.startsWith('en')) ||
@@ -502,7 +384,7 @@ export const ChatMessage: React.FC<ChatMessageProps> = ({ message }) => {
     window.speechSynthesis.speak(utterance);
   };
 
-  // ── USER MESSAGE BUBBLE (Clean right-aligned pill with Copy action) ──
+  // ── USER MESSAGE BUBBLE ──
   if (!isAssistant) {
     return (
       <div className="w-full py-2 flex flex-col items-end group">
@@ -515,7 +397,6 @@ export const ChatMessage: React.FC<ChatMessageProps> = ({ message }) => {
           {message.content}
         </div>
 
-        {/* Minimalist Action toolbar (Copy) on hover / mobile */}
         <div className="flex items-center gap-1.5 pt-1 pr-1 opacity-0 group-hover:opacity-100 transition-opacity">
           <button
             onClick={copyToClipboard}
@@ -536,13 +417,12 @@ export const ChatMessage: React.FC<ChatMessageProps> = ({ message }) => {
     );
   }
 
-  // ── ASSISTANT MESSAGE (Clean spacious canvas layout) ──
+  // ── ASSISTANT MESSAGE ──
   return (
     <div
       dir={isArabicScript ? 'rtl' : 'ltr'}
       className={`w-full py-3 space-y-3 ${isArabicScript ? 'text-right' : 'text-left'}`}
     >
-      {/* Content directly on canvas with rich markdown & table rendering */}
       <div
         style={{ unicodeBidi: 'plaintext' }}
         className={`prose-chat text-zinc-100 ${isArabicScript ? 'font-["Cairo",sans-serif]' : ''}`}
