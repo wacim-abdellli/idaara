@@ -84,7 +84,6 @@ export const DocumentUploader: React.FC<DocumentUploaderProps> = ({ onAnalyze, i
         />
 
         {selectedFile ? (
-          /* ── File selected state ── */
           <div className="p-5">
             {/* Clear button */}
             <button
@@ -96,19 +95,19 @@ export const DocumentUploader: React.FC<DocumentUploaderProps> = ({ onAnalyze, i
             </button>
 
             <div className="flex items-start gap-4">
-              {/* Preview / PDF icon */}
-              <div className="relative shrink-0 w-20 h-24 rounded-2xl overflow-hidden border border-zinc-700 bg-zinc-900 flex items-center justify-center">
+              {/* Preview / PDF icon with dynamic Laser Scanner */}
+              <div className="relative shrink-0 w-24 h-28 rounded-2xl overflow-hidden border border-zinc-700 bg-zinc-900 flex items-center justify-center shadow-lg">
                 {previewUrl && !isPdf ? (
                   <>
                     {/* eslint-disable-next-line @next/next/no-img-element */}
                     <img
                       src={previewUrl}
                       alt="Document preview"
-                      className={`w-full h-full object-cover ${redactSensitiveData ? 'blur-[2px]' : ''}`}
+                      className={`w-full h-full object-cover ${redactSensitiveData ? 'blur-[1.5px]' : ''}`}
                     />
                     {redactSensitiveData && (
-                      <div className="absolute inset-0 flex items-end justify-center p-1">
-                        <span className="text-[9px] px-1.5 py-0.5 rounded-md bg-emerald-950/90 text-emerald-400 border border-emerald-500/30 flex items-center gap-1 font-bold">
+                      <div className="absolute inset-0 flex items-end justify-center p-1 z-10">
+                        <span className="text-[9px] px-1.5 py-0.5 rounded-md bg-emerald-950/90 text-emerald-400 border border-emerald-500/30 flex items-center gap-1 font-bold shadow-sm">
                           <ShieldCheck className="w-2.5 h-2.5" />
                           <span>{t('uploadPrivacy')}</span>
                         </span>
@@ -121,25 +120,44 @@ export const DocumentUploader: React.FC<DocumentUploaderProps> = ({ onAnalyze, i
                     <span className="text-[9px] font-bold text-zinc-400">PDF</span>
                   </div>
                 )}
+
+                {/* Futuristic Laser Scanner Beam */}
+                {isAnalyzing && (
+                  <div className="absolute inset-0 bg-emerald-500/10 pointer-events-none flex flex-col justify-between overflow-hidden z-20">
+                    <div className="w-full h-1 bg-emerald-400 shadow-[0_0_12px_rgba(52,211,153,1)] animate-bounce" />
+                    <div className="w-full text-[8px] font-mono font-bold text-emerald-300 text-center bg-black/70 py-0.5">
+                      SCANNING...
+                    </div>
+                  </div>
+                )}
               </div>
 
               {/* File info */}
-              <div className="flex-1 min-w-0 pt-1">
-                <p className="text-xs font-semibold text-white truncate">{selectedFile.name}</p>
-                <p className="text-[11px] text-zinc-500 mt-0.5">
-                  {(selectedFile.size / 1024).toFixed(0)} KB · {selectedFile.type.split('/')[1]?.toUpperCase() || 'FILE'}
+              <div className="flex-1 min-w-0 pt-1 space-y-1">
+                <p className="text-xs font-bold text-white truncate">{selectedFile.name}</p>
+                <p className="text-[11px] text-zinc-400 font-mono">
+                  {(selectedFile.size / 1024).toFixed(0)} KB · {selectedFile.type.split('/')[1]?.toUpperCase() || 'DOCUMENT'}
                 </p>
-                <button
-                  onClick={(e) => { e.stopPropagation(); fileInputRef.current?.click(); }}
-                  className="mt-2 text-[11px] text-emerald-400 hover:text-emerald-300 underline underline-offset-2 transition-colors cursor-pointer"
-                >
-                  {t('uploadChange')}
-                </button>
+
+                {isAnalyzing ? (
+                  <div className="flex items-center gap-2 pt-1 text-emerald-400 text-xs animate-pulse">
+                    <Loader2 className="w-3.5 h-3.5 animate-spin" />
+                    <span className="font-mono text-[11px]">
+                      {locale === 'ar' ? 'جارِ فك الرموز والتحليل القانوني...' : 'Extraction & analyse juridique...'}
+                    </span>
+                  </div>
+                ) : (
+                  <button
+                    onClick={(e) => { e.stopPropagation(); fileInputRef.current?.click(); }}
+                    className="mt-1 text-[11px] text-emerald-400 hover:text-emerald-300 underline underline-offset-2 transition-colors cursor-pointer"
+                  >
+                    {t('uploadChange')}
+                  </button>
+                )}
               </div>
             </div>
           </div>
         ) : (
-          /* ── Empty / prompt state ── */
           <div className="py-10 px-6 flex flex-col items-center text-center space-y-3 group">
             <div className="w-14 h-14 rounded-2xl bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center text-emerald-400 group-hover:scale-110 transition-transform shadow-lg shadow-emerald-950">
               <UploadCloud className="w-7 h-7" />

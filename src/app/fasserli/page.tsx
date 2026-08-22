@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useLocale } from '../../context/LocaleContext';
 import { DocumentUploader } from '../../components/fasserli/DocumentUploader';
@@ -20,6 +20,7 @@ export default function FasserliPage() {
   const [analysisResult, setAnalysisResult] = useState<OCRAnalysisResult | null>(
     sampleDocumentsList[0].simulatedOCRResult
   );
+  const reportRef = useRef<HTMLDivElement | null>(null);
 
   const handleSelectSample = async (sample: SampleDocItem) => {
     setSelectedSample(sample);
@@ -42,6 +43,9 @@ export default function FasserliPage() {
       setAnalysisResult(sample.simulatedOCRResult);
     } finally {
       setIsAnalyzing(false);
+      setTimeout(() => {
+        reportRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }, 100);
     }
   };
 
@@ -65,6 +69,9 @@ export default function FasserliPage() {
       console.error('OCR custom upload error:', e);
     } finally {
       setIsAnalyzing(false);
+      setTimeout(() => {
+        reportRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }, 100);
     }
   };
 
@@ -250,11 +257,12 @@ export default function FasserliPage() {
       <AnimatePresence>
         {analysisResult && (
           <motion.div
+            ref={reportRef}
             initial={{ opacity: 0, y: 16 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -10 }}
             transition={{ duration: 0.35, ease: 'easeOut' }}
-            className="pt-6 border-t border-zinc-800/80"
+            className="pt-6 border-t border-zinc-800/80 scroll-mt-20"
           >
             <div className="flex items-center gap-2 text-xs font-bold text-zinc-400 uppercase tracking-wider mb-4">
               <FileSearch className="w-4 h-4 text-emerald-400" />
