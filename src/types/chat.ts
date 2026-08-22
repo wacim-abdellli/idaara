@@ -14,6 +14,7 @@ export interface ChatMessage {
   timestamp: string;
   language?: string;
   audioUrl?: string;
+  isStreaming?: boolean;
   relatedProcedure?: Partial<Procedure>;
   actions?: ChatMessageAction[];
   timbreBreakdown?: {

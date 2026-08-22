@@ -218,13 +218,14 @@ export default function CopilotPage() {
 
       const aiMsgId = `ai-${Date.now()}`;
 
-      // Insert initial assistant message shell
+      // Insert initial assistant message shell with isStreaming: true
       setMessages((prev) => [
         ...prev,
         {
           id: aiMsgId,
           sender: 'assistant',
           content: '',
+          isStreaming: true,
           timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
           actions: response.actions,
           timbreBreakdown: response.timbreBreakdown,
@@ -243,7 +244,7 @@ export default function CopilotPage() {
         if (!line.trim()) {
           const snapshot = currentText;
           setMessages((prev) =>
-            prev.map((m) => (m.id === aiMsgId ? { ...m, content: snapshot } : m))
+            prev.map((m) => (m.id === aiMsgId ? { ...m, content: snapshot, isStreaming: true } : m))
           );
           await new Promise((r) => setTimeout(r, 20));
           continue;
@@ -254,15 +255,20 @@ export default function CopilotPage() {
           currentText += (j === 0 ? '' : ' ') + words[j];
           const snapshot = currentText;
           setMessages((prev) =>
-            prev.map((m) => (m.id === aiMsgId ? { ...m, content: snapshot } : m))
+            prev.map((m) => (m.id === aiMsgId ? { ...m, content: snapshot, isStreaming: true } : m))
           );
-          // Fast, silky smooth typing speed (16ms per token)
-          await new Promise((r) => setTimeout(r, 16));
+          // Fast, silky smooth typing speed (14ms per word)
+          await new Promise((r) => setTimeout(r, 14));
         }
 
-        // Brief natural pause between lines/paragraphs
-        await new Promise((r) => setTimeout(r, 40));
+        // Brief natural pause between lines
+        await new Promise((r) => setTimeout(r, 35));
       }
+
+      // Mark streaming as complete so toolbar & badges reveal smoothly
+      setMessages((prev) =>
+        prev.map((m) => (m.id === aiMsgId ? { ...m, isStreaming: false } : m))
+      );
     } catch {
       setMessages((prev) => [
         ...prev,
@@ -825,17 +831,12 @@ export default function CopilotPage() {
                   <ChatMessage key={msg.id} message={msg} onSelectPrompt={(p) => handleSendMessage(p)} />
                 ))}
 
-                {/* Typing / Thinking Indicator */}
+                {/* Minimalist ChatGPT-style Loading Dots */}
                 {isProcessing && (
-                  <div className="w-full py-3 animate-fade-in flex items-center gap-2.5 text-emerald-400 text-xs font-mono font-bold bg-emerald-950/30 border border-emerald-500/20 rounded-2xl p-3 max-w-md">
-                    <Loader2 className="w-4 h-4 animate-spin text-emerald-400" />
-                    <span>
-                      {locale === 'ar'
-                        ? 'جارٍ فحص القوانين والتنابر الرسمية...'
-                        : locale === 'derja'
-                        ? '9a3ed nthabbet fel awra9 wel 9anoun...'
-                        : 'Vérification des textes officiels JORT et barèmes...'}
-                    </span>
+                  <div className="w-full py-4 px-1 flex items-center gap-1.5 animate-fade-in">
+                    <span className="w-2.5 h-2.5 rounded-full bg-zinc-400 animate-bounce" style={{ animationDelay: '0ms' }} />
+                    <span className="w-2.5 h-2.5 rounded-full bg-zinc-400 animate-bounce" style={{ animationDelay: '150ms' }} />
+                    <span className="w-2.5 h-2.5 rounded-full bg-zinc-400 animate-bounce" style={{ animationDelay: '300ms' }} />
                   </div>
                 )}
               </div>

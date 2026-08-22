@@ -362,11 +362,14 @@ export const ChatMessage: React.FC<ChatMessageProps> = ({ message }) => {
         className={`prose-chat text-zinc-100 ${isArabicScript ? 'font-["Cairo",sans-serif]' : ''}`}
       >
         {renderFormattedContent(message.content)}
+        {message.isStreaming && (
+          <span className="inline-block w-1.5 h-4 bg-emerald-400/90 ml-1.5 rounded-xs animate-pulse align-middle" />
+        )}
       </div>
 
       {/* Timbre Breakdown Docket (if any) */}
-      {message.timbreBreakdown && (
-        <div className="mt-3 p-3.5 rounded-2xl bg-[#1a1a1d] border border-amber-500/25 space-y-2 max-w-lg shadow-lg">
+      {!message.isStreaming && message.timbreBreakdown && (
+        <div className="mt-3 p-3.5 rounded-2xl bg-[#1a1a1d] border border-amber-500/25 space-y-2 max-w-lg shadow-lg animate-fade-in">
           <div className="flex items-center justify-between font-bold text-amber-400 pb-1.5 border-b border-white/10 text-xs">
             <div className="flex items-center gap-1.5">
               <Stamp className="w-3.5 h-3.5 text-amber-400" />
@@ -399,8 +402,8 @@ export const ChatMessage: React.FC<ChatMessageProps> = ({ message }) => {
       )}
 
       {/* Action Chips */}
-      {message.actions && message.actions.length > 0 && (
-        <div className="flex flex-wrap gap-2 pt-1">
+      {!message.isStreaming && message.actions && message.actions.length > 0 && (
+        <div className="flex flex-wrap gap-2 pt-1 animate-fade-in">
           {message.actions.map((action, idx) => {
             const label = getLocalized(action.label, locale) || 'Voir';
             return (
@@ -422,27 +425,29 @@ export const ChatMessage: React.FC<ChatMessageProps> = ({ message }) => {
       )}
 
       {/* ChatGPT-style Icon Toolbar (Copy, Listen) */}
-      <div className="flex items-center gap-2 pt-1 text-zinc-500">
-        <button
-          onClick={copyToClipboard}
-          className="p-1.5 rounded-lg hover:bg-white/10 text-zinc-400 hover:text-zinc-200 transition-colors cursor-pointer border-0 outline-none"
-          title={locale === 'ar' ? 'نسخ النص' : locale === 'fr' ? 'Copier' : 'Copy'}
-        >
-          {copied ? <Check className="w-4 h-4 text-emerald-400" /> : <Copy className="w-4 h-4" />}
-        </button>
+      {!message.isStreaming && message.content && (
+        <div className="flex items-center gap-2 pt-1 text-zinc-500 animate-fade-in">
+          <button
+            onClick={copyToClipboard}
+            className="p-1.5 rounded-lg hover:bg-white/10 text-zinc-400 hover:text-zinc-200 transition-colors cursor-pointer border-0 outline-none"
+            title={locale === 'ar' ? 'نسخ النص' : locale === 'fr' ? 'Copier' : 'Copy'}
+          >
+            {copied ? <Check className="w-4 h-4 text-emerald-400" /> : <Copy className="w-4 h-4" />}
+          </button>
 
-        <button
-          onClick={speakMessage}
-          className={`p-1.5 rounded-lg transition-colors cursor-pointer border-0 outline-none ${
-            isPlayingAudio
-              ? 'text-red-400 bg-red-500/10'
-              : 'text-zinc-400 hover:text-zinc-200 hover:bg-white/10'
-          }`}
-          title={locale === 'ar' ? 'استماع بالصوت' : locale === 'fr' ? 'Écouter' : 'Read out loud'}
-        >
-          {isPlayingAudio ? <VolumeX className="w-4 h-4" /> : <Volume2 className="w-4 h-4" />}
-        </button>
-      </div>
+          <button
+            onClick={speakMessage}
+            className={`p-1.5 rounded-lg transition-colors cursor-pointer border-0 outline-none ${
+              isPlayingAudio
+                ? 'text-red-400 bg-red-500/10'
+                : 'text-zinc-400 hover:text-zinc-200 hover:bg-white/10'
+            }`}
+            title={locale === 'ar' ? 'استماع بالصوت' : locale === 'fr' ? 'Écouter' : 'Read out loud'}
+          >
+            {isPlayingAudio ? <VolumeX className="w-4 h-4" /> : <Volume2 className="w-4 h-4" />}
+          </button>
+        </div>
+      )}
     </div>
   );
 };
