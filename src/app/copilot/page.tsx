@@ -66,6 +66,7 @@ export default function CopilotPage() {
   const [editingTitle, setEditingTitle] = useState<string>('');
   const [sidebarOpen, setSidebarOpen] = useState<boolean>(true);
   const [thinkMode, setThinkMode] = useState<boolean>(false);
+  const [attachedFile, setAttachedFile] = useState<File | null>(null);
   const [attachedFileName, setAttachedFileName] = useState<string | null>(null);
   const [isInitialized, setIsInitialized] = useState(false);
 
@@ -203,14 +204,13 @@ export default function CopilotPage() {
 
   const handleSendMessage = async (textToSend?: string) => {
     const rawQuery = (textToSend ?? inputVal).trim();
-    if ((!rawQuery && !attachedFileName) || isProcessing) return;
+    if ((!rawQuery && !attachedFileName && !attachedFile) || isProcessing) return;
 
-    const displayContent = attachedFileName
-      ? `📄 [وثيقة مرفقة: ${attachedFileName}]\n${rawQuery || 'فسرلي هذه الوثيقة واستخرج منها التنابر والآجال المطلوبة'}`
-      : rawQuery;
+    const currentFile = attachedFile;
+    const currentFileName = attachedFileName;
 
-    const queryToSend = attachedFileName
-      ? `[وثيقة إدارية مرفقة: ${attachedFileName}] ${rawQuery || 'فسرلي هذه الوثيقة الإدارية بالتفصيل واستخرج الإجراءات والرسوم المطلوبة'}`
+    const displayContent = currentFileName
+      ? `📄 [وثيقة مرفقة: ${currentFileName}]\n${rawQuery || 'فسرلي هذه الوثيقة واستخرج منها التنابر والآجال المطلوبة'}`
       : rawQuery;
 
     const userMsg: ChatMessageType = {
@@ -222,6 +222,7 @@ export default function CopilotPage() {
 
     setMessages((prev) => [...prev, userMsg]);
     setInputVal('');
+    setAttachedFile(null);
     setAttachedFileName(null);
     if (fileInputRef.current) fileInputRef.current.value = '';
     setShowPlusMenu(false);
@@ -229,6 +230,36 @@ export default function CopilotPage() {
     if (textareaRef.current) textareaRef.current.style.height = 'auto';
 
     try {
+      // 1. If an actual image/document file was attached, decode it via OCR first
+      let documentContext = '';
+      if (currentFile) {
+        try {
+          const formData = new FormData();
+          formData.append('file', currentFile);
+          formData.append('documentName', currentFileName || currentFile.name);
+          const ocrRes = await fetch('/api/ocr', { method: 'POST', body: formData });
+          if (ocrRes.ok) {
+            const ocrData = await ocrRes.json();
+            if (ocrData.analysis) {
+              const dType = ocrData.analysis.documentType?.ar || ocrData.analysis.documentType?.derja || ocrData.analysis.documentType?.fr || 'وثيقة إدارية تونسية';
+              const dAuth = ocrData.analysis.issuingAuthority?.ar || ocrData.analysis.issuingAuthority?.fr || 'الهيكل الإداري التونسي المختص';
+              const dDeadline = ocrData.analysis.deadlineDate || '';
+              const dPenalty = ocrData.analysis.penaltyRisk?.ar || ocrData.analysis.penaltyRisk?.derja || '';
+              const dSummary = Array.isArray(ocrData.analysis.summary?.ar) ? ocrData.analysis.summary.ar.join(' · ') : '';
+              documentContext = `[وثيقة إدارية مرفقة تم فحصها وتحليلها: نوع الوثيقة: ${dType}، الهيكل المصدر: ${dAuth}${dDeadline ? `، الأجل: ${dDeadline}` : ''}${dPenalty ? `، المخاطر: ${dPenalty}` : ''}${dSummary ? `، ملخص الفحص: ${dSummary}` : ''}]`;
+            }
+          }
+        } catch (ocrErr) {
+          console.warn('Background OCR extraction notice:', ocrErr);
+        }
+      }
+
+      const queryToSend = documentContext
+        ? `${documentContext} ${rawQuery || 'فسرلي هذه الوثيقة الإدارية بالتفصيل واستخرج الإجراءات والرسوم المطلوبة'}`
+        : currentFileName
+        ? `[وثيقة إدارية مرفقة: ${currentFileName}] ${rawQuery || 'فسرلي هذه الوثيقة الإدارية بالتفصيل واستخرج الإجراءات والرسوم المطلوبة'}`
+        : rawQuery;
+
       const history = messages.slice(-10).map((m) => ({
         role: m.sender === 'user' ? 'user' : 'assistant',
         content: m.content,
@@ -819,6 +850,7 @@ export default function CopilotPage() {
                   <button
                     type="button"
                     onClick={() => {
+                      setAttachedFile(null);
                       setAttachedFileName(null);
                       if (fileInputRef.current) fileInputRef.current.value = '';
                     }}
@@ -839,6 +871,7 @@ export default function CopilotPage() {
                 onChange={(e) => {
                   const file = e.target.files?.[0];
                   if (file) {
+                    setAttachedFile(file);
                     setAttachedFileName(file.name);
                   }
                 }}
@@ -1009,10 +1042,31 @@ export default function CopilotPage() {
             {/* Sticky Bottom Dock Input (When chatting) */}
             <footer className="p-4 bg-[#090b0e]/95 backdrop-blur-xl border-t border-white/[0.08] shrink-0 z-20">
               <div className="max-w-3xl mx-auto space-y-2">
+                
+                {/* Attached Document Preview Badge in Footer */}
+                {attachedFileName && (
+                  <div className="flex items-center gap-2 px-3 py-1 rounded-xl bg-emerald-500/10 border border-emerald-500/30 text-emerald-300 text-xs w-fit animate-fade-in">
+                    <ScanText className="w-3.5 h-3.5" />
+                    <span className="font-mono truncate max-w-xs">{attachedFileName}</span>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setAttachedFile(null);
+                        setAttachedFileName(null);
+                        if (fileInputRef.current) fileInputRef.current.value = '';
+                      }}
+                      className="hover:text-white text-zinc-400 p-0.5 transition-colors cursor-pointer"
+                      title="Remove attachment"
+                    >
+                      ×
+                    </button>
+                  </div>
+                )}
+
                 <div className="flex items-center gap-2.5 bg-[#12141a] border border-white/[0.08] focus-within:border-emerald-500/50 rounded-2xl p-2 px-3 shadow-2xl transition-all">
                   
                   {/* Plus Quick Topics */}
-                  <div className="relative shrink-0">
+                  <div className="relative shrink-0 flex items-center gap-1">
                     <button
                       type="button"
                       onClick={() => setShowPlusMenu((p) => !p)}
@@ -1020,6 +1074,15 @@ export default function CopilotPage() {
                       title="Quick Topics"
                     >
                       <Plus className="w-4 h-4" />
+                    </button>
+
+                    <button
+                      type="button"
+                      onClick={() => fileInputRef.current?.click()}
+                      className="p-2 rounded-xl hover:bg-white/10 text-zinc-400 hover:text-emerald-400 transition-colors cursor-pointer border-0 outline-none"
+                      title="Attach document or photo (OCR)"
+                    >
+                      <ScanText className="w-4 h-4" />
                     </button>
 
                     {showPlusMenu && (

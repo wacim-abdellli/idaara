@@ -101,6 +101,22 @@ function buildGroundingContext(query: string, locale: string): string {
   const concoursContext = buildConcoursGroundingPrompt(query, locale);
   if (concoursContext) context += '\n' + concoursContext;
 
+  // Attached Document / OCR Special Grounding
+  if (q.includes('وثيقة') || q.includes('مرفقة') || q.includes('.jpg') || q.includes('.png') || q.includes('cin') || q.includes('carte') || q.includes('بطاقة') || q.includes('chni') || q.includes('شنوة')) {
+    context += `\n\n=== ATTACHED CIVIC DOCUMENT GROUNDING ===
+If the user is asking about an attached document or image (e.g. CIN, Carte d'Identité, Passport, CNSS, Impôts):
+- CARTE D'IDENTITÉ NATIONALE (CIN / بطاقة التعريف الوطنية):
+  * Official Authority: Ministère de l'Intérieur / Commissariat de Police ou Poste de Garde Nationale.
+  * Validity: 10 ans.
+  * Fees: 3 DT (première délivrance) | 25 DT timbre fiscal (renouvellement / perte / détérioration).
+  * Required: Extrait de naissance (مضموم ولادة حديث < 3 أشهر), Certificat de résidence (شهادة إقامة), 3 photos fond blanc, ancienne CIN.
+- AVIS FISCAL / RECOUVREMENT (DGI):
+  * Statutory appeal window: 30 jours à compter de la date de notification.
+- MISE EN DEMEURE CNSS:
+  * Regularization window: 15 jours.
+Explain the document directly, warmly and clearly in Tunisian Derja, outline the 3 key points, required papers, fiscal stamps, and target office. NEVER say "I cannot view images".`;
+  }
+
   return context;
 }
 
@@ -152,7 +168,17 @@ CRITICAL INSTRUCTIONS & INTELLIGENT ROUTING:
 4. ACCURACY & ZERO EMPTY SECTIONS:
 - Only output sections that have real content.
 - If an item is not applicable, simply do not mention it.
-- State verified official fees from JORT and Loi de Finances 2025/2026.`;
+- State verified official fees from JORT and Loi de Finances 2025/2026.
+
+5. ATTACHED DOCUMENTS & OCR DECODING (e.g. [وثيقة إدارية مرفقة: ...]):
+- When the user attaches an administrative document or photo and asks "chni hethi", "شنوة هذي", "فسرلي هذي", or asks about their document:
+- NEVER EVER say "ما نجمش نفتح الصور" or "I cannot view images". You ARE the official Tunisian civic and document decoder!
+- Identify and decode the document based on Tunisian administrative law (CIN, Passport, Avis Fiscal, CNSS, Convocation, Facture STEG/SONEDE):
+  - 📌 **الخلاصة**: تعريف الوثيقة، الهيكل الإداري المصدر (وزارة الداخلية / مركز الشرطة / القباضة...) والصلاحية القانونية.
+  - 📑 **الأوراق المطلوبة** (للتجديد أو للإجابة).
+  - 💰 **التنابر والمعاليم الرسمية** (مثلاً 3 د.ت / 25 د.ت).
+  - 🏛️ **الشباك المختص والآجال القانونية**.
+  - > 💡 **نصيحة إدارة.تونس**: نصيحة عملية للتنقل أو لتفادي الخطايا.`;
 
 export async function POST(req: NextRequest) {
   try {
