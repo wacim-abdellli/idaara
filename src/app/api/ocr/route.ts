@@ -1,9 +1,25 @@
 import { NextRequest, NextResponse } from 'next/server';
 import fs from 'fs';
 import path from 'path';
+import { GoogleGenerativeAI } from '@google/generative-ai';
 import Tesseract from 'tesseract.js';
 import { sampleDocumentsList } from '../../../data/sampleDocuments';
 import { OCRAnalysisResult } from '../../../types/chat';
+
+function getGeminiKey(): string {
+  if (process.env.GEMINI_API_KEY && process.env.GEMINI_API_KEY.trim()) {
+    return process.env.GEMINI_API_KEY.trim();
+  }
+  try {
+    const envPath = path.join(process.cwd(), '.env.local');
+    if (fs.existsSync(envPath)) {
+      const content = fs.readFileSync(envPath, 'utf8');
+      const match = content.match(/GEMINI_API_KEY=["']?([^"'\r\n]+)/);
+      if (match && match[1]) return match[1].trim();
+    }
+  } catch {}
+  return '';
+}
 
 function getGroqKey(): string {
   if (process.env.GROQ_API_KEY && process.env.GROQ_API_KEY.trim()) {
@@ -20,72 +36,8 @@ function getGroqKey(): string {
   return '';
 }
 
-export async function POST(req: NextRequest) {
-  try {
-    const formData = await req.formData();
-    const file = formData.get('file') as File | null;
-    const sampleId = formData.get('sampleId') as string | null;
-    const documentName = (formData.get('documentName') as string) || file?.name || 'document-scan.png';
-
-    // 1. If static sample is picked
-    if (sampleId) {
-      const found = sampleDocumentsList.find((s) => s.id === sampleId);
-      if (found) {
-        return NextResponse.json({
-          success: true,
-          analysis: found.simulatedOCRResult,
-          filename: documentName,
-        });
-      }
-    }
-
-    // 2. Extract Real OCR Text using Tesseract Engine
-    let extractedText = '';
-    if (file && file.size > 0) {
-      try {
-        const arrayBuffer = await file.arrayBuffer();
-        const buffer = Buffer.from(arrayBuffer);
-
-        const ocrPromise = Tesseract.recognize(buffer, 'ara+fra+eng', {
-          logger: () => {},
-        });
-
-        // 10s safeguard timeout on OCR
-        const timeoutPromise = new Promise<{ data: { text: string } }>((resolve) =>
-          setTimeout(() => resolve({ data: { text: '' } }), 10000)
-        );
-
-        const raceResult = await Promise.race([ocrPromise, timeoutPromise]);
-        extractedText = (raceResult?.data?.text || '').trim();
-      } catch (ocrErr) {
-        console.warn('Tesseract OCR engine error:', ocrErr);
-      }
-    }
-
-    const apiKey = getGroqKey();
-
-    // 3. AI Legal Analysis of the ACTUAL extracted OCR text
-    if (apiKey) {
-      try {
-        const controller = new AbortController();
-        const timeoutId = setTimeout(() => controller.abort(), 8000);
-
-        const prompt = `You are the Official Tunisian Administrative & Legal Document Decoder (Idaara AI Fasserli).
-A citizen has uploaded an image file titled "${documentName}".
-Our OCR engine extracted the following real text from the image:
-
-=== EXTRACTED OCR TEXT FROM USER IMAGE ===
-${extractedText || '(No clear text detected in image)'}
-==========================================
-
-Analyze the REAL document content extracted above with 100% honesty and accuracy.
-- If it is a kids summer camp or club registration form (بطاقة إرشادات وتسجيل بالنادي), identify it accurately as a Club/School Registration form.
-- If it is a Tax adjustment or Avis Fiscal, identify the tax office and 30-day statutory appeal window.
-- If it is a CNSS notice, identify the CNSS office and 15-day deadline.
-- If it is a National Identity Card (CIN) or Passport, analyze it accurately.
-- If it is a general image with no text (e.g. photo of flowers or landscape), state that it is not an official document.
-
-Return ONLY a valid JSON object matching this schema:
+const DOCUMENT_ANALYSIS_SCHEMA_PROMPT = `
+Return ONLY a valid JSON object matching this exact schema:
 {
   "documentType": {
     "ar": "الاسم الدقيق للوثيقة بالعربية",
@@ -94,23 +46,23 @@ Return ONLY a valid JSON object matching this schema:
     "en": "Exact document name in English"
   },
   "issuingAuthority": {
-    "ar": "المؤسسة أو الهيكل المصدر",
+    "ar": "المؤسسة أو الهيكل المصدر (وزارة / قباضة / نادي / محكمة)",
     "fr": "Organisme émetteur",
     "derja": "El haykal el masdour",
     "en": "Issuing entity"
   },
-  "referenceNumber": "رقم المرجع إن وجد أو غير متوفر",
+  "referenceNumber": "رقم المرجع أو الوصل إن وجد أو غير متوفر",
   "dateDetected": "التاريخ إن وجد أو غير متوفر",
   "urgency": "low" | "medium" | "high" | "critical",
   "deadlineDate": "الآجال القانونية إن وجدت أو غير محدد",
   "penaltyRisk": {
-    "ar": "المخاطر القانونية والخطايا إن وجدت أو غير منطبق",
+    "ar": "المخاطر والخطايا القانونية إن وجدت أو غير منطبق",
     "fr": "Risques ou Non applicable",
     "derja": "Mochkla wala le",
     "en": "Risk or Not applicable"
   },
   "summary": {
-    "ar": ["نقطة 1 تشرح محتوى الوثيقة الحقيقية بدقة", "نقطة 2", "نقطة 3"],
+    "ar": ["نقطة 1 تشرح محتوى الوثيقة الحقيقية بدقة", "نقطة 2 تشرح المطلوب", "نقطة 3 توضح الآجال أو التفاصيل"],
     "fr": ["point 1", "point 2", "point 3"],
     "derja": ["no9ta 1", "no9ta 2", "no9ta 3"],
     "en": ["point 1", "point 2", "point 3"]
@@ -124,19 +76,142 @@ Return ONLY a valid JSON object matching this schema:
     }
   ],
   "legalContext": {
-    "ar": "السياق القانوني أو التنظيمي",
-    "fr": "Contexte juridique",
-    "derja": "El 9anoun el ma3ni",
-    "en": "Legal context"
+    "ar": "السياق القانوني أو التنظيمي التونسي",
+    "fr": "Contexte juridique tunisien",
+    "derja": "El 9anoun el tounsi el ma3ni",
+    "en": "Tunisian legal context"
   }
 }`;
+
+export async function POST(req: NextRequest) {
+  try {
+    const formData = await req.formData();
+    const file = formData.get('file') as File | null;
+    const sampleId = formData.get('sampleId') as string | null;
+    const documentName = (formData.get('documentName') as string) || file?.name || 'document-scan.png';
+
+    // 1. If static verified sample
+    if (sampleId) {
+      const found = sampleDocumentsList.find((s) => s.id === sampleId);
+      if (found) {
+        return NextResponse.json({
+          success: true,
+          analysis: found.simulatedOCRResult,
+          filename: documentName,
+        });
+      }
+    }
+
+    let buffer: Buffer | null = null;
+    let mimeType = 'image/png';
+
+    if (file && file.size > 0) {
+      const arrayBuffer = await file.arrayBuffer();
+      buffer = Buffer.from(arrayBuffer);
+      mimeType = file.type || (documentName.endsWith('.pdf') ? 'application/pdf' : 'image/png');
+    }
+
+    const geminiKey = getGeminiKey();
+    const groqKey = getGroqKey();
+
+    // ─── METHOD 1: Google Gemini Multimodal Vision (Native Pixel Scanner - Fast & Free) ───
+    if (geminiKey && buffer) {
+      try {
+        const genAI = new GoogleGenerativeAI(geminiKey);
+        const model = genAI.getGenerativeModel({ model: 'gemini-2.0-flash' });
+
+        const base64 = buffer.toString('base64');
+        const visionPrompt = `You are the Official Tunisian Administrative & Legal Document Decoder (Idaara AI Fasserli).
+You have human-level OCR and visual document recognition capabilities for Tunisian administrative paperwork (CIN, Passport, Avis Fiscal, CNSS, B3, Municipal birth extracts, court summons, utility bills, school forms).
+
+Analyze this uploaded document image in detail.
+Read the actual visible text, headers, seals, stamps, and dates.
+${DOCUMENT_ANALYSIS_SCHEMA_PROMPT}`;
+
+        const result = await model.generateContent([
+          visionPrompt,
+          {
+            inlineData: {
+              mimeType: mimeType.includes('pdf') ? 'application/pdf' : 'image/png',
+              data: base64,
+            },
+          },
+        ]);
+
+        const rawText = result.response.text();
+        const jsonMatch = rawText.match(/\{[\s\S]*\}/);
+        if (jsonMatch) {
+          const parsed = JSON.parse(jsonMatch[0]);
+          if (parsed.documentType && parsed.summary) {
+            const analysis: OCRAnalysisResult = {
+              id: `ocr-${Date.now()}`,
+              documentType: parsed.documentType,
+              issuingAuthority: parsed.issuingAuthority || { ar: 'الهيكل المصدر', fr: 'Autorité', derja: 'El Haykal', en: 'Authority' },
+              referenceNumber: parsed.referenceNumber || 'غير متوفر',
+              dateDetected: parsed.dateDetected || 'غير متوفر',
+              urgency: parsed.urgency || 'low',
+              deadlineDate: parsed.deadlineDate || 'غير محدد',
+              penaltyRisk: parsed.penaltyRisk || { ar: 'غير منطبق', fr: 'Non applicable', derja: 'Ghir montaba9', en: 'Not applicable' },
+              summary: parsed.summary,
+              actionItems: parsed.actionItems || [],
+              legalContext: parsed.legalContext || { ar: 'إجراء إداري / تنظيمي', fr: 'Procédure administrative', derja: 'Ijra2 idari', en: 'Administrative procedure' },
+            };
+
+            return NextResponse.json({
+              success: true,
+              engine: 'gemini-vision',
+              analysis,
+              filename: documentName,
+            });
+          }
+        }
+      } catch (geminiErr) {
+        console.warn('Gemini Vision engine fallback:', geminiErr);
+      }
+    }
+
+    // ─── METHOD 2: Tesseract OCR + Groq 120B Cascade ───
+    let extractedText = '';
+    if (buffer) {
+      try {
+        const ocrPromise = Tesseract.recognize(buffer, 'ara+fra+eng', {
+          logger: () => {},
+        });
+
+        // 25s timeout for large 5MB images
+        const timeoutPromise = new Promise<{ data: { text: string } }>((resolve) =>
+          setTimeout(() => resolve({ data: { text: '' } }), 25000)
+        );
+
+        const raceResult = await Promise.race([ocrPromise, timeoutPromise]);
+        extractedText = (raceResult?.data?.text || '').trim();
+      } catch (ocrErr) {
+        console.warn('Tesseract OCR engine fallback:', ocrErr);
+      }
+    }
+
+    if (groqKey) {
+      try {
+        const controller = new AbortController();
+        const timeoutId = setTimeout(() => controller.abort(), 8000);
+
+        const prompt = `You are the Official Tunisian Administrative & Legal Document Decoder (Idaara AI Fasserli).
+A citizen has uploaded an image file titled "${documentName}".
+Our OCR engine extracted the following real text from the image:
+
+=== EXTRACTED OCR TEXT FROM USER IMAGE ===
+${extractedText || '(No clear text detected in image)'}
+==========================================
+
+Analyze the REAL document content extracted above with 100% honesty and accuracy.
+${DOCUMENT_ANALYSIS_SCHEMA_PROMPT}`;
 
         const groqRes = await fetch('https://api.groq.com/openai/v1/chat/completions', {
           method: 'POST',
           signal: controller.signal,
           headers: {
             'Content-Type': 'application/json',
-            Authorization: `Bearer ${apiKey}`,
+            Authorization: `Bearer ${groqKey}`,
           },
           body: JSON.stringify({
             model: 'openai/gpt-oss-120b',
@@ -170,6 +245,7 @@ Return ONLY a valid JSON object matching this schema:
             };
             return NextResponse.json({
               success: true,
+              engine: 'tesseract-groq',
               analysis,
               filename: documentName,
               ocrText: extractedText.slice(0, 500),
@@ -181,7 +257,7 @@ Return ONLY a valid JSON object matching this schema:
       }
     }
 
-    // 4. Honest Fallback if AI or OCR is unreachable
+    // ─── METHOD 3: Fallback response ───
     const hasText = extractedText.length > 15;
     const fallbackAnalysis: OCRAnalysisResult = {
       id: `ocr-${Date.now()}`,
