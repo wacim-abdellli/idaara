@@ -66,13 +66,10 @@ export default function CopilotPage() {
   const [editingTitle, setEditingTitle] = useState<string>('');
   const [sidebarOpen, setSidebarOpen] = useState<boolean>(true);
   const [thinkMode, setThinkMode] = useState<boolean>(false);
-  const [attachedFile, setAttachedFile] = useState<File | null>(null);
-  const [attachedFileName, setAttachedFileName] = useState<string | null>(null);
   const [isInitialized, setIsInitialized] = useState(false);
 
   const messagesContainerRef = useRef<HTMLDivElement | null>(null);
   const textareaRef = useRef<HTMLTextAreaElement | null>(null);
-  const fileInputRef = useRef<HTMLInputElement | null>(null);
   const mediaRecorderRef = useRef<MediaRecorder | null>(null);
   const audioChunksRef = useRef<Blob[]>([]);
 
@@ -204,62 +201,22 @@ export default function CopilotPage() {
 
   const handleSendMessage = async (textToSend?: string) => {
     const rawQuery = (textToSend ?? inputVal).trim();
-    if ((!rawQuery && !attachedFileName && !attachedFile) || isProcessing) return;
-
-    const currentFile = attachedFile;
-    const currentFileName = attachedFileName;
-
-    const displayContent = currentFileName
-      ? `📄 [وثيقة مرفقة: ${currentFileName}]\n${rawQuery || 'فسرلي هذه الوثيقة واستخرج منها التنابر والآجال المطلوبة'}`
-      : rawQuery;
+    if (!rawQuery || isProcessing) return;
 
     const userMsg: ChatMessageType = {
       id: `user-${Date.now()}`,
       sender: 'user',
-      content: displayContent,
+      content: rawQuery,
       timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
     };
 
     setMessages((prev) => [...prev, userMsg]);
     setInputVal('');
-    setAttachedFile(null);
-    setAttachedFileName(null);
-    if (fileInputRef.current) fileInputRef.current.value = '';
     setShowPlusMenu(false);
     setIsProcessing(true);
     if (textareaRef.current) textareaRef.current.style.height = 'auto';
 
     try {
-      // 1. If an actual image/document file was attached, decode it via OCR first
-      let documentContext = '';
-      if (currentFile) {
-        try {
-          const formData = new FormData();
-          formData.append('file', currentFile);
-          formData.append('documentName', currentFileName || currentFile.name);
-          const ocrRes = await fetch('/api/ocr', { method: 'POST', body: formData });
-          if (ocrRes.ok) {
-            const ocrData = await ocrRes.json();
-            if (ocrData.analysis) {
-              const dType = ocrData.analysis.documentType?.ar || ocrData.analysis.documentType?.derja || ocrData.analysis.documentType?.fr || 'وثيقة إدارية تونسية';
-              const dAuth = ocrData.analysis.issuingAuthority?.ar || ocrData.analysis.issuingAuthority?.fr || 'الهيكل الإداري التونسي المختص';
-              const dDeadline = ocrData.analysis.deadlineDate || '';
-              const dPenalty = ocrData.analysis.penaltyRisk?.ar || ocrData.analysis.penaltyRisk?.derja || '';
-              const dSummary = Array.isArray(ocrData.analysis.summary?.ar) ? ocrData.analysis.summary.ar.join(' · ') : '';
-              documentContext = `[وثيقة إدارية مرفقة تم فحصها وتحليلها: نوع الوثيقة: ${dType}، الهيكل المصدر: ${dAuth}${dDeadline ? `، الأجل: ${dDeadline}` : ''}${dPenalty ? `، المخاطر: ${dPenalty}` : ''}${dSummary ? `، ملخص الفحص: ${dSummary}` : ''}]`;
-            }
-          }
-        } catch (ocrErr) {
-          console.warn('Background OCR extraction notice:', ocrErr);
-        }
-      }
-
-      const queryToSend = documentContext
-        ? `${documentContext} ${rawQuery || 'فسرلي هذه الوثيقة الإدارية بالتفصيل واستخرج الإجراءات والرسوم المطلوبة'}`
-        : currentFileName
-        ? `[وثيقة إدارية مرفقة: ${currentFileName}] ${rawQuery || 'فسرلي هذه الوثيقة الإدارية بالتفصيل واستخرج الإجراءات والرسوم المطلوبة'}`
-        : rawQuery;
-
       const history = messages.slice(-10).map((m) => ({
         role: m.sender === 'user' ? 'user' : 'assistant',
         content: m.content,
@@ -268,7 +225,7 @@ export default function CopilotPage() {
       const res = await fetch('/api/copilot', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ prompt: queryToSend, locale, history, think: thinkMode }),
+        body: JSON.stringify({ prompt: rawQuery, locale, history, think: thinkMode }),
       });
 
       const data = await res.json();
@@ -841,42 +798,6 @@ export default function CopilotPage() {
 
             {/* Minimalist Studio Input Card */}
             <div className="w-full rounded-2xl bg-[#13151b] border border-white/[0.08] hover:border-white/[0.15] focus-within:border-emerald-500/40 p-3 sm:p-3.5 shadow-xl transition-all space-y-2.5">
-              
-              {/* Attached Document Preview Badge */}
-              {attachedFileName && (
-                <div className="flex items-center gap-2 px-3 py-1 rounded-xl bg-emerald-500/10 border border-emerald-500/30 text-emerald-300 text-xs w-fit animate-fade-in">
-                  <ScanText className="w-3.5 h-3.5" />
-                  <span className="font-mono truncate max-w-xs">{attachedFileName}</span>
-                  <button
-                    type="button"
-                    onClick={() => {
-                      setAttachedFile(null);
-                      setAttachedFileName(null);
-                      if (fileInputRef.current) fileInputRef.current.value = '';
-                    }}
-                    className="hover:text-white text-zinc-400 p-0.5 transition-colors cursor-pointer"
-                    title="Remove attachment"
-                  >
-                    ×
-                  </button>
-                </div>
-              )}
-
-              {/* Hidden File Input for OCR direct attachment */}
-              <input
-                type="file"
-                ref={fileInputRef}
-                accept="image/*,.pdf"
-                className="hidden"
-                onChange={(e) => {
-                  const file = e.target.files?.[0];
-                  if (file) {
-                    setAttachedFile(file);
-                    setAttachedFileName(file.name);
-                  }
-                }}
-              />
-
               <textarea
                 autoFocus
                 rows={2}
@@ -893,26 +814,16 @@ export default function CopilotPage() {
                 <div className="flex items-center gap-1.5">
                   <button
                     type="button"
-                    onClick={() => fileInputRef.current?.click()}
-                    className="p-1.5 rounded-lg text-zinc-400 hover:text-white hover:bg-white/5 text-xs transition-colors flex items-center gap-1 cursor-pointer border border-transparent"
-                    title="Attach administrative notice or document (OCR)"
-                  >
-                    <ScanText className="w-3.5 h-3.5 text-emerald-400" />
-                    <span className="text-[11px] hidden sm:inline">{locale === 'ar' ? 'ماسح ضوئي' : 'OCR'}</span>
-                  </button>
-
-                  <button
-                    type="button"
                     onClick={() => setThinkMode((p) => !p)}
-                    className={`flex items-center gap-1 px-2 py-1 rounded-lg text-[11px] font-medium transition-colors cursor-pointer border ${
+                    className={`flex items-center gap-1 px-2.5 py-1 rounded-lg text-[11px] font-medium transition-colors cursor-pointer border ${
                       thinkMode
                         ? 'bg-emerald-500/20 text-emerald-300 border-emerald-500/40 shadow-sm'
                         : 'text-zinc-400 hover:text-white border-transparent hover:bg-white/5'
                     }`}
                     title="Toggle Deep Legal & Statutory Reasoning Mode"
                   >
-                    <Brain className="w-3 h-3 text-emerald-400" />
-                    <span>Think</span>
+                    <Brain className="w-3.5 h-3.5 text-emerald-400" />
+                    <span>{locale === 'ar' ? 'تفكير معمق' : 'Think'}</span>
                   </button>
                 </div>
 
@@ -1042,27 +953,6 @@ export default function CopilotPage() {
             {/* Sticky Bottom Dock Input (When chatting) */}
             <footer className="p-4 bg-[#090b0e]/95 backdrop-blur-xl border-t border-white/[0.08] shrink-0 z-20">
               <div className="max-w-3xl mx-auto space-y-2">
-                
-                {/* Attached Document Preview Badge in Footer */}
-                {attachedFileName && (
-                  <div className="flex items-center gap-2 px-3 py-1 rounded-xl bg-emerald-500/10 border border-emerald-500/30 text-emerald-300 text-xs w-fit animate-fade-in">
-                    <ScanText className="w-3.5 h-3.5" />
-                    <span className="font-mono truncate max-w-xs">{attachedFileName}</span>
-                    <button
-                      type="button"
-                      onClick={() => {
-                        setAttachedFile(null);
-                        setAttachedFileName(null);
-                        if (fileInputRef.current) fileInputRef.current.value = '';
-                      }}
-                      className="hover:text-white text-zinc-400 p-0.5 transition-colors cursor-pointer"
-                      title="Remove attachment"
-                    >
-                      ×
-                    </button>
-                  </div>
-                )}
-
                 <div className="flex items-center gap-2.5 bg-[#12141a] border border-white/[0.08] focus-within:border-emerald-500/50 rounded-2xl p-2 px-3 shadow-2xl transition-all">
                   
                   {/* Plus Quick Topics */}
@@ -1074,15 +964,6 @@ export default function CopilotPage() {
                       title="Quick Topics"
                     >
                       <Plus className="w-4 h-4" />
-                    </button>
-
-                    <button
-                      type="button"
-                      onClick={() => fileInputRef.current?.click()}
-                      className="p-2 rounded-xl hover:bg-white/10 text-zinc-400 hover:text-emerald-400 transition-colors cursor-pointer border-0 outline-none"
-                      title="Attach document or photo (OCR)"
-                    >
-                      <ScanText className="w-4 h-4" />
                     </button>
 
                     {showPlusMenu && (
