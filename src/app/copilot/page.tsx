@@ -79,12 +79,22 @@ export default function CopilotPage() {
     }
   };
 
-  // ── 1. Load Chat Sessions & Active Thread with Auto-Deduplication ──
+  // ── 1. Load Chat Sessions & Active Thread with Auto-Deduplication & Resize Listener ──
   useEffect(() => {
-    if (typeof window !== 'undefined') {
-      if (window.innerWidth >= 1024) {
-        setSidebarOpen(true);
+    const handleResize = () => {
+      if (typeof window !== 'undefined') {
+        if (window.innerWidth < 1024) {
+          setSidebarOpen(false);
+        } else {
+          setSidebarOpen(true);
+        }
       }
+    };
+
+    if (typeof window !== 'undefined') {
+      handleResize();
+      window.addEventListener('resize', handleResize);
+
       try {
         const savedSessions = localStorage.getItem(STORAGE_SESSIONS_KEY);
         let loadedSessions: ChatSession[] = [];
@@ -126,6 +136,12 @@ export default function CopilotPage() {
       const q = urlParams.get('q');
       if (q && q.trim()) handleSendMessage(q.trim());
     }
+
+    return () => {
+      if (typeof window !== 'undefined') {
+        window.removeEventListener('resize', handleResize);
+      }
+    };
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -768,7 +784,7 @@ export default function CopilotPage() {
       {/* ═════════════════════════════════════════════════════════════════
           MAIN CANVAS AREA: MINIMALIST CIVIC ASSISTANT
       ══════════════════════════════════════════════════════════════════ */}
-      <div className="flex-1 flex flex-col bg-[#090a0d] relative overflow-hidden">
+      <div className="flex-1 flex flex-col bg-[#090a0d] relative overflow-hidden w-full min-w-0">
         
         {/* ─── Minimalist Top Bar ─── */}
         <header className="shrink-0 h-13 px-3 sm:px-6 flex items-center justify-between border-b border-white/[0.06] bg-[#090a0d]/90 backdrop-blur-md z-20">
