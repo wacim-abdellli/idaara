@@ -51,8 +51,8 @@ Return ONLY a valid JSON object matching this exact schema:
     "derja": "El haykal el masdour",
     "en": "Issuing entity"
   },
-  "referenceNumber": "رقم المرجع أو الوصل إن وجد أو غير متوفر",
-  "dateDetected": "التاريخ إن وجد أو غير متوفر",
+  "referenceNumber": "رقم المرجع أو الوصل الفعلي إن وجد أو null",
+  "dateDetected": "التاريخ الفعلي المكتوب بالوثيقة أو null",
   "urgency": "low" | "medium" | "high" | "critical",
   "deadlineDate": "الآجال القانونية إن وجدت أو غير محدد",
   "penaltyRisk": {

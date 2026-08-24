@@ -44,7 +44,16 @@ export const DocumentAnalysisResult: React.FC<DocumentAnalysisResultProps> = ({
       : (locale === 'ar' ? 'إعلام رسمي معتمد' : locale === 'en' ? 'Official Notice' : locale === 'derja' ? 'I3lam Rasmi' : 'Avis Officiel');
 
   const refPrefix =
-    locale === 'ar' ? 'المرجع :' : locale === 'en' ? 'Ref:' : locale === 'derja' ? 'Réf:' : 'Réf :';
+    locale === 'ar' ? 'المرجع:' : locale === 'en' ? 'Ref:' : locale === 'derja' ? 'Réf:' : 'Réf :';
+
+  const isRealReference =
+    Boolean(result.referenceNumber) &&
+    result.referenceNumber !== 'غير متوفر' &&
+    result.referenceNumber !== 'null' &&
+    result.referenceNumber !== 'UNKNOWN' &&
+    result.referenceNumber?.toLowerCase() !== 'n/a' &&
+    result.referenceNumber?.toLowerCase() !== 'none' &&
+    result.referenceNumber?.toLowerCase() !== 'non spécifié';
 
   const deadlineDisplay =
     !result.deadlineDate || result.deadlineDate === 'غير محدد' || result.deadlineDate === 'Non spécifié' || result.deadlineDate === 'UNKNOWN'
@@ -63,7 +72,7 @@ export const DocumentAnalysisResult: React.FC<DocumentAnalysisResultProps> = ({
           <div className="flex items-center gap-2 text-xs text-zinc-400 font-mono">
             <Building2 className="w-3.5 h-3.5 text-emerald-400" />
             <span className="text-zinc-300 font-semibold">{authority}</span>
-            {result.referenceNumber && (
+            {isRealReference && (
               <>
                 <span className="text-zinc-600">·</span>
                 <span className="text-zinc-400">{refPrefix} {result.referenceNumber}</span>
