@@ -147,7 +147,7 @@ export default function ConcoursPage() {
               <div className="flex flex-wrap items-center gap-2">
                 <span className="text-[10px] font-mono font-bold uppercase tracking-wider text-emerald-400 px-2.5 py-1 rounded-lg bg-emerald-950/80 border border-emerald-800/50 flex items-center gap-1.5 shadow-sm">
                   <Briefcase className="w-3.5 h-3.5" />
-                  <span>concours.gov.tn · JORT 2026</span>
+                  <span>concours.gov.tn · JORT {new Date().getFullYear()}</span>
                 </span>
                 <span className="text-[11px] font-mono text-zinc-400 flex items-center gap-1">
                   <span className="w-2 h-2 rounded-full bg-emerald-400 animate-ping inline-block" />

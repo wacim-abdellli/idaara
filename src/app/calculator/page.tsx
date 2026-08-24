@@ -164,7 +164,7 @@ export default function CalculatorPage() {
                 <span>{locale === 'en' ? 'Statutory Stamp Tariffs' : 'Timbres Fiscaux en Vigueur'}</span>
               </span>
               <span className="text-[10px] font-mono text-emerald-400 bg-emerald-950/60 border border-emerald-800/50 px-2 py-0.5 rounded-full">
-                JORT 2026
+                JORT {new Date().getFullYear()}
               </span>
             </div>
 

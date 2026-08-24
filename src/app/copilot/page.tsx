@@ -114,17 +114,12 @@ export default function CopilotPage() {
         if (savedSessions) {
           const parsed = JSON.parse(savedSessions);
           if (Array.isArray(parsed)) {
-            // Deduplicate sessions by ID and clean duplicate ghost threads
+            // Deduplicate sessions strictly by unique ID
             const seenIds = new Set<string>();
-            const seenSignatures = new Set<string>();
             for (const s of parsed) {
               if (s && s.id && !seenIds.has(s.id)) {
-                const signature = `${s.title}_${s.messages?.length || 0}`;
-                if (!seenSignatures.has(signature)) {
-                  seenSignatures.add(signature);
-                  seenIds.add(s.id);
-                  loadedSessions.push(s);
-                }
+                seenIds.add(s.id);
+                loadedSessions.push(s);
               }
             }
             setSessions(loadedSessions);
@@ -509,6 +504,15 @@ export default function CopilotPage() {
       ? "Comment puis-je vous aider dans vos démarches ?"
       : "What Tunisian procedure do you need help with?";
 
+  const centerSubtitle =
+    locale === 'ar'
+      ? 'دليلك الرسمي للإجراءات، التنابر والمناظرات الوطنية في تونس.'
+      : locale === 'derja'
+      ? 'Dalilek el rasmi lel awra9, el timbres wel concourat fi Tounes.'
+      : locale === 'fr'
+      ? 'Votre guide officiel pour les démarches, timbres et concours en Tunisie.'
+      : 'Your official guide for procedures, fiscal stamps, and public exams in Tunisia.';
+
   const placeholder = isRecording
     ? (locale === 'ar' ? 'جارٍ الاستماع... تفضل بالتحدث' : locale === 'derja' ? '9a3ed nesma3 fik... Tkellem tawa' : 'Listening... Speak now')
     : isTranscribing
@@ -795,7 +799,7 @@ export default function CopilotPage() {
             onClick={closeSidebarOnMobile}
             className="px-2.5 py-1 rounded-lg bg-emerald-500/10 hover:bg-emerald-500/20 border border-emerald-500/30 text-[11px] font-semibold text-emerald-300 transition-colors"
           >
-            {locale === 'ar' ? 'المستقل' : 'Freelance'}
+            {locale === 'ar' ? 'المستقل' : locale === 'derja' ? 'Mustaqel' : locale === 'fr' ? 'Indépendant' : 'Freelance'}
           </Link>
         </div>
       </aside>
@@ -819,7 +823,7 @@ export default function CopilotPage() {
             <div className="flex items-center gap-2 text-xs font-semibold text-zinc-300">
               <div className="w-2 h-2 rounded-full bg-emerald-400 shadow-sm shadow-emerald-400" />
               <span>Idaara AI</span>
-              <span className="text-[10px] text-zinc-500 font-mono hidden sm:inline">· JORT 2026</span>
+              <span className="text-[10px] text-zinc-500 font-mono hidden sm:inline">· JORT {new Date().getFullYear()}</span>
             </div>
           </div>
 
@@ -843,23 +847,23 @@ export default function CopilotPage() {
           <div className="flex-1 flex flex-col items-center justify-center px-4 sm:px-6 max-w-2xl mx-auto w-full -mt-6">
             
             {/* Minimalist Heading */}
-            <div className="text-center space-y-2 mb-6 sm:mb-8">
-              <h1 className="text-2xl sm:text-3xl font-bold text-white tracking-tight">
+            <div className="text-center space-y-2 mb-8 animate-fade-in">
+              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-xs font-medium mb-3">
+                <Sparkles className="w-3.5 h-3.5" />
+                <span>{locale === 'ar' ? 'المساعد الإداري الذكي' : locale === 'en' ? 'Civic AI Copilot' : 'Assistant Administratif IA'}</span>
+              </div>
+              <h1 className="text-2xl sm:text-4xl font-extrabold text-white tracking-tight">
                 {centerHeadline}
               </h1>
-              <p className="text-xs sm:text-sm text-zinc-400 max-w-md mx-auto">
-                {locale === 'ar'
-                  ? 'دليلك الرسمي للإجراءات، التنابر والمناظرات الوطنية في تونس.'
-                  : locale === 'derja'
-                  ? 'Dalilek el rasmi lel awra9, el timbres wel concourat fi Tounes.'
-                  : 'Votre guide officiel pour les démarches, timbres et concours en Tunisie.'}
+              <p className="text-xs sm:text-sm text-zinc-400 max-w-md mx-auto leading-relaxed">
+                {centerSubtitle}
               </p>
             </div>
 
-            {/* Minimalist Studio Input Card */}
-            <div className="w-full rounded-2xl bg-[#13151b] border border-white/[0.08] hover:border-white/[0.15] focus-within:border-emerald-500/40 p-3 sm:p-3.5 shadow-xl transition-all space-y-2.5">
+            {/* Centered Minimalist Input Box */}
+            <div className="w-full bg-[#12141a] border border-white/10 focus-within:border-emerald-500/50 rounded-2xl p-3 shadow-2xl transition-all space-y-3">
               <textarea
-                autoFocus
+                ref={textareaRef}
                 rows={2}
                 value={inputVal}
                 onChange={onTextareaChange}
@@ -930,7 +934,17 @@ export default function CopilotPage() {
             <div className="flex flex-wrap items-center justify-center gap-2 mt-5 text-xs text-zinc-400" dir={isRtl ? 'rtl' : 'ltr'}>
               <button
                 dir="auto"
-                onClick={() => handleSendMessage('Kifech n5arej awra9 el passeport tounsi?')}
+                onClick={() =>
+                  handleSendMessage(
+                    locale === 'ar'
+                      ? 'كيفاش نخرج أوراق جواز السفر التونسي؟'
+                      : locale === 'fr'
+                      ? 'Comment renouveler un passeport tunisien ?'
+                      : locale === 'en'
+                      ? 'How do I renew a Tunisian passport?'
+                      : 'Kifech n5arej awra9 el passeport tounsi?'
+                  )
+                }
                 className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-white/[0.03] hover:bg-white/[0.08] hover:text-zinc-200 border border-white/5 transition-all cursor-pointer"
               >
                 <FileCheck2 className="w-3.5 h-3.5 text-emerald-400" />
@@ -939,7 +953,17 @@ export default function CopilotPage() {
 
               <button
                 dir="auto"
-                onClick={() => handleSendMessage('Kifech na3mel mutation carte grise fi Tounes?')}
+                onClick={() =>
+                  handleSendMessage(
+                    locale === 'ar'
+                      ? 'كيفاش نعمل بطاقة رمادية في تونس؟'
+                      : locale === 'fr'
+                      ? 'Comment faire une mutation de carte grise en Tunisie ?'
+                      : locale === 'en'
+                      ? 'How do I transfer vehicle registration (carte grise)?'
+                      : 'Kifech na3mel mutation carte grise fi Tounes?'
+                  )
+                }
                 className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-white/[0.03] hover:bg-white/[0.08] hover:text-zinc-200 border border-white/5 transition-all cursor-pointer"
               >
                 <Car className="w-3.5 h-3.5 text-amber-400" />
@@ -948,7 +972,17 @@ export default function CopilotPage() {
 
               <button
                 dir="auto"
-                onClick={() => handleSendMessage('A3melli contrat de bail kré sakani mrigel')}
+                onClick={() =>
+                  handleSendMessage(
+                    locale === 'ar'
+                      ? 'اعمل لي عقد كراء سكني قانوني'
+                      : locale === 'fr'
+                      ? 'Rédige-moi un contrat de bail résidentiel légal'
+                      : locale === 'en'
+                      ? 'Draft a legal residential lease agreement'
+                      : 'A3melli contrat de bail kré sakani mrigel'
+                  )
+                }
                 className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-white/[0.03] hover:bg-white/[0.08] hover:text-zinc-200 border border-white/5 transition-all cursor-pointer"
               >
                 <FileText className="w-3.5 h-3.5 text-blue-400" />
@@ -957,11 +991,21 @@ export default function CopilotPage() {
 
               <button
                 dir="auto"
-                onClick={() => handleSendMessage('Chnowa les concours el maftou7in tawa fi Tounes?')}
+                onClick={() =>
+                  handleSendMessage(
+                    locale === 'ar'
+                      ? 'شنوة المناظرات المفتوحة توا في تونس؟'
+                      : locale === 'fr'
+                      ? 'Quels sont les concours ouverts actuellement en Tunisie ?'
+                      : locale === 'en'
+                      ? 'What civil service exams are currently open in Tunisia?'
+                      : 'Chnowa les concours el maftou7in tawa fi Tounes?'
+                  )
+                }
                 className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-white/[0.03] hover:bg-white/[0.08] hover:text-zinc-200 border border-white/5 transition-all cursor-pointer"
               >
                 <Briefcase className="w-3.5 h-3.5 text-teal-400" />
-                <span>{locale === 'ar' ? 'المناظرات 2026' : 'Concours 2026'}</span>
+                <span>{locale === 'ar' ? `المناظرات ${new Date().getFullYear()}` : `Concours ${new Date().getFullYear()}`}</span>
               </button>
             </div>
 

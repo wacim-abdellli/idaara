@@ -115,8 +115,15 @@ export const Navbar: React.FC = () => {
             <motion.button
               whileTap={{ scale: 0.9 }}
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              className="lg:hidden p-1.5 rounded-xl text-zinc-400 hover:text-white hover:bg-zinc-900 border border-zinc-800 transition-colors cursor-pointer"
-              aria-label="Toggle menu"
+              className="lg:hidden p-2.5 rounded-xl text-zinc-400 hover:text-white hover:bg-zinc-900 border border-zinc-800 transition-colors cursor-pointer"
+              aria-label={
+                {
+                  ar: 'فتح/إغلاق القائمة',
+                  derja: 'Bawweb/sakker el menu',
+                  fr: 'Ouvrir/fermer le menu',
+                  en: 'Toggle menu',
+                }[locale] ?? 'Toggle menu'
+              }
             >
               {mobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
             </motion.button>

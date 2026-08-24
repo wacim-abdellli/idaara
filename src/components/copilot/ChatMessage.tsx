@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useMemo } from 'react';
 import Link from 'next/link';
 import {
   Copy,
@@ -43,9 +43,7 @@ function renderInlineStyles(text: string): React.ReactNode {
           href={url}
           target="_blank"
           rel="noopener noreferrer"
-          dir="ltr"
-          style={{ unicodeBidi: 'isolate' }}
-          className="inline-flex items-center gap-1 px-2 py-0.5 mx-1 rounded-lg bg-emerald-500/15 hover:bg-emerald-500/25 border border-emerald-500/30 text-emerald-400 font-mono text-xs font-semibold hover:underline transition-colors align-baseline"
+          className="inline-flex items-center gap-1 text-emerald-400 hover:text-emerald-300 underline font-medium break-all"
         >
           <span>{mdLinkMatch[1]}</span>
           <ExternalLink className="w-3 h-3 shrink-0" />
@@ -113,15 +111,15 @@ function renderInlineStyles(text: string): React.ReactNode {
 }
 
 /** Modern, Clean Markdown & Civic Element Parser (ChatGPT/Claude Grade) */
-function renderFormattedContent(text: string, locale: string = 'derja'): React.ReactNode {
+function renderFormattedContent(text: string, locale: string = 'derja', isRTLOverride?: boolean): React.ReactNode {
   // 1. Sanitize any thinking or chain-of-thought blocks
   let cleanText = text.replace(/<think>[\s\S]*?(?:<\/think>|$)/gi, '').trim();
   cleanText = cleanText.replace(/^(?:Here's a thinking process|Analyze User Input|Check Constraints)[\s\S]*?\n\n/i, '').trim();
 
   // 2. Accurate script direction detection
-  const arabicCount = (cleanText.match(/[\u0600-\u06FF]/g) || []).length;
-  const latinCount = (cleanText.match(/[a-zA-Z]/g) || []).length;
-  const isMessageRTL = arabicCount > latinCount && arabicCount > 5;
+  const isMessageRTL = isRTLOverride !== undefined
+    ? isRTLOverride
+    : ((cleanText.match(/[\u0600-\u06FF]/g) || []).length > (cleanText.match(/[a-zA-Z]/g) || []).length);
 
   const rawLines = cleanText.split('\n');
   const blocks: React.ReactNode[] = [];
@@ -382,9 +380,11 @@ export const ChatMessage: React.FC<ChatMessageProps> = ({ message }) => {
   };
 
   const isAssistant = message.sender === 'assistant';
-  const arabicChars = (message.content.match(/[\u0600-\u06FF]/g) || []).length;
-  const latinChars = (message.content.match(/[a-zA-Z]/g) || []).length;
-  const isArabicScript = arabicChars > latinChars && arabicChars > 5;
+  const isArabicScript = useMemo(() => {
+    const arabicChars = (message.content.match(/[\u0600-\u06FF]/g) || []).length;
+    const latinChars = (message.content.match(/[a-zA-Z]/g) || []).length;
+    return arabicChars > latinChars && arabicChars > 5;
+  }, [message.content]);
 
   const copyToClipboard = async () => {
     try {
@@ -410,7 +410,7 @@ export const ChatMessage: React.FC<ChatMessageProps> = ({ message }) => {
         <div className="flex items-center gap-1.5 pt-1 pr-1 opacity-0 group-hover:opacity-100 transition-opacity">
           <button
             onClick={copyToClipboard}
-            className="p-1 rounded-lg hover:bg-white/10 text-zinc-500 hover:text-zinc-300 transition-colors cursor-pointer border-0 outline-none flex items-center gap-1 text-[11px]"
+            className="p-2.5 rounded-lg hover:bg-white/10 text-zinc-500 hover:text-zinc-300 transition-colors cursor-pointer border-0 outline-none flex items-center gap-1 text-[11px]"
             title={locale === 'ar' ? 'نسخ الرسالة' : locale === 'fr' ? 'Copier' : 'Copy'}
           >
             {copied ? (
@@ -437,7 +437,7 @@ export const ChatMessage: React.FC<ChatMessageProps> = ({ message }) => {
         style={{ unicodeBidi: 'plaintext' }}
         className={`prose-chat text-zinc-100 ${isArabicScript ? 'font-["Cairo",sans-serif]' : ''}`}
       >
-        {renderFormattedContent(message.content, locale)}
+        {renderFormattedContent(message.content, locale, isArabicScript)}
         {message.isStreaming && (
           <span className="inline-block w-1.5 h-4 bg-emerald-400/90 ms-1.5 rounded-xs animate-pulse align-middle" />
         )}
@@ -505,7 +505,7 @@ export const ChatMessage: React.FC<ChatMessageProps> = ({ message }) => {
         <div className="flex items-center gap-2 pt-1 text-zinc-500 animate-fade-in">
           <button
             onClick={copyToClipboard}
-            className="p-1.5 rounded-lg hover:bg-white/10 text-zinc-400 hover:text-zinc-200 transition-colors cursor-pointer border-0 outline-none flex items-center gap-1 text-xs"
+            className="p-2.5 rounded-lg hover:bg-white/10 text-zinc-400 hover:text-zinc-200 transition-colors cursor-pointer border-0 outline-none flex items-center gap-1 text-xs"
             title={locale === 'ar' ? 'نسخ النص' : locale === 'fr' ? 'Copier' : 'Copy'}
           >
             {copied ? (
