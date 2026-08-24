@@ -118,11 +118,11 @@ export async function POST(req: NextRequest) {
     if (geminiKey && buffer) {
       try {
         const genAI = new GoogleGenerativeAI(geminiKey);
-        const model = genAI.getGenerativeModel({ model: 'gemini-2.0-flash' });
+        const model = genAI.getGenerativeModel({ model: 'gemini-2.5-flash' });
 
         const base64 = buffer.toString('base64');
         const visionPrompt = `You are the Official Tunisian Administrative & Legal Document Decoder (Idaara AI Fasserli).
-You have human-level OCR and visual document recognition capabilities for Tunisian administrative paperwork (CIN, Passport, Avis Fiscal, CNSS, B3, Municipal birth extracts, court summons, utility bills, school forms).
+You have human-level OCR and visual document recognition capabilities for Tunisian administrative paperwork (CIN, Passport, Avis Fiscal, CNSS, B3, Municipal birth extracts, court summons, utility bills, school & club forms).
 
 Analyze this uploaded document image in detail.
 Read the actual visible text, headers, seals, stamps, and dates.
