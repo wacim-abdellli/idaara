@@ -64,7 +64,7 @@ export default function CopilotPage() {
   const [sessionToDelete, setSessionToDelete] = useState<ChatSession | null>(null);
   const [editingSessionId, setEditingSessionId] = useState<string | null>(null);
   const [editingTitle, setEditingTitle] = useState<string>('');
-  const [sidebarOpen, setSidebarOpen] = useState<boolean>(true);
+  const [sidebarOpen, setSidebarOpen] = useState<boolean>(false);
   const [thinkMode, setThinkMode] = useState<boolean>(false);
   const [isInitialized, setIsInitialized] = useState(false);
 
@@ -73,9 +73,18 @@ export default function CopilotPage() {
   const mediaRecorderRef = useRef<MediaRecorder | null>(null);
   const audioChunksRef = useRef<Blob[]>([]);
 
+  const closeSidebarOnMobile = () => {
+    if (typeof window !== 'undefined' && window.innerWidth < 1024) {
+      setSidebarOpen(false);
+    }
+  };
+
   // ── 1. Load Chat Sessions & Active Thread with Auto-Deduplication ──
   useEffect(() => {
     if (typeof window !== 'undefined') {
+      if (window.innerWidth >= 1024) {
+        setSidebarOpen(true);
+      }
       try {
         const savedSessions = localStorage.getItem(STORAGE_SESSIONS_KEY);
         let loadedSessions: ChatSession[] = [];
@@ -310,12 +319,14 @@ export default function CopilotPage() {
     setCurrentSessionId(newId);
     setMessages([]);
     localStorage.setItem(STORAGE_ACTIVE_ID_KEY, newId);
+    closeSidebarOnMobile();
   };
 
   const loadSession = (session: ChatSession) => {
     setCurrentSessionId(session.id);
     setMessages(session.messages || []);
     localStorage.setItem(STORAGE_ACTIVE_ID_KEY, session.id);
+    closeSidebarOnMobile();
   };
 
   const promptDeleteSession = (e: React.MouseEvent, sess: ChatSession) => {
@@ -489,254 +500,270 @@ export default function CopilotPage() {
   return (
     <div className="fixed inset-x-0 top-14 bottom-0 z-30 flex bg-[#09090b] text-white overflow-hidden font-sans">
 
+      {/* ── Mobile Backdrop Overlay ── */}
+      {sidebarOpen && (
+        <div
+          onClick={() => setSidebarOpen(false)}
+          className="fixed inset-0 top-14 bg-black/75 backdrop-blur-xs z-40 lg:hidden animate-fade-in"
+        />
+      )}
+
       {/* ═════════════════════════════════════════════════════════════════
           BESPOKE CIVIC SIDEBAR (#121214)
       ══════════════════════════════════════════════════════════════════ */}
-      {sidebarOpen && (
-        <aside className="w-64 shrink-0 bg-[#121214] border-r border-white/5 flex flex-col justify-between select-none z-20 animate-fade-in">
+      <aside
+        className={`fixed lg:static inset-y-0 top-14 lg:top-0 start-0 z-50 lg:z-20 w-72 max-w-[85vw] lg:w-64 shrink-0 bg-[#121214] border-e border-white/5 flex flex-col justify-between select-none shadow-2xl lg:shadow-none transition-transform duration-200 ease-in-out ${
+          sidebarOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0 lg:hidden'
+        }`}
+      >
+        {/* Top Section */}
+        <div className="flex flex-col flex-1 overflow-hidden">
           
-          {/* Top Section */}
-          <div className="flex flex-col flex-1 overflow-hidden">
-            
-            {/* Sidebar Top Action Header (h-14 aligned) */}
-            <div className="h-14 px-3 flex items-center justify-between border-b border-white/5 shrink-0">
-              <button
-                onClick={handleNewChat}
-                className="flex items-center gap-2 px-3 py-1.5 rounded-xl bg-white/[0.06] hover:bg-white/[0.1] text-zinc-100 text-xs font-semibold transition-all cursor-pointer border border-white/10 shadow-sm"
+          {/* Sidebar Top Action Header (h-14 aligned) */}
+          <div className="h-14 px-3 flex items-center justify-between border-b border-white/5 shrink-0">
+            <button
+              onClick={handleNewChat}
+              className="flex items-center gap-2 px-3 py-1.5 rounded-xl bg-white/[0.06] hover:bg-white/[0.1] text-zinc-100 text-xs font-semibold transition-all cursor-pointer border border-white/10 shadow-sm"
+            >
+              <PenSquare className="w-3.5 h-3.5 text-emerald-400" />
+              <span>
+                {locale === 'ar'
+                  ? 'محادثة جديدة'
+                  : locale === 'en'
+                  ? 'New Chat'
+                  : locale === 'derja'
+                  ? 'M7adtha Jdida'
+                  : 'Nouveau chat'}
+              </span>
+            </button>
+
+            <button
+              onClick={() => setSidebarOpen(false)}
+              className="p-1.5 rounded-lg hover:bg-white/10 text-zinc-400 hover:text-white transition-colors cursor-pointer border-0 outline-none"
+              title={locale === 'ar' ? 'إغلاق القائمة' : locale === 'en' ? 'Close sidebar' : 'Fermer le menu'}
+            >
+              <PanelLeftClose className="w-4 h-4" />
+            </button>
+          </div>
+
+          {/* Sidebar Scrollable Body */}
+          <div className="p-3 space-y-3 overflow-y-auto flex-1">
+            {/* Civic Navigation Tools */}
+            <nav className="space-y-0.5">
+              <Link
+                href="/fasserli"
+                onClick={closeSidebarOnMobile}
+                className="flex items-center gap-3 px-3 py-2 rounded-xl text-zinc-300 hover:text-white hover:bg-white/5 text-xs font-medium transition-colors"
               >
-                <PenSquare className="w-3.5 h-3.5 text-emerald-400" />
+                <ScanText className="w-4 h-4 text-emerald-400" />
                 <span>
                   {locale === 'ar'
-                    ? 'محادثة جديدة'
+                    ? 'فسّرلي هالورقة (OCR)'
                     : locale === 'en'
-                    ? 'New Chat'
+                    ? 'Scanner OCR'
                     : locale === 'derja'
-                    ? 'M7adtha Jdida'
-                    : 'Nouveau chat'}
+                    ? 'Fasserli OCR'
+                    : 'Scanner OCR'}
                 </span>
-              </button>
-
-              <button
-                onClick={() => setSidebarOpen(false)}
-                className="p-1.5 rounded-lg hover:bg-white/10 text-zinc-400 hover:text-white transition-colors cursor-pointer border-0 outline-none"
-                title={locale === 'ar' ? 'إغلاق القائمة' : locale === 'en' ? 'Close sidebar' : 'Fermer le menu'}
+              </Link>
+              <Link
+                href="/documents"
+                onClick={closeSidebarOnMobile}
+                className="flex items-center gap-3 px-3 py-2 rounded-xl text-zinc-300 hover:text-white hover:bg-white/5 text-xs font-medium transition-colors"
               >
-                <PanelLeftClose className="w-4 h-4" />
-              </button>
-            </div>
-
-            {/* Sidebar Scrollable Body */}
-            <div className="p-3 space-y-3 overflow-y-auto flex-1">
-              {/* Civic Navigation Tools */}
-              <nav className="space-y-0.5">
-                <Link
-                  href="/fasserli"
-                  className="flex items-center gap-3 px-3 py-2 rounded-xl text-zinc-300 hover:text-white hover:bg-white/5 text-xs font-medium transition-colors"
-                >
-                  <ScanText className="w-4 h-4 text-emerald-400" />
-                  <span>
-                    {locale === 'ar'
-                      ? 'فسّرلي هالورقة (OCR)'
-                      : locale === 'en'
-                      ? 'Scanner OCR'
-                      : locale === 'derja'
-                      ? 'Fasserli OCR'
-                      : 'Scanner OCR'}
-                  </span>
-                </Link>
-                <Link
-                  href="/documents"
-                  className="flex items-center gap-3 px-3 py-2 rounded-xl text-zinc-300 hover:text-white hover:bg-white/5 text-xs font-medium transition-colors"
-                >
-                  <FileCode2 className="w-4 h-4 text-blue-400" />
-                  <span>
-                    {locale === 'ar'
-                      ? 'نماذج العقود والاستمارات'
-                      : locale === 'en'
-                      ? 'Templates & Forms'
-                      : locale === 'derja'
-                      ? 'Modélet & 39oud'
-                      : 'Modèles & Contrats'}
-                  </span>
-                </Link>
-                <Link
-                  href="/calculator"
-                  className="flex items-center gap-3 px-3 py-2 rounded-xl text-zinc-300 hover:text-white hover:bg-white/5 text-xs font-medium transition-colors"
-                >
-                  <Stamp className="w-4 h-4 text-amber-400" />
-                  <span>
-                    {locale === 'ar'
-                      ? 'حاسبة التنابر والرسوم'
-                      : locale === 'en'
-                      ? 'Stamp Calculator'
-                      : locale === 'derja'
-                      ? 'Calculateur Timbres'
-                      : 'Calculateur de Timbres'}
-                  </span>
-                </Link>
-                <Link
-                  href="/concours"
-                  className="flex items-center gap-3 px-3 py-2 rounded-xl text-zinc-300 hover:text-white hover:bg-white/5 text-xs font-medium transition-colors"
-                >
-                  <Briefcase className="w-4 h-4 text-teal-400" />
-                  <span>
-                    {locale === 'ar'
-                      ? 'المناظرات الوطنية'
-                      : locale === 'en'
-                      ? 'Public Concours'
-                      : locale === 'derja'
-                      ? 'Radar el Concourat'
-                      : 'Concours Nationaux'}
-                  </span>
-                </Link>
-                <Link
-                  href="/locator"
-                  className="flex items-center gap-3 px-3 py-2 rounded-xl text-zinc-300 hover:text-white hover:bg-white/5 text-xs font-medium transition-colors"
-                >
-                  <Building2 className="w-4 h-4 text-indigo-400" />
-                  <span>
-                    {locale === 'ar'
-                      ? 'دليل البلديات والقباضات'
-                      : locale === 'en'
-                      ? 'Offices & Baladiyas'
-                      : locale === 'derja'
-                      ? 'Baladiyas & 9badhat'
-                      : 'Baladiyas & Recettes'}
-                  </span>
-                </Link>
-                <Link
-                  href="/procedures"
-                  className="flex items-center gap-3 px-3 py-2 rounded-xl text-zinc-300 hover:text-white hover:bg-white/5 text-xs font-medium transition-colors"
-                >
-                  <Landmark className="w-4 h-4 text-purple-400" />
-                  <span>
-                    {locale === 'ar'
-                      ? 'دليل الإجراءات الرسمية'
-                      : locale === 'en'
-                      ? 'Procedures Guide'
-                      : locale === 'derja'
-                      ? 'Dalil el Démarches'
-                      : 'Guide des Démarches'}
-                  </span>
-                </Link>
-              </nav>
-
-              {/* Recents Section */}
-              <div className="pt-2">
-                <div className="px-3 pb-1.5 text-[11px] font-semibold text-zinc-500 uppercase tracking-wider">
+                <FileCode2 className="w-4 h-4 text-blue-400" />
+                <span>
                   {locale === 'ar'
-                    ? 'المحادثات السابقة'
+                    ? 'نماذج العقود والاستمارات'
                     : locale === 'en'
-                    ? 'Recent History'
+                    ? 'Templates & Forms'
                     : locale === 'derja'
-                    ? 'M7adhathat 9dima'
-                    : 'Historique Récent'}
-                </div>
-                <div className="space-y-0.5">
-                  {sessions.length === 0 ? (
-                    <div className="px-3 py-2 text-xs text-zinc-500 italic">
-                      {locale === 'ar'
-                        ? 'لا توجد محادثات سابقة'
-                        : locale === 'en'
-                        ? 'No recent discussions'
-                        : locale === 'derja'
-                        ? '7atta m7adtha 9dima'
-                        : 'Aucune discussion récente'}
-                    </div>
-                  ) : (
-                    sessions.map((sess) => {
-                      const isEditing = editingSessionId === sess.id;
-                      return (
-                        <div
-                          key={sess.id}
-                          onClick={() => !isEditing && loadSession(sess)}
-                          className={`group flex items-center justify-between px-3 py-2 rounded-xl text-sm transition-colors cursor-pointer ${
-                            currentSessionId === sess.id
-                              ? 'bg-white/10 text-white font-medium'
-                              : 'text-zinc-300 hover:bg-white/5 hover:text-white'
-                          }`}
-                        >
-                          {isEditing ? (
-                            <div className="flex items-center gap-1.5 w-full" onClick={(e) => e.stopPropagation()}>
-                              <input
-                                autoFocus
-                                type="text"
-                                value={editingTitle}
-                                onChange={(e) => setEditingTitle(e.target.value)}
-                                onKeyDown={(e) => {
-                                  if (e.key === 'Enter') saveRenamedTitle(e, sess.id);
-                                  if (e.key === 'Escape') setEditingSessionId(null);
-                                }}
-                                className="flex-1 bg-black/60 border border-emerald-500 rounded-lg px-2 py-1 text-xs text-white outline-none focus:ring-1 focus:ring-emerald-400"
-                              />
+                    ? 'Modélet & 39oud'
+                    : 'Modèles & Contrats'}
+                </span>
+              </Link>
+              <Link
+                href="/calculator"
+                onClick={closeSidebarOnMobile}
+                className="flex items-center gap-3 px-3 py-2 rounded-xl text-zinc-300 hover:text-white hover:bg-white/5 text-xs font-medium transition-colors"
+              >
+                <Stamp className="w-4 h-4 text-amber-400" />
+                <span>
+                  {locale === 'ar'
+                    ? 'حاسبة التنابر والرسوم'
+                    : locale === 'en'
+                    ? 'Stamp Calculator'
+                    : locale === 'derja'
+                    ? 'Calculateur Timbres'
+                    : 'Calculateur de Timbres'}
+                </span>
+              </Link>
+              <Link
+                href="/concours"
+                onClick={closeSidebarOnMobile}
+                className="flex items-center gap-3 px-3 py-2 rounded-xl text-zinc-300 hover:text-white hover:bg-white/5 text-xs font-medium transition-colors"
+              >
+                <Briefcase className="w-4 h-4 text-teal-400" />
+                <span>
+                  {locale === 'ar'
+                    ? 'المناظرات الوطنية'
+                    : locale === 'en'
+                    ? 'Public Concours'
+                    : locale === 'derja'
+                    ? 'Radar el Concourat'
+                    : 'Concours Nationaux'}
+                </span>
+              </Link>
+              <Link
+                href="/locator"
+                onClick={closeSidebarOnMobile}
+                className="flex items-center gap-3 px-3 py-2 rounded-xl text-zinc-300 hover:text-white hover:bg-white/5 text-xs font-medium transition-colors"
+              >
+                <Building2 className="w-4 h-4 text-indigo-400" />
+                <span>
+                  {locale === 'ar'
+                    ? 'دليل البلديات والقباضات'
+                    : locale === 'en'
+                    ? 'Offices & Baladiyas'
+                    : locale === 'derja'
+                    ? 'Baladiyas & 9badhat'
+                    : 'Baladiyas & Recettes'}
+                </span>
+              </Link>
+              <Link
+                href="/procedures"
+                onClick={closeSidebarOnMobile}
+                className="flex items-center gap-3 px-3 py-2 rounded-xl text-zinc-300 hover:text-white hover:bg-white/5 text-xs font-medium transition-colors"
+              >
+                <Landmark className="w-4 h-4 text-purple-400" />
+                <span>
+                  {locale === 'ar'
+                    ? 'دليل الإجراءات الرسمية'
+                    : locale === 'en'
+                    ? 'Procedures Guide'
+                    : locale === 'derja'
+                    ? 'Dalil el Démarches'
+                    : 'Guide des Démarches'}
+                </span>
+              </Link>
+            </nav>
+
+            {/* Recents Section */}
+            <div className="pt-2">
+              <div className="px-3 pb-1.5 text-[11px] font-semibold text-zinc-500 uppercase tracking-wider">
+                {locale === 'ar'
+                  ? 'المحادثات السابقة'
+                  : locale === 'en'
+                  ? 'Recent History'
+                  : locale === 'derja'
+                  ? 'M7adhathat 9dima'
+                  : 'Historique Récent'}
+              </div>
+              <div className="space-y-0.5">
+                {sessions.length === 0 ? (
+                  <div className="px-3 py-2 text-xs text-zinc-500 italic">
+                    {locale === 'ar'
+                      ? 'لا توجد محادثات سابقة'
+                      : locale === 'en'
+                      ? 'No recent discussions'
+                      : locale === 'derja'
+                      ? '7atta m7adtha 9dima'
+                      : 'Aucune discussion récente'}
+                  </div>
+                ) : (
+                  sessions.map((sess) => {
+                    const isEditing = editingSessionId === sess.id;
+                    return (
+                      <div
+                        key={sess.id}
+                        onClick={() => !isEditing && loadSession(sess)}
+                        className={`group flex items-center justify-between px-3 py-2 rounded-xl text-sm transition-colors cursor-pointer ${
+                          currentSessionId === sess.id
+                            ? 'bg-white/10 text-white font-medium'
+                            : 'text-zinc-300 hover:bg-white/5 hover:text-white'
+                        }`}
+                      >
+                        {isEditing ? (
+                          <div className="flex items-center gap-1.5 w-full" onClick={(e) => e.stopPropagation()}>
+                            <input
+                              autoFocus
+                              type="text"
+                              value={editingTitle}
+                              onChange={(e) => setEditingTitle(e.target.value)}
+                              onKeyDown={(e) => {
+                                if (e.key === 'Enter') saveRenamedTitle(e, sess.id);
+                                if (e.key === 'Escape') setEditingSessionId(null);
+                              }}
+                              className="flex-1 bg-black/60 border border-emerald-500 rounded-lg px-2 py-1 text-xs text-white outline-none focus:ring-1 focus:ring-emerald-400"
+                            />
+                            <button
+                              onClick={(e) => saveRenamedTitle(e, sess.id)}
+                              className="p-1 rounded-md bg-emerald-500/20 text-emerald-400 hover:bg-emerald-500/30 transition-colors cursor-pointer border-0"
+                              title="Save"
+                            >
+                              <Check className="w-3 h-3" />
+                            </button>
+                            <button
+                              onClick={cancelRenaming}
+                              className="p-1 rounded-md text-zinc-400 hover:text-white hover:bg-white/10 transition-colors cursor-pointer border-0"
+                              title="Cancel"
+                            >
+                              <X className="w-3 h-3" />
+                            </button>
+                          </div>
+                        ) : (
+                          <>
+                            <span className="truncate flex-1 text-xs">{sess.title}</span>
+                            <div className="flex items-center gap-0.5 opacity-0 group-hover:opacity-100 transition-opacity">
                               <button
-                                onClick={(e) => saveRenamedTitle(e, sess.id)}
-                                className="p-1 rounded-md bg-emerald-500/20 text-emerald-400 hover:bg-emerald-500/30 transition-colors cursor-pointer border-0"
-                                title="Save"
+                                onClick={(e) => startRenaming(e, sess)}
+                                className="p-1 hover:text-emerald-400 text-zinc-400 transition-colors cursor-pointer border-0 outline-none"
+                                title={locale === 'ar' ? 'تغيير الاسم' : locale === 'fr' ? 'Renommer' : 'Rename'}
                               >
-                                <Check className="w-3 h-3" />
+                                <Pencil className="w-3 h-3" />
                               </button>
                               <button
-                                onClick={cancelRenaming}
-                                className="p-1 rounded-md text-zinc-400 hover:text-white hover:bg-white/10 transition-colors cursor-pointer border-0"
-                                title="Cancel"
+                                onClick={(e) => promptDeleteSession(e, sess)}
+                                className="p-1 hover:text-red-400 text-zinc-400 transition-colors cursor-pointer border-0 outline-none"
+                                title={locale === 'ar' ? 'حذف المحادثة' : locale === 'en' ? 'Delete chat' : 'Supprimer la discussion'}
                               >
-                                <X className="w-3 h-3" />
+                                <Trash2 className="w-3 h-3" />
                               </button>
                             </div>
-                          ) : (
-                            <>
-                              <span className="truncate flex-1 text-xs">{sess.title}</span>
-                              <div className="flex items-center gap-0.5 opacity-0 group-hover:opacity-100 transition-opacity">
-                                <button
-                                  onClick={(e) => startRenaming(e, sess)}
-                                  className="p-1 hover:text-emerald-400 text-zinc-400 transition-colors cursor-pointer border-0 outline-none"
-                                  title={locale === 'ar' ? 'تغيير الاسم' : locale === 'fr' ? 'Renommer' : 'Rename'}
-                                >
-                                  <Pencil className="w-3 h-3" />
-                                </button>
-                                <button
-                                  onClick={(e) => promptDeleteSession(e, sess)}
-                                  className="p-1 hover:text-red-400 text-zinc-400 transition-colors cursor-pointer border-0 outline-none"
-                                  title={locale === 'ar' ? 'حذف المحادثة' : locale === 'en' ? 'Delete chat' : 'Supprimer la discussion'}
-                                >
-                                  <Trash2 className="w-3 h-3" />
-                                </button>
-                              </div>
-                            </>
-                          )}
-                        </div>
-                      );
-                    })
-                  )}
-                </div>
+                          </>
+                        )}
+                      </div>
+                    );
+                  })
+                )}
               </div>
             </div>
           </div>
+        </div>
 
-          {/* Bottom Profile / Platform Info */}
-          <div className="p-3 border-t border-white/5 flex items-center justify-between">
-            <div className="flex items-center gap-2.5">
-              <div className="w-7 h-7 rounded-full bg-emerald-700/80 text-white flex items-center justify-center font-bold text-xs shadow-inner">
-                TN
-              </div>
-              <div className="leading-tight">
-                <div className="text-xs font-semibold text-zinc-200">
-                  {locale === 'ar' ? 'مواطن' : locale === 'en' ? 'Citizen' : locale === 'derja' ? 'Mowaten' : 'Citoyen'}
-                </div>
-                <div className="text-[10px] text-emerald-400 font-medium">Idaara Free</div>
-              </div>
+        {/* Bottom Profile / Platform Info */}
+        <div className="p-3 border-t border-white/5 flex items-center justify-between">
+          <div className="flex items-center gap-2.5">
+            <div className="w-7 h-7 rounded-full bg-emerald-700/80 text-white flex items-center justify-center font-bold text-xs shadow-inner">
+              TN
             </div>
-
-            <Link
-              href="/launchpad"
-              className="px-2.5 py-1 rounded-lg bg-emerald-500/10 hover:bg-emerald-500/20 border border-emerald-500/30 text-[11px] font-semibold text-emerald-300 transition-colors"
-            >
-              {locale === 'ar' ? 'المستقل' : 'Freelance'}
-            </Link>
+            <div className="leading-tight">
+              <div className="text-xs font-semibold text-zinc-200">
+                {locale === 'ar' ? 'مواطن' : locale === 'en' ? 'Citizen' : locale === 'derja' ? 'Mowaten' : 'Citoyen'}
+              </div>
+              <div className="text-[10px] text-emerald-400 font-medium">Idaara Free</div>
+            </div>
           </div>
-        </aside>
-      )}
+
+          <Link
+            href="/launchpad"
+            onClick={closeSidebarOnMobile}
+            className="px-2.5 py-1 rounded-lg bg-emerald-500/10 hover:bg-emerald-500/20 border border-emerald-500/30 text-[11px] font-semibold text-emerald-300 transition-colors"
+          >
+            {locale === 'ar' ? 'المستقل' : 'Freelance'}
+          </Link>
+        </div>
+      </aside>
 
       {/* ═════════════════════════════════════════════════════════════════
           MAIN CANVAS AREA: MINIMALIST CIVIC ASSISTANT
@@ -744,22 +771,20 @@ export default function CopilotPage() {
       <div className="flex-1 flex flex-col bg-[#090a0d] relative overflow-hidden">
         
         {/* ─── Minimalist Top Bar ─── */}
-        <header className="shrink-0 h-13 px-4 sm:px-6 flex items-center justify-between border-b border-white/[0.06] bg-[#090a0d]/90 backdrop-blur-md z-20">
-          <div className="flex items-center gap-2.5">
-            {!sidebarOpen && (
-              <button
-                onClick={() => setSidebarOpen(true)}
-                className="p-1.5 rounded-lg hover:bg-white/10 text-zinc-400 hover:text-white transition-colors cursor-pointer border-0 outline-none"
-                title={locale === 'ar' ? 'فتح القائمة' : locale === 'en' ? 'Open sidebar' : 'Ouvrir le menu'}
-              >
-                <PanelLeft className="w-4 h-4" />
-              </button>
-            )}
+        <header className="shrink-0 h-13 px-3 sm:px-6 flex items-center justify-between border-b border-white/[0.06] bg-[#090a0d]/90 backdrop-blur-md z-20">
+          <div className="flex items-center gap-2 sm:gap-2.5">
+            <button
+              onClick={() => setSidebarOpen((p) => !p)}
+              className="p-1.5 rounded-lg hover:bg-white/10 text-zinc-400 hover:text-white transition-colors cursor-pointer border-0 outline-none flex items-center justify-center"
+              title={locale === 'ar' ? 'القائمة' : 'Menu'}
+            >
+              <PanelLeft className="w-4 h-4" />
+            </button>
 
             <div className="flex items-center gap-2 text-xs font-semibold text-zinc-300">
               <div className="w-2 h-2 rounded-full bg-emerald-400 shadow-sm shadow-emerald-400" />
               <span>Idaara AI</span>
-              <span className="text-[10px] text-zinc-500 font-mono">· JORT 2026</span>
+              <span className="text-[10px] text-zinc-500 font-mono hidden sm:inline">· JORT 2026</span>
             </div>
           </div>
 
@@ -909,7 +934,7 @@ export default function CopilotPage() {
           <>
             <div
               ref={messagesContainerRef}
-              className="flex-1 overflow-y-auto px-4 sm:px-6 py-6 scroll-smooth"
+              className="flex-1 overflow-y-auto px-3 sm:px-6 py-4 sm:py-6 pb-28 sm:pb-8 scroll-smooth"
             >
               <div className="max-w-3xl mx-auto space-y-4">
                 {messages.map((msg) => (
@@ -951,7 +976,7 @@ export default function CopilotPage() {
             </div>
 
             {/* Sticky Bottom Dock Input (When chatting) */}
-            <footer className="p-4 bg-[#090b0e]/95 backdrop-blur-xl border-t border-white/[0.08] shrink-0 z-20">
+            <footer className="p-3 sm:p-4 bg-[#090b0e]/95 backdrop-blur-xl border-t border-white/[0.08] shrink-0 z-20 pb-safe">
               <div className="max-w-3xl mx-auto space-y-2">
                 <div className="flex items-center gap-2.5 bg-[#12141a] border border-white/[0.08] focus-within:border-emerald-500/50 rounded-2xl p-2 px-3 shadow-2xl transition-all">
                   
