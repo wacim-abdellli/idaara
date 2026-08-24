@@ -196,45 +196,93 @@ function renderFormattedContent(text: string): React.ReactNode {
 
     // 2. Summary Card: 📌 **الخلاصة**...
     if (/^(?:###|##|#)?\s*📌/.test(line)) {
-      const summaryText = line.replace(/^(?:###|##|#)?\s*📌\s*:?\s*/, '');
+      const summaryHeader = line.replace(/^(?:###|##|#)?\s*📌\s*:?\s*/, '').replace(/\*{2}/g, '').trim();
+      i++;
+      
+      const summaryItems: string[] = [];
+      // Capture bullet items right after 📌:
+      while (i < rawLines.length) {
+        const nextLine = rawLines[i].trim();
+        if (!nextLine) {
+          i++;
+          continue;
+        }
+        if (nextLine.startsWith('#') || /^(\*{2})?(📑|🎯|💰|🏛️|📍|📋|✅|🔑|>|💡)/.test(nextLine) || nextLine.match(/^\d+\.\s+/)) {
+          break;
+        }
+        if (nextLine.startsWith('- ') || nextLine.startsWith('* ') || nextLine.startsWith('• ') || nextLine.startsWith('✔ ') || nextLine.startsWith('✓ ')) {
+          summaryItems.push(nextLine.replace(/^[-*•✔✓]\s+/, ''));
+          i++;
+        } else if (summaryItems.length === 0 && (!summaryHeader || summaryHeader === 'الخلاصة')) {
+          summaryItems.push(nextLine);
+          i++;
+        } else {
+          break;
+        }
+      }
+
       blocks.push(
         <div
           key={`summary-${i}`}
           dir={lineDir}
-          className={`p-4 my-3 rounded-2xl bg-emerald-950/25 border border-emerald-500/30 shadow-md ${lineAlign}`}
+          className={`my-3 p-3.5 rounded-2xl bg-[#0f1513] border border-emerald-500/25 shadow-sm max-w-2xl ${lineAlign}`}
         >
-          <div className="flex items-center gap-2 pb-2 mb-2 border-b border-emerald-500/20 text-xs font-mono font-bold text-emerald-400 uppercase tracking-wider">
-            <span className="text-base">📌</span>
+          <div className="flex items-center gap-2 pb-2 mb-2.5 border-b border-emerald-500/15 text-[11px] font-mono font-bold text-emerald-400 uppercase tracking-wider">
+            <span className="text-sm">📌</span>
             <span>الخلاصة الإدارية السريعة</span>
           </div>
-          <div className="leading-relaxed text-zinc-100 text-sm sm:text-[15px]">
-            {renderInlineStyles(summaryText)}
-          </div>
+
+          {summaryItems.length > 0 ? (
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-2">
+              {summaryItems.map((item, sIdx) => (
+                <div
+                  key={sIdx}
+                  className="p-2.5 rounded-xl bg-white/[0.03] border border-white/[0.05] flex flex-col gap-1"
+                >
+                  <div className="text-xs text-zinc-300 leading-relaxed">
+                    {renderInlineStyles(item)}
+                  </div>
+                </div>
+              ))}
+            </div>
+          ) : (
+            <div className="text-xs sm:text-sm text-zinc-200 leading-relaxed">
+              {renderInlineStyles(summaryHeader)}
+            </div>
+          )}
         </div>
       );
-      i++;
       continue;
     }
 
     // 3. Tip / Pro-Advice Callout: > 💡 or 💡 **نصيحة...
     if (/^(?:>|###|##|#)?\s*💡/.test(line)) {
-      const tipText = line.replace(/^(?:>|###|##|#)?\s*💡\s*:?\s*/, '');
+      let tipText = line
+        .replace(/^(?:>|###|##|#)?\s*💡\s*:?\s*/, '')
+        .replace(/^\*{2}نصيحة(?:\s*إدارة\.تونس)?\*{2}\s*:?\s*/i, '')
+        .replace(/^نصيحة(?:\s*إدارة\.تونس)?\s*:?\s*/i, '')
+        .trim();
+
+      i++;
+
+      // If the tip spans multiple lines or has quote lines:
+      while (i < rawLines.length && rawLines[i].trim().startsWith('>')) {
+        tipText += ' ' + rawLines[i].replace(/^>\s*/, '').trim();
+        i++;
+      }
+
       blocks.push(
         <div
           key={`tip-${i}`}
           dir={lineDir}
-          className={`p-4 my-3.5 rounded-2xl bg-amber-500/[0.08] border border-amber-500/25 border-s-4 border-s-amber-400 shadow-sm ${lineAlign}`}
+          className={`my-3 p-3 rounded-xl bg-amber-500/[0.06] border border-amber-500/20 border-s-3 border-s-amber-400 flex items-start gap-2.5 max-w-2xl shadow-xs ${lineAlign}`}
         >
-          <div className="flex items-center gap-2 pb-1.5 mb-1.5 border-b border-amber-500/20 text-xs font-mono font-bold text-amber-400 uppercase tracking-wider">
-            <Lightbulb className="w-4 h-4 text-amber-400 shrink-0" />
-            <span>نصيحة إدارة.تونس العملية</span>
-          </div>
-          <div className="text-sm sm:text-[14.5px] leading-relaxed text-amber-100/90 font-medium">
+          <Lightbulb className="w-4 h-4 text-amber-400 shrink-0 mt-0.5" />
+          <div className="flex-1 text-xs sm:text-[13.5px] leading-relaxed text-amber-100/90 font-medium">
             {renderInlineStyles(tipText)}
           </div>
         </div>
       );
-      i++;
       continue;
     }
 
