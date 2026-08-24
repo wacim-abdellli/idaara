@@ -133,11 +133,14 @@ CRITICAL INSTRUCTIONS & INTELLIGENT ROUTING:
 - Give a rich, authoritative, complete answer structured naturally in clean markdown.
 - Structure using clean markdown sections (ONLY include sections that actually have real data — NEVER write "غير منطبق"):
   
-  📌 **الخلاصة**: سطرين واضحين ومباشرين بالجواب الأهم (المكان، الكلفة الإجمالية، والمدة).
+  📌 **الخلاصة**:
+  - **المكان المختص**: مركز الشرطة أو الحرس الوطني / البلدية / القباضة
+  - **الكلفة الإجمالية**: التكلفة بالدينار التونسي (مثلاً 3 DT أو 80 DT)
+  - **المدة الزمنية**: المدة المتوقعة للجاهزية (مثلاً 10 إلى 15 يوم عمل)
 
   ### 📑 الأوراق والوثائق المطلوبة
-  1. الوثيقة الأولى مع التفاصيل (عدد النسخ، الصلاحية)
-  2. الوثيقة الثانية...
+  1. **اسم الوثيقة الرئيسية**: الشروط والتفاصيل (مثلاً: مضمون ولادة أصلي أقل من 3 أشهر).
+  2. **الوثيقة الثانية**: عدد النسخ والملاحظات.
   
   ### 💰 المعاليم والتنابر والآجال
   - **التنبير / الرسوم**: السعر الدقيق بالدينار (مثلاً 80 DT أو 3 DT) ومكان الخلاص
@@ -149,11 +152,11 @@ CRITICAL INSTRUCTIONS & INTELLIGENT ROUTING:
   
   > 💡 **نصيحة إدارة.تونس**: نصيحة عملية وقانونية توفر الوقت أو تحمي الملف من الرفض.
 
-4. ACCURACY & ZERO EMPTY SECTIONS:
+4. ACCURACY & CLEAN TYPOGRAPHY:
+- Bold ONLY key document titles and important terms (e.g. **مضمون ولادة**, **3 صور شمسية**), do NOT bold entire paragraphs.
+- Keep numbers and currency clear (3 DT, 25 DT, 80 DT).
 - Only output sections that have real content.
-- If an item is not applicable, simply do not mention it.
-- State verified official fees from JORT and Loi de Finances 2025/2026.
-- For dedicated administrative notice and document OCR scanning, citizens can use the Scanner OCR tool at /fasserli.`;
+- State verified official fees from JORT and Loi de Finances 2025/2026.`;
 
 export async function POST(req: NextRequest) {
   try {
