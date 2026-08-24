@@ -131,11 +131,19 @@ export default function FasserliPage() {
                     ? 'تقرير التحليل القانوني والإداري للوثيقة :'
                     : locale === 'en'
                     ? 'Administrative OCR Analysis & Legal Report :'
+                    : locale === 'derja'
+                    ? 'Rapport d\'analyse 9anouniya mta3 el war9a :'
                     : "Rapport d'Analyse Juridique du Document :"}
                 </span>
               </div>
               <span className="text-[11px] font-mono text-emerald-400 bg-emerald-950/60 border border-emerald-500/30 px-2.5 py-0.5 rounded-full font-bold">
-                ✓ CERTIFIÉ JORT
+                {locale === 'ar'
+                  ? '✓ مطابق للرائد الرسمي JORT'
+                  : locale === 'en'
+                  ? '✓ JORT 2026 Certified'
+                  : locale === 'derja'
+                  ? '✓ Certifié JORT 2026'
+                  : '✓ CERTIFIÉ JORT'}
               </span>
             </div>
 
