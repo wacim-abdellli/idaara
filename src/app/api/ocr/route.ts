@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import fs from 'fs';
 import path from 'path';
+import Tesseract from 'tesseract.js';
 import { sampleDocumentsList } from '../../../data/sampleDocuments';
 import { OCRAnalysisResult } from '../../../types/chat';
 
@@ -19,33 +20,6 @@ function getGroqKey(): string {
   return '';
 }
 
-/**
- * Fast resilient document classifier for Tunisian administrative paperwork.
- * Detects keywords like CIN, Passport, CNSS, DGI, Impôts, Police, STEG, SONEDE, etc.
- */
-function classifyTunisianDocumentHint(filename: string): string {
-  const lower = filename.toLowerCase();
-  if (lower.includes('cin') || lower.includes('carte') || lower.includes('identite') || lower.includes('تعريف') || lower.includes('بطاقة')) {
-    return 'CARTE D\'IDENTITÉ NATIONALE (CIN / بطاقة التعريف الوطنية)';
-  }
-  if (lower.includes('passeport') || lower.includes('passport') || lower.includes('سفر')) {
-    return 'PASSEPORT TUNISIEN (جواز السفر)';
-  }
-  if (lower.includes('cnss') || lower.includes('daman') || lower.includes('ضمان')) {
-    return 'AVIS / MISE EN DEMEURE CNSS (الصندوق الوطني للضمان الاجتماعي)';
-  }
-  if (lower.includes('dgi') || lower.includes('impot') || lower.includes('tax') || lower.includes('fiscal') || lower.includes('قباضة') || lower.includes('ضريبة')) {
-    return 'AVIS DE REDRESSEMENT OU TAXE FISCALE (إعلام بالضريبة / مراجعة جبائية)';
-  }
-  if (lower.includes('police') || lower.includes('tribunal') || lower.includes('convocation') || lower.includes('استدعاء') || lower.includes('محكمة')) {
-    return 'CONVOCATION TRIBUNAL / SÛRETÉ NATIONALE (استدعاء أمني أو عدلي)';
-  }
-  if (lower.includes('steg') || lower.includes('sonede') || lower.includes('facture') || lower.includes('فاتورة')) {
-    return 'FACTURE / AVIS STEG OU SONEDE (فاتورة استهلاك أو إشعار قطع)';
-  }
-  return 'DOCUMENT OFFICIEL TUNISIEN (وثيقة إدارية رسمية)';
-}
-
 export async function POST(req: NextRequest) {
   try {
     const formData = await req.formData();
@@ -53,7 +27,7 @@ export async function POST(req: NextRequest) {
     const sampleId = formData.get('sampleId') as string | null;
     const documentName = (formData.get('documentName') as string) || file?.name || 'document-scan.png';
 
-    // 1. If static verified sample
+    // 1. If static sample is picked
     if (sampleId) {
       const found = sampleDocumentsList.find((s) => s.id === sampleId);
       if (found) {
@@ -65,48 +39,96 @@ export async function POST(req: NextRequest) {
       }
     }
 
-    const docCategoryHint = classifyTunisianDocumentHint(documentName);
+    // 2. Extract Real OCR Text using Tesseract Engine
+    let extractedText = '';
+    if (file && file.size > 0) {
+      try {
+        const arrayBuffer = await file.arrayBuffer();
+        const buffer = Buffer.from(arrayBuffer);
+
+        const ocrPromise = Tesseract.recognize(buffer, 'ara+fra+eng', {
+          logger: () => {},
+        });
+
+        // 10s safeguard timeout on OCR
+        const timeoutPromise = new Promise<{ data: { text: string } }>((resolve) =>
+          setTimeout(() => resolve({ data: { text: '' } }), 10000)
+        );
+
+        const raceResult = await Promise.race([ocrPromise, timeoutPromise]);
+        extractedText = (raceResult?.data?.text || '').trim();
+      } catch (ocrErr) {
+        console.warn('Tesseract OCR engine error:', ocrErr);
+      }
+    }
+
     const apiKey = getGroqKey();
 
-    // 2. High-speed AI Legal Document Analysis (Strict 5s timeout, 0 hangs)
+    // 3. AI Legal Analysis of the ACTUAL extracted OCR text
     if (apiKey) {
       try {
         const controller = new AbortController();
-        const timeoutId = setTimeout(() => controller.abort(), 5000);
+        const timeoutId = setTimeout(() => controller.abort(), 8000);
 
         const prompt = `You are the Official Tunisian Administrative & Legal Document Decoder (Idaara AI Fasserli).
-A citizen has scanned and uploaded an official Tunisian administrative document.
-Filename: "${documentName}"
-Detected Document Category Hint: "${docCategoryHint}"
+A citizen has uploaded an image file titled "${documentName}".
+Our OCR engine extracted the following real text from the image:
 
-Analyze this document based on Tunisian administrative law, JORT regulations, and procedures.
-If it is a Carte d'Identité Nationale (CIN / بطاقة التعريف الوطنية):
-- Issuing authority: Ministère de l'Intérieur / Direction Générale de la Sûreté Nationale (وزارة الداخلية / الإدارة العامة للأمن الوطني)
-- Urgency: standard / information (or critical if expiring / damaged)
-- Provide exact official validity rules (10-year validity, renewal fees: 25 DT timbre fiscal, required documents for renewal, certificate of loss if stolen).
+=== EXTRACTED OCR TEXT FROM USER IMAGE ===
+${extractedText || '(No clear text detected in image)'}
+==========================================
+
+Analyze the REAL document content extracted above with 100% honesty and accuracy.
+- If it is a kids summer camp or club registration form (بطاقة إرشادات وتسجيل بالنادي), identify it accurately as a Club/School Registration form.
+- If it is a Tax adjustment or Avis Fiscal, identify the tax office and 30-day statutory appeal window.
+- If it is a CNSS notice, identify the CNSS office and 15-day deadline.
+- If it is a National Identity Card (CIN) or Passport, analyze it accurately.
+- If it is a general image with no text (e.g. photo of flowers or landscape), state that it is not an official document.
 
 Return ONLY a valid JSON object matching this schema:
 {
-  "documentType": {"derja": "string", "fr": "string", "ar": "string", "en": "string"},
-  "issuingAuthority": {"derja": "string", "fr": "string", "ar": "string", "en": "string"},
-  "referenceNumber": "string",
-  "dateDetected": "string",
-  "urgency": "critical" | "high" | "medium" | "low",
-  "deadlineDate": "string",
-  "penaltyRisk": {"derja": "string", "fr": "string", "ar": "string", "en": "string"},
+  "documentType": {
+    "ar": "الاسم الدقيق للوثيقة بالعربية",
+    "fr": "Nom exact du document en français",
+    "derja": "Esm el war9a bed-Derja",
+    "en": "Exact document name in English"
+  },
+  "issuingAuthority": {
+    "ar": "المؤسسة أو الهيكل المصدر",
+    "fr": "Organisme émetteur",
+    "derja": "El haykal el masdour",
+    "en": "Issuing entity"
+  },
+  "referenceNumber": "رقم المرجع إن وجد أو غير متوفر",
+  "dateDetected": "التاريخ إن وجد أو غير متوفر",
+  "urgency": "low" | "medium" | "high" | "critical",
+  "deadlineDate": "الآجال القانونية إن وجدت أو غير محدد",
+  "penaltyRisk": {
+    "ar": "المخاطر القانونية والخطايا إن وجدت أو غير منطبق",
+    "fr": "Risques ou Non applicable",
+    "derja": "Mochkla wala le",
+    "en": "Risk or Not applicable"
+  },
   "summary": {
-    "derja": ["point 1", "point 2", "point 3"],
+    "ar": ["نقطة 1 تشرح محتوى الوثيقة الحقيقية بدقة", "نقطة 2", "نقطة 3"],
     "fr": ["point 1", "point 2", "point 3"],
-    "ar": ["point 1", "point 2", "point 3"],
+    "derja": ["no9ta 1", "no9ta 2", "no9ta 3"],
     "en": ["point 1", "point 2", "point 3"]
   },
-  "actionItems": [{
-    "task": {"derja": "string", "fr": "string", "ar": "string", "en": "string"},
-    "office": {"derja": "string", "fr": "string", "ar": "string", "en": "string"},
-    "requiredPapers": ["string", "string"],
-    "feeTND": number
-  }],
-  "legalContext": {"derja": "string", "fr": "string", "ar": "string", "en": "string"}
+  "actionItems": [
+    {
+      "task": {"ar": "الخطوة الأولى", "fr": "Étape 1", "derja": "5otwa 1", "en": "Step 1"},
+      "office": {"ar": "المكان المطلوب", "fr": "Bureau", "derja": "El ma9arr", "en": "Office"},
+      "requiredPapers": ["ورقة 1", "ورقة 2"],
+      "feeTND": 0
+    }
+  ],
+  "legalContext": {
+    "ar": "السياق القانوني أو التنظيمي",
+    "fr": "Contexte juridique",
+    "derja": "El 9anoun el ma3ni",
+    "en": "Legal context"
+  }
 }`;
 
         const groqRes = await fetch('https://api.groq.com/openai/v1/chat/completions', {
@@ -135,12 +157,22 @@ Return ONLY a valid JSON object matching this schema:
           if (parsed.documentType && parsed.summary) {
             const analysis: OCRAnalysisResult = {
               id: `ocr-${Date.now()}`,
-              ...parsed,
+              documentType: parsed.documentType,
+              issuingAuthority: parsed.issuingAuthority || { ar: 'الهيكل المعني', fr: 'Autorité', derja: 'El Haykal', en: 'Authority' },
+              referenceNumber: parsed.referenceNumber || 'غير متوفر',
+              dateDetected: parsed.dateDetected || 'غير متوفر',
+              urgency: parsed.urgency || 'low',
+              deadlineDate: parsed.deadlineDate || 'غير محدد',
+              penaltyRisk: parsed.penaltyRisk || { ar: 'غير منطبق', fr: 'Non applicable', derja: 'Ghir montaba9', en: 'Not applicable' },
+              summary: parsed.summary,
+              actionItems: parsed.actionItems || [],
+              legalContext: parsed.legalContext || { ar: 'إجراء إداري / تنظيمي', fr: 'Procédure administrative', derja: 'Ijra2 idari', en: 'Administrative procedure' },
             };
             return NextResponse.json({
               success: true,
               analysis,
               filename: documentName,
+              ocrText: extractedText.slice(0, 500),
             });
           }
         }
@@ -149,101 +181,100 @@ Return ONLY a valid JSON object matching this schema:
       }
     }
 
-    // 3. Instant Smart Heuristic Fallback
-    const isCIN = docCategoryHint.includes('CIN');
+    // 4. Honest Fallback if AI or OCR is unreachable
+    const hasText = extractedText.length > 15;
     const fallbackAnalysis: OCRAnalysisResult = {
       id: `ocr-${Date.now()}`,
       documentType: {
-        derja: isCIN ? "Bitaket Ta3rif Wataniya (CIN)" : "Wathi9a Idariya Rasmiya",
-        fr: isCIN ? "Carte d'Identité Nationale (CIN)" : "Document Administratif Officiel",
-        ar: isCIN ? "بطاقة التعريف الوطنية (CIN)" : "وثيقة إدارية رسمية",
-        en: isCIN ? "National Identity Card (CIN)" : "Official Administrative Notice",
+        derja: hasText ? "Wathi9a Idariya Mfasra" : "Taswira 3adiya (Ghir Wadh7a)",
+        fr: hasText ? "Document Administratif Détecté" : "Image Non Documentaire / Illisible",
+        ar: hasText ? "وثيقة إدارية تم مسحها" : "صورة عادية أو غير مقروءة",
+        en: hasText ? "Scanned Administrative Document" : "Unclear / Non-document Image",
       },
       issuingAuthority: {
-        derja: isCIN ? "Wizarat el Dakhiliya / Markez el Chorta" : "El Idara el Mokhtassa",
-        fr: isCIN ? "Ministère de l'Intérieur / Poste de Police" : "Administration Compétente",
-        ar: isCIN ? "وزارة الداخلية / مركز الأمن أو الحرس الوطني" : "الإدارة التونسية المختصة",
-        en: isCIN ? "Ministry of Interior / Police Station" : "Competent Authority",
+        derja: hasText ? "El Haykal el Ma3ni" : "Ghir Mou7addad",
+        fr: hasText ? "Organisme Concerné" : "Non Déterminé",
+        ar: hasText ? "الهيكل المعني" : "غير محدد",
+        en: hasText ? "Concerned Entity" : "Unspecified",
       },
-      referenceNumber: `TUN-CIN-${Date.now().toString().slice(-8)}`,
+      referenceNumber: "غير متوفر",
       dateDetected: new Date().getFullYear().toString(),
-      urgency: isCIN ? "medium" : "high",
-      deadlineDate: isCIN ? "Valable 10 ans à compter de l'émission" : "Dans les 15 jours",
+      urgency: "low",
+      deadlineDate: "غير محدد",
       penaltyRisk: {
-        derja: isCIN ? "Khnayet 10 DT fi sourat themara edhaya3." : "Khnayet ta5ir 3la el ajel el 9anouni.",
-        fr: isCIN ? "Timbre fiscal de 25 DT en cas de renouvellement ou perte." : "Pénalités applicables selon le barème légal.",
-        ar: isCIN ? "معلوم طابع جبائي 25 د في صورة التجديد أو الضياع." : "خطايا تأخير قانونية في صورة عدم الاستجابة.",
-        en: isCIN ? "25 TND fiscal stamp for renewal or replacement." : "Statutory late fees apply.",
+        derja: "Ghir montaba9.",
+        fr: "Non applicable.",
+        ar: "غير منطبق.",
+        en: "Not applicable.",
       },
       summary: {
-        derja: isCIN
+        derja: hasText
           ? [
-              "Hathi wathi9at el CIN el rasmiya elli tethbet el howiya mte3ek.",
-              "Sal7a lmoddet 10 snin kemlin men tarekh el isdar.",
-              "Tnajjem tched biha el safarat, el concourat wel 9badhat el kol."
+              "Wathi9a tmét 9rayetha bel OCR.",
+              "Fiha ma3loumet chakhsiya w bayanét idariya.",
+              "Tnajjem testa3mel Idaara AI Copilot bech tfasser akther."
             ]
           : [
-              "Wathi9a idariya mouwajjaha lech-chakhs el ma3ni.",
-              "Tatlab moraja3at el ma9arr el idari el moukhtass.",
-              "Yelzem estehfadh bel wathi9a w el wasel el rasmi."
+              "El taswira ma fihech ktaba idariya wadh7a.",
+              "Thabbet men woudhou7 el taswira wel idhaa.",
+              "Souwer war9a rasmiya bech Idaara AI tfasserha."
             ],
-        fr: isCIN
+        fr: hasText
           ? [
-              "Pièce d'identité officielle tunisienne attestant de l'état civil.",
-              "Durée de validité statutaire de 10 ans.",
-              "Document obligatoire pour toutes les démarches et concours d'État."
+              "Document analysé avec succès par le moteur OCR.",
+              "Comporte des données et mentions textuelles.",
+              "Consultez Idaara AI Copilot pour des démarches détaillées."
             ]
           : [
-              "Document administratif homologué émis par l'autorité compétente.",
-              "Requiert le respect des délais légaux d'action.",
-              "Conservez la copie et le récépissé de dépôt."
+              "Aucun texte administratif clair détecté.",
+              "Vérifiez la netteté de l'image et l'éclairage.",
+              "Scannez un document officiel pour obtenir un décryptage juridique."
             ],
-        ar: isCIN
+        ar: hasText
           ? [
-              "وثيقة الهوية الوطنية الرسمية المثبتة للحالة المدنية التونسية.",
-              "صالحة لمدة 10 سنوات كاملة من تاريخ إصدارها.",
-              "مستند إجباري وأساسي لكافة المعاملات الإدارية والمناظرات الوطنية."
+              "تمت قراءة نص الوثيقة بنجاح عبر الماسح الضوئي.",
+              "تحتوي على بيانات ومعطيات نصية تم استخراجها.",
+              "يمكنك استشارة Idaara AI للحصول على مزيد من الإجراءات."
             ]
           : [
-              "وثيقة إدارية رسمية صادرة عن الهيكل الحكومي المعني.",
-              "تستوجب متابعة الإجراءات في الآجال القانونية المحددة.",
-              "الاحتفاظ بنسخة من الوثيقة مع وصل الإيداع."
+              "لم يتم العثور على نص إداري واضح في الصورة.",
+              "يرجى التأكد من وضوح الصورة والإضاءة.",
+              "قم بمسح وثيقة أو استمارة رسمية للحصول على التقرير القانوني."
             ],
-        en: isCIN
+        en: hasText
           ? [
-              "Official Tunisian National Identity Card proving civil status.",
-              "Valid for 10 full years from the issue date.",
-              "Mandatory document for all state procedures and public concours."
+              "Document successfully scanned by OCR engine.",
+              "Contains extracted text data.",
+              "Consult Idaara AI Copilot for next procedural steps."
             ]
           : [
-              "Official administrative notice from the competent department.",
-              "Requires compliance with statutory response deadlines.",
-              "Keep a copy and the formal filing receipt."
+              "No clear administrative text detected in image.",
+              "Please ensure good lighting and document sharpness.",
+              "Scan an official document to obtain legal breakdown."
             ],
       },
       actionItems: [
         {
           task: {
-            derja: isCIN ? "Fi sourat el tajdid, a3mel chhedet i9ama w 3 tsawer." : "Etasel bel idara el moukhtassa.",
-            fr: isCIN ? "Pour renouvellement: fournir extrait de naissance, certificat de résidence et 3 photos." : "Contacter le bureau compétent.",
-            ar: isCIN ? "للتجديد: استخراج مضموم ولادة، شهادة إقامة و3 صور شمسية." : "الاتصال بالشباك المعني.",
-            en: isCIN ? "For renewal: birth certificate, residence certificate, and 3 photos." : "Contact the competent desk.",
+            ar: 'مراجعة بيانات الوثيقة',
+            fr: 'Vérifier les données',
+            derja: 'Thabbet fel ma3loumet',
+            en: 'Check information',
           },
           office: {
-            derja: isCIN ? "Markez el chorta walla el 7ares el tourabi" : "El Guichet el Mokhtass",
-            fr: isCIN ? "Poste de police ou garde nationale territorialement compétent" : "Guichet compétent",
-            ar: isCIN ? "مركز الشرطة أو الحرس الوطني مرجع النظر" : "الشباك المعني",
-            en: isCIN ? "Local Police or National Guard Station" : "Competent Office",
+            ar: 'الهيكل المختص',
+            fr: 'Bureau compétent',
+            derja: 'El ma9arr',
+            en: 'Competent office',
           },
-          requiredPapers: isCIN ? ["Extrait de naissance", "Certificat de résidence", "3 Photos", "Timbre 25 DT"] : ["Copie Document", "CIN"],
-          feeTND: isCIN ? 25 : 0,
+          requiredPapers: [],
         },
       ],
       legalContext: {
-        derja: isCIN ? "9anoun el bita9a el wataniya n° 68-27." : "El majalla el idariya el tounsiya.",
-        fr: isCIN ? "Loi n° 68-27 du 24 juillet 1968 portant création de la CIN." : "Code des Procédures Administratives.",
-        ar: isCIN ? "القانون عدد 27 لسنة 1968 المؤرخ في 24 جويلية 1968 المتعلق ببطاقة التعريف الوطنية." : "مجلة الإجراءات الإدارية والقانون التونسي.",
-        en: isCIN ? "Law No. 68-27 of July 24, 1968 establishing the Tunisian CIN." : "Tunisian Administrative Legal Framework.",
+        ar: 'إجراء إداري / تنظيمي عام',
+        fr: 'Procédure administrative générale',
+        derja: 'Ijra2 idari 3am',
+        en: 'General administrative procedure',
       },
     };
 
@@ -252,9 +283,10 @@ Return ONLY a valid JSON object matching this schema:
       analysis: fallbackAnalysis,
       filename: documentName,
     });
-  } catch (error) {
+  } catch (error: any) {
+    console.error('OCR Route Fatal Error:', error);
     return NextResponse.json(
-      { error: 'Failed to process document analysis', details: String(error) },
+      { success: false, error: error.message || 'OCR extraction failed' },
       { status: 500 }
     );
   }
