@@ -1,9 +1,9 @@
 'use client';
 
 import React, { useRef, useState } from 'react';
-import { motion, useMotionValue, useSpring, useTransform } from 'framer-motion';
+import { motion, useMotionValue, useSpring, useTransform, type HTMLMotionProps } from 'framer-motion';
 
-interface SpotlightCardProps extends React.HTMLAttributes<HTMLDivElement> {
+interface SpotlightCardProps extends HTMLMotionProps<'div'> {
   children: React.ReactNode;
   className?: string;
   spotlightColor?: string;
@@ -61,7 +61,7 @@ export const SpotlightCard: React.FC<SpotlightCardProps> = ({
       whileHover={{ y: -2 }}
       transition={{ duration: 0.2, ease: 'easeOut' }}
       className={`relative overflow-hidden rounded-3xl border border-white/[0.08] hover:border-white/[0.16] bg-[#0d0e12] transition-colors duration-300 ${className}`}
-      {...(props as any)}
+      {...props}
     >
       {/* Subtle Dynamic Cursor Spotlight Radial Glow */}
       <motion.div

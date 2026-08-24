@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import {
   UploadCloud,
   Camera,
@@ -30,12 +30,32 @@ export const DocumentUploader: React.FC<DocumentUploaderProps> = ({ onAnalyze, i
   const [isDragOver, setIsDragOver] = useState(false);
   const fileInputRef = useRef<HTMLInputElement | null>(null);
 
+  useEffect(() => {
+    return () => {
+      if (previewUrl) URL.revokeObjectURL(previewUrl);
+    };
+  }, [previewUrl]);
+
+  const ALLOWED_TYPES = ['image/jpeg', 'image/jpg', 'image/png', 'image/webp', 'image/gif', 'application/pdf'];
+  const MAX_SIZE = 10 * 1024 * 1024; // 10 MB
+
   const handleFile = (file: File) => {
+    if (!ALLOWED_TYPES.includes(file.type)) {
+      alert('نوع الملف غير مدعوم. يرجى رفع صورة (JPEG, PNG, WEBP) أو ملف PDF.');
+      return;
+    }
+    if (file.size > MAX_SIZE) {
+      alert('الملف كبير جداً. الحد الأقصى هو 10 ميغابايت.');
+      return;
+    }
     setSelectedFile(file);
     setIsPdf(file.type === 'application/pdf');
     if (file.type.startsWith('image/')) {
-      setPreviewUrl(URL.createObjectURL(file));
+      if (previewUrl) URL.revokeObjectURL(previewUrl);
+      const url = URL.createObjectURL(file);
+      setPreviewUrl(url);
     } else {
+      if (previewUrl) URL.revokeObjectURL(previewUrl);
       setPreviewUrl(null);
     }
   };
@@ -52,6 +72,7 @@ export const DocumentUploader: React.FC<DocumentUploaderProps> = ({ onAnalyze, i
 
   const clearFile = (e: React.MouseEvent) => {
     e.stopPropagation();
+    if (previewUrl) URL.revokeObjectURL(previewUrl);
     setSelectedFile(null);
     setPreviewUrl(null);
     setIsPdf(false);
@@ -244,7 +265,16 @@ export const DocumentUploader: React.FC<DocumentUploaderProps> = ({ onAnalyze, i
               <Camera className="w-3.5 h-3.5 text-emerald-400" />
               <span>{t('uploadCamera')}</span>
             </button>
-            <span className="text-xs text-zinc-500">ou glissez-déposez ici</span>
+            <span className="text-xs text-zinc-500">
+              {
+                {
+                  ar: 'أو اسحب الملف وأفلته هنا',
+                  fr: 'ou glissez-déposez ici',
+                  en: 'or drag and drop here',
+                  derja: 'walla siḥ el fichier lena',
+                }[locale] ?? 'ou glissez-déposez ici'
+              }
+            </span>
           </div>
         </div>
       )}

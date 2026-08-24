@@ -1,6 +1,4 @@
 import { NextRequest, NextResponse } from 'next/server';
-import fs from 'fs';
-import path from 'path';
 import { parseAndReason } from '../../../lib/ai-engine';
 import { proceduresData } from '../../../data/procedures';
 import { queryCivicKnowledge } from '../../../lib/tunisian-civic-knowledge';
@@ -9,18 +7,7 @@ import { buildLiveGroundingFeed } from '../../../lib/live-civic-fetcher';
 import { getLocalized } from '../../../lib/locale-utils';
 
 function getGroqKey(): string {
-  if (process.env.GROQ_API_KEY && process.env.GROQ_API_KEY.trim()) {
-    return process.env.GROQ_API_KEY.trim();
-  }
-  try {
-    const envPath = path.join(process.cwd(), '.env.local');
-    if (fs.existsSync(envPath)) {
-      const content = fs.readFileSync(envPath, 'utf8');
-      const match = content.match(/GROQ_API_KEY=["']?([^"'\r\n]+)/);
-      if (match && match[1]) return match[1].trim();
-    }
-  } catch {}
-  return '';
+  return (process.env.GROQ_API_KEY || '').trim();
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -160,20 +147,33 @@ CRITICAL INSTRUCTIONS & INTELLIGENT ROUTING:
 
 export async function POST(req: NextRequest) {
   try {
+    // Reject payloads > 50 KB to prevent prompt injection via oversized history
+    const contentLength = parseInt(req.headers.get('content-length') || '0', 10);
+    if (contentLength > 50 * 1024) {
+      return NextResponse.json({ error: 'Request too large.' }, { status: 413 });
+    }
     const body = await req.json();
     const { prompt, locale = 'derja', history = [], think = false } = body;
 
-    if (!prompt || typeof prompt !== 'string') {
-      return NextResponse.json({ error: 'Prompt string is required' }, { status: 400 });
+    // Runtime validation — never trust client-sent data
+    if (typeof prompt !== 'string' || prompt.trim().length === 0) {
+      return NextResponse.json({ error: 'Invalid prompt.' }, { status: 400 });
     }
+    const safeHistory = Array.isArray(history)
+      ? history
+          .filter((m): m is { role: string; content: string } =>
+            Boolean(m && typeof m.role === 'string' && typeof m.content === 'string')
+          )
+          .slice(-8) // Max 8 messages of history
+      : [];
 
     const now = new Date();
-    const currentDateIso = now.toISOString().split('T')[0]; // "2026-08-22"
+    const currentDateIso = now.toISOString().split('T')[0]; // e.g. "2026-08-24"
     const currentFormattedDate = now.toLocaleDateString('ar-TN', { year: 'numeric', month: 'long', day: 'numeric' });
 
     const temporalDirective = `\nREAL-TIME TEMPORAL DIRECTIVE:
 - Today's date is: ${currentDateIso} (${currentFormattedDate}).
-- We are currently in August 2026. The active recruitment cycle is the 2026/2027 session.
+- We are currently in ${now.toLocaleString('en-GB', { month: 'long', year: 'numeric' })}. The active recruitment cycle is the ${now.getFullYear()}/${now.getFullYear() + 1} session.
 - Always use the real-time live official feed below from Tunisian government servers (concours.gov.tn / edunet.tn).`;
 
     const thinkDirective = think
@@ -193,7 +193,7 @@ export async function POST(req: NextRequest) {
 
     const chatMessages = [
       { role: 'system', content: completeSystemPrompt },
-      ...history.slice(-8).map((m: { role: string; content: string }) => ({
+      ...safeHistory.map((m: { role: string; content: string }) => ({
         role: m.role === 'user' ? 'user' : 'assistant',
         content: m.content,
       })),
@@ -209,8 +209,12 @@ export async function POST(req: NextRequest) {
       ];
       for (const model of groqModels) {
         try {
+          const llmController = new AbortController();
+          const llmTimeout = setTimeout(() => llmController.abort(), 25000);
+
           const groqRes = await fetch('https://api.groq.com/openai/v1/chat/completions', {
             method: 'POST',
+            signal: llmController.signal,
             headers: {
               'Content-Type': 'application/json',
               Authorization: `Bearer ${apiKey}`,
@@ -223,6 +227,7 @@ export async function POST(req: NextRequest) {
               top_p: 0.95,
             }),
           });
+          clearTimeout(llmTimeout);
 
           if (groqRes.ok) {
             const data = await groqRes.json();

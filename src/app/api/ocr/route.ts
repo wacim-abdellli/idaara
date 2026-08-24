@@ -1,39 +1,14 @@
 import { NextRequest, NextResponse } from 'next/server';
-import fs from 'fs';
-import path from 'path';
 import { GoogleGenerativeAI } from '@google/generative-ai';
-import Tesseract from 'tesseract.js';
 import { sampleDocumentsList } from '../../../data/sampleDocuments';
 import { OCRAnalysisResult } from '../../../types/chat';
 
 function getGeminiKey(): string {
-  if (process.env.GEMINI_API_KEY && process.env.GEMINI_API_KEY.trim()) {
-    return process.env.GEMINI_API_KEY.trim();
-  }
-  try {
-    const envPath = path.join(process.cwd(), '.env.local');
-    if (fs.existsSync(envPath)) {
-      const content = fs.readFileSync(envPath, 'utf8');
-      const match = content.match(/GEMINI_API_KEY=["']?([^"'\r\n]+)/);
-      if (match && match[1]) return match[1].trim();
-    }
-  } catch {}
-  return '';
+  return (process.env.GEMINI_API_KEY || '').trim();
 }
 
 function getGroqKey(): string {
-  if (process.env.GROQ_API_KEY && process.env.GROQ_API_KEY.trim()) {
-    return process.env.GROQ_API_KEY.trim();
-  }
-  try {
-    const envPath = path.join(process.cwd(), '.env.local');
-    if (fs.existsSync(envPath)) {
-      const content = fs.readFileSync(envPath, 'utf8');
-      const match = content.match(/GROQ_API_KEY=["']?([^"'\r\n]+)/);
-      if (match && match[1]) return match[1].trim();
-    }
-  } catch {}
-  return '';
+  return (process.env.GROQ_API_KEY || '').trim();
 }
 
 const DOCUMENT_ANALYSIS_SCHEMA_PROMPT = `
@@ -105,6 +80,15 @@ export async function POST(req: NextRequest) {
     let buffer: Buffer | null = null;
     let mimeType = 'image/png';
 
+    // ── File size guard (10 MB max) ───────────────────────────────────────────
+    const MAX_FILE_BYTES = 10 * 1024 * 1024;
+    if (file && file.size > MAX_FILE_BYTES) {
+      return NextResponse.json(
+        { success: false, error: 'File too large. Maximum size is 10 MB.' },
+        { status: 413 }
+      );
+    }
+
     if (file && file.size > 0) {
       const arrayBuffer = await file.arrayBuffer();
       buffer = Buffer.from(arrayBuffer);
@@ -174,6 +158,7 @@ ${DOCUMENT_ANALYSIS_SCHEMA_PROMPT}`;
     let extractedText = '';
     if (buffer) {
       try {
+        const { default: Tesseract } = await import('tesseract.js');
         const ocrPromise = Tesseract.recognize(buffer, 'ara+fra+eng', {
           logger: () => {},
         });
@@ -190,7 +175,7 @@ ${DOCUMENT_ANALYSIS_SCHEMA_PROMPT}`;
       }
     }
 
-    if (groqKey) {
+    if (groqKey && extractedText.length > 10) {
       try {
         const controller = new AbortController();
         const timeoutId = setTimeout(() => controller.abort(), 8000);
@@ -227,16 +212,26 @@ ${DOCUMENT_ANALYSIS_SCHEMA_PROMPT}`;
         if (groqRes.ok) {
           const data = await groqRes.json();
           const rawContent = data.choices?.[0]?.message?.content || '{}';
-          const parsed = JSON.parse(rawContent);
+          let parsed: Partial<OCRAnalysisResult> = {};
+          try {
+            parsed = JSON.parse(rawContent) as Partial<OCRAnalysisResult>;
+          } catch {
+            console.warn('[OCR] Groq returned malformed JSON, using fallback.');
+          }
 
           if (parsed.documentType && parsed.summary) {
+            const urgencyVal = parsed.urgency;
+            const validUrgency = (urgencyVal === 'low' || urgencyVal === 'medium' || urgencyVal === 'high' || urgencyVal === 'critical')
+              ? urgencyVal
+              : 'low';
+
             const analysis: OCRAnalysisResult = {
               id: `ocr-${Date.now()}`,
               documentType: parsed.documentType,
               issuingAuthority: parsed.issuingAuthority || { ar: 'الهيكل المعني', fr: 'Autorité', derja: 'El Haykal', en: 'Authority' },
               referenceNumber: parsed.referenceNumber || 'غير متوفر',
               dateDetected: parsed.dateDetected || 'غير متوفر',
-              urgency: parsed.urgency || 'low',
+              urgency: validUrgency,
               deadlineDate: parsed.deadlineDate || 'غير محدد',
               penaltyRisk: parsed.penaltyRisk || { ar: 'غير منطبق', fr: 'Non applicable', derja: 'Ghir montaba9', en: 'Not applicable' },
               summary: parsed.summary,
@@ -359,10 +354,10 @@ ${DOCUMENT_ANALYSIS_SCHEMA_PROMPT}`;
       analysis: fallbackAnalysis,
       filename: documentName,
     });
-  } catch (error: any) {
-    console.error('OCR Route Fatal Error:', error);
+  } catch (error: unknown) {
+    console.error('[OCR] Fatal error:', error);
     return NextResponse.json(
-      { success: false, error: error.message || 'OCR extraction failed' },
+      { success: false, error: 'Document analysis failed. Please try again.' },
       { status: 500 }
     );
   }

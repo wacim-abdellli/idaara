@@ -38,6 +38,7 @@ import {
   Zap,
 } from 'lucide-react';
 import { formatTND } from '../lib/utils';
+import { getLocalized } from '../lib/locale-utils';
 
 export default function HomePage() {
   const { t, locale } = useLocale();
@@ -1231,10 +1232,10 @@ export default function HomePage() {
               ? 'text-emerald-400 bg-emerald-500/10 border-emerald-500/20'
               : 'text-blue-400 bg-blue-500/10 border-blue-500/20';
 
-            const title = (desk.title as any)[locale] || desk.title.fr;
-            const location = (desk.location as any)[locale] || desk.location.fr;
-            const services = (desk.services as any)[locale] || desk.services.fr;
-            const badge = (desk.badge as any)[locale] || desk.badge.fr;
+            const title = getLocalized(desk.title, locale);
+            const location = getLocalized(desk.location, locale);
+            const services = getLocalized(desk.services, locale);
+            const badge = getLocalized(desk.badge, locale);
 
             return (
               <SpotlightCard

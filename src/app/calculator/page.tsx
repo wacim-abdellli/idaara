@@ -18,6 +18,21 @@ export default function CalculatorPage() {
   const { locale } = useLocale();
   const [selectedProcId, setSelectedProcId] = useState<string>('passeport-renouvellement');
 
+  const ui = {
+    officialScale: {
+      ar: 'الجدول الرسمي · قباضة المالية والبلدية',
+      fr: 'Barème Officiel · Recette des Finances & Baladiya',
+      en: 'Official Scale · Finance Office & Municipality',
+      derja: 'Jadwal rasmi · Qabadat el maliya',
+    },
+    procedures: {
+      ar: 'إجراءات',
+      fr: 'démarches',
+      en: 'procedures',
+      derja: 'ijra2at',
+    },
+  };
+
   const selectedProcedure = getProcedureById(selectedProcId) || proceduresData[0];
 
   const headlineMain =
@@ -117,7 +132,7 @@ export default function CalculatorPage() {
         <div className="lg:col-span-7 space-y-3 relative z-10">
           <div className="flex items-center gap-2 text-xs font-mono text-zinc-500 uppercase tracking-widest">
             <span className="text-amber-400 font-bold">/</span>
-            <span>Barème Officiel · Recette des Finances & Baladiya</span>
+            <span>{getLocalized(ui.officialScale, locale)}</span>
           </div>
 
           <h1 className="leading-tight">
@@ -185,7 +200,7 @@ export default function CalculatorPage() {
             {locale === 'ar' ? 'اختر الإجراء المعني :' : locale === 'en' ? 'Select procedure to calculate:' : 'Sélectionner la démarche :'}
           </span>
           <span className="font-mono text-[11px]">
-            {proceduresData.length} démarches
+            {proceduresData.length} {getLocalized(ui.procedures, locale)}
           </span>
         </div>
 
@@ -215,7 +230,7 @@ export default function CalculatorPage() {
                   </h4>
                 </div>
                 <div className="pt-2 mt-2 border-t border-zinc-800/60 text-[10px] font-mono font-bold text-amber-400">
-                  ~ {p.estimatedTotalCostTND.toFixed(3)} DT
+                  ~ {(p.estimatedTotalCostTND ?? 0).toFixed(3)} DT
                 </div>
               </motion.button>
             );

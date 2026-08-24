@@ -1,11 +1,11 @@
-import jsPDF from 'jspdf';
-import html2canvas from 'html2canvas-pro';
-
 export async function generatePDFFromElement(elementId: string, filename: string): Promise<void> {
   const element = document.getElementById(elementId);
   if (!element) {
     throw new Error(`Element with id #${elementId} not found`);
   }
+
+  const { default: html2canvas } = await import('html2canvas-pro');
+  const { default: jsPDF } = await import('jspdf');
 
   const canvas = await html2canvas(element, {
     scale: 2, // High-DPI crisp vector-like output

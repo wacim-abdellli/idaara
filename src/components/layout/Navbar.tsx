@@ -80,7 +80,15 @@ export const Navbar: React.FC = () => {
               whileTap={{ scale: 0.98 }}
               onClick={triggerCommandPalette}
               className="hidden xl:flex items-center gap-2 px-3 py-1.5 rounded-xl bg-zinc-900/80 hover:bg-zinc-800/80 border border-zinc-800 text-zinc-400 hover:text-zinc-200 text-xs transition-colors cursor-pointer shrink-0 shadow-sm"
-              title="Search Idaara (Ctrl+K)"
+              title={
+                locale === 'ar'
+                  ? 'بحث في إدارة (Ctrl+K)'
+                  : locale === 'derja'
+                  ? 'Lawwej fi Idaara (Ctrl+K)'
+                  : locale === 'fr'
+                  ? 'Rechercher sur Idaara (Ctrl+K)'
+                  : 'Search Idaara (Ctrl+K)'
+              }
             >
               <Search className="w-3.5 h-3.5 text-zinc-500" />
               <span className="text-xs text-zinc-400">{t('quickSearchPrompt')}</span>

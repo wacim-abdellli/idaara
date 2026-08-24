@@ -10,6 +10,35 @@ interface AudioRecorderProps {
   isProcessing?: boolean;
 }
 
+interface SpeechRecognitionEvent {
+  results: {
+    length: number;
+    [index: number]: {
+      [index: number]: {
+        transcript: string;
+      };
+    };
+  };
+}
+
+interface SpeechRecognitionErrorEvent {
+  error: string;
+}
+
+interface SpeechRecognitionInstance {
+  continuous: boolean;
+  interimResults: boolean;
+  maxAlternatives: number;
+  lang: string;
+  onresult: ((event: SpeechRecognitionEvent) => void) | null;
+  onerror: ((event: SpeechRecognitionErrorEvent) => void) | null;
+  start: () => void;
+  stop: () => void;
+  abort: () => void;
+}
+
+type SpeechRecognitionConstructor = new () => SpeechRecognitionInstance;
+
 export const AudioRecorder: React.FC<AudioRecorderProps> = ({
   onTranscript,
   isProcessing = false,
@@ -22,8 +51,7 @@ export const AudioRecorder: React.FC<AudioRecorderProps> = ({
   const [typeMode, setTypeMode] = useState(false);
   const [typeInput, setTypeInput] = useState('');
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const recognitionRef = useRef<any>(null);
+  const recognitionRef = useRef<SpeechRecognitionInstance | null>(null);
   const mediaStreamRef = useRef<MediaStream | null>(null);
   const timerRef = useRef<NodeJS.Timeout | null>(null);
   const finalTranscriptRef = useRef<string>('');
@@ -85,16 +113,15 @@ export const AudioRecorder: React.FC<AudioRecorderProps> = ({
 
     if (SpeechRecognition) {
       try {
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        const recognition = new (SpeechRecognition as any)();
+        const SpeechRec = SpeechRecognition as unknown as SpeechRecognitionConstructor;
+        const recognition = new SpeechRec();
         recognitionRef.current = recognition;
         recognition.continuous = true;
         recognition.interimResults = true;
         recognition.maxAlternatives = 1;
         recognition.lang = locale === 'ar' ? 'ar-TN' : locale === 'fr' ? 'fr-FR' : 'en-US';
 
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        recognition.onresult = (event: any) => {
+        recognition.onresult = (event: SpeechRecognitionEvent) => {
           let accumulated = '';
           for (let i = 0; i < event.results.length; i++) {
             accumulated += event.results[i][0].transcript + ' ';
@@ -106,8 +133,7 @@ export const AudioRecorder: React.FC<AudioRecorderProps> = ({
           }
         };
 
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        recognition.onerror = (event: any) => {
+        recognition.onerror = (event: SpeechRecognitionErrorEvent) => {
           if (event.error === 'not-allowed' || event.error === 'service-not-allowed') {
             setStatus('mic_blocked');
             setTypeMode(true);

@@ -113,7 +113,7 @@ function renderInlineStyles(text: string): React.ReactNode {
 }
 
 /** Modern, Clean Markdown & Civic Element Parser (ChatGPT/Claude Grade) */
-function renderFormattedContent(text: string): React.ReactNode {
+function renderFormattedContent(text: string, locale: string = 'derja'): React.ReactNode {
   // 1. Sanitize any thinking or chain-of-thought blocks
   let cleanText = text.replace(/<think>[\s\S]*?(?:<\/think>|$)/gi, '').trim();
   cleanText = cleanText.replace(/^(?:Here's a thinking process|Analyze User Input|Check Constraints)[\s\S]*?\n\n/i, '').trim();
@@ -221,6 +221,13 @@ function renderFormattedContent(text: string): React.ReactNode {
         }
       }
 
+      const summaryLabel = {
+        ar: 'الخلاصة الإدارية السريعة',
+        derja: 'El khoulassa el idaria',
+        fr: 'Résumé administratif rapide',
+        en: 'Quick Administrative Summary',
+      }[locale] ?? 'الخلاصة الإدارية السريعة';
+
       blocks.push(
         <div
           key={`summary-${i}`}
@@ -229,7 +236,7 @@ function renderFormattedContent(text: string): React.ReactNode {
         >
           <div className="flex items-center gap-2 pb-2 mb-2.5 border-b border-emerald-500/15 text-[11px] font-mono font-bold text-emerald-400 uppercase tracking-wider">
             <span className="text-sm">📌</span>
-            <span>الخلاصة الإدارية السريعة</span>
+            <span>{summaryLabel}</span>
           </div>
 
           {summaryItems.length > 0 ? (
@@ -367,6 +374,13 @@ export const ChatMessage: React.FC<ChatMessageProps> = ({ message }) => {
   const { locale } = useLocale();
   const [copied, setCopied] = useState(false);
 
+  const copyLabels: Record<string, string> = {
+    ar: 'تم النسخ ✓',
+    derja: 'Tnsaḥ ✓',
+    fr: 'Copié ✓',
+    en: 'Copied ✓',
+  };
+
   const isAssistant = message.sender === 'assistant';
   const arabicChars = (message.content.match(/[\u0600-\u06FF]/g) || []).length;
   const latinChars = (message.content.match(/[a-zA-Z]/g) || []).length;
@@ -402,7 +416,7 @@ export const ChatMessage: React.FC<ChatMessageProps> = ({ message }) => {
             {copied ? (
               <>
                 <Check className="w-3.5 h-3.5 text-emerald-400" />
-                <span className="text-emerald-400 text-[10px]">{locale === 'ar' ? 'تم النسخ' : 'Copié'}</span>
+                <span className="text-emerald-400 text-[10px]">{copyLabels[locale] ?? 'Copied ✓'}</span>
               </>
             ) : (
               <Copy className="w-3.5 h-3.5" />
@@ -423,9 +437,9 @@ export const ChatMessage: React.FC<ChatMessageProps> = ({ message }) => {
         style={{ unicodeBidi: 'plaintext' }}
         className={`prose-chat text-zinc-100 ${isArabicScript ? 'font-["Cairo",sans-serif]' : ''}`}
       >
-        {renderFormattedContent(message.content)}
+        {renderFormattedContent(message.content, locale)}
         {message.isStreaming && (
-          <span className="inline-block w-1.5 h-4 bg-emerald-400/90 ml-1.5 rounded-xs animate-pulse align-middle" />
+          <span className="inline-block w-1.5 h-4 bg-emerald-400/90 ms-1.5 rounded-xs animate-pulse align-middle" />
         )}
       </div>
 
@@ -497,7 +511,7 @@ export const ChatMessage: React.FC<ChatMessageProps> = ({ message }) => {
             {copied ? (
               <>
                 <Check className="w-3.5 h-3.5 text-emerald-400" />
-                <span className="text-emerald-400 text-[10px]">{locale === 'ar' ? 'تم النسخ' : 'Copié'}</span>
+                <span className="text-emerald-400 text-[10px]">{copyLabels[locale] ?? 'Copied ✓'}</span>
               </>
             ) : (
               <Copy className="w-3.5 h-3.5" />

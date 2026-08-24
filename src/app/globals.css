@@ -30,7 +30,21 @@
   --font-display: "Orbitron", system-ui, sans-serif;
   --font-body:    "Space Grotesk", system-ui, sans-serif;
   --font-arabic:  "Cairo", "Noto Sans Arabic", Tahoma, sans-serif;
-  --font-mono:    "JetBrains Mono", monospace;
+}
+
+/* ── iOS Safe Area Support ──────────────────── */
+/* Required for pb-safe class used in copilot page */
+.pb-safe {
+  padding-bottom: env(safe-area-inset-bottom, 0.75rem);
+}
+.pt-safe {
+  padding-top: env(safe-area-inset-top, 0px);
+}
+/* Body bottom padding accounts for iOS home bar */
+@supports (padding-bottom: env(safe-area-inset-bottom)) {
+  body {
+    padding-bottom: env(safe-area-inset-bottom, 0px);
+  }
 }
 
 * { box-sizing: border-box; }

@@ -3,6 +3,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import Link from 'next/link';
 import { useLocale } from '../../context/LocaleContext';
+import { getLocalized } from '../../lib/locale-utils';
 import { ChatMessage } from '../../components/copilot/ChatMessage';
 import { ChatMessage as ChatMessageType } from '../../types/chat';
 import {
@@ -50,7 +51,19 @@ const STORAGE_SESSIONS_KEY = 'idaara_copilot_saved_sessions';
 const STORAGE_ACTIVE_ID_KEY = 'idaara_copilot_active_session_id';
 
 export default function CopilotPage() {
-  const { locale } = useLocale();
+  const { locale, isRtl } = useLocale();
+
+  const tooltips = {
+    thinkMode: {
+      ar: 'تفعيل وضع التحليل القانوني العميق',
+      fr: 'Activer le mode raisonnement juridique approfondi',
+      en: 'Toggle Deep Legal & Statutory Reasoning Mode',
+      derja: 'Chargi wad3 el tahlil el 9anuni',
+    },
+    dictate: { ar: 'إملاء', fr: 'Dicter', en: 'Dictate', derja: 'Hki bel mic' },
+    send: { ar: 'إرسال', fr: 'Envoyer', en: 'Send', derja: 'Eb3ath' },
+    quickTopics: { ar: 'أسئلة سريعة', fr: 'Sujets rapides', en: 'Quick Topics', derja: 'Mawadhi3 sari3a' },
+  };
 
   const [messages, setMessages] = useState<ChatMessageType[]>([]);
   const [sessions, setSessions] = useState<ChatSession[]>([]);
@@ -134,7 +147,11 @@ export default function CopilotPage() {
 
       const urlParams = new URLSearchParams(window.location.search);
       const q = urlParams.get('q');
-      if (q && q.trim()) handleSendMessage(q.trim());
+      if (q && q.trim()) {
+        // Sanitize: max 500 chars, strip control characters
+        const sanitized = q.trim().slice(0, 500).replace(/[\x00-\x1F\x7F]/g, '');
+        if (sanitized.length > 0) handleSendMessage(sanitized);
+      }
     }
 
     return () => {
@@ -459,13 +476,13 @@ export default function CopilotPage() {
       setIsRecording(true);
     } catch (err) {
       console.warn('Mic permission error:', err);
-      alert(
-        locale === 'ar'
-          ? 'يرجى السماح بالوصول إلى الميكروفون.'
-          : locale === 'fr'
-          ? 'Veuillez autoriser l’accès au micro.'
-          : 'Please allow microphone access.'
-      );
+      const micAlerts: Record<string, string> = {
+        ar: 'يرجى السماح بالوصول إلى الميكروفون في إعدادات المتصفح.',
+        fr: 'Veuillez autoriser l\'accès au microphone dans les paramètres du navigateur.',
+        en: 'Please allow microphone access in your browser settings.',
+        derja: 'Samah lel mic fil paramètres mta3 el browser.',
+      };
+      alert(micAlerts[locale] ?? micAlerts['fr']);
       setIsRecording(false);
     }
   };
@@ -733,17 +750,17 @@ export default function CopilotPage() {
                             <div className="flex items-center gap-0.5 opacity-0 group-hover:opacity-100 transition-opacity">
                               <button
                                 onClick={(e) => startRenaming(e, sess)}
-                                className="p-1 hover:text-emerald-400 text-zinc-400 transition-colors cursor-pointer border-0 outline-none"
+                                className="p-2 hover:text-emerald-400 text-zinc-400 transition-colors cursor-pointer border-0 outline-none"
                                 title={locale === 'ar' ? 'تغيير الاسم' : locale === 'fr' ? 'Renommer' : 'Rename'}
                               >
-                                <Pencil className="w-3 h-3" />
+                                <Pencil className="w-4 h-4" />
                               </button>
                               <button
                                 onClick={(e) => promptDeleteSession(e, sess)}
-                                className="p-1 hover:text-red-400 text-zinc-400 transition-colors cursor-pointer border-0 outline-none"
+                                className="p-2 hover:text-red-400 text-zinc-400 transition-colors cursor-pointer border-0 outline-none"
                                 title={locale === 'ar' ? 'حذف المحادثة' : locale === 'en' ? 'Delete chat' : 'Supprimer la discussion'}
                               >
-                                <Trash2 className="w-3 h-3" />
+                                <Trash2 className="w-4 h-4" />
                               </button>
                             </div>
                           </>
@@ -767,7 +784,9 @@ export default function CopilotPage() {
               <div className="text-xs font-semibold text-zinc-200">
                 {locale === 'ar' ? 'مواطن' : locale === 'en' ? 'Citizen' : locale === 'derja' ? 'Mowaten' : 'Citoyen'}
               </div>
-              <div className="text-[10px] text-emerald-400 font-medium">Idaara Free</div>
+              <div className="text-[10px] text-emerald-400 font-medium">
+                Idaara {locale === 'ar' || locale === 'derja' ? 'مجاني' : locale === 'fr' ? 'Gratuit' : 'Free'}
+              </div>
             </div>
           </div>
 
@@ -861,7 +880,7 @@ export default function CopilotPage() {
                         ? 'bg-emerald-500/20 text-emerald-300 border-emerald-500/40 shadow-sm'
                         : 'text-zinc-400 hover:text-white border-transparent hover:bg-white/5'
                     }`}
-                    title="Toggle Deep Legal & Statutory Reasoning Mode"
+                    title={getLocalized(tooltips.thinkMode, locale)}
                   >
                     <Brain className="w-3.5 h-3.5 text-emerald-400" />
                     <span>{locale === 'ar' ? 'تفكير معمق' : 'Think'}</span>
@@ -881,7 +900,7 @@ export default function CopilotPage() {
                         ? 'text-emerald-400'
                         : 'text-zinc-400 hover:text-white hover:bg-white/10'
                     }`}
-                    title="Dictate"
+                    title={getLocalized(tooltips.dictate, locale)}
                   >
                     {isTranscribing ? (
                       <Loader2 className="w-4 h-4 animate-spin" />
@@ -908,8 +927,9 @@ export default function CopilotPage() {
             </div>
 
             {/* Sleek Minimalist Quick Pills */}
-            <div className="flex flex-wrap items-center justify-center gap-2 mt-5 text-xs text-zinc-400">
+            <div className="flex flex-wrap items-center justify-center gap-2 mt-5 text-xs text-zinc-400" dir={isRtl ? 'rtl' : 'ltr'}>
               <button
+                dir="auto"
                 onClick={() => handleSendMessage('Kifech n5arej awra9 el passeport tounsi?')}
                 className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-white/[0.03] hover:bg-white/[0.08] hover:text-zinc-200 border border-white/5 transition-all cursor-pointer"
               >
@@ -918,6 +938,7 @@ export default function CopilotPage() {
               </button>
 
               <button
+                dir="auto"
                 onClick={() => handleSendMessage('Kifech na3mel mutation carte grise fi Tounes?')}
                 className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-white/[0.03] hover:bg-white/[0.08] hover:text-zinc-200 border border-white/5 transition-all cursor-pointer"
               >
@@ -926,6 +947,7 @@ export default function CopilotPage() {
               </button>
 
               <button
+                dir="auto"
                 onClick={() => handleSendMessage('A3melli contrat de bail kré sakani mrigel')}
                 className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-white/[0.03] hover:bg-white/[0.08] hover:text-zinc-200 border border-white/5 transition-all cursor-pointer"
               >
@@ -934,6 +956,7 @@ export default function CopilotPage() {
               </button>
 
               <button
+                dir="auto"
                 onClick={() => handleSendMessage('Chnowa les concours el maftou7in tawa fi Tounes?')}
                 className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-white/[0.03] hover:bg-white/[0.08] hover:text-zinc-200 border border-white/5 transition-all cursor-pointer"
               >
@@ -1002,7 +1025,7 @@ export default function CopilotPage() {
                       type="button"
                       onClick={() => setShowPlusMenu((p) => !p)}
                       className="p-2 rounded-xl hover:bg-white/10 text-zinc-400 hover:text-white transition-colors cursor-pointer border-0 outline-none"
-                      title="Quick Topics"
+                      title={getLocalized(tooltips.quickTopics, locale)}
                     >
                       <Plus className="w-4 h-4" />
                     </button>
@@ -1054,7 +1077,7 @@ export default function CopilotPage() {
                           ? 'text-emerald-400 bg-emerald-950'
                           : 'text-zinc-400 hover:text-white bg-white/[0.04] hover:bg-white/[0.08]'
                       }`}
-                      title="Voice Dictate"
+                      title={getLocalized(tooltips.dictate, locale)}
                     >
                       {isTranscribing ? (
                         <Loader2 className="w-4 h-4 animate-spin" />
@@ -1070,7 +1093,7 @@ export default function CopilotPage() {
                       onClick={() => handleSendMessage()}
                       disabled={!inputVal.trim() || isProcessing || isTranscribing}
                       className="px-3.5 py-2 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-zinc-950 flex items-center justify-center transition-all disabled:opacity-20 disabled:cursor-not-allowed cursor-pointer shadow-md font-bold text-xs"
-                      title="Send"
+                      title={getLocalized(tooltips.send, locale)}
                     >
                       <ArrowUp className="w-4 h-4 stroke-[3]" />
                     </button>

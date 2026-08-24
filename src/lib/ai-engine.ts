@@ -153,8 +153,8 @@ export function parseAndReason(prompt: string, locale: SupportedLanguage | strin
   });
 
   if (matchedProcedure) {
-    const title = getLocalized(matchedProcedure.title, lang === 'derja' ? 'fr' : (lang as any));
-    const desc = getLocalized(matchedProcedure.shortDescription, lang === 'derja' ? 'fr' : (lang as any));
+    const title = getLocalized(matchedProcedure.title, lang === 'derja' ? 'fr' : lang);
+    const desc = getLocalized(matchedProcedure.shortDescription, lang === 'derja' ? 'fr' : lang);
     const cost = matchedProcedure.estimatedTotalCostTND;
 
     return {
@@ -168,7 +168,7 @@ export function parseAndReason(prompt: string, locale: SupportedLanguage | strin
       timbreBreakdown: {
         totalTND: cost,
         items: matchedProcedure.costsBreakdown.map((c) => ({
-          label: getLocalized(c.label, lang === 'derja' ? 'fr' : (lang as any)),
+          label: getLocalized(c.label, lang === 'derja' ? 'fr' : lang),
           amount: c.amountTND,
         })),
       },

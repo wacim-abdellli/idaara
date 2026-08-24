@@ -37,6 +37,15 @@ export default function ConcoursPage() {
   const [selectedLevel, setSelectedLevel] = useState<EducationLevel>('all');
   const [expandedConcoursId, setExpandedConcoursId] = useState<string | null>(null);
 
+  const ui = {
+    openPositions: { ar: 'مناصب مفتوحة', fr: 'Postes Ouverts', en: 'Open Positions', derja: 'Manasseb maftouha' },
+    sectors: { ar: 'القطاعات', fr: 'Secteurs', en: 'Sectors', derja: 'El qita3at' },
+    portal: { ar: 'البوابة', fr: 'Portail', en: 'Portal', derja: 'El bawwaba' },
+    reset: { ar: 'إعادة تعيين', fr: 'Réinitialiser', en: 'Reset', derja: 'Ebda men el bidaya' },
+    level: { ar: 'المستوى:', fr: 'Niveau:', en: 'Level:', derja: 'El niveau:' },
+    sector: { ar: 'القطاع:', fr: 'Secteur:', en: 'Sector:', derja: 'El qita3:' },
+  };
+
   const filteredItems = filterConcours(concoursData, {
     category: selectedCategory,
     educationLevel: selectedLevel,
@@ -158,15 +167,15 @@ export default function ConcoursPage() {
             {/* Quick Live Stats Pill Card */}
             <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 shrink-0 p-4 rounded-2xl bg-zinc-950/80 border border-white/[0.06] shadow-xl">
               <div className="text-center sm:text-left px-2">
-                <span className="text-[10px] uppercase font-bold text-zinc-500 block">Postes Ouverts</span>
+                <span className="text-[10px] uppercase font-bold text-zinc-500 block">{getLocalized(ui.openPositions, locale)}</span>
                 <span className="text-xl sm:text-2xl font-mono font-extrabold text-emerald-400">{totalPosts}</span>
               </div>
               <div className="text-center sm:text-left px-2 border-l border-white/[0.08]">
-                <span className="text-[10px] uppercase font-bold text-zinc-500 block">Secteurs</span>
+                <span className="text-[10px] uppercase font-bold text-zinc-500 block">{getLocalized(ui.sectors, locale)}</span>
                 <span className="text-xl sm:text-2xl font-mono font-extrabold text-amber-400">8</span>
               </div>
               <div className="text-center sm:text-left px-2 border-l border-white/[0.08] col-span-2 sm:col-span-1">
-                <span className="text-[10px] uppercase font-bold text-zinc-500 block">Portail</span>
+                <span className="text-[10px] uppercase font-bold text-zinc-500 block">{getLocalized(ui.portal, locale)}</span>
                 <span className="text-xs font-mono font-bold text-teal-300">100% Officiel</span>
               </div>
             </div>
@@ -198,7 +207,7 @@ export default function ConcoursPage() {
               onClick={() => setSearchQuery('')}
               className="text-xs text-zinc-500 hover:text-zinc-300 mr-3 px-2 py-1 rounded bg-zinc-800"
             >
-              Reset
+              {getLocalized(ui.reset, locale)}
             </button>
           )}
         </div>
@@ -207,11 +216,11 @@ export default function ConcoursPage() {
         <div className="flex items-center gap-1.5 overflow-x-auto pb-1 scrollbar-none">
           <span className="text-[11px] font-bold text-zinc-500 uppercase px-2 shrink-0 flex items-center gap-1">
             <GraduationCap className="w-3.5 h-3.5" />
-            <span>Niveau:</span>
+            <span>{getLocalized(ui.level, locale)}</span>
           </span>
           {educationLevels.map((lvl) => {
             const isSelected = selectedLevel === lvl.id;
-            const label = getLocalized(lvl.label as any, locale);
+            const label = getLocalized(lvl.label as Record<string, string>, locale);
             return (
               <button
                 key={lvl.id}
@@ -232,11 +241,11 @@ export default function ConcoursPage() {
         <div className="flex items-center gap-1.5 overflow-x-auto pb-1 scrollbar-none">
           <span className="text-[11px] font-bold text-zinc-500 uppercase px-2 shrink-0 flex items-center gap-1">
             <Filter className="w-3.5 h-3.5" />
-            <span>Secteur:</span>
+            <span>{getLocalized(ui.sector, locale)}</span>
           </span>
           {categories.map((cat) => {
             const isSelected = selectedCategory === cat.id;
-            const label = getLocalized(cat.label as any, locale);
+            const label = getLocalized(cat.label as Record<string, string>, locale);
             return (
               <button
                 key={cat.id}
