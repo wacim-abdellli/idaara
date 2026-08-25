@@ -379,11 +379,18 @@ export const ChatMessage: React.FC<ChatMessageProps> = ({ message }) => {
     en: 'Copied ✓',
   };
 
+  const copyTitleLabels: Record<string, string> = {
+    ar: 'نسخ الرسالة',
+    derja: 'Kopi el message',
+    fr: 'Copier le message',
+    en: 'Copy message',
+  };
+
   const isAssistant = message.sender === 'assistant';
   const isArabicScript = useMemo(() => {
     const arabicChars = (message.content.match(/[\u0600-\u06FF]/g) || []).length;
     const latinChars = (message.content.match(/[a-zA-Z]/g) || []).length;
-    return arabicChars > latinChars && arabicChars > 5;
+    return arabicChars > latinChars && arabicChars > 3;
   }, [message.content]);
 
   const copyToClipboard = async () => {
@@ -391,7 +398,9 @@ export const ChatMessage: React.FC<ChatMessageProps> = ({ message }) => {
       await navigator.clipboard.writeText(message.content);
       setCopied(true);
       setTimeout(() => setCopied(false), 2000);
-    } catch {}
+    } catch {
+      // noop
+    }
   };
 
   // ── USER MESSAGE BUBBLE ──
@@ -411,7 +420,7 @@ export const ChatMessage: React.FC<ChatMessageProps> = ({ message }) => {
           <button
             onClick={copyToClipboard}
             className="p-2.5 rounded-lg hover:bg-white/10 text-zinc-500 hover:text-zinc-300 transition-colors cursor-pointer border-0 outline-none flex items-center gap-1 text-[11px]"
-            title={locale === 'ar' ? 'نسخ الرسالة' : locale === 'fr' ? 'Copier' : 'Copy'}
+            title={copyTitleLabels[locale] ?? 'Copy'}
           >
             {copied ? (
               <>
@@ -506,7 +515,7 @@ export const ChatMessage: React.FC<ChatMessageProps> = ({ message }) => {
           <button
             onClick={copyToClipboard}
             className="p-2.5 rounded-lg hover:bg-white/10 text-zinc-400 hover:text-zinc-200 transition-colors cursor-pointer border-0 outline-none flex items-center gap-1 text-xs"
-            title={locale === 'ar' ? 'نسخ النص' : locale === 'fr' ? 'Copier' : 'Copy'}
+            title={copyTitleLabels[locale] ?? 'Copy'}
           >
             {copied ? (
               <>

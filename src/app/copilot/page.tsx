@@ -755,14 +755,14 @@ export default function CopilotPage() {
                               <button
                                 onClick={(e) => startRenaming(e, sess)}
                                 className="p-2 hover:text-emerald-400 text-zinc-400 transition-colors cursor-pointer border-0 outline-none"
-                                title={locale === 'ar' ? 'تغيير الاسم' : locale === 'fr' ? 'Renommer' : 'Rename'}
+                                title={locale === 'ar' ? 'تغيير الاسم' : locale === 'derja' ? 'Baddel el ism' : locale === 'en' ? 'Rename' : 'Renommer'}
                               >
                                 <Pencil className="w-4 h-4" />
                               </button>
                               <button
                                 onClick={(e) => promptDeleteSession(e, sess)}
                                 className="p-2 hover:text-red-400 text-zinc-400 transition-colors cursor-pointer border-0 outline-none"
-                                title={locale === 'ar' ? 'حذف المحادثة' : locale === 'en' ? 'Delete chat' : 'Supprimer la discussion'}
+                                title={locale === 'ar' ? 'حذف المحادثة' : locale === 'derja' ? 'Fasa5 el chat' : locale === 'en' ? 'Delete chat' : 'Supprimer la discussion'}
                               >
                                 <Trash2 className="w-4 h-4" />
                               </button>
@@ -815,7 +815,7 @@ export default function CopilotPage() {
             <button
               onClick={() => setSidebarOpen((p) => !p)}
               className="p-1.5 rounded-lg hover:bg-white/10 text-zinc-400 hover:text-white transition-colors cursor-pointer border-0 outline-none flex items-center justify-center"
-              title={locale === 'ar' ? 'القائمة' : 'Menu'}
+              title={locale === 'ar' ? 'القائمة' : locale === 'derja' ? 'El Menu' : locale === 'en' ? 'Menu' : 'Menu'}
             >
               <PanelLeft className="w-4 h-4" />
             </button>
@@ -930,7 +930,15 @@ export default function CopilotPage() {
                     disabled={!inputVal.trim() || isProcessing || isTranscribing}
                     className="p-1.5 sm:px-3 sm:py-1.5 rounded-xl bg-white hover:bg-zinc-200 text-black text-xs font-semibold flex items-center gap-1 transition-all disabled:opacity-20 disabled:cursor-not-allowed cursor-pointer shadow-sm"
                   >
-                    <span className="hidden sm:inline">{locale === 'ar' ? 'إرسال' : 'Envoyer'}</span>
+                    <span className="hidden sm:inline">
+                      {locale === 'ar'
+                        ? 'إرسال'
+                        : locale === 'derja'
+                        ? 'Eb3eth'
+                        : locale === 'en'
+                        ? 'Send'
+                        : 'Envoyer'}
+                    </span>
                     <ArrowUp className="w-3.5 h-3.5 stroke-[2.5]" />
                   </button>
                 </div>
@@ -956,7 +964,15 @@ export default function CopilotPage() {
                 className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-white/[0.03] hover:bg-white/[0.08] hover:text-zinc-200 border border-white/5 transition-all cursor-pointer"
               >
                 <FileCheck2 className="w-3.5 h-3.5 text-emerald-400" />
-                <span>{locale === 'ar' ? 'جواز السفر 80د' : 'Passeport (80 DT)'}</span>
+                <span>
+                  {locale === 'ar'
+                    ? 'جواز السفر (86 د.ت)'
+                    : locale === 'derja'
+                    ? 'Passeport (86 DT)'
+                    : locale === 'en'
+                    ? 'Passport (86 DT)'
+                    : 'Passeport (86 DT)'}
+                </span>
               </button>
 
               <button
@@ -975,7 +991,15 @@ export default function CopilotPage() {
                 className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-white/[0.03] hover:bg-white/[0.08] hover:text-zinc-200 border border-white/5 transition-all cursor-pointer"
               >
                 <Car className="w-3.5 h-3.5 text-amber-400" />
-                <span>{locale === 'ar' ? 'البطاقة الرمادية 145د' : 'Carte Grise (145 DT)'}</span>
+                <span>
+                  {locale === 'ar'
+                    ? 'البطاقة الرمادية (145 د.ت)'
+                    : locale === 'derja'
+                    ? 'Carte Grise (145 DT)'
+                    : locale === 'en'
+                    ? 'Vehicle Reg. (145 DT)'
+                    : 'Carte Grise (145 DT)'}
+                </span>
               </button>
 
               <button
@@ -994,7 +1018,15 @@ export default function CopilotPage() {
                 className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-white/[0.03] hover:bg-white/[0.08] hover:text-zinc-200 border border-white/5 transition-all cursor-pointer"
               >
                 <FileText className="w-3.5 h-3.5 text-blue-400" />
-                <span>{locale === 'ar' ? 'عقد كراء سكني' : 'Contrat de bail'}</span>
+                <span>
+                  {locale === 'ar'
+                    ? 'عقد كراء سكني'
+                    : locale === 'derja'
+                    ? 'Contrat de bail'
+                    : locale === 'en'
+                    ? 'Lease Agreement'
+                    : 'Contrat de bail'}
+                </span>
               </button>
 
               <button
@@ -1013,7 +1045,15 @@ export default function CopilotPage() {
                 className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-white/[0.03] hover:bg-white/[0.08] hover:text-zinc-200 border border-white/5 transition-all cursor-pointer"
               >
                 <Briefcase className="w-3.5 h-3.5 text-teal-400" />
-                <span>{locale === 'ar' ? `المناظرات ${new Date().getFullYear()}` : `Concours ${new Date().getFullYear()}`}</span>
+                <span>
+                  {locale === 'ar'
+                    ? `المناظرات ${new Date().getFullYear()}`
+                    : locale === 'derja'
+                    ? `Concourat ${new Date().getFullYear()}`
+                    : locale === 'en'
+                    ? `Competitions ${new Date().getFullYear()}`
+                    : `Concours ${new Date().getFullYear()}`}
+                </span>
               </button>
             </div>
 

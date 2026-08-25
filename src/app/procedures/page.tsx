@@ -389,11 +389,24 @@ export default function ProceduresPage() {
           <span className="text-[11px] font-bold uppercase tracking-wider text-zinc-500 flex items-center gap-1.5">
             <Sparkles className="w-3.5 h-3.5 text-amber-400" />
             <span>
-              {locale === 'ar' ? 'أكثر الإجراءات طلباً' : locale === 'en' ? 'Fast-Track Citizen Demands' : 'Démarches Populaires'}
+              {locale === 'ar'
+                ? 'أكثر الإجراءات طلباً'
+                : locale === 'derja'
+                ? 'El Démarches el Maftou7a Barcha'
+                : locale === 'en'
+                ? 'Fast-Track Citizen Demands'
+                : 'Démarches Populaires'}
             </span>
           </span>
           <span className="text-[11px] text-zinc-500 font-mono">
-            {proceduresData.length} {locale === 'ar' ? 'إجراء متاح' : 'dossiers homologués'}
+            {proceduresData.length}{' '}
+            {locale === 'ar'
+              ? 'إجراء متاح'
+              : locale === 'derja'
+              ? 'démarche mawjouda'
+              : locale === 'en'
+              ? 'homologated dossiers'
+              : 'dossiers homologués'}
           </span>
         </div>
 
@@ -536,7 +549,14 @@ export default function ProceduresPage() {
         <div className="lg:col-span-8 space-y-4">
           <div className="flex items-center justify-between text-xs text-zinc-500 px-1">
             <span className="font-semibold text-zinc-400">
-              {filteredProcedures.length} {locale === 'ar' ? 'إجراء معتمد' : 'procédures homologuées'}
+              {filteredProcedures.length}{' '}
+              {locale === 'ar'
+                ? 'إجراء معتمد'
+                : locale === 'derja'
+                ? 'démarche homologuée'
+                : locale === 'en'
+                ? 'verified procedures'
+                : 'procédures homologuées'}
             </span>
           </div>
 
@@ -573,7 +593,13 @@ export default function ProceduresPage() {
                         <div className="flex items-center gap-3 shrink-0 self-start sm:self-center">
                           <div className="text-right rtl:text-left">
                             <span className="text-[9px] text-zinc-500 uppercase font-bold block">
-                              {locale === 'ar' ? 'المصاريف' : 'Budget'}
+                              {locale === 'ar'
+                                ? 'المصاريف'
+                                : locale === 'derja'
+                                ? 'El Masrouf'
+                                : locale === 'en'
+                                ? 'Est. Budget'
+                                : 'Budget'}
                             </span>
                             <span className="font-mono font-bold text-sm text-amber-400">
                               {formatTND(proc.estimatedTotalCostTND, locale)}
@@ -615,15 +641,37 @@ export default function ProceduresPage() {
                         <div className="flex items-center justify-between pt-2 border-t border-zinc-800/60 text-[11px] text-zinc-500 font-mono">
                           <div className="flex items-center gap-2">
                             <span className="px-2 py-0.5 rounded bg-zinc-900 border border-zinc-800 text-zinc-400">
-                              {proc.requiredDocuments.length} {locale === 'ar' ? 'وثائق مطلوبة' : 'pièces'}
+                              {proc.requiredDocuments.length}{' '}
+                              {locale === 'ar'
+                                ? 'وثائق مطلوبة'
+                                : locale === 'derja'
+                                ? 'awra9'
+                                : locale === 'en'
+                                ? 'docs required'
+                                : 'pièces'}
                             </span>
                             <span className="px-2 py-0.5 rounded bg-zinc-900 border border-zinc-800 text-zinc-400">
-                              {proc.costsBreakdown.length} {locale === 'ar' ? 'معاليم/تنابر' : 'frais'}
+                              {proc.costsBreakdown.length}{' '}
+                              {locale === 'ar'
+                                ? 'معاليم/تنابر'
+                                : locale === 'derja'
+                                ? 'timbres/frais'
+                                : locale === 'en'
+                                ? 'fees/stamps'
+                                : 'frais'}
                             </span>
                           </div>
 
                           <span className="text-emerald-400 font-bold group-hover:translate-x-1 rtl:group-hover:-translate-x-1 transition-transform flex items-center gap-1 text-xs">
-                            <span>{locale === 'en' ? 'Open Dossier' : 'Consulter le dossier'}</span>
+                            <span>
+                              {locale === 'ar'
+                                ? 'فتح الملف'
+                                : locale === 'derja'
+                                ? '7el el dossier'
+                                : locale === 'en'
+                                ? 'Open Dossier'
+                                : 'Consulter le dossier'}
+                            </span>
                             <ArrowRight className="w-3.5 h-3.5 rtl:rotate-180" />
                           </span>
                         </div>

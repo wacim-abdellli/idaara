@@ -511,10 +511,16 @@ export default function LocatorPage() {
         {/* Search */}
         <div className="space-y-1.5">
           <label className="block text-[10px] font-bold text-zinc-500 uppercase tracking-wider">
-            {locale === 'ar' ? 'البحث بالكلمة :' : locale === 'en' ? 'Search Keyword:' : 'Recherche par mot-clé :'}
+            {locale === 'ar'
+              ? 'البحث بالكلمة :'
+              : locale === 'derja'
+              ? 'Lawwej bel kelma :'
+              : locale === 'en'
+              ? 'Search Keyword:'
+              : 'Recherche par mot-clé :'}
           </label>
           <div className="relative">
-            <Search className="w-4 h-4 text-zinc-600 absolute left-3.5 top-1/2 -translate-y-1/2" />
+            <Search className="w-4 h-4 text-zinc-600 absolute left-3.5 top-1/2 -translate-y-1/2 rtl:left-auto rtl:right-3.5" />
             <input
               type="text"
               value={searchQuery}
@@ -522,11 +528,13 @@ export default function LocatorPage() {
               placeholder={
                 locale === 'ar'
                   ? 'مثال: القصبة، المهدية، صفاقس...'
+                  : locale === 'derja'
+                  ? 'Mathalan: Kasbah, Sousse, Ariana...'
                   : locale === 'en'
                   ? 'Ex: Kasbah, Sousse, Ariana...'
                   : 'Ex: Kasbah, Houmt Souk, Sousse...'
               }
-              className="w-full bg-zinc-900 border border-zinc-800 focus:border-emerald-500/50 rounded-xl pl-10 pr-4 py-3 text-xs text-zinc-200 placeholder-zinc-600 focus:outline-none transition-colors"
+              className="w-full bg-zinc-900 border border-zinc-800 focus:border-emerald-500/50 rounded-xl pl-10 pr-4 rtl:pr-10 rtl:pl-4 py-3 text-xs text-zinc-200 placeholder-zinc-600 focus:outline-none transition-colors"
             />
           </div>
         </div>
@@ -537,7 +545,9 @@ export default function LocatorPage() {
         <span>
           {filteredOffices.length > 0
             ? locale === 'ar'
-              ? `${filteredOffices.length} إدارة وجدت`
+              ? `${filteredOffices.length} إدارة ومصلحة`
+              : locale === 'derja'
+              ? `${filteredOffices.length} masla7a mawjouda`
               : locale === 'en'
               ? `${filteredOffices.length} public office${filteredOffices.length > 1 ? 's' : ''} listed`
               : `${filteredOffices.length} organisme${filteredOffices.length > 1 ? 's' : ''} répertorié${filteredOffices.length > 1 ? 's' : ''}`
@@ -560,10 +570,22 @@ export default function LocatorPage() {
         <div className="glass-panel rounded-3xl p-16 text-center border border-zinc-800">
           <Building2 className="w-10 h-10 mx-auto text-zinc-700 mb-4" />
           <h3 className="text-sm font-bold text-zinc-400 mb-1">
-            {locale === 'ar' ? 'لا توجد نتائج' : locale === 'en' ? 'No offices found' : 'Aucun organisme trouvé'}
+            {locale === 'ar'
+              ? 'لا توجد نتائج'
+              : locale === 'derja'
+              ? 'Ma l9inéch masla7a'
+              : locale === 'en'
+              ? 'No offices found'
+              : 'Aucun organisme trouvé'}
           </h3>
           <p className="text-xs text-zinc-600">
-            {locale === 'ar' ? 'حاول تعديل المرشحات أو تغيير الولاية.' : locale === 'en' ? 'Try changing the filters or governorate.' : 'Essayez de modifier les filtres ou le gouvernorat.'}
+            {locale === 'ar'
+              ? 'حاول تعديل المرشحات أو تغيير الولاية.'
+              : locale === 'derja'
+              ? 'Baddel el filtre walla el wilaya bech tal9a el masale7.'
+              : locale === 'en'
+              ? 'Try changing the filters or governorate.'
+              : 'Essayez de modifier les filtres ou le gouvernorat.'}
           </p>
         </div>
       )}

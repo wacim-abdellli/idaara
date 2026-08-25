@@ -190,7 +190,13 @@ export const DocumentUploader: React.FC<DocumentUploaderProps> = ({ onAnalyze, i
             <ShieldCheck className="w-4 h-4 text-emerald-400 shrink-0 mt-0.5" />
             <div className="space-y-0.5 leading-relaxed text-[11px] sm:text-xs">
               <span className="font-semibold text-emerald-300">
-                {locale === 'ar' ? 'بروتوكول معالجة آمن ومؤقت (Zero-Storage): ' : 'Protocole Zero-Storage : '}
+                {locale === 'ar'
+                  ? 'بروتوكول معالجة آمن ومؤقت (Zero-Storage): '
+                  : locale === 'derja'
+                  ? 'Protocole Zero-Storage (Sécurisé) : '
+                  : locale === 'en'
+                  ? 'Zero-Storage Privacy Protocol: '
+                  : 'Protocole Zero-Storage : '}
               </span>
               <span className="text-zinc-400">
                 {locale === 'ar'

@@ -151,7 +151,16 @@ export default function ConcoursPage() {
                 </span>
                 <span className="text-[11px] font-mono text-zinc-400 flex items-center gap-1">
                   <span className="w-2 h-2 rounded-full bg-emerald-400 animate-ping inline-block" />
-                  <span>{concoursData.length} {locale === 'ar' ? 'مناظرات مفتوحة حالياً' : 'concours ouverts'}</span>
+                  <span>
+                    {concoursData.length}{' '}
+                    {locale === 'ar'
+                      ? 'مناظرة مفتوحة حالياً'
+                      : locale === 'derja'
+                      ? 'concourat maftou7in tawa'
+                      : locale === 'en'
+                      ? 'open competitions'
+                      : 'concours ouverts'}
+                  </span>
                 </span>
               </div>
 
@@ -198,6 +207,8 @@ export default function ConcoursPage() {
                 ? 'ابحث عن مناظرة (STEG, التربية, الصوناد, مهندسين, محاسبة...)'
                 : locale === 'derja'
                 ? 'Lawwej 3la concours (STEG, CAPES, SONEDE, ingénieurs, finance...)'
+                : locale === 'en'
+                ? 'Search competitions (STEG, CAPES, SONEDE, engineering, finance...)'
                 : 'Rechercher un concours (STEG, CAPES, SONEDE, ingénieurs, finances...)'
             }
             className="w-full bg-transparent text-xs sm:text-sm text-zinc-100 placeholder-zinc-500 focus:outline-none py-1.5 min-w-0"
@@ -220,18 +231,17 @@ export default function ConcoursPage() {
           </span>
           {educationLevels.map((lvl) => {
             const isSelected = selectedLevel === lvl.id;
-            const label = getLocalized(lvl.label as Record<string, string>, locale);
             return (
               <button
                 key={lvl.id}
                 onClick={() => setSelectedLevel(lvl.id)}
-                className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-all cursor-pointer shrink-0 border ${
+                className={`px-3 py-1.5 rounded-xl text-xs font-semibold whitespace-nowrap transition-all border shrink-0 ${
                   isSelected
-                    ? 'bg-emerald-500 text-zinc-950 border-emerald-400 shadow-md shadow-emerald-500/20'
-                    : 'bg-[#0d0e12] text-zinc-400 hover:text-white border-white/[0.06] hover:border-white/[0.12]'
+                    ? 'bg-emerald-500 text-zinc-950 border-emerald-500 shadow-md shadow-emerald-500/20 font-bold'
+                    : 'bg-zinc-900/60 text-zinc-400 border-white/[0.06] hover:bg-zinc-800 hover:text-zinc-200'
                 }`}
               >
-                {label}
+                {getLocalized(lvl.label, locale)}
               </button>
             );
           })}
@@ -245,18 +255,17 @@ export default function ConcoursPage() {
           </span>
           {categories.map((cat) => {
             const isSelected = selectedCategory === cat.id;
-            const label = getLocalized(cat.label as Record<string, string>, locale);
             return (
               <button
                 key={cat.id}
                 onClick={() => setSelectedCategory(cat.id)}
-                className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-all cursor-pointer shrink-0 border ${
+                className={`px-3 py-1.5 rounded-xl text-xs font-semibold whitespace-nowrap transition-all border shrink-0 ${
                   isSelected
-                    ? 'bg-zinc-200 text-zinc-950 border-white font-extrabold shadow-sm'
-                    : 'bg-[#0d0e12] text-zinc-400 hover:text-white border-white/[0.06] hover:border-white/[0.12]'
+                    ? 'bg-zinc-100 text-zinc-950 border-white shadow-md font-bold'
+                    : 'bg-zinc-900/60 text-zinc-400 border-white/[0.06] hover:bg-zinc-800 hover:text-zinc-200'
                 }`}
               >
-                {label}
+                {getLocalized(cat.label, locale)}
               </button>
             );
           })}
@@ -267,7 +276,14 @@ export default function ConcoursPage() {
       <div className="space-y-4">
         <div className="flex items-center justify-between text-xs text-zinc-400 px-1">
           <span>
-            {filteredItems.length} {locale === 'ar' ? 'مناظرة مطابقة للبحث' : 'concours trouvés'}
+            {filteredItems.length}{' '}
+            {locale === 'ar'
+              ? 'مناظرة مطابقة للبحث'
+              : locale === 'derja'
+              ? 'concourat mawjouda'
+              : locale === 'en'
+              ? 'competitions found'
+              : 'concours trouvés'}
           </span>
         </div>
 
@@ -299,10 +315,13 @@ export default function ConcoursPage() {
                     <div className="flex items-center gap-3 shrink-0">
                       <span className="px-2.5 py-1 rounded-lg bg-amber-500/10 text-amber-300 border border-amber-500/20 text-[11px] font-mono font-bold flex items-center gap-1.5">
                         <Clock className="w-3.5 h-3.5 text-amber-400" />
-                        <span>{locale === 'ar' ? 'آخر أجل :' : 'Délai :'} {deadline}</span>
+                        <span>
+                          {locale === 'ar' ? 'آخر أجل :' : locale === 'derja' ? 'Ekher ajel :' : locale === 'en' ? 'Deadline:' : 'Délai :'} {deadline}
+                        </span>
                       </span>
                       <span className="px-2.5 py-1 rounded-lg bg-zinc-900 border border-white/[0.08] text-emerald-400 text-xs font-mono font-bold">
-                        {item.positionsCount} {locale === 'ar' ? 'خطة' : 'postes'}
+                        {item.positionsCount}{' '}
+                        {locale === 'ar' ? 'خطة' : locale === 'derja' ? 'poste' : locale === 'en' ? 'positions' : 'postes'}
                       </span>
                     </div>
                   </div>
@@ -316,7 +335,15 @@ export default function ConcoursPage() {
                         </h3>
                         {item.estimatedSalaryRangeTND && (
                           <p className="text-xs text-zinc-400 mt-1">
-                            <span className="text-zinc-500">{locale === 'ar' ? 'الراتب التقديري :' : 'Rémunération indicative :'}</span>{' '}
+                            <span className="text-zinc-500">
+                              {locale === 'ar'
+                                ? 'الراتب التقديري :'
+                                : locale === 'derja'
+                                ? 'Salaire te9ribi :'
+                                : locale === 'en'
+                                ? 'Estimated salary:'
+                                : 'Rémunération indicative :'}
+                            </span>{' '}
                             <strong className="text-zinc-200 font-mono">{item.estimatedSalaryRangeTND}</strong>
                           </p>
                         )}
@@ -330,7 +357,15 @@ export default function ConcoursPage() {
                           rel="noopener noreferrer"
                           className="flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-zinc-950 font-bold text-xs shadow-md shadow-emerald-500/20 transition-all cursor-pointer"
                         >
-                          <span>{locale === 'ar' ? 'التسجيل الرسمي' : 'Inscription Officielle'}</span>
+                          <span>
+                            {locale === 'ar'
+                              ? 'التسجيل الرسمي'
+                              : locale === 'derja'
+                              ? 'Inscription Rasmiya'
+                              : locale === 'en'
+                              ? 'Official Application'
+                              : 'Inscription Officielle'}
+                          </span>
                           <ExternalLink className="w-3.5 h-3.5" />
                         </a>
 
@@ -338,7 +373,15 @@ export default function ConcoursPage() {
                           onClick={() => setExpandedConcoursId(isExpanded ? null : item.id)}
                           className="flex items-center gap-1.5 px-3 py-2 rounded-xl bg-zinc-800/80 hover:bg-zinc-700 text-zinc-300 font-semibold text-xs transition-colors cursor-pointer border border-zinc-700"
                         >
-                          <span>{locale === 'ar' ? 'الملف والشروط' : 'Détails & Dossier'}</span>
+                          <span>
+                            {locale === 'ar'
+                              ? 'الملف والشروط'
+                              : locale === 'derja'
+                              ? 'Dossier w Chourout'
+                              : locale === 'en'
+                              ? 'Requirements & Dossier'
+                              : 'Détails & Dossier'}
+                          </span>
                           {isExpanded ? <ChevronUp className="w-3.5 h-3.5" /> : <ChevronDown className="w-3.5 h-3.5" />}
                         </button>
                       </div>
@@ -360,7 +403,15 @@ export default function ConcoursPage() {
                           <div className="p-4 rounded-2xl bg-zinc-950/70 border border-white/[0.06] space-y-2.5">
                             <div className="font-bold text-white flex items-center gap-1.5 text-xs pb-1 border-b border-white/[0.06]">
                               <FileCheck2 className="w-4 h-4 text-emerald-400" />
-                              <span>{locale === 'ar' ? 'الوثائق المطلوبة للملف' : 'Pièces requises pour le dossier'}</span>
+                              <span>
+                                {locale === 'ar'
+                                  ? 'الوثائق المطلوبة للملف'
+                                  : locale === 'derja'
+                                  ? 'L\'awra9 el matlouba fel dossier'
+                                  : locale === 'en'
+                                  ? 'Required dossier documents'
+                                  : 'Pièces requises pour le dossier'}
+                              </span>
                             </div>
                             <ul className="space-y-1.5 text-zinc-300">
                               {item.requiredDocuments.map((doc, dIdx) => (
@@ -376,7 +427,15 @@ export default function ConcoursPage() {
                           <div className="p-4 rounded-2xl bg-zinc-950/70 border border-white/[0.06] space-y-2.5">
                             <div className="font-bold text-white flex items-center gap-1.5 text-xs pb-1 border-b border-white/[0.06]">
                               <AlertCircle className="w-4 h-4 text-amber-400" />
-                              <span>{locale === 'ar' ? 'الشروط ومراحل الاختبار' : 'Conditions & Épreuves du concours'}</span>
+                              <span>
+                                {locale === 'ar'
+                                  ? 'الشروط ومراحل الاختبار'
+                                  : locale === 'derja'
+                                  ? 'Chourout w Ekhwet el Concours'
+                                  : locale === 'en'
+                                  ? 'Conditions & Exam Stages'
+                                  : 'Conditions & Épreuves du concours'}
+                              </span>
                             </div>
                             <div className="space-y-2 text-zinc-300">
                               {item.conditions.map((cond, cIdx) => (
@@ -386,7 +445,13 @@ export default function ConcoursPage() {
                               ))}
                               <div className="pt-2 border-t border-zinc-800 space-y-1">
                                 <span className="text-[10px] font-bold uppercase text-zinc-500 block">
-                                  {locale === 'ar' ? 'مراحل المناظرة :' : 'Étapes du concours :'}
+                                  {locale === 'ar'
+                                    ? 'مراحل المناظرة :'
+                                    : locale === 'derja'
+                                    ? 'Marahil el concours :'
+                                    : locale === 'en'
+                                    ? 'Exam stages:'
+                                    : 'Étapes du concours :'}
                                 </span>
                                 {item.examStages.map((stg, sIdx) => (
                                   <p key={sIdx} className="text-[11px] text-zinc-300">
@@ -403,11 +468,21 @@ export default function ConcoursPage() {
                         <div className="p-3.5 rounded-2xl bg-emerald-950/20 border border-emerald-500/20 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
                           <div className="text-xs text-zinc-300">
                             <span className="font-bold text-emerald-300 block">
-                              {locale === 'ar' ? 'هل لديك استفسار حول هذه المناظرة؟' : 'Question sur ce concours ?'}
+                              {locale === 'ar'
+                                ? 'هل لديك استفسار حول هذه المناظرة؟'
+                                : locale === 'derja'
+                                ? '3andek sou2el 3la hal concours?'
+                                : locale === 'en'
+                                ? 'Questions about this competition?'
+                                : 'Question sur ce concours ?'}
                             </span>
                             <span className="text-[11px] text-zinc-400">
                               {locale === 'ar'
                                 ? 'اسأل مساعد إدارة.تونس الذكي عن كيفية احتساب السكور وطريقة استخراج الوثائق.'
+                                : locale === 'derja'
+                                ? 'As\'el Idaara AI kifeh ta7seb score-ek w t7adher l\'awra9 mte3ek.'
+                                : locale === 'en'
+                                ? 'Ask Idaara AI how to calculate your eligibility score and prepare certified copies.'
                                 : 'Demandez à Idaara AI comment calculer votre score et préparer vos photocopies conformes.'}
                             </span>
                           </div>
@@ -416,7 +491,15 @@ export default function ConcoursPage() {
                             href={`/copilot?q=${encodeURIComponent(`Comment postuler au concours ${item.institution} ${title} ?`)}`}
                             className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-zinc-950 font-bold text-xs shadow transition-all shrink-0"
                           >
-                            <span>{locale === 'ar' ? 'اسأل المساعد الذكي' : 'Consulter Idaara AI'}</span>
+                            <span>
+                              {locale === 'ar'
+                                ? 'اسأل المساعد الذكي'
+                                : locale === 'derja'
+                                ? 'As\'el Idaara AI'
+                                : locale === 'en'
+                                ? 'Ask Idaara AI'
+                                : 'Consulter Idaara AI'}
+                            </span>
                             <ArrowRight className="w-3.5 h-3.5 rtl:rotate-180" />
                           </Link>
                         </div>

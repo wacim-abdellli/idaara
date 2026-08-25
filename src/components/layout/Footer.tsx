@@ -134,6 +134,28 @@ export const Footer: React.FC = () => {
           ? 'Official Procedures Catalog'
           : 'Catalogue des Démarches',
     },
+    {
+      href: '/portails',
+      label:
+        locale === 'ar'
+          ? 'البوابات الإلكترونية الرسمية (15 بوابة)'
+          : locale === 'derja'
+          ? 'Portails e-Gov el Rasmiyin'
+          : locale === 'en'
+          ? 'Official e-Gov Portals (15)'
+          : 'Portails e-Gov Officiels (15)',
+    },
+    {
+      href: '/contacts',
+      label:
+        locale === 'ar'
+          ? 'أرقام الطوارئ والوزارات'
+          : locale === 'derja'
+          ? 'Numérowet el 7adra wel Wezarat'
+          : locale === 'en'
+          ? 'Emergency Hotlines & Ministries'
+          : 'Urgences & Ministères',
+    },
   ];
 
   return (
@@ -216,12 +238,23 @@ export const Footer: React.FC = () => {
         </div>
 
         <div className="pt-8 border-t border-zinc-900/80 flex flex-col sm:flex-row items-center justify-between text-zinc-500 text-xs">
-          <p>© {new Date().getFullYear()} Idaara.tn. {locale === 'en' ? 'All rights reserved.' : locale === 'ar' ? 'جميع الحقوق محفوظة.' : 'Tous droits réservés.'}</p>
+          <p>
+            © {new Date().getFullYear()} Idaara.tn.{' '}
+            {locale === 'en'
+              ? 'All rights reserved.'
+              : locale === 'ar'
+              ? 'جميع الحقوق محفوظة.'
+              : locale === 'derja'
+              ? 'Kol el 7o9ou9 ma7foudha.'
+              : 'Tous droits réservés.'}
+          </p>
           <div className="mt-3 sm:mt-0 text-[11px] text-zinc-600">
             {locale === 'en'
               ? 'Independent civic technology project for Tunisia.'
               : locale === 'ar'
               ? 'مشروع تكنولوجي مدني مستقل للمواطن التونسي.'
+              : locale === 'derja'
+              ? 'Machrou3 civique mosta9el lel mowaten el tounsi.'
               : 'Projet civique indépendant pour les citoyens tunisiens.'}
           </div>
         </div>

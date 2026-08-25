@@ -53,29 +53,44 @@ export const OfficeCard: React.FC<OfficeCardProps> = ({ office, activeScheduleMo
       case 'ramadan':
         return {
           icon: <Moon className="w-3.5 h-3.5 text-amber-400" />,
-          label: locale === 'ar' ? 'توقيت رمضان' : locale === 'en' ? 'Ramadan Hours' : 'Horaire Ramadan',
+          label: locale === 'ar' ? 'توقيت رمضان' : locale === 'derja' ? 'Taw9it Romdhan' : locale === 'en' ? 'Ramadan Hours' : 'Horaire Ramadan',
           text: `${office.schedule.ramadan.days} : ${office.schedule.ramadan.hours}`,
           bg: 'bg-amber-500/8 border-amber-500/20',
-          badge: locale === 'ar' ? 'توقيت رمضان خاص' : 'Horaire Ramadan',
+          badge: locale === 'ar' ? 'توقيت رمضان خاص' : locale === 'derja' ? 'Taw9it Romdhan' : locale === 'en' ? 'Ramadan Special' : 'Horaire Ramadan',
         };
       case 'summer':
         return {
           icon: <Sun className="w-3.5 h-3.5 text-orange-400" />,
-          label: locale === 'ar' ? 'الحصة الواحدة' : locale === 'en' ? 'Summer Hours' : "Séance Unique (Été)",
+          label: locale === 'ar' ? 'الحصة الواحدة' : locale === 'derja' ? 'Séance Unique' : locale === 'en' ? 'Summer Hours' : 'Séance Unique (Été)',
           text: `${office.schedule.summer.days} : ${office.schedule.summer.hours}`,
           bg: 'bg-orange-500/8 border-orange-500/20',
-          badge: locale === 'ar' ? 'حصة واحدة صيفية' : 'Séance Unique',
+          badge: locale === 'ar' ? 'حصة واحدة صيفية' : locale === 'derja' ? 'Séance Unique (Sayf)' : locale === 'en' ? 'Summer Single Shift' : 'Séance Unique',
         };
       default:
         return {
           icon: <Clock className="w-3.5 h-3.5 text-emerald-400" />,
-          label: locale === 'ar' ? 'التوقيت العادي' : locale === 'en' ? 'Regular Hours' : 'Horaire Normal',
+          label: locale === 'ar' ? 'التوقيت العادي' : locale === 'derja' ? 'Taw9it 3adi' : locale === 'en' ? 'Regular Hours' : 'Horaire Normal',
           text: `${office.schedule.regular.days} : ${office.schedule.regular.hours}`,
           bg: 'bg-emerald-500/5 border-zinc-800',
-          badge: locale === 'ar' ? 'توقيت شتوي عادي' : 'Horaire Normal',
+          badge: locale === 'ar' ? 'توقيت شتوي عادي' : locale === 'derja' ? 'Taw9it Chte 3adi' : locale === 'en' ? 'Standard Shift' : 'Horaire Normal',
         };
     }
   })();
+
+  const conformeLabel =
+    locale === 'ar' ? 'مطابقة للأصل' : locale === 'derja' ? 'Copie Conforme' : locale === 'en' ? 'Certified Copy' : 'Copie Conforme';
+
+  const timbresLabel =
+    locale === 'ar' ? 'بيع التنابر' : locale === 'derja' ? 'Bey3 Timbres' : locale === 'en' ? 'Stamp Vendor' : 'Vente Timbres';
+
+  const directionsLabel =
+    locale === 'ar'
+      ? 'الموقع على الخريطة GPS'
+      : locale === 'derja'
+      ? 'Itinéraire GPS / Waze'
+      : locale === 'en'
+      ? 'GPS Directions'
+      : 'Itinéraire GPS';
 
   return (
     <div className="glass-panel rounded-2xl p-4 sm:p-5 border border-zinc-800/80 flex flex-col justify-between hover:border-zinc-700 hover:shadow-xl transition-all duration-200 group">
@@ -135,13 +150,13 @@ export const OfficeCard: React.FC<OfficeCardProps> = ({ office, activeScheduleMo
           {office.hasConformeService && (
             <span className="text-[10px] px-2 py-0.5 rounded-lg bg-emerald-950/60 text-emerald-400 border border-emerald-800/60 flex items-center space-x-1 rtl:space-x-reverse font-semibold">
               <CheckCircle2 className="w-3 h-3" />
-              <span>Copie Conforme</span>
+              <span>{conformeLabel}</span>
             </span>
           )}
           {office.hasTimbreVendor && (
             <span className="text-[10px] px-2 py-0.5 rounded-lg bg-amber-950/60 text-amber-400 border border-amber-800/60 flex items-center space-x-1 rtl:space-x-reverse font-semibold">
               <Stamp className="w-3 h-3" />
-              <span>Vente Timbres</span>
+              <span>{timbresLabel}</span>
             </span>
           )}
         </div>
@@ -164,7 +179,7 @@ export const OfficeCard: React.FC<OfficeCardProps> = ({ office, activeScheduleMo
           className="flex items-center justify-center space-x-2 rtl:space-x-reverse w-full px-4 py-2 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-zinc-950 font-bold text-xs shadow-md shadow-emerald-500/20 transition-all hover:scale-[1.02] hover:shadow-emerald-500/30"
         >
           <Navigation2 className="w-3.5 h-3.5" />
-          <span>{locale === 'ar' ? 'الموقع على الخريطة GPS' : locale === 'en' ? 'GPS Directions' : 'Itinéraire GPS'}</span>
+          <span>{directionsLabel}</span>
         </a>
       </div>
     </div>

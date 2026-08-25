@@ -824,7 +824,15 @@ export default function HomePage() {
                     className="flex items-center gap-2 px-5 py-2.5 rounded-xl font-bold text-xs bg-emerald-500 hover:bg-emerald-400 text-zinc-950 shrink-0 shadow-lg shadow-emerald-500/30 transition-all cursor-pointer"
                   >
                     <Sparkles className="w-3.5 h-3.5 fill-current" />
-                    <span>{locale === 'ar' ? 'المساعد الذكي' : 'Idaara AI'}</span>
+                    <span>
+                      {locale === 'ar'
+                        ? 'المساعد الذكي'
+                        : locale === 'derja'
+                        ? 'Idaara AI'
+                        : locale === 'en'
+                        ? 'Civic AI'
+                        : 'Idaara AI'}
+                    </span>
                   </Link>
                 </motion.div>
               </form>
@@ -835,10 +843,54 @@ export default function HomePage() {
                   {ui.directAccess}
                 </span>
                 {[
-                  { name: locale === 'ar' ? 'جواز السفر' : locale === 'derja' ? 'Passeport' : 'Passeport', cost: '86 DT', href: '/procedures/passeport-renouvellement' },
-                  { name: locale === 'ar' ? 'البطاقة الرمادية' : locale === 'derja' ? 'Carte Grise' : 'Carte Grise', cost: '145 DT', href: '/procedures/mutation-carte-grise' },
-                  { name: locale === 'ar' ? 'عقد الكراء' : locale === 'derja' ? 'Contrat Bail' : 'Contrat Bail', cost: '35 DT', href: '/documents/contrat-location' },
-                  { name: locale === 'ar' ? 'المبادر الذاتي' : locale === 'derja' ? 'Auto-Entrepreneur' : 'Auto-Entrepreneur', cost: '1% Tax', href: '/launchpad' },
+                  {
+                    name:
+                      locale === 'ar'
+                        ? 'جواز السفر'
+                        : locale === 'derja'
+                        ? 'Passeport'
+                        : locale === 'en'
+                        ? 'Passport'
+                        : 'Passeport',
+                    cost: '86 DT',
+                    href: '/procedures/passeport-renouvellement',
+                  },
+                  {
+                    name:
+                      locale === 'ar'
+                        ? 'البطاقة الرمادية'
+                        : locale === 'derja'
+                        ? 'Carte Grise'
+                        : locale === 'en'
+                        ? 'Vehicle Registration'
+                        : 'Carte Grise',
+                    cost: '145 DT',
+                    href: '/procedures/mutation-carte-grise',
+                  },
+                  {
+                    name:
+                      locale === 'ar'
+                        ? 'عقد الكراء'
+                        : locale === 'derja'
+                        ? 'Contrat Kré'
+                        : locale === 'en'
+                        ? 'Lease Agreement'
+                        : 'Contrat Bail',
+                    cost: '35 DT',
+                    href: '/documents/contrat-location',
+                  },
+                  {
+                    name:
+                      locale === 'ar'
+                        ? 'المبادر الذاتي'
+                        : locale === 'derja'
+                        ? 'Auto-Entrepreneur'
+                        : locale === 'en'
+                        ? 'Self-Entrepreneur'
+                        : 'Auto-Entrepreneur',
+                    cost: '1% Tax',
+                    href: '/launchpad',
+                  },
                 ].map((item, idx) => (
                   <motion.div key={idx} whileHover={{ y: -2, scale: 1.03 }} whileTap={{ scale: 0.97 }}>
                     <Link
@@ -1184,7 +1236,13 @@ export default function HomePage() {
                 {ui.radarEyebrow}
               </span>
               <span className="text-[11px] font-mono text-zinc-400">
-                {locale === 'ar' ? '24 ولاية · تحديث فوري' : '24 Gouvernorats · Temps Réel'}
+                {locale === 'ar'
+                  ? '24 ولاية · تحديث فوري'
+                  : locale === 'derja'
+                  ? '24 Wilaya · Mise à jour 7iniya'
+                  : locale === 'en'
+                  ? '24 Governorates · Real-Time'
+                  : '24 Gouvernorats · Temps Réel'}
               </span>
             </div>
             <h2 className="text-xl sm:text-3xl font-extrabold text-white tracking-tight">
@@ -1290,7 +1348,15 @@ export default function HomePage() {
                     href={`/locator?gov=${encodeURIComponent(selectedWilaya)}`}
                     className="text-[11px] font-semibold text-zinc-400 hover:text-white flex items-center gap-1 transition-colors"
                   >
-                    <span>{locale === 'ar' ? 'الخريطة' : 'Localiser'}</span>
+                    <span>
+                      {locale === 'ar'
+                        ? 'الخريطة'
+                        : locale === 'derja'
+                        ? 'Waze / GPS'
+                        : locale === 'en'
+                        ? 'Locate'
+                        : 'Localiser'}
+                    </span>
                     <ArrowRight className="w-3 h-3 rtl:rotate-180" />
                   </Link>
                 </div>
@@ -1308,6 +1374,8 @@ export default function HomePage() {
                 ? 'دليل البلديات والقباضات ومراكز الفحص الفني لجميع ولايات الجمهورية (350+ مصلحة عمومية).'
                 : locale === 'derja'
                 ? 'Dalil el Baladiyas, el 9badhat, wel Mines lkol el wilayat fi Tounes (350+ blasa).'
+                : locale === 'en'
+                ? 'Official directory and GPS locator for 350+ public desks across all 24 governorates.'
                 : 'Annuaire officiel et géolocalisation de plus de 350 bureaux publics à travers les 24 gouvernorats.'}
             </span>
           </div>
@@ -1316,7 +1384,15 @@ export default function HomePage() {
             href="/locator"
             className="inline-flex items-center justify-center gap-1.5 px-4 py-2 rounded-xl bg-cyan-500 hover:bg-cyan-400 text-zinc-950 font-bold text-xs shadow-md shadow-cyan-500/20 transition-all shrink-0 cursor-pointer"
           >
-            <span>{locale === 'ar' ? 'فتح الدليل الجغرافي الكامل' : 'Consulter le Répertoire Complet'}</span>
+            <span>
+              {locale === 'ar'
+                ? 'فتح الدليل الجغرافي الكامل'
+                : locale === 'derja'
+                ? '7el el Répertoire el Kemel'
+                : locale === 'en'
+                ? 'Open Full Directory'
+                : 'Consulter le Répertoire Complet'}
+            </span>
             <ArrowRight className="w-3.5 h-3.5 rtl:rotate-180" />
           </Link>
         </div>
@@ -1374,13 +1450,23 @@ export default function HomePage() {
             <div className="p-4 rounded-2xl bg-zinc-950/70 border border-white/[0.06] space-y-1.5">
               <div className="flex items-center gap-2 text-xs font-bold text-emerald-400">
                 <Zap className="w-3.5 h-3.5" />
-                <span>{locale === 'ar' ? 'معالجة في الذاكرة الحية فقط' : 'Traitement RAM Éphémère'}</span>
+                <span>
+                  {locale === 'ar'
+                    ? 'معالجة في الذاكرة الحية فقط'
+                    : locale === 'derja'
+                    ? 'Traitement fel RAM kahaw'
+                    : locale === 'en'
+                    ? 'Ephemeral In-Memory Processing'
+                    : 'Traitement RAM Éphémère'}
+                </span>
               </div>
               <p className="text-[11px] text-zinc-400 leading-relaxed">
                 {locale === 'ar'
                   ? 'لا يتم حفظ أي صورة أو وثيقة على خوادم أو قواعد بيانات. الحذف فوري بمجرد إغلاق الجلسة.'
                   : locale === 'derja'
                   ? 'Les documents yet3aljou fel RAM w yetfas5ou direct. 0 stockage fi ay base de données.'
+                  : locale === 'en'
+                  ? 'No documents or images are stored on servers or databases. Instant memory purge.'
                   : 'Aucun stockage sur disque ou base de données. Analyse en mémoire vive volatile puis suppression immédiate.'}
               </p>
             </div>
@@ -1388,13 +1474,23 @@ export default function HomePage() {
             <div className="p-4 rounded-2xl bg-zinc-950/70 border border-white/[0.06] space-y-1.5">
               <div className="flex items-center gap-2 text-xs font-bold text-teal-400">
                 <EyeOff className="w-3.5 h-3.5" />
-                <span>{locale === 'ar' ? 'إخفاء المعطيات الحساسة (CIN & RIB)' : 'Masquage Automatique PII'}</span>
+                <span>
+                  {locale === 'ar'
+                    ? 'إخفاء المعطيات الحساسة (CIN & RIB)'
+                    : locale === 'derja'
+                    ? 'Masquage Automatique CIN & RIB'
+                    : locale === 'en'
+                    ? 'Automated PII Redaction'
+                    : 'Masquage Automatique PII'}
+                </span>
               </div>
               <p className="text-[11px] text-zinc-400 leading-relaxed">
                 {locale === 'ar'
                   ? 'اكتشاف تلقائي وحجب فوري لأرقام بطاقة التعريف الوطنية والحسابات البنكية قبل التحليل.'
                   : locale === 'derja'
                   ? 'Redaction automatique lel noumrouwat CIN w RIB 9bel ma ysir el traitement OCR.'
+                  : locale === 'en'
+                  ? 'Automatic detection and masking of national identity numbers (CIN) and bank accounts (RIB).'
                   : 'Détection automatique et masquage des numéros de carte d’identité (CIN) et coordonnées bancaires (RIB).'}
               </p>
             </div>
@@ -1402,13 +1498,23 @@ export default function HomePage() {
             <div className="p-4 rounded-2xl bg-zinc-950/70 border border-white/[0.06] space-y-1.5">
               <div className="flex items-center gap-2 text-xs font-bold text-cyan-400">
                 <Layers className="w-3.5 h-3.5" />
-                <span>{locale === 'ar' ? 'مطابقة لمعايير حماية المعطيات (INPDP)' : 'Conformité Totale INPDP'}</span>
+                <span>
+                  {locale === 'ar'
+                    ? 'مطابقة لمعايير حماية المعطيات (INPDP)'
+                    : locale === 'derja'
+                    ? 'Conformité 100% INPDP'
+                    : locale === 'en'
+                    ? 'Full INPDP Compliance'
+                    : 'Conformité Totale INPDP'}
+                </span>
               </div>
               <p className="text-[11px] text-zinc-400 leading-relaxed">
                 {locale === 'ar'
                   ? 'احترام تام للتشريع التونسي لحماية المعطيات الشخصية وقانون الرقمنة الإدارية.'
                   : locale === 'derja'
                   ? 'Conforme 100% m3a el 9anoun el tounsi mte3 7imayet el ma3loumet el chakhsiya.'
+                  : locale === 'en'
+                  ? 'Strict compliance with Tunisian statutory personal data regulations (Organic Law N°2004-63).'
                   : 'Respect scrupuleux du cadre juridique tunisien de protection des données personnelles (Loi Organique N°2004-63).'}
               </p>
             </div>
