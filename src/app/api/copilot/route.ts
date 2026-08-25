@@ -220,7 +220,7 @@ export async function POST(req: NextRequest) {
       for (const model of groqModels) {
         try {
           const llmController = new AbortController();
-          const llmTimeout = setTimeout(() => llmController.abort(), 25000);
+          const llmTimeout = setTimeout(() => llmController.abort(), 8500);
 
           const groqRes = await fetch('https://api.groq.com/openai/v1/chat/completions', {
             method: 'POST',

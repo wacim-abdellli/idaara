@@ -147,7 +147,13 @@ export const DocumentUploader: React.FC<DocumentUploaderProps> = ({ onAnalyze, i
                 <div className="flex items-center gap-2">
                   <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse shrink-0" />
                   <span className="text-[11px] font-mono uppercase text-emerald-400 font-bold tracking-wider">
-                    {locale === 'ar' ? 'جاهز للتحليل' : 'Prêt pour l’analyse'}
+                    {locale === 'ar'
+                      ? 'جاهز للتحليل'
+                      : locale === 'derja'
+                      ? '7adher lel ta7lil'
+                      : locale === 'en'
+                      ? 'Ready to Scan'
+                      : 'Prêt pour l’analyse'}
                   </span>
                 </div>
 
@@ -167,7 +173,15 @@ export const DocumentUploader: React.FC<DocumentUploaderProps> = ({ onAnalyze, i
               className="px-3.5 py-2 rounded-xl bg-white/5 hover:bg-white/10 text-zinc-300 hover:text-white text-xs font-medium border border-white/10 transition-colors cursor-pointer flex items-center gap-1.5 shrink-0 self-end sm:self-center"
             >
               <RefreshCw className="w-3.5 h-3.5" />
-              <span>{locale === 'ar' ? 'تغيير الوثيقة' : 'Remplacer'}</span>
+              <span>
+                {locale === 'ar'
+                  ? 'تغيير الوثيقة'
+                  : locale === 'derja'
+                  ? 'Baddel el war9a'
+                  : locale === 'en'
+                  ? 'Replace'
+                  : 'Remplacer'}
+              </span>
             </button>
           </div>
 

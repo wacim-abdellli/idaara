@@ -887,7 +887,15 @@ export default function CopilotPage() {
                     title={getLocalized(tooltips.thinkMode, locale)}
                   >
                     <Brain className="w-3.5 h-3.5 text-emerald-400" />
-                    <span>{locale === 'ar' ? 'تفكير معمق' : 'Think'}</span>
+                    <span>
+                      {locale === 'ar'
+                        ? 'تفكير معمق'
+                        : locale === 'derja'
+                        ? 'Fakker mezyen'
+                        : locale === 'fr'
+                        ? 'Analyse poussée'
+                        : 'Think'}
+                    </span>
                   </button>
                 </div>
 
@@ -897,7 +905,7 @@ export default function CopilotPage() {
                     type="button"
                     onClick={toggleVoice}
                     disabled={isTranscribing}
-                    className={`p-1.5 rounded-lg transition-colors cursor-pointer ${
+                    className={`p-2 sm:p-2.5 rounded-xl transition-colors cursor-pointer ${
                       isRecording
                         ? 'bg-red-500 text-white animate-pulse'
                         : isTranscribing
