@@ -175,19 +175,19 @@ export const ExportInvoiceGen: React.FC = () => {
               <p className="font-bold text-zinc-800">{clientName}</p>
             </div>
 
-            <table className="w-full text-left border-collapse mb-6">
+            <table className="w-full text-left rtl:text-right border-collapse mb-6">
               <thead>
-                <tr className="border-b-2 border-zinc-800 text-[10px] uppercase text-zinc-500">
-                  <th className="py-2">Description</th>
-                  <th className="py-2 text-right">TVA</th>
-                  <th className="py-2 text-right">Total (€ EUR)</th>
+                <tr className="border-b-2 border-zinc-800 text-[10px] uppercase text-zinc-500 font-mono">
+                  <th className="py-2">{locale === 'ar' ? 'الوصف / Description' : 'Description'}</th>
+                  <th className="py-2 text-right rtl:text-left">{locale === 'en' ? 'VAT (TVA)' : 'TVA'}</th>
+                  <th className="py-2 text-right rtl:text-left">{locale === 'en' ? 'Total (€ EUR)' : 'Total (€ EUR)'}</th>
                 </tr>
               </thead>
               <tbody className="text-xs">
                 <tr className="border-b border-zinc-200">
                   <td className="py-3 font-medium text-zinc-800">{description}</td>
-                  <td className="py-3 text-right text-zinc-500">0% (Export)</td>
-                  <td className="py-3 text-right font-bold text-zinc-900">
+                  <td className="py-3 text-right rtl:text-left text-zinc-500">0% (Export)</td>
+                  <td className="py-3 text-right rtl:text-left font-bold text-zinc-900 font-mono">
                     {amountEUR.toLocaleString()} €
                   </td>
                 </tr>
@@ -197,12 +197,25 @@ export const ExportInvoiceGen: React.FC = () => {
 
           <div className="space-y-4 pt-4 border-t border-zinc-200">
             <div className="flex justify-between items-center bg-zinc-50 p-3 rounded font-bold">
-              <span className="text-zinc-700">NET À PAYER :</span>
-              <span className="text-base text-emerald-700">{amountEUR.toLocaleString()} € EUR</span>
+              <span className="text-zinc-700">
+                {locale === 'ar'
+                  ? 'المبلغ الصافي للدفع / NET À PAYER :'
+                  : locale === 'en'
+                  ? 'TOTAL AMOUNT DUE (NET À PAYER) :'
+                  : 'NET À PAYER :'}
+              </span>
+              <span className="text-base text-emerald-700 font-mono">{amountEUR.toLocaleString()} € EUR</span>
             </div>
 
             <div className="text-[9px] text-zinc-500 leading-relaxed bg-zinc-100 p-2.5 rounded border border-zinc-200">
-              <strong>Mention légale fiscale obligatoire :</strong> Facture établie hors taxes conformément aux dispositions de l'article 11 du Code de la TVA tunisien (Exportation de services). Rapatriement de devises soumis à la réglementation de la Banque Centrale de Tunisie (BCT).
+              <strong>
+                {locale === 'ar'
+                  ? 'التنصيص الجبائي القانوني الإلزامي :'
+                  : locale === 'en'
+                  ? 'Mandatory Legal & Tax Notice:'
+                  : 'Mention légale fiscale obligatoire :'}
+              </strong>{' '}
+              Facture établie hors taxes conformément aux dispositions de l'article 11 du Code de la TVA tunisien (Exportation de services). Rapatriement de devises soumis à la réglementation de la Banque Centrale de Tunisie (BCT).
             </div>
           </div>
         </div>

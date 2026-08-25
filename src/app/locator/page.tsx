@@ -356,7 +356,15 @@ export default function LocatorPage() {
         <div className="lg:col-span-7 space-y-3">
           <div className="flex items-center gap-2 text-xs font-mono text-zinc-500 uppercase tracking-widest">
             <span className="text-emerald-400 font-bold">/</span>
-            <span>24 Gouvernorats · 350+ Guichets Géolocalisés</span>
+            <span>
+              {locale === 'ar'
+                ? '24 ولاية · 350+ مصلحة ومقر بلدي محدد جغرافياً'
+                : locale === 'derja'
+                ? '24 Wilaya · 350+ Masla7a w Baladiya Géolocalisés'
+                : locale === 'en'
+                ? '24 Governorates · 350+ Geocoded Public Desks'
+                : '24 Gouvernorats · 350+ Guichets Géolocalisés'}
+            </span>
           </div>
 
           <h1 className="leading-tight">

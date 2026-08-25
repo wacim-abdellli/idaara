@@ -5,6 +5,7 @@ import { DocumentTemplate } from '../../types/document';
 import { generatePDFFromElement } from '../../lib/pdf-generator';
 import { Download, Printer, CheckCircle, ShieldCheck, QrCode } from 'lucide-react';
 import { triggerConfetti } from '../../lib/utils';
+import { useLocale } from '../../context/LocaleContext';
 
 interface PDFPreviewProps {
   template: DocumentTemplate;
@@ -12,6 +13,7 @@ interface PDFPreviewProps {
 }
 
 export const PDFPreview: React.FC<PDFPreviewProps> = ({ template, formData }) => {
+  const { locale } = useLocale();
   const [isGenerating, setIsGenerating] = useState(false);
 
   const handleDownload = async () => {
@@ -30,30 +32,60 @@ export const PDFPreview: React.FC<PDFPreviewProps> = ({ template, formData }) =>
     window.print();
   };
 
+  const previewBannerText =
+    locale === 'ar'
+      ? 'معاينة متجهة عالية الدقة (جاهزة للطباعة والتوقيع)'
+      : locale === 'derja'
+      ? 'Aperçu HD Vectoriel (7adhra lel Imprimer)'
+      : locale === 'en'
+      ? 'High-Definition Vector Preview (Ready to Print & Sign)'
+      : "Aperçu Vectoriel Haute Définition (Prêt à l'impression)";
+
+  const printBtnText =
+    locale === 'ar' ? 'طباعة' : locale === 'derja' ? 'Imprimer' : locale === 'en' ? 'Print' : 'Imprimer';
+
+  const downloadBtnText =
+    locale === 'ar'
+      ? 'تحميل PDF'
+      : locale === 'derja'
+      ? 'Telechargi PDF'
+      : locale === 'en'
+      ? 'Download PDF'
+      : 'Télécharger PDF';
+
+  const generatingBtnText =
+    locale === 'ar'
+      ? 'جار الإعداد...'
+      : locale === 'derja'
+      ? 'Ta7dhir...'
+      : locale === 'en'
+      ? 'Generating...'
+      : 'Génération...';
+
   return (
     <div className="space-y-4">
       {/* Top Action Bar */}
-      <div className="flex items-center justify-between p-4 rounded-xl bg-zinc-900 border border-zinc-800">
-        <div className="flex items-center space-x-2 text-xs text-zinc-300">
-          <ShieldCheck className="w-4 h-4 text-emerald-400" />
-          <span>Aperçu Vectoriel Haute Définition (Prêt à l'impression)</span>
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between p-4 rounded-xl bg-zinc-900 border border-zinc-800 gap-3">
+        <div className="flex items-center space-x-2 rtl:space-x-reverse text-xs text-zinc-300">
+          <ShieldCheck className="w-4 h-4 text-emerald-400 shrink-0" />
+          <span>{previewBannerText}</span>
         </div>
 
-        <div className="flex items-center space-x-2">
+        <div className="flex items-center space-x-2 rtl:space-x-reverse shrink-0">
           <button
             onClick={handlePrint}
-            className="flex items-center space-x-1 px-3 py-1.5 rounded-lg bg-zinc-800 hover:bg-zinc-700 text-zinc-300 text-xs font-semibold transition-colors"
+            className="flex items-center space-x-1 rtl:space-x-reverse px-3 py-1.5 rounded-lg bg-zinc-800 hover:bg-zinc-700 text-zinc-300 text-xs font-semibold transition-colors cursor-pointer"
           >
             <Printer className="w-3.5 h-3.5" />
-            <span>Imprimer</span>
+            <span>{printBtnText}</span>
           </button>
           <button
             onClick={handleDownload}
             disabled={isGenerating}
-            className="flex items-center space-x-1.5 px-4 py-1.5 rounded-lg bg-emerald-500 hover:bg-emerald-400 text-zinc-950 font-bold text-xs shadow-md shadow-emerald-500/20 transition-all hover:scale-105"
+            className="flex items-center space-x-1.5 rtl:space-x-reverse px-4 py-1.5 rounded-lg bg-emerald-500 hover:bg-emerald-400 text-zinc-950 font-bold text-xs shadow-md shadow-emerald-500/20 transition-all hover:scale-105 cursor-pointer disabled:opacity-50"
           >
             <Download className="w-3.5 h-3.5" />
-            <span>{isGenerating ? 'Génération...' : 'Télécharger PDF'}</span>
+            <span>{isGenerating ? generatingBtnText : downloadBtnText}</span>
           </button>
         </div>
       </div>

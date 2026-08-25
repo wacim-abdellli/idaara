@@ -199,7 +199,15 @@ export default function LaunchpadPage() {
         <div className="lg:col-span-7 space-y-3 relative z-10">
           <div className="flex items-center gap-2 text-xs font-mono text-zinc-500 uppercase tracking-widest">
             <span className="text-emerald-400 font-bold">/</span>
-            <span>Loi de Finances · Régime Auto-Entrepreneur 1% & BCT Export</span>
+            <span>
+              {locale === 'ar'
+                ? 'قانون المالية · نظام المبادر الذاتي 1% وتصدير الخدمات BCT'
+                : locale === 'derja'
+                ? 'Loi de Finances · Statut Auto-Entrepreneur 1% & BCT Export'
+                : locale === 'en'
+                ? 'Finance Law · Self-Entrepreneur 1% Tax & BCT Export'
+                : 'Loi de Finances · Régime Auto-Entrepreneur 1% & BCT Export'}
+            </span>
           </div>
 
           <h1 className="leading-tight">

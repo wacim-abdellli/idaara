@@ -185,7 +185,15 @@ export default function ConcoursPage() {
               </div>
               <div className="text-center sm:text-left px-2 border-l border-white/[0.08] col-span-2 sm:col-span-1">
                 <span className="text-[10px] uppercase font-bold text-zinc-500 block">{getLocalized(ui.portal, locale)}</span>
-                <span className="text-xs font-mono font-bold text-teal-300">100% Officiel</span>
+                <span className="text-xs font-mono font-bold text-teal-300">
+                  {locale === 'ar'
+                    ? '100% رسمي'
+                    : locale === 'derja'
+                    ? '100% Rasmi'
+                    : locale === 'en'
+                    ? '100% Official'
+                    : '100% Officiel'}
+                </span>
               </div>
             </div>
           </div>

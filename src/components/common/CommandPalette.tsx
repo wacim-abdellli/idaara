@@ -429,7 +429,15 @@ export const CommandPalette: React.FC = () => {
           </div>
           <div className="flex items-center gap-1.5 text-emerald-500/60">
             <div className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
-            <span>Idaara Search</span>
+            <span>
+              {locale === 'ar'
+                ? 'محرك بحث إدارة'
+                : locale === 'derja'
+                ? 'Moteur Recherche Idaara'
+                : locale === 'en'
+                ? 'Idaara Civic Search'
+                : 'Moteur de Recherche Idaara'}
+            </span>
           </div>
         </div>
       </div>
