@@ -5,7 +5,7 @@ import { Procedure } from '../../types/procedure';
 import { useLocale } from '../../context/LocaleContext';
 import { getLocalized } from '../../lib/locale-utils';
 import { formatTND, triggerConfetti } from '../../lib/utils';
-import { generatePDFFromElement } from '../../lib/pdf-generator';
+import { generatePDFFromElement, printElement } from '../../lib/pdf-generator';
 import { Printer, Stamp, Clock, FileCheck2, Download, Building2, CheckCircle2, ShieldCheck, Loader2 } from 'lucide-react';
 
 interface DossierKitExportProps {
@@ -26,9 +26,7 @@ export const DossierKitExport: React.FC<DossierKitExportProps> = ({
   );
 
   const handlePrint = () => {
-    if (typeof window !== 'undefined') {
-      window.print();
-    }
+    printElement('printable-procedure-dossier');
   };
 
   const handleDownloadPDF = async () => {
@@ -121,8 +119,8 @@ export const DossierKitExport: React.FC<DossierKitExportProps> = ({
         </div>
       </div>
 
-      {/* ── HIDDEN HIGH-RES A4 OFFICIAL DOSSIER CONTAINER (FOR PDF & PRINT ONLY) ── */}
-      <div className="hidden">
+      {/* ── HIGH-RES A4 OFFICIAL DOSSIER CONTAINER (FOR PDF & PRINT ONLY) ── */}
+      <div className="fixed -left-[9999px] top-0 opacity-0 pointer-events-none z-[-100]" aria-hidden="true">
         <div
           id="printable-procedure-dossier"
           className="w-[210mm] min-h-[297mm] bg-white text-zinc-900 p-8 sm:p-12 font-sans space-y-6"

@@ -2,7 +2,7 @@
 
 import React, { useState } from 'react';
 import { FileText, Download, Sparkles, ShieldCheck, Loader2 } from 'lucide-react';
-import { generatePDFFromElement } from '../../lib/pdf-generator';
+import { generatePDFFromElement, printElement } from '../../lib/pdf-generator';
 import { triggerConfetti } from '../../lib/utils';
 import { useLocale } from '../../context/LocaleContext';
 
@@ -39,13 +39,13 @@ export const ExportInvoiceGen: React.FC = () => {
     locale === 'ar'
       ? 'مطابقة لمواصفات بنك تونس المركزي (BCT) مع التنصيص على الإعفاء من الأداء على القيمة المضافة (TVA)'
       : locale === 'en'
-      ? 'Compliant with Central Bank of Tunisia (BCT) foreign exchange rules with mandatory 0% VAT export exemption clause'
-      : "Conforme Banque Centrale de Tunisie (BCT) avec mention d'exonération TVA à l'exportation";
+      ? 'Central Bank of Tunisia (BCT) compliant export invoice with 0% VAT export exemption statement'
+      : 'Conforme aux exigences BCT pour les virements en devises avec mention d’exonération TVA légale (Art. 13 Code TVA)';
 
   const btnText =
     isGenerating
       ? (locale === 'en' ? 'Generating...' : 'Export en cours...')
-      : (locale === 'ar' ? 'تحميل الفاتورة PDF' : locale === 'en' ? 'Download Vector PDF' : 'Télécharger Facture PDF');
+      : (locale === 'ar' ? 'تحميل الفاتورة PDF' : locale === 'en' ? 'Download Invoice PDF' : 'Télécharger la Facture PDF');
 
   return (
     <div className="glass-panel rounded-3xl p-6 sm:p-7 border border-zinc-800 space-y-6">
@@ -62,7 +62,7 @@ export const ExportInvoiceGen: React.FC = () => {
 
         <div className="flex items-center gap-2 self-start sm:self-auto shrink-0">
           <button
-            onClick={() => typeof window !== 'undefined' && window.print()}
+            onClick={() => printElement('export-invoice-render')}
             className="flex items-center justify-center gap-1.5 px-3.5 py-2.5 rounded-xl bg-zinc-800 hover:bg-zinc-700 text-zinc-200 font-bold text-xs transition-all cursor-pointer border border-zinc-700"
             title="Imprimer la facture"
           >

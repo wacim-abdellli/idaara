@@ -2,7 +2,7 @@
 
 import React, { useState } from 'react';
 import { DocumentTemplate } from '../../types/document';
-import { generatePDFFromElement } from '../../lib/pdf-generator';
+import { generatePDFFromElement, printElement } from '../../lib/pdf-generator';
 import { Download, Printer, CheckCircle, ShieldCheck, QrCode } from 'lucide-react';
 import { triggerConfetti } from '../../lib/utils';
 import { useLocale } from '../../context/LocaleContext';
@@ -29,7 +29,7 @@ export const PDFPreview: React.FC<PDFPreviewProps> = ({ template, formData }) =>
   };
 
   const handlePrint = () => {
-    window.print();
+    printElement('official-doc-render');
   };
 
   const previewBannerText =
