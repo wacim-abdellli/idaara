@@ -27,7 +27,6 @@ export const proceduresData: Procedure[] = [
     estimatedTotalCostTND: 86.0,
     estimatedProcessingTime: "7 - 15 jours",
     urgencyLevel: 'medium',
-    templateSlug: 'demande-passeport',
     relatedOfficeTypes: ['police_garde', 'recette_finances', 'baladiya'],
     costsBreakdown: [
       {
@@ -542,7 +541,6 @@ export const proceduresData: Procedure[] = [
     estimatedTotalCostTND: 220.0,
     estimatedProcessingTime: "3 - 7 jours",
     urgencyLevel: 'medium',
-    templateSlug: 'statuts-societe',
     relatedOfficeTypes: ['rne', 'recette_finances', 'baladiya'],
     costsBreakdown: [
       {

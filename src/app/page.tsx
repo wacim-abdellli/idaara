@@ -167,7 +167,7 @@ export default function HomePage() {
           : locale === 'en'
           ? '3 DT Fiscal Stamp (10 DT if lost)'
           : '3.000 DT (10 DT en cas de perte)',
-      url: '/procedures/cin-premiere-demande',
+      url: '/procedures/cin-carte-identite',
       points: [
         locale === 'ar'
           ? 'مضمون ولادة أصلي باللغة العربية والفرنسية (< 3 أشهر)'
@@ -226,7 +226,7 @@ export default function HomePage() {
           : locale === 'en'
           ? '30 DT Registration + 5 DT Municipal'
           : '30 DT Enregistrement + 5 DT Baladiya',
-      url: '/documents/contrat-location-residentiel',
+      url: '/documents/contrat-location',
       points: [
         locale === 'ar'
           ? 'مطابق للفصل 1104 من مجلة الالتزامات والعقود (م.ا.ع)'

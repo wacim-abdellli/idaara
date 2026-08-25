@@ -4,6 +4,7 @@ import React, { use } from 'react';
 import { notFound } from 'next/navigation';
 import Link from 'next/link';
 import { getProcedureById } from '../../../data/procedures';
+import { getTemplateBySlug } from '../../../data/documentTemplates';
 import { useLocale } from '../../../context/LocaleContext';
 import { TimbreCostBreakdown } from '../../../components/calculator/TimbreCostBreakdown';
 import { ChecklistTracker } from '../../../components/calculator/ChecklistTracker';
@@ -107,7 +108,7 @@ export default function ProcedureDetailPage({
         </p>
 
         {/* Quick Action Badges */}
-        {procedure.templateSlug && (
+        {procedure.templateSlug && getTemplateBySlug(procedure.templateSlug) && (
           <div className="pt-4 border-t border-zinc-800/80 flex items-center">
             <Link
               href={`/documents/${procedure.templateSlug}`}
