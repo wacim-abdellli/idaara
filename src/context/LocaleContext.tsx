@@ -30,15 +30,15 @@ export function LocaleProvider({ children }: { children: React.ReactNode }) {
   }, []);
 
   const applyDomLocale = (l: SupportedLanguage) => {
-    const isRtlLocale = l === 'ar' || l === 'derja';
+    const isRtlLocale = l === 'ar';
     document.documentElement.setAttribute('dir', isRtlLocale ? 'rtl' : 'ltr');
     const langMap: Record<SupportedLanguage, string> = {
       ar: 'ar',
-      derja: 'ar-TN',
+      derja: 'fr-TN',
       fr: 'fr',
       en: 'en',
     };
-    document.documentElement.setAttribute('lang', langMap[l]);
+    document.documentElement.setAttribute('lang', langMap[l] || 'fr');
   };
 
   const setLocale = (newLocale: SupportedLanguage) => {
@@ -51,7 +51,7 @@ export function LocaleProvider({ children }: { children: React.ReactNode }) {
     applyDomLocale(newLocale);
   };
 
-  const isRtl = locale === 'ar' || locale === 'derja';
+  const isRtl = locale === 'ar';
 
   const t = (key: string): string => {
     return translations[locale]?.[key] || translations['en']?.[key] || translations['fr']?.[key] || key;

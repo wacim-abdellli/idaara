@@ -31,7 +31,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="ar-TN" dir="rtl" className="dark scroll-smooth" suppressHydrationWarning>
+    <html lang="fr" dir="ltr" className="dark scroll-smooth" suppressHydrationWarning>
       <body className="antialiased min-h-screen flex flex-col selection:bg-emerald-500/30 selection:text-emerald-200 pb-[calc(4rem+env(safe-area-inset-bottom,0px))] lg:pb-0" suppressHydrationWarning>
         <LocaleProvider>
           <ChecklistProvider>
