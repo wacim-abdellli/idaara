@@ -45,57 +45,36 @@ export default function DocumentDetailPage({
   };
 
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-8">
-      {/* Back link & Header */}
-      <div className="space-y-4">
-        <Link
-          href="/documents"
-          className="inline-flex items-center space-x-2 rtl:space-x-reverse text-xs font-bold text-zinc-400 hover:text-emerald-400 transition-colors group"
-        >
-          <ArrowLeft className="w-4 h-4 rtl:rotate-180 transition-transform group-hover:-translate-x-1 rtl:group-hover:translate-x-1" />
-          <span>
-            {locale === 'ar'
-              ? 'الرجوع إلى قائمة النماذج والعقود'
-              : locale === 'derja'
-              ? 'Arje3 lel les formulaires wel contrats'
-              : locale === 'en'
-              ? 'Back to all document templates'
-              : 'Retour à la liste des formulaires'}
-          </span>
-        </Link>
+    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 space-y-5">
+      {/* Minimalist Top Header */}
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-2 border-b border-zinc-800/60">
+        <div>
+          <Link
+            href="/documents"
+            className="inline-flex items-center space-x-1.5 rtl:space-x-reverse text-xs text-zinc-400 hover:text-zinc-200 transition-colors mb-1.5"
+          >
+            <ArrowLeft className="w-3.5 h-3.5 rtl:rotate-180" />
+            <span>
+              {locale === 'ar'
+                ? 'النماذج والعقود'
+                : locale === 'derja'
+                ? 'Les formulaires wel contrats'
+                : locale === 'en'
+                ? 'All templates'
+                : 'Tous les formulaires'}
+            </span>
+          </Link>
 
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 p-6 sm:p-7 rounded-3xl bg-[#0d0f14] border border-white/[0.08] shadow-2xl">
-          <div className="space-y-1.5">
-            <div className="flex items-center space-x-2 rtl:space-x-reverse text-xs text-amber-400 font-bold">
-              <Stamp className="w-4 h-4 shrink-0" />
-              <span>
-                {locale === 'ar'
-                  ? 'نموذج رسمي معتمد ومطابق لتراتيب البلدية والقباضة المالية'
-                  : locale === 'derja'
-                  ? 'Modèle Homologué Baladiya & Recette'
-                  : locale === 'en'
-                  ? 'Certified Legal Model for Baladiya & Recette'
-                  : 'Modèle Certifié Baladiya & Recette'}
-              </span>
-            </div>
-            <h1 className="text-2xl sm:text-3xl lg:text-4xl font-extrabold text-white tracking-tight">
+          <div className="flex flex-wrap items-center gap-2.5">
+            <h1 className="text-xl sm:text-2xl font-extrabold text-white tracking-tight">
               {title}
             </h1>
-            <p className="text-xs sm:text-sm text-zinc-400 max-w-3xl leading-relaxed">{description}</p>
-          </div>
-
-          <div className="p-4 rounded-2xl bg-[#07080b] border border-amber-500/25 text-right rtl:text-left shrink-0 shadow-lg">
-            <span className="text-[10px] text-zinc-400 block uppercase font-bold tracking-wider">
-              {locale === 'ar'
-                ? 'التنبر المطلوب'
-                : locale === 'derja'
-                ? 'El Timbre el Matloub'
-                : locale === 'en'
-                ? 'Required Stamp'
-                : 'Timbre Requis'}
+            <span className="inline-flex items-center gap-1 text-[11px] font-mono font-bold px-2 py-0.5 rounded-md bg-amber-500/10 text-amber-300 border border-amber-500/20">
+              <Stamp className="w-3 h-3 text-amber-400" />
+              <span>{template.requiredTimbreTND} DT</span>
             </span>
-            <span className="text-xl font-extrabold text-amber-400 font-mono">{template.requiredTimbreTND} DT</span>
           </div>
+          <p className="text-xs text-zinc-400 mt-1 max-w-2xl">{description}</p>
         </div>
       </div>
 
