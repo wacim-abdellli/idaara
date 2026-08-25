@@ -870,7 +870,7 @@ export default function CopilotPage() {
                 onKeyDown={onKeyDown}
                 placeholder={placeholder}
                 disabled={isTranscribing}
-                className="w-full bg-transparent text-sm sm:text-base text-zinc-100 placeholder-zinc-500 border-0 outline-none ring-0 focus:outline-none focus:ring-0 resize-none max-h-36 leading-relaxed"
+                className="w-full bg-transparent text-base text-zinc-100 placeholder-zinc-500 border-0 outline-none ring-0 focus:outline-none focus:ring-0 resize-none max-h-36 leading-relaxed"
               />
 
               {/* Minimalist Bottom Actions */}
@@ -879,7 +879,7 @@ export default function CopilotPage() {
                   <button
                     type="button"
                     onClick={() => setThinkMode((p) => !p)}
-                    className={`flex items-center gap-1 px-2.5 py-1 rounded-lg text-[11px] font-medium transition-colors cursor-pointer border ${
+                    className={`flex items-center gap-1.5 px-3 py-2 rounded-xl text-xs font-medium transition-colors cursor-pointer border ${
                       thinkMode
                         ? 'bg-emerald-500/20 text-emerald-300 border-emerald-500/40 shadow-sm'
                         : 'text-zinc-400 hover:text-white border-transparent hover:bg-white/5'
@@ -1105,7 +1105,7 @@ export default function CopilotPage() {
                     onKeyDown={onKeyDown}
                     placeholder={placeholder}
                     disabled={isTranscribing}
-                    className="flex-1 bg-transparent py-1 text-sm sm:text-base text-zinc-100 placeholder-zinc-500 border-0 outline-none ring-0 focus:border-0 focus:outline-none focus:ring-0 focus-visible:border-0 focus-visible:outline-none focus-visible:ring-0 shadow-none resize-none max-h-36 leading-relaxed"
+                    className="flex-1 bg-transparent py-1 text-base text-zinc-100 placeholder-zinc-500 border-0 outline-none ring-0 focus:border-0 focus:outline-none focus:ring-0 focus-visible:border-0 focus-visible:outline-none focus-visible:ring-0 shadow-none resize-none max-h-36 leading-relaxed"
                   />
 
                   {/* Mic & Send Buttons */}

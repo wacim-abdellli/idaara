@@ -16,14 +16,13 @@ export default function FasserliPage() {
   const [analysisResult, setAnalysisResult] = useState<OCRAnalysisResult | null>(null);
   const reportRef = useRef<HTMLDivElement | null>(null);
 
-  const handleCustomUpload = async (file: File | null, redact: boolean) => {
+  const handleCustomUpload = async (file: File | null) => {
     if (!file) return;
     setIsAnalyzing(true);
     try {
       const formData = new FormData();
       formData.append('file', file);
       formData.append('documentName', file.name);
-      formData.append('redact', String(redact));
       const res = await fetch('/api/ocr', {
         method: 'POST',
         body: formData,
@@ -41,6 +40,8 @@ export default function FasserliPage() {
       }, 100);
     }
   };
+
+  const currentYear = new Date().getFullYear();
 
   const headlineMain =
     locale === 'ar'
@@ -94,12 +95,24 @@ export default function FasserliPage() {
         <div className="flex items-center justify-center gap-3 pt-1 text-xs text-zinc-400 font-mono">
           <span className="flex items-center gap-1 text-emerald-400">
             <CheckCircle2 className="w-3.5 h-3.5" />
-            <span>Conforme Code Fiscal 2026</span>
+            <span>
+              {locale === 'ar'
+                ? `مطابق لمجلة الجباية ${currentYear}`
+                : locale === 'en'
+                ? `Fiscal Code ${currentYear} Compliant`
+                : `Conforme Code Fiscal ${currentYear}`}
+            </span>
           </span>
           <span>·</span>
           <span className="flex items-center gap-1 text-zinc-400">
             <Lock className="w-3.5 h-3.5 text-emerald-400" />
-            <span>Zero-Storage & Confidentialité</span>
+            <span>
+              {locale === 'ar'
+                ? 'حماية البيانات وحذف فوري (Zero-Storage)'
+                : locale === 'en'
+                ? 'Zero-Storage & Privacy Protected'
+                : 'Zero-Storage & Confidentialité'}
+            </span>
           </span>
         </div>
       </FadeIn>
@@ -138,12 +151,10 @@ export default function FasserliPage() {
               </div>
               <span className="text-[11px] font-mono text-emerald-400 bg-emerald-950/60 border border-emerald-500/30 px-2.5 py-0.5 rounded-full font-bold">
                 {locale === 'ar'
-                  ? '✓ مطابق للرائد الرسمي JORT'
+                  ? `✓ مطابق للرائد الرسمي JORT ${currentYear}`
                   : locale === 'en'
-                  ? '✓ JORT 2026 Certified'
-                  : locale === 'derja'
-                  ? '✓ Certifié JORT 2026'
-                  : '✓ CERTIFIÉ JORT'}
+                  ? `✓ JORT ${currentYear} Certified`
+                  : `✓ Certifié JORT ${currentYear}`}
               </span>
             </div>
 

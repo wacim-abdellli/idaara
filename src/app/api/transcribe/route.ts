@@ -1,18 +1,25 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { checkRateLimit, getClientIp } from '../../../lib/rate-limit';
 
 // Maximum audio file size: 25 MB
 const MAX_AUDIO_BYTES = 25 * 1024 * 1024;
 
 export async function POST(req: NextRequest) {
   try {
+    // Rate limit check (max 30 transcription requests per minute per IP)
+    const ip = getClientIp(req);
+    if (!checkRateLimit(ip, 30)) {
+      return NextResponse.json({ error: 'Too many requests. Please wait a minute.' }, { status: 429 });
+    }
+
     const formData = await req.formData();
     const rawFile = formData.get('file');
 
-    if (!rawFile || typeof rawFile === 'string') {
+    if (!rawFile || typeof rawFile === 'string' || !(rawFile instanceof File)) {
       return NextResponse.json({ error: 'Audio file is required' }, { status: 400 });
     }
 
-    const audioFile = rawFile as File;
+    const audioFile = rawFile;
 
     // ── Size guard ───────────────────────────────────────────────────────────
     if (audioFile.size > MAX_AUDIO_BYTES) {

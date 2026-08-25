@@ -17,7 +17,7 @@ import {
 import { useLocale } from '../../context/LocaleContext';
 
 interface DocumentUploaderProps {
-  onAnalyze: (file: File | null, redactSensitiveData: boolean) => void;
+  onAnalyze: (file: File | null) => void;
   isAnalyzing: boolean;
 }
 
@@ -26,7 +26,6 @@ export const DocumentUploader: React.FC<DocumentUploaderProps> = ({ onAnalyze, i
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
   const [isPdf, setIsPdf] = useState(false);
-  const [redactSensitiveData, setRedactSensitiveData] = useState(true);
   const [isDragOver, setIsDragOver] = useState(false);
   const fileInputRef = useRef<HTMLInputElement | null>(null);
 
@@ -41,11 +40,19 @@ export const DocumentUploader: React.FC<DocumentUploaderProps> = ({ onAnalyze, i
 
   const handleFile = (file: File) => {
     if (!ALLOWED_TYPES.includes(file.type)) {
-      alert('نوع الملف غير مدعوم. يرجى رفع صورة (JPEG, PNG, WEBP) أو ملف PDF.');
+      alert(
+        locale === 'ar'
+          ? 'نوع الملف غير مدعوم. يرجى رفع صورة (JPEG, PNG, WEBP) أو ملف PDF.'
+          : 'Format non supporté. Veuillez importer une image (JPEG, PNG, WEBP) ou un PDF.'
+      );
       return;
     }
     if (file.size > MAX_SIZE) {
-      alert('الملف كبير جداً. الحد الأقصى هو 10 ميغابايت.');
+      alert(
+        locale === 'ar'
+          ? 'الملف كبير جداً. الحد الأقصى هو 10 ميغابايت.'
+          : 'Fichier trop volumineux. Taille maximale : 10 Mo.'
+      );
       return;
     }
     setSelectedFile(file);
@@ -78,15 +85,6 @@ export const DocumentUploader: React.FC<DocumentUploaderProps> = ({ onAnalyze, i
     setIsPdf(false);
     if (fileInputRef.current) fileInputRef.current.value = '';
   };
-
-  const redactLabel =
-    locale === 'en'
-      ? 'Mask sensitive CIN & bank account numbers'
-      : locale === 'ar'
-      ? 'حجب أرقام بطاقة التعريف والحساب البنكي'
-      : locale === 'fr'
-      ? 'Masquer les numéros sensibles (CIN & RIB)'
-      : 'Imser les numéros CIN & RIB';
 
   const analyzeBtnText =
     locale === 'en'
@@ -126,13 +124,8 @@ export const DocumentUploader: React.FC<DocumentUploaderProps> = ({ onAnalyze, i
                     <img
                       src={previewUrl}
                       alt="Document preview"
-                      className={`w-full h-full object-cover ${redactSensitiveData ? 'blur-[1px]' : ''}`}
+                      className="w-full h-full object-cover"
                     />
-                    {redactSensitiveData && (
-                      <div className="absolute inset-0 bg-black/30 flex items-center justify-center">
-                        <Lock className="w-4 h-4 text-emerald-400" />
-                      </div>
-                    )}
                   </>
                 ) : (
                   <div className="w-full h-full flex flex-col items-center justify-center gap-1 bg-white/[0.02]">
@@ -178,29 +171,28 @@ export const DocumentUploader: React.FC<DocumentUploaderProps> = ({ onAnalyze, i
             </button>
           </div>
 
-          {/* Privacy Redaction Toggle */}
-          <div className="flex items-center justify-between p-3 rounded-2xl bg-white/[0.02] border border-white/[0.05]">
-            <label className="flex items-center gap-2.5 cursor-pointer select-none">
-              <input
-                type="checkbox"
-                checked={redactSensitiveData}
-                onChange={(e) => setRedactSensitiveData(e.target.checked)}
-                className="w-4 h-4 rounded border-zinc-700 text-emerald-500 focus:ring-emerald-500 bg-zinc-900 shrink-0 cursor-pointer"
-              />
-              <span className="text-xs text-zinc-300 font-medium">
-                {redactLabel}
+          {/* Honest Zero-Storage Privacy Protocol Notice */}
+          <div className="flex items-start gap-3 p-3.5 rounded-2xl bg-emerald-500/[0.04] border border-emerald-500/15 text-xs text-zinc-300">
+            <ShieldCheck className="w-4 h-4 text-emerald-400 shrink-0 mt-0.5" />
+            <div className="space-y-0.5 leading-relaxed text-[11px] sm:text-xs">
+              <span className="font-semibold text-emerald-300">
+                {locale === 'ar' ? 'بروتوكول معالجة آمن ومؤقت (Zero-Storage): ' : 'Protocole Zero-Storage : '}
               </span>
-            </label>
-
-            <span className="text-[11px] font-mono text-emerald-400/90 hidden sm:inline-flex items-center gap-1">
-              <ShieldCheck className="w-3 h-3" />
-              <span>100% Local</span>
-            </span>
+              <span className="text-zinc-400">
+                {locale === 'ar'
+                  ? 'تتم قراءة الوثيقة واستخراج المعلومات مؤقتاً في الذاكرة الحية لفك الرموز القانونية. لا يتم حفظ أو تخزين أي ملف على خوادمنا.'
+                  : locale === 'derja'
+                  ? 'El war9a tet3alech fi la7dha fel mémoire w ma tet7fadhch direct fel serveuret.'
+                  : locale === 'fr'
+                  ? 'Le document est traité de manière éphémère en mémoire pour le décryptage. Aucun fichier n’est conservé sur nos serveurs.'
+                  : 'Documents are processed ephemerally in volatile memory for legal analysis and are never stored on servers.'}
+              </span>
+            </div>
           </div>
 
           {/* Full-Width Vibrant Scan Action */}
           <button
-            onClick={() => onAnalyze(selectedFile, redactSensitiveData)}
+            onClick={() => onAnalyze(selectedFile)}
             disabled={isAnalyzing}
             className="w-full flex items-center justify-center gap-2.5 py-3.5 rounded-2xl bg-emerald-500 hover:bg-emerald-400 text-zinc-950 font-bold text-sm shadow-xl shadow-emerald-500/25 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer hover:scale-[1.01] active:scale-[0.99]"
           >

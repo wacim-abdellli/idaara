@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { GoogleGenerativeAI } from '@google/generative-ai';
 import { sampleDocumentsList } from '../../../data/sampleDocuments';
 import { OCRAnalysisResult } from '../../../types/chat';
+import { checkRateLimit, getClientIp } from '../../../lib/rate-limit';
 
 function getGeminiKey(): string {
   return (process.env.GEMINI_API_KEY || '').trim();
@@ -60,6 +61,15 @@ Return ONLY a valid JSON object matching this exact schema:
 
 export async function POST(req: NextRequest) {
   try {
+    // Rate limit check (max 20 OCR requests per minute per IP)
+    const ip = getClientIp(req);
+    if (!checkRateLimit(ip, 20)) {
+      return NextResponse.json(
+        { success: false, error: 'Too many requests. Please wait a minute.' },
+        { status: 429 }
+      );
+    }
+
     const formData = await req.formData();
     const file = formData.get('file') as File | null;
     const sampleId = formData.get('sampleId') as string | null;
@@ -92,6 +102,19 @@ export async function POST(req: NextRequest) {
     if (file && file.size > 0) {
       const arrayBuffer = await file.arrayBuffer();
       buffer = Buffer.from(arrayBuffer);
+
+      // Server-side magic-byte validation (reject spoofed executables / invalid files)
+      const magicHex = buffer.slice(0, 4).toString('hex').toLowerCase();
+      // JPEG: ffd8ff, PNG: 89504e47, PDF: 25504446 (%PDF), GIF: 47494638, WebP: 52494646 (RIFF)
+      const validMagicPrefixes = ['ffd8ff', '89504e47', '25504446', '47494638', '52494646'];
+      const isValidMagic = validMagicPrefixes.some((prefix) => magicHex.startsWith(prefix));
+      if (!isValidMagic) {
+        return NextResponse.json(
+          { success: false, error: 'Invalid file format. Only real images (PNG, JPEG, WebP, GIF) and PDF files are supported.' },
+          { status: 415 }
+        );
+      }
+
       mimeType = file.type || (documentName.endsWith('.pdf') ? 'application/pdf' : 'image/png');
     }
 
@@ -199,7 +222,7 @@ ${DOCUMENT_ANALYSIS_SCHEMA_PROMPT}`;
             Authorization: `Bearer ${groqKey}`,
           },
           body: JSON.stringify({
-            model: 'openai/gpt-oss-120b',
+            model: 'llama-3.3-70b-versatile',
             messages: [{ role: 'user', content: prompt }],
             temperature: 0.1,
             max_tokens: 1200,

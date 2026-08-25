@@ -5,6 +5,7 @@ import { queryCivicKnowledge } from '../../../lib/tunisian-civic-knowledge';
 import { buildConcoursGroundingPrompt } from '../../../lib/concours-knowledge';
 import { buildLiveGroundingFeed } from '../../../lib/live-civic-fetcher';
 import { getLocalized } from '../../../lib/locale-utils';
+import { checkRateLimit, getClientIp } from '../../../lib/rate-limit';
 
 function getGroqKey(): string {
   return (process.env.GROQ_API_KEY || '').trim();
@@ -147,6 +148,12 @@ CRITICAL INSTRUCTIONS & INTELLIGENT ROUTING:
 
 export async function POST(req: NextRequest) {
   try {
+    // Rate limit check (max 30 requests per minute per IP)
+    const ip = getClientIp(req);
+    if (!checkRateLimit(ip, 30)) {
+      return NextResponse.json({ error: 'Too many requests. Please wait a minute.' }, { status: 429 });
+    }
+
     // Reject payloads > 50 KB to prevent prompt injection via oversized history
     const contentLength = parseInt(req.headers.get('content-length') || '0', 10);
     if (contentLength > 50 * 1024) {
@@ -158,6 +165,9 @@ export async function POST(req: NextRequest) {
     // Runtime validation — never trust client-sent data
     if (typeof prompt !== 'string' || prompt.trim().length === 0) {
       return NextResponse.json({ error: 'Invalid prompt.' }, { status: 400 });
+    }
+    if (prompt.length > 4000) {
+      return NextResponse.json({ error: 'Prompt too long (max 4000 characters).' }, { status: 400 });
     }
     const safeHistory = Array.isArray(history)
       ? history
@@ -203,9 +213,9 @@ export async function POST(req: NextRequest) {
     // ─── PRIMARY ENGINE: Multi-Model Groq Cascade ───
     if (apiKey) {
       const groqModels = [
-        'openai/gpt-oss-120b',
-        'qwen/qwen3.6-27b',
-        'openai/gpt-oss-20b',
+        'llama-3.3-70b-versatile',
+        'llama-3.1-8b-instant',
+        'mixtral-8x7b-32768',
       ];
       for (const model of groqModels) {
         try {
