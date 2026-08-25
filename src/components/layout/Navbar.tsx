@@ -7,7 +7,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { useLocale } from '../../context/LocaleContext';
 import { LanguageSwitcher } from './LanguageSwitcher';
 import { BrandLogo } from './BrandLogo';
-import { Sparkles, FileSearch, FileText, Calculator, MapPin, Rocket, BookOpen, Briefcase, Menu, X, Search } from 'lucide-react';
+import { Sparkles, FileSearch, FileText, Calculator, MapPin, Rocket, BookOpen, Briefcase, Menu, X, Search, Globe, Phone } from 'lucide-react';
 
 const NAV_LINKS = [
   { href: '/copilot',    tKey: 'copilotNav',    icon: Sparkles },
@@ -18,6 +18,8 @@ const NAV_LINKS = [
   { href: '/locator',    tKey: 'locatorNav',    icon: MapPin },
   { href: '/launchpad',  tKey: 'launchpadNav',  icon: Rocket },
   { href: '/procedures', tKey: 'proceduresNav', icon: BookOpen },
+  { href: '/portails',   tKey: 'portailsNav',   icon: Globe },
+  { href: '/contacts',   tKey: 'contactsNav',   icon: Phone },
 ] as const;
 
 export const Navbar: React.FC = () => {
