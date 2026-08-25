@@ -249,6 +249,110 @@ export const PDFPreview: React.FC<PDFPreviewProps> = ({ template, formData }) =>
                   </div>
                 </>
               )}
+
+              {template.slug === 'reconnaissance-dette' && (
+                <>
+                  <div className="p-4 bg-zinc-50 border border-zinc-200 rounded space-y-3">
+                    <p>
+                      Je soussigné(e) (Le Débiteur) : <strong>{formData.debiteur_name || '...........................................'}</strong>, 
+                      titulaire de la CIN n° <strong>{formData.debiteur_cin || '................'}</strong>,<br/>
+                      Reconnais par le présent acte devoir à (Le Créancier) : <strong>{formData.creancier_name || '...........................................'}</strong>, 
+                      titulaire de la CIN n° <strong>{formData.creancier_cin || '................'}</strong>.
+                    </p>
+                    <div className="p-3 bg-white border border-zinc-300 rounded">
+                      <p className="font-bold text-base text-zinc-900">
+                        Montant de la Dette : {formData.montant_chiffres ? `${formData.montant_chiffres} TND` : '.............. TND'}
+                      </p>
+                      <p className="text-xs text-zinc-600 italic">
+                        En toutes lettres : {formData.montant_lettres || '...........................................................................'}
+                      </p>
+                    </div>
+                    <p className="text-xs">
+                      <strong>Échéance & Modalités :</strong> Remboursement intégral exigible le <strong>{formData.date_echeance || 'JJ/MM/AAAA'}</strong>. {formData.modalites_paiement || ''}
+                    </p>
+                    <p className="text-[10px] text-zinc-500 italic">
+                      Engagement pris sous l'empire des dispositions des articles 339 et suivants du Code des Obligations et des Contrats (COC).
+                    </p>
+                  </div>
+                </>
+              )}
+
+              {template.slug === 'declaration-perte' && (
+                <>
+                  <div className="p-4 bg-zinc-50 border border-zinc-200 rounded space-y-3">
+                    <p>
+                      Je soussigné(e) : <strong>{formData.declarant_name || '...........................................'}</strong>, 
+                      titulaire du document d'identité n° <strong>{formData.declarant_cin || '................'}</strong>,<br/>
+                      Demeurant à : <strong>{formData.declarant_address || '...........................................................................'}</strong>.
+                    </p>
+                    <p className="font-semibold text-zinc-800">
+                      Déclare sur l'honneur avoir égaré le document officiel suivant :
+                    </p>
+                    <div className="p-3 bg-white border border-zinc-300 rounded space-y-1">
+                      <p><strong>Nature du document :</strong> {formData.nature_document || '...........................................'}</p>
+                      <p><strong>Numéro du document (si connu) :</strong> {formData.numero_document_perdu || 'Non spécifié'}</p>
+                      <p><strong>Date approximative de la perte :</strong> {formData.date_perte || 'JJ/MM/AAAA'}</p>
+                    </div>
+                    {formData.circonstances_perte && (
+                      <p className="text-xs italic text-zinc-600">
+                        <strong>Circonstances :</strong> "{formData.circonstances_perte}"
+                      </p>
+                    )}
+                    <p className="text-[10px] text-red-700 italic">
+                      Fait pour servir et valoir ce que de droit en vue de la délivrance d'un duplicata officiel. Toute fausse déclaration expose son auteur aux peines de l'Article 173 du Code Pénal.
+                    </p>
+                  </div>
+                </>
+              )}
+
+              {template.slug === 'attestation-hebergement' && (
+                <>
+                  <div className="p-4 bg-zinc-50 border border-zinc-200 rounded space-y-3">
+                    <p>
+                      Je soussigné(e) (L'Hébergeant) : <strong>{formData.host_name || '...........................................'}</strong>, 
+                      titulaire de la CIN n° <strong>{formData.host_cin || '................'}</strong>,<br/>
+                      Demeurant au logement sis à : <strong>{formData.host_address || '...........................................................................'}</strong>.
+                    </p>
+                    <p className="font-semibold text-zinc-800">
+                      Certifie sur l'honneur héberger à mon domicile la personne suivante :
+                    </p>
+                    <div className="p-3 bg-white border border-zinc-300 rounded space-y-1">
+                      <p><strong>Nom & Prénom de l'Invité :</strong> {formData.guest_name || '...........................................'}</p>
+                      <p><strong>Nationalité :</strong> {formData.guest_nationality || '................'} | <strong>N° Passeport :</strong> {formData.guest_passport || '................'}</p>
+                      <p><strong>Période du séjour :</strong> Du <strong>{formData.date_debut || 'JJ/MM/AAAA'}</strong> au <strong>{formData.date_fin || 'JJ/MM/AAAA'}</strong></p>
+                    </div>
+                    <p className="text-[10px] text-zinc-500 italic">
+                      Attestation établie pour satisfaire aux exigences des autorités consulaires et de séjour. L'hébergeant déclare assurer la prise en charge matérielle durant la période susmentionnée.
+                    </p>
+                  </div>
+                </>
+              )}
+
+              {template.slug === 'attestation-travail' && (
+                <>
+                  <div className="p-4 bg-zinc-50 border border-zinc-200 rounded space-y-3">
+                    <div className="border-b border-zinc-300 pb-2">
+                      <p className="font-bold text-zinc-900 text-sm">{formData.company_name || 'ENTREPRISE / SOCIÉTÉ'}</p>
+                      <p className="text-[10px] text-zinc-500">Matricule Fiscal / RNE : {formData.matricule_fiscal || '........................'}</p>
+                    </div>
+                    <p>
+                      Nous soussignés, <strong>{formData.company_name || 'la direction de l entreprise'}</strong>, certifions par la présente que :
+                    </p>
+                    <div className="p-3 bg-white border border-zinc-300 rounded space-y-1">
+                      <p>Monsieur / Madame : <strong>{formData.employee_name || '...........................................'}</strong></p>
+                      <p>Titulaire de la CIN n° : <strong>{formData.employee_cin || '................'}</strong></p>
+                      <p>Occupe actuellement le poste de : <strong>{formData.employee_position || '...........................................'}</strong></p>
+                      <p>Sous contrat de type : <strong>{formData.type_contrat || 'CDI'}</strong> depuis le <strong>{formData.date_embauche || 'JJ/MM/AAAA'}</strong>.</p>
+                    </div>
+                    <p className="text-xs text-zinc-600">
+                      Le/la salarié(e) est libre de tout engagement envers notre entreprise à ce jour et quitte l'établissement en règle avec nos services.
+                    </p>
+                    <p className="text-[10px] text-zinc-500 italic">
+                      Certificat délivré en application de l'Article 14 du Code du Travail tunisien pour servir et valoir ce que de droit.
+                    </p>
+                  </div>
+                </>
+              )}
             </div>
           </div>
 

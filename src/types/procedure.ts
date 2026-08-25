@@ -6,7 +6,9 @@ export type ProcedureVertical =
   | 'business'
   | 'housing'
   | 'healthcare'
-  | 'customs';
+  | 'customs'
+  | 'education'
+  | 'justice';
 
 export interface RequiredDocument {
   id: string;

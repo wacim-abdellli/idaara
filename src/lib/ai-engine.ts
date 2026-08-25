@@ -142,6 +142,186 @@ export function parseAndReason(prompt: string, locale: SupportedLanguage | strin
     };
   }
 
+  // Retraite CNSS Intent
+  if (
+    query.includes('retraite') ||
+    query.includes('pension') ||
+    query.includes('ta9a3od') ||
+    query.includes('ta9a3ed') ||
+    query.includes('تقاعد') ||
+    query.includes('شيخوخة') ||
+    query.includes('جراية')
+  ) {
+    const p = getProcedureById('cnss-retraite-pension')!;
+    return {
+      content:
+        lang === 'ar'
+          ? "للحصول على جراية التقاعد (CNSS)، يجب بلوغ السن القانونية (60 سنة عموماً أو 50 سنة للتقاعد النسبي) مع استيفاء 120 ثلاثية مصرح بها على الأقل. يتطلب الملف: مطبوعة جراية الشيخوخة من الصندوق، كشف الحياة المهنية (Relevé de carrière)، شهادة في التوقف عن العمل مسلّمة من آخر مؤجر، كشف هوية بنكية (RIB)، ومضمون ولادة أصلي."
+          : lang === 'en'
+          ? "To claim your CNSS retirement pension in Tunisia, you must reach the legal age (60 years, or 50 for early retirement with 180 quarters) and have at least 120 validated quarters. Required dossier: CNSS retirement form, career statement, employer cessation of activity certificate, bank RIB, and birth certificate."
+          : lang === 'fr'
+          ? "Pour liquider votre pension de retraite CNSS en Tunisie, vous devez avoir atteint 60 ans (ou 50 ans avec 180 trimestres pour retraite anticipée) et justifier d'au moins 120 trimestres cotisés. Pièces requises : Formulaire CNSS, relevé de carrière, certificat de cessation d'activité de l'employeur, RIB bancaire et extrait de naissance."
+          : "Bech tsob dossier el Retraite fel CNSS, lezem tkoun wassalt 60 sne (walla 50 sne ken 3andek 180 trimestres) w msajjel au moins 120 trimestres. T7adher: formulaire CNSS, relevé de carrière, chhadet in9ita3 men 3and el batron, copie CIN, w RIB.",
+      relatedProcedureId: p?.id || 'cnss-retraite-pension',
+      timbreBreakdown: {
+        totalTND: 0,
+        items: [{ label: lang === 'ar' ? 'إيداع الملف بالصندوق (مجاني)' : 'Dépôt dossier CNSS (Gratuit)', amount: 0 }],
+      },
+      actions: [
+        {
+          label: { derja: '📋 Guide Retraite CNSS', fr: 'Démarche Retraite CNSS', ar: 'دليل جراية التقاعد', en: 'Retirement Guide' },
+          type: 'procedure_link',
+          payload: '/procedures/cnss-retraite-pension',
+        },
+      ],
+    };
+  }
+
+  // Permis de Bâtir Intent
+  if (
+    query.includes('batir') ||
+    query.includes('construire') ||
+    query.includes('bnina') ||
+    query.includes('bne') ||
+    query.includes('بناء') ||
+    query.includes('رخصة بناء') ||
+    query.includes('رخصة البناء')
+  ) {
+    const p = getProcedureById('permis-de-batir')!;
+    return {
+      content:
+        lang === 'ar'
+          ? "للحصول على رخصة البناء من البلدية، يتطلب الملف إعداد أمثلة هندسية معمارية مصادق عليها من مهندس معماري مرسم (5 نسخ)، شهادة ملكية أصلية حديثة من إدارة الملكية العقارية (CPF)، مثال موقعي، ووصل خلاص الأداء البلدي (الزبلة والخروبة). الأجل القانوني لرد البلدية هو 45 يوماً."
+          : lang === 'en'
+          ? "To obtain a municipal building permit (Permis de Bâtir) in Tunisia, you must submit: 5 copies of architectural plans certified by a registered architect, an updated property title from CPF, a site plan, and property tax receipt (TIB). The statutory response delay is 45 days."
+          : lang === 'fr'
+          ? "Pour obtenir un permis de bâtir municipal en Tunisie, préparez : 5 exemplaires des plans visés par un architecte agréé, un certificat de propriété récent de la CPF, un plan de situation, et la quittance de la taxe des immeubles (TIB). Le délai légal d'instruction municipal est de 45 jours."
+          : "Bech te5ou Rokhset Bné mel Baladiya, lezem t7adher: plans msa77in men 3and architecte agréé (5 copies), chhadet melkiya men CPF, plan de situation, w quittance khlas zebla w kharrouba. El Baladiya 3andha 45 jours delai legal bech tjeweb.",
+      relatedProcedureId: p?.id || 'permis-de-batir',
+      timbreBreakdown: {
+        totalTND: 120.0,
+        items: [
+          { label: 'Droit municipal permis', amount: 80.0 },
+          { label: 'Timbres & Alignement', amount: 40.0 },
+        ],
+      },
+      actions: [
+        {
+          label: { derja: '📋 Dossier Rokhset Bné', fr: 'Dossier Permis de Bâtir', ar: 'ملف رخصة البناء', en: 'Building Permit Guide' },
+          type: 'procedure_link',
+          payload: '/procedures/permis-de-batir',
+        },
+      ],
+    };
+  }
+
+  // Hojjet Wafet / Heritage Intent
+  if (
+    query.includes('wafet') ||
+    query.includes('heritage') ||
+    query.includes('irth') ||
+    query.includes('terka') ||
+    query.includes('hojja') ||
+    query.includes('وفاة') ||
+    query.includes('إرث') ||
+    query.includes('حجة وفاة') ||
+    query.includes('تركة')
+  ) {
+    const p = getProcedureById('hojjet-wafet-heritage')!;
+    return {
+      content:
+        lang === 'ar'
+          ? "لاستخراج حجة الوفاة وحصر الإرث، يجب التوجه لعدلي إشهاد (Notaires) مصحوباً بمضمون وفاة الهالك، مضامين ولادة كافة الورثة الشرعيين، عقد الزواج أو الدفتر العائلي، وشاهدين رشيدين حاملين لبطاقات تعريفهما. بعد التحرير يتم تسجيلها بالقباضة المالية ومصادقة قاضي الناحية لتمكين الورثة من التصرف في الحسابات والعقارات."
+          : lang === 'en'
+          ? "To obtain a Certificate of Inheritance (Hojjet Wafet) in Tunisia, visit two certified notaries (Adoul) with the deceased's death certificate, birth certificates of all heirs, marriage contract, and 2 adult witnesses. Once drafted, register it at the Tax Office and obtain cantonal judge approval to unfreeze bank accounts and transfer properties."
+          : lang === 'fr'
+          ? "Pour établir une Hojjet Wafet (acte de notoriété après décès) en Tunisie, rendez-vous chez deux notaires (Adoul Ichhad) avec l'extrait de décès, les extraits de naissance de tous les héritiers, l'acte de mariage et 2 témoins majeurs. L'acte est ensuite enregistré à la Recette et homologué par le juge cantonal pour débloquer les comptes et biens."
+          : "Bech t5arraj Hojjet Wafet, temchi l'2 3doul ichhed m3ak: madhmoun wafet el mayyet, madhamin el ouratha kol, 3a9d zawaj, w 2 chhoud b'CIN mte3hom. Ba3d tsajjalha fel 9badha w tsadde9ha fel Ma7kama bech t7ell el compte bancaire walla te9sem el terka.",
+      relatedProcedureId: p?.id || 'hojjet-wafet-heritage',
+      timbreBreakdown: {
+        totalTND: 45.0,
+        items: [
+          { label: 'Honoraires 3doul ichhed', amount: 35.0 },
+          { label: 'Enregistrement Recette', amount: 10.0 },
+        ],
+      },
+      actions: [
+        {
+          label: { derja: '📋 Guide Hojjet Wafet', fr: 'Démarche Hojjet Wafet', ar: 'دليل حجة الوفاة والإرث', en: 'Inheritance Guide' },
+          type: 'procedure_link',
+          payload: '/procedures/hojjet-wafet-heritage',
+        },
+      ],
+    };
+  }
+
+  // Déclaration de Perte Document Intent
+  if (
+    query.includes('dha3et') ||
+    query.includes('dha3li') ||
+    query.includes('dhaya3') ||
+    query.includes('perte') ||
+    query.includes('perdu') ||
+    query.includes('ضياع') ||
+    query.includes('ضاعت') ||
+    query.includes('تصريح بضياع')
+  ) {
+    return {
+      content:
+        lang === 'ar'
+          ? "في حالة ضياع وثيقة رسمية (بطاقة تعريف، جواز سفر، بطاقة رمادية)، يجب تحرير تصريح بالضياع والتعريف بالإمضاء عليه بالبلدية (طابع بلدي 3 د.ت) ثم التوجه لمركز الأمن الوطني لاستخراج شهادة ضياع رسمية لتقديمها ضمن ملف النظير."
+          : lang === 'en'
+          ? "If you have lost an official document (National ID, Passport, Registration Card), generate a Sworn Declaration of Loss, legalize it at the Baladiya (3 TND municipal stamp), and present it at your police station to obtain the official loss certificate for duplicate issuance."
+          : lang === 'fr'
+          ? "En cas de perte d'un document officiel (CIN, Passeport, Carte Grise), générez une déclaration sur l'honneur de perte, faites légaliser votre signature à la Baladiya (timbre municipal 3 DT), puis déposez-la au poste de police pour obtenir l'attestation de perte."
+          : "Ken dhy3etlek war9a rasmiya (CIN, Passeport, Carte Grise), 3ammer Tasri7 b'Dhiya3, emchi 3arref bel imdha2 fel Baladiya (3 DT timbre), w hezzou lel markez bech te5ou chhadet dhiya3 w t3awadh war9tek.",
+      timbreBreakdown: {
+        totalTND: 3.0,
+        items: [{ label: 'Timbre Baladiya déclaration perte', amount: 3.0 }],
+      },
+      actions: [
+        {
+          label: { derja: '📄 A3mel Tasri7 Dhiya3 PDF', fr: 'Générer Déclaration de Perte PDF', ar: 'استخراج تصريح بالضياع PDF', en: 'Generate Loss PDF' },
+          type: 'pdf_form',
+          payload: '/documents/declaration-perte',
+        },
+      ],
+    };
+  }
+
+  // Reconnaissance de Dette Intent
+  if (
+    query.includes('dette') ||
+    query.includes('dayn') ||
+    query.includes('tsalef') ||
+    query.includes('salleft') ||
+    query.includes('دين') ||
+    query.includes('اعتراف بدين') ||
+    query.includes('إقرار بدين')
+  ) {
+    return {
+      content:
+        lang === 'ar'
+          ? "لإثبات قرض مالي بين الأفراد بطريقة قانونية ملزمة، يجب تحرير إقرار واعتراف بدين يتضمن هوية الدائن والمدين، المبلغ بالأرقام والحروف، تاريخ الاستحقاق وشروط السداد، مع التعريف بالإمضاء وجوباً بالبلدية (طابع بلدي 5 د.ت) طبقاً للفصول 339 إلى 348 من مجلة الالتزامات والعقود."
+          : lang === 'en'
+          ? "To legally secure a personal loan in Tunisia, draft a formal Debt Acknowledgment stating creditor/debtor IDs, exact amount in digits and words, due date, and repayment terms. Signatures must be legalized at the Baladiya (5 TND stamp) pursuant to Articles 339-348 of the COC."
+          : lang === 'fr'
+          ? "Pour formaliser un prêt financier entre particuliers en Tunisie, rédigez une Reconnaissance de Dette mentionnant l'identité des parties, le montant en chiffres et en lettres, l'échéance et les modalités. Légalisez obligatoirement les signatures à la Baladiya (timbre 5 DT) conformément aux articles 339 à 348 du COC."
+          : "Bech t'dhamen flousek mrigel fi tsallif, a3mel I9rar w I3tiraf b'Dayn fih esm el dayen wel madin, el montant bel ar9am wel klem, date e5er ajal lel 5lass, w sa77a7 m3a el ta3rif bel imdha2 fel Baladiya (5 DT timbre).",
+      timbreBreakdown: {
+        totalTND: 5.0,
+        items: [{ label: 'Timbre Baladiya reconnaissance dette', amount: 5.0 }],
+      },
+      actions: [
+        {
+          label: { derja: '📄 A3mel I3tiraf b\'Dayn PDF', fr: 'Générer Reconnaissance de Dette PDF', ar: 'استخراج إقرار بدين PDF', en: 'Generate Debt PDF' },
+          type: 'pdf_form',
+          payload: '/documents/reconnaissance-dette',
+        },
+      ],
+    };
+  }
+
   // 2. Dynamic Search across all procedures in proceduresData
   const matchedProcedure = proceduresData.find((p) => {
     const title = getLocalized(p.title, 'fr').toLowerCase();

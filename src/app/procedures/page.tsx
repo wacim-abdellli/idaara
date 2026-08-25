@@ -32,6 +32,8 @@ import {
   CheckCircle2,
   Mic,
   Zap,
+  GraduationCap,
+  Scale,
 } from 'lucide-react';
 
 export default function ProceduresPage() {
@@ -125,6 +127,30 @@ export default function ProceduresPage() {
           : 'Douane & Diaspora (FCR)',
       icon: Plane,
     },
+    {
+      id: 'justice',
+      label:
+        locale === 'ar'
+          ? 'العدل والأحوال الشخصية'
+          : locale === 'derja'
+          ? '3adl w 7ala Madaniya'
+          : locale === 'en'
+          ? 'Justice & Civil Status'
+          : 'Justice & État Civil',
+      icon: Scale,
+    },
+    {
+      id: 'education',
+      label:
+        locale === 'ar'
+          ? 'التعليم والمنح الجامعية'
+          : locale === 'derja'
+          ? 'Ta3lim w Bourse Jam3iya'
+          : locale === 'en'
+          ? 'Higher Ed & Scholarships'
+          : 'Enseignement & Bourses',
+      icon: GraduationCap,
+    },
   ];
 
   const lifeScenarios = [
@@ -165,19 +191,55 @@ export default function ProceduresPage() {
       tag: '7.5 DT',
     },
     {
+      id: 'permis-de-batir',
+      label:
+        locale === 'ar'
+          ? 'رخصة البناء بالبلدية'
+          : locale === 'derja'
+          ? 'Rokhset Bné Baladiya'
+          : locale === 'en'
+          ? 'Municipal Building Permit'
+          : 'Permis de Bâtir',
+      tag: '120 DT',
+    },
+    {
+      id: 'cnss-retraite-pension',
+      label:
+        locale === 'ar'
+          ? 'ملف جراية التقاعد (CNSS)'
+          : locale === 'derja'
+          ? 'Dossier Retraite CNSS'
+          : locale === 'en'
+          ? 'CNSS Retirement Pension'
+          : 'Pension Retraite CNSS',
+      tag: '0 DT',
+    },
+    {
+      id: 'hojjet-wafet-heritage',
+      label:
+        locale === 'ar'
+          ? 'حجة وفاة وحصر الإرث'
+          : locale === 'derja'
+          ? 'Hojjet Wafet w Terka'
+          : locale === 'en'
+          ? 'Certificate of Inheritance'
+          : 'Hojjet Wafet & Héritage',
+      tag: '45 DT',
+    },
+    {
       id: 'auto-entrepreneur-creation',
       label:
         locale === 'ar'
-          ? 'نظام المبادر الذاتي'
+          ? 'نظام المبادر الذاتي 1%'
           : locale === 'derja'
           ? 'Statut Auto-Entrepreneur'
           : locale === 'en'
-          ? 'Auto-Entrepreneur Status'
+          ? 'Auto-Entrepreneur 1%'
           : 'Statut Auto-Entrepreneur',
       tag: '0 DT',
     },
     {
-      id: 'contrat-location-residentiel',
+      id: 'contrat-location-habitation',
       label:
         locale === 'ar'
           ? 'عقد كراء سكني مصادق'
@@ -189,7 +251,19 @@ export default function ProceduresPage() {
       tag: '35 DT',
     },
     {
-      id: 'fcr-regime-douanier',
+      id: 'equivalence-diplome-etranger',
+      label:
+        locale === 'ar'
+          ? 'معادلة شهادة جامعية'
+          : locale === 'derja'
+          ? 'Mo3adalet Diplôme MESRS'
+          : locale === 'en'
+          ? 'Foreign Degree Equivalence'
+          : 'Équivalence Diplôme MESRS',
+      tag: '40 DT',
+    },
+    {
+      id: 'regime-fcr-douane',
       label:
         locale === 'ar'
           ? 'امتياز الديوانة (ن.ت.د / FCR)'

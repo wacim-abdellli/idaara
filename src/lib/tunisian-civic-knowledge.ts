@@ -366,6 +366,333 @@ export const TUNISIAN_CIVIC_KNOWLEDGE: CivicProcedureKnowledge[] = [
     proTips: [
       "Le madhmoun extrait en ligne avec cachet électronique visible (QR Code certifié par TunTrust) a la même valeur juridique que l'extrait papier délivré au guichet."
     ]
+  },
+
+  // 15. CNSS RETRAITE & PENSION DE VIEILLESSE
+  {
+    keywords: ['retraite', 'pension', 'cnss', 'vieillesse', 'ta9a3od', 'تقاعد', 'شيخوخة', 'جراية', 'trimestres'],
+    title: 'Pension de Retraite et Vieillesse (CNSS)',
+    authority: 'Caisse Nationale de Sécurité Sociale (Bureau Régional CNSS)',
+    statutoryCost: '0 DT (Service public gratuit)',
+    delay: '30 à 60 jours',
+    derjaSummary: "Bech te5ou jarrayet el retraite fel CNSS, lezem tkoun wassalt 60 sne (walla 50 sne retraite anticipée b'180 trimestres) w 3andek au moins 120 trimestres déclarés. Tsob dossier fih formulaire CNSS, relevé de carrière, chhadet in9ita3 men 3and el batron, w RIB.",
+    requiredDocuments: [
+      "Formulaire officiel de demande de pension de vieillesse CNSS",
+      "Relevé de carrière CNSS certifié justifiant d'au moins 120 trimestres de cotisation",
+      "Certificat de cessation de travail délivré par le dernier employeur",
+      "Copie certifiée conforme de la CIN",
+      "Extrait de naissance original récent (< 3 mois)",
+      "Relevé d'identité bancaire ou postal (RIB) original pour le virement mensuel"
+    ],
+    steps: [
+      "Vérifier le relevé des trimestres cotisés sur le portail e-cnss.tn ou au guichet",
+      "Obtenir l'attestation de cessation de travail auprès de son employeur",
+      "Déposer le dossier complet au bureau régional de la CNSS et retirer le récépissé",
+      "Percevoir le premier virement de liquidation sous 30 à 60 jours"
+    ],
+    proTips: [
+      "Si vous n'avez pas atteint 120 trimestres à 60 ans, vous pouvez continuer à cotiser jusqu'à 65 ans ou demander un rachat de trimestres (Tadawol).",
+      "Le montant de la pension correspond à 40% du salaire moyen des 10 meilleures années pour les premiers 120 trimestres, majoré de 0.5% par trimestre supplémentaire (plafonné à 80%)."
+    ]
+  },
+
+  // 16. CNAM CARNET DE SOINS & AFFILIATION
+  {
+    keywords: ['cnam', 'carnet', 'soins', 'filière', 'maladie', 'assurance', 'كنام', 'تأمين', 'صحة', 'علاج', 'طبيب العائلة'],
+    title: 'Carnet de Soins CNAM & Choix de Filière',
+    authority: 'Caisse Nationale d’Assurance Maladie (Centre Régional CNAM)',
+    statutoryCost: '0 DT (Couverture sociale obligatoire)',
+    delay: '15 à 30 jours',
+    derjaSummary: "Kol 5addam 3andou el 7a9 fi carnet CNAM. Tnejjem ta5tar bin 3 filières: Publique (sbitarat), Privée (Tbib el 3ayla w tiers-payant pharmacie), walla Remboursement (t5allas w CNAM traja3lek 70%). Tsob dossier fih attestation CNSS, formulaire filière, copie CIN, w RIB.",
+    requiredDocuments: [
+      "Formulaire d'adhésion et choix de filière de soins CNAM",
+      "Attestation d'affiliation récente délivrée par la CNSS ou CNRPS",
+      "Copie conforme de la CIN de l'assuré",
+      "Extraits de naissance des ayants droit (conjoint non travailleur et enfants < 20 ans)",
+      "Relevé d'identité bancaire ou postal (RIB)"
+    ],
+    steps: [
+      "Choisir sa filière de soins (Filière publique, privée avec médecin de famille référent, ou remboursement)",
+      "Déposer le formulaire d'adhésion au centre CNAM le plus proche",
+      "Retirer le carnet de soins validé pour l'année en cours"
+    ],
+    proTips: [
+      "Le changement de filière de soins n'est autorisé qu'une fois par an, durant la période légale du 1er septembre au 31 octobre.",
+      "En cas d'Affection Prise en Charge Intégralement (APCI - maladies chroniques), le taux de couverture passe à 100% sans plafond annuel."
+    ]
+  },
+
+  // 17. PERMIS DE BÂTIR MUNICIPAL (BALADIYA)
+  {
+    keywords: ['batir', 'construire', 'bnina', 'maison', 'villa', 'permis', 'rokhsa', 'بناء', 'رخصة', 'عمارة', 'دار'],
+    title: 'Permis de Bâtir Municipal (Baladiya)',
+    authority: 'Municipalité (Baladiya) — Service Urbanisme et Bâtiment',
+    statutoryCost: '50 à 200 DT (Droits municipaux et taxes d’urbanisme)',
+    delay: '45 jours (Délai légal d’instruction)',
+    derjaSummary: "Bech tebni dar walla tzid étage, lezem te5ou rokhset bné mel Baladiya. Lezem dossier fih plans d'architecte agréé (5 copies), chhadet melkiya (titre foncier CPF), plan de situation, w quittance khlas zebla w kharrouba. El Baladiya 3andha 45 jours delai legal bech tjeweb.",
+    requiredDocuments: [
+      "Demande de permis de bâtir sur formulaire municipal",
+      "Certificat de propriété récent (شهادة ملكية) délivré par la CPF",
+      "Plans d'architecture complets visés par un architecte agréé à l'Ordre (5 exemplaires)",
+      "Plan de situation (1/2000) et plan de masse côté (1/500)",
+      "Quittance de paiement de la taxe sur les immeubles bâtis (TIB - الزبلة والخروبة)",
+      "Attestation d'alignement délivrée par les services techniques municipaux"
+    ],
+    steps: [
+      "Faire élaborer les plans par un architecte agréé conformément au Plan d'Aménagement Urbain (PAU)",
+      "Régler la taxe des immeubles à la Recette des Finances et obtenir le titre foncier à la CPF",
+      "Déposer le dossier complet au Bureau d'Ordre de la Baladiya et exiger le reçu daté",
+      "Suivi de la commission technique municipale et retrait de l'arrêté de permis de bâtir sous 45 jours"
+    ],
+    proTips: [
+      "Selon l'Article 70 du Code de l'Urbanisme, le silence de la municipalité pendant 45 jours à compter du dépôt complet vaut approbation tacite du permis de bâtir.",
+      "Le permis de bâtir est valable pour une durée de 3 ans, renouvelable une seule fois sur demande motivée."
+    ]
+  },
+
+  // 18. SONEDE BRANCHEMENT EAU POTABLE
+  {
+    keywords: ['sonede', 'eau', 'ma', 'mé', 'branchement', 'compteur', 'ماء', 'سوناد', 'عداد'],
+    title: 'Branchement & Nouvel Abonnement SONEDE (Eau Potable)',
+    authority: 'Société Nationale d’Exploitation et de Distribution des Eaux (District SONEDE)',
+    statutoryCost: '200 à 500 DT (Selon métrage et devis technique)',
+    delay: '15 à 30 jours',
+    derjaSummary: "Bech tda55al compteur mé SONEDE, tsob dossier fel district fih rokhset bné walla chhadet melkiya, copie CIN, plan de situation, w tarkhis 7afr mel baladiya ken el kayes yetmass. Technicien SONEDE yji ya3mel visite w ya3tik devis khlas.",
+    requiredDocuments: [
+      "Formulaire de demande de branchement SONEDE",
+      "Copie de la CIN du propriétaire",
+      "Titre de propriété enregistré ou contrat de bail",
+      "Copie du permis de bâtir ou certificat de conformité des travaux",
+      "Plan de situation côté indiquant l'emplacement exact de la construction",
+      "Autorisation municipale de tranchée sur voirie publique si nécessaire"
+    ],
+    steps: [
+      "Déposer le dossier complet au district SONEDE territorialement compétent",
+      "Visite technique sur site de l'agent SONEDE et établissement du devis de raccordement",
+      "Paiement du montant du devis à la caisse du district SONEDE",
+      "Intervention de l'équipe technique pour pose du compteur et raccordement au réseau public"
+    ],
+    proTips: [
+      "Si la canalisation principale se trouve de l'autre côté de la chaussée, anticipez l'autorisation municipale de voirie pour éviter des retards de plusieurs semaines."
+    ]
+  },
+
+  // 19. TITRE FONCIER & CONSERVATION FONCIÈRE (CPF)
+  {
+    keywords: ['titre', 'foncier', 'cpf', 'propriete', 'immeuble', 'terrain', 'ملكية', 'عقار', 'رسم', 'عقاري', 'titre bleu'],
+    title: 'Extrait de Titre Foncier (Conservation de la Propriété Foncière - CPF)',
+    authority: 'Conservation de la Propriété Foncière (CPF — إدارة الملكية العقارية)',
+    statutoryCost: '15 DT (Par extrait de titre)',
+    delay: '24 à 48 heures (ou instantané sur cpf.tn)',
+    derjaSummary: "Chhadet el Melkiya (Extrait de titre foncier) t5arrajha b'nomrou el rasm el 3a9ari (titre bleu) soit mel guichet CPF soit direct men site cpf.tn b'carte bancaire b'15 DT. Tethbet chkoun el malek w ken fih rahina walla o9la.",
+    requiredDocuments: [
+      "Formulaire de demande d'extrait mentionnant le numéro et nom du titre foncier",
+      "Copie de la CIN du demandeur"
+    ],
+    steps: [
+      "Identifier le numéro exact du titre foncier sur l'acte notarié ou contrat précédent",
+      "Commander l'extrait en ligne sur cpf.tn ou se présenter au guichet régional de la CPF",
+      "Payer les droits de quittance de 15 DT et télécharger ou retirer le document signé électroniquement"
+    ],
+    proTips: [
+      "L'extrait délivré en ligne sur cpf.tn comporte un QR Code sécurisé de vérification TunTrust et a la même valeur juridique que l'extrait délivré au guichet."
+    ]
+  },
+
+  // 20. AUTORISATION D'EXERCICE COMMERCIAL (BALADIYA)
+  {
+    keywords: ['commerce', 'local', 'magasin', 'patente', '7anout', 'محل', 'تجاري', 'رخصة', 'باتيندة'],
+    title: 'Autorisation d’Exercice Commercial & Ouverture de Local (Baladiya)',
+    authority: 'Municipalité (Baladiya) — Service des Affaires Économiques',
+    statutoryCost: '30 à 80 DT (Taxe municipale d’autorisation)',
+    delay: '15 à 30 jours',
+    derjaSummary: "Bech t7ell 7anout walla local commercial, lezem te5ou tarkhis mel Baladiya. Tsob dossier fih 3a9d kré msajjal walla chhadet melkiya, copie patente men el 9badha, w certif protection civile ken el nachat fih public. Commission el hifdh el se77i tji tchouf el local 9bal el rokhsa.",
+    requiredDocuments: [
+      "Demande d'autorisation d'ouverture sur formulaire municipal",
+      "Contrat de bail commercial enregistré à la Recette ou titre de propriété",
+      "Copie de la carte d'identification fiscale (Patente)",
+      "Certificat de conformité et sécurité de la Protection Civile (pour ERP)",
+      "Copie de la CIN de l'exploitant"
+    ],
+    steps: [
+      "Effectuer la déclaration d'existence et obtenir la patente à la Recette des Finances",
+      "Déposer le dossier complet au service économique de la Baladiya",
+      "Visite d'inspection de la commission municipale d'hygiène et de sécurité",
+      "Retrait de l'arrêté municipal d'autorisation d'ouverture"
+    ],
+    proTips: [
+      "Depuis le Décret n° 2018-417, de nombreuses activités commerciales et de services ne nécessitent plus d'autorisation préalable mais un simple dépôt de cahier des charges signé."
+    ]
+  },
+
+  // 21. PERMIS DE CONDUIRE INTERNATIONAL (TOURING CLUB)
+  {
+    keywords: ['permis international', 'conduire international', 'touring club', 'tct', 'voyage permis', 'سياقة دولية', 'رخصة دولية'],
+    title: 'Permis de Conduire International (Touring Club de Tunisie)',
+    authority: 'Touring Club de Tunisie (TCT)',
+    statutoryCost: '30 DT (Droits de délivrance et adhésion TCT) + 5 DT photos',
+    delay: '24 à 48 heures (ou sur place au siège)',
+    derjaSummary: "El Permis International y5allik tsou9 karhba fel kharej fi akther men 150 bled. Yetsallam mel Touring Club de Tunisie (Rue de Hollande Tunis walla agences). Lezem permis tounsi asly, copie CIN, 2 tsawer fond blanc, w 35 DT. Salou7iyyetou 1 an.",
+    requiredDocuments: [
+      "Permis de conduire tunisien original en cours de validité + Copie",
+      "Copie de la CIN du demandeur",
+      "2 Photos d'identité récentes identiques sur fond blanc",
+      "Formulaire officiel de demande du Touring Club de Tunisie"
+    ],
+    steps: [
+      "Rassembler les pièces justificatives et photos conformes",
+      "Se présenter au siège du Touring Club (Rue de Hollande, Tunis) ou bureau régional",
+      "Payer les frais de 30 DT et retirer le livret international sous 24 à 48 heures"
+    ],
+    proTips: [
+      "Le permis international n'est valable à l'étranger qu'accompagné obligatoirement de votre permis national tunisien original."
+    ]
+  },
+
+  // 22. RÉGULARISATION DOUANIÈRE VÉHICULE RS
+  {
+    keywords: ['douane rs', 'regularisation', 'serie rs', 'importation voiture', 'fcr rs', 'ديوانة', 'سيارة', 'استيراد', 'ن.ت'],
+    title: 'Régularisation Douanière Véhicule Importé (Série RS vers TU)',
+    authority: 'Direction Générale des Douanes & ATTT',
+    statutoryCost: 'Variable (Droits de douane calculés selon valeur argus et cylindrée) + 50 DT carte grise TU',
+    delay: '15 à 30 jours',
+    derjaSummary: "El karhba série RS ma tnejjemch tbi3ha ken ma t5allas diwanetha. Fel amnisties fiscales, el dawla t5afadh el diwana l'35% walla 40%. Tsob dossier fel bureau des douanes, t5allas, te5ou chhadet ifraj diwani, w tbadal carte grise fi ATTT l'série TU.",
+    requiredDocuments: [
+      "Carte grise originale du véhicule série RS",
+      "Passeport du propriétaire avec l'ensemble des cachets douaniers d'entrée/sortie",
+      "Demande de régularisation douanière sur formulaire officiel",
+      "Copie de la CIN du propriétaire"
+    ],
+    steps: [
+      "Déposer la demande au bureau régional des douanes pour liquidation des droits",
+      "Régler le montant des droits et taxes à la Recette des Douanes et retirer le certificat d'apurement",
+      "Présenter le certificat d'apurement au centre ATTT pour immatriculation en série normale TU"
+    ],
+    proTips: [
+      "Surveillez les lois de finances annuelles qui accordent régulièrement des régimes dérogatoires avec réduction de 60% à 70% des droits de douane pour la régularisation des véhicules RS."
+    ]
+  },
+
+  // 23. LÉGALISATION DE SIGNATURE & COPIE CONFORME (BALADIYA)
+  {
+    keywords: ['legalisation', 'signature', 'imdha', 'conforme', 'copie', 'baladiya', 'ta3rif', 'تعريف بالإمضاء', 'مطابقة للأصل', 'بلدية'],
+    title: 'Légalisation de Signature & Copie Conforme (Baladiya)',
+    authority: 'Municipalité (Baladiya) ou Délégation / Imadat',
+    statutoryCost: '3 DT (Par signature ou certification de copie conforme)',
+    delay: '10 à 15 minutes au guichet',
+    derjaSummary: "El Ta3rif bel Imdha2 ysir fi ay Baladiya fi tounes. Lezem t7adher el wathi9a non signée, CIN aslye, w tsa7a7 9oddém el 3awn. Mamnou3 el ta3rif 3la awra9 baydha2 walla 3ou9oud m5alfa lel 9anoun. El ma3loum 3 DT.",
+    requiredDocuments: [
+      "Document à légaliser (non signé à l'avance, signature devant l'officier)",
+      "Carte d'Identité Nationale (CIN) originale en cours de validité du signataire",
+      "Document original (en cas de demande de copie certifiée conforme)"
+    ],
+    steps: [
+      "Se présenter physiquement au guichet de légalisation de la Baladiya avec sa CIN",
+      "Signer le document et le registre d'état civil en présence de l'officier",
+      "Payer le timbre municipal de 3 DT et récupérer le document cacheté et visé"
+    ],
+    proTips: [
+      "La légalisation de signature sur des documents rédigés en langue étrangère exige que l'officier comprenne la langue ou qu'une traduction assermentée soit fournie.",
+      "Pour les concours publics de la fonction publique, la certification de conformité des copies de diplômes n'est plus exigée au premier tour (Décret n° 2014-4030)."
+    ]
+  },
+
+  // 24. HOJJET WAFET & PARTAGE SUCCESSORAL (HÉRITAGE)
+  {
+    keywords: ['wafet', 'heritage', 'irth', 'deces', 'adoul', 'succession', 'terka', 'hojja', 'وفاة', 'إرث', 'حجة', 'تركة', 'عدول'],
+    title: 'Certificat de Décès (Hojjet Wafet) & Partage Successoral',
+    authority: 'Adoul Ichhad (Notaires) & Tribunal de Première Instance (Juge Cantonal)',
+    statutoryCost: '35 DT (Honoraires réglementés des notaires) + 10 DT enregistrement',
+    delay: '7 à 15 jours',
+    derjaSummary: "Hojjet el Wafet hiya el war9a el wa7ida elli tethbet chkoun el ouratha mte3 el mayyet w fardh kol wa7ed. Tetkattab 3and 2 3doul ichhed b'7odhwr 2 chhoud ya3rfou el 3ayla, ba3d tsajjalha fel 9badha w tsadde9ha fel Ma7kama bech te9sem el terka walla t7ell el compte bancaire.",
+    requiredDocuments: [
+      "Extrait de décès original du défunt délivré par la Baladiya",
+      "Extraits de naissance de l'ensemble des héritiers légitimes",
+      "Acte de mariage du défunt ou livret de famille",
+      "2 Témoins majeurs munis de leurs CIN originales, connaissant parfaitement la filiation de la famille"
+    ],
+    steps: [
+      "Collecter l'extrait de décès et les actes d'état civil de tous les héritiers",
+      "Se rendre chez deux notaires (Adoul Ichhad) accompagnés de deux témoins pour dresser l'acte",
+      "Enregistrer la Hojja à la Recette des Finances et la soumettre à l'homologation du juge cantonal"
+    ],
+    proTips: [
+      "La Hojjet Wafet est strictement obligatoire pour débloquer les comptes bancaires ou postaux du défunt et pour transférer la propriété des biens immobiliers auprès de la CPF."
+    ]
+  },
+
+  // 25. DÉCLARATION DE NAISSANCE (BALADIYA)
+  {
+    keywords: ['naissance', 'wilada', 'bébé', 'etat civil', 'madhmoun', 'mouloud', 'ولادة', 'تصريح', 'مضمون', 'مولود', 'تسجيل'],
+    title: 'Déclaration de Naissance & Inscription à l’État Civil (Baladiya)',
+    authority: 'Municipalité (Baladiya) — Bureau de l’État Civil',
+    statutoryCost: '0 DT (Inscription gratuite) + 0.500 DT par extrait',
+    delay: '15 minutes (Délai légal impératif : 10 jours)',
+    derjaSummary: "Kol mawloud lezem ytsajjal fel Baladiya fi ajel 10 ayem mel wilada. El bou walla el omm yhezzo chhadet el wilada mel sbitar/clinique, livret de famille walla 3a9d zawaj, w CIN. Ken tfout 10 ayem lezem 7okm 9adha2i mel Ma7kama.",
+    requiredDocuments: [
+      "Certificat médical d'accouchement original délivré par l'hôpital ou la clinique",
+      "Livret de famille ou extrait de l'acte de mariage des parents",
+      "CIN originale du déclarant (père, mère ou personne habilitée)"
+    ],
+    steps: [
+      "Récupérer l'attestation de naissance à la maternité",
+      "Se présenter au service d'état civil de la Baladiya du lieu de naissance dans les 10 jours",
+      "Enregistrer le prénom du nouveau-né et retirer immédiatement les premiers extraits de naissance"
+    ],
+    proTips: [
+      "Le prénom choisi ne doit pas porter atteinte aux bonnes mœurs ni créer de confusion sur la nationalité ou la religion de l'enfant (Loi n° 57-3)."
+    ]
+  },
+
+  // 26. ÉQUIVALENCE DES DIPLÔMES ÉTRANGERS (MESRS)
+  {
+    keywords: ['equivalence', 'diplome etranger', 'universite etrangere', 'mesrs', 'homologation', 'معادلة', 'شهادة أجنبية', 'جامعة بالخارج'],
+    title: 'Équivalence des Diplômes Universitaires Étrangers (MESRS)',
+    authority: 'Ministère de l’Enseignement Supérieur et de la Recherche Scientifique',
+    statutoryCost: '20 DT (Frais de dossier) + traductions assermentées',
+    delay: '60 à 90 jours',
+    derjaSummary: "Bech t5addem diplôme 5dhitou men jame3a fel kharej fel wadhifa el 3oumoumiya walla les concours, lezem ta3mallou Mo3adala fi Wizarat el Ta3lim el 3ali. El candidature tebda en ligne 3al site mesrs.tn, ba3d thot dossier fih diplôme légalisé/apostille, relevés de notes kemlin, w tarjama mou7allefa.",
+    requiredDocuments: [
+      "Formulaire officiel de demande d'équivalence saisi sur mesrs.tn",
+      "Copie certifiée conforme du diplôme étranger avec apostille ou visa consulaire",
+      "Relevés de notes originaux certifiés pour toutes les années d'études supérieures",
+      "Copie conforme du Baccalauréat tunisien ou titre admis en équivalence",
+      "Traduction assermentée en arabe ou français si le diplôme est rédigé dans une autre langue"
+    ],
+    steps: [
+      "Créer un compte et saisir le cursus d'études sur la plateforme en ligne mesrs.tn",
+      "Déposer ou envoyer par lettre recommandée le dossier physique complet au Bureau d'Ordre du MESRS",
+      "Suivre l'instruction de la commission sectorielle et retirer l'attestation d'équivalence officielle"
+    ],
+    proTips: [
+      "Les diplômes délivrés par des institutions étrangères non reconnues par l'État d'origine ou obtenus via des formations 100% en ligne non accréditées sont systématiquement rejetés par la Commission."
+    ]
+  },
+
+  // 27. BOURSES & PRÊTS UNIVERSITAIRES (OOUS)
+  {
+    keywords: ['bourse', 'pret universitaire', 'oous', 'ooun', 'oouc', 'etudiant', 'menha', 'منحة', 'قرض جامعي', 'طالب', 'ديوان الخدمات الجامعية'],
+    title: 'Bourses et Prêts Universitaires Nationaux (Offices des Œuvres Universitaires)',
+    authority: 'Office des Œuvres Universitaires (OOUN / OOUC / OOUS)',
+    statutoryCost: '0 DT (Candidature et octroi 100% gratuits)',
+    delay: '30 à 45 jours',
+    derjaSummary: "El talaba 3andhom el 7a9 ysobbo matloub men7a jam3iya (bourse) walla 9ardh fel Office mte3houm (Nord, Centre, Sud). El candidature tsir 100% en ligne ba3d el tawjih. El critère houwa da5l el walidin (IRPP) w 3addad el ekhwa fel 3ayla. El men7a tetsabb kol trimestre 3al compte.",
+    requiredDocuments: [
+      "Fiche de candidature imprimée et signée depuis le portail de l'Office universitaire",
+      "Copie certifiée conforme de l'attestation d'orientation ou d'inscription universitaire",
+      "Déclaration de revenus des parents délivrée par la Recette des Finances (IRPP)",
+      "Attestation d'affiliation ou de non-affiliation CNSS/CNRPS des deux parents",
+      "Relevé d'identité bancaire ou postal (RIB) au nom de l'étudiant demandeur"
+    ],
+    steps: [
+      "Remplir la candidature en ligne sur le portail de l'Office de votre circonscription (ooun.rnu.tn / oouc.rnu.tn / oous.rnu.tn)",
+      "Constituer le dossier physique avec toutes les justifications de revenus",
+      "Envoyer le dossier par lettre recommandée (Rapide Poste) avant la date limite officielle",
+      "Consulter les résultats d'attribution en ligne et percevoir les versements trimestriels"
+    ],
+    proTips: [
+      "Les étudiants orphelins, handicapés ou dont les deux parents sont sans emploi bénéficient d'une bonification de points prioritaire dans le barème national d'attribution."
+    ]
   }
 ];
 

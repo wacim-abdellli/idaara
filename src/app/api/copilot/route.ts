@@ -59,6 +59,40 @@ const DEEP_CIVIC_KNOWLEDGE = `
 [STEG & SONEDE]
 - STEG: Concours Ingénieurs & Cadres (180 postes), Techniciens (350 postes) via www.steg.com.tn / www.concours.gov.tn.
 - SONEDE: Ingénieurs hydrauliques/électromécaniques & agents via www.sonede.com.tn / www.concours.gov.tn.
+
+[CNSS RETRAITE / جراية التقاعد والشيخوخة]
+- Authority: Caisse Nationale de Sécurité Sociale (CNSS)
+- Conditions: 60 ans d'âge (ou 50 ans anticipée avec 180 trimestres) + 120 trimestres cotisés minimum.
+- Cost: 0 DT (Gratuit) | Delay: 30 à 60 jours
+- Required: Formulaire CNSS, relevé de carrière, certificat de cessation d'activité employeur, CIN, extrait de naissance, RIB bancaire.
+
+[CNAM CARNET DE SOINS / بطاقة علاج الكنام]
+- Authority: Caisse Nationale d'Assurance Maladie (CNAM)
+- Filières: Publique (hôpitaux publics), Privée (médecin de famille référent), Remboursement (70%).
+- Changement de filière: 1er sept au 31 oct chaque année.
+- Required: Attestation CNSS, formulaire adhésion, copie CIN, extraits de naissance famille, RIB.
+
+[PERMIS DE BÂTIR / رخصة البناء البلدية]
+- Authority: Municipalité (Baladiya) — Service Urbanisme
+- Legal Delay: 45 jours (silence = accord tacite Art. 70 Code de l'Urbanisme)
+- Total Cost: 50 à 200 DT
+- Required: Plans d'architecte agréé (5 copies), certificat de propriété CPF (titre foncier), plan de situation, quittance taxe TIB (zebla w kharrouba).
+
+[HOJJET WAFET / حجة الوفاة وحصر الإرث]
+- Authority: 2 Notaires (Adoul Ichhad) + Homologation Juge Cantonal
+- Cost: 35 DT (Adoul) + 10 DT (Enregistrement Recette) | Delay: 7 à 15 jours
+- Required: Extrait de décès, extraits de naissance des héritiers, acte de mariage, 2 témoins majeurs avec CIN.
+
+[DÉCLARATION DE NAISSANCE / التصريح بالولادة]
+- Authority: Bureau d'État Civil de la Baladiya du lieu d'accouchement
+- Legal Delay: 10 jours ouvrables impératifs (passé 10 jours, jugement au tribunal obligatoire)
+- Cost: 0 DT (Gratuit) | Extrait: 0.500 DT
+- Required: Certificat médical d'accouchement, livret de famille / acte de mariage, CIN du déclarant.
+
+[ÉQUIVALENCE DIPLÔMES ÉTRANGERS / معادلة الشهائد العلمية]
+- Authority: Ministère de l'Enseignement Supérieur (MESRS)
+- Portal: www.mesrs.tn | Cost: 20 DT frais de dossier | Delay: 60 à 90 jours
+- Required: Diplôme original avec apostille/visa consulaire, relevés de notes complets de toutes les années, copie Bac, traduction assermentée.
 `;
 
 function buildGroundingContext(query: string, locale: string): string {
