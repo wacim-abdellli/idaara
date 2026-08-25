@@ -7,6 +7,7 @@ import { SupportedLanguage } from '../../data/translations';
 const LANGUAGES: Array<{ code: SupportedLanguage; label: string; title: string }> = [
   { code: 'derja', label: 'TN', title: 'Derja Tounsi 🇹🇳' },
   { code: 'fr',    label: 'FR', title: 'Français 🇫🇷' },
+  { code: 'ar',    label: 'ع',  title: 'العربية 🇹🇳' },
   { code: 'en',    label: 'EN', title: 'English 🇬🇧' },
 ];
 
@@ -24,7 +25,7 @@ export const LanguageSwitcher: React.FC = () => {
             title={lang.title}
             aria-label={lang.title}
             aria-pressed={isActive}
-            className={`w-9 h-6 text-[10px] font-bold rounded-full transition-all duration-150 cursor-pointer leading-none shrink-0 ${
+            className={`w-7 h-6 text-[10px] font-bold rounded-full transition-all duration-150 cursor-pointer leading-none shrink-0 ${
               isActive
                 ? 'bg-zinc-700 text-emerald-300 shadow-sm'
                 : 'text-zinc-500 hover:text-zinc-200 hover:bg-zinc-800/60'

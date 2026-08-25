@@ -176,7 +176,7 @@ export const Navbar: React.FC = () => {
               whileHover={{ scale: 1.02 }}
               whileTap={{ scale: 0.98 }}
               onClick={triggerCommandPalette}
-              className="hidden xl:flex items-center gap-2 px-3 py-1.5 rounded-xl bg-zinc-900/80 hover:bg-zinc-800/80 border border-zinc-800 text-zinc-400 hover:text-zinc-200 text-xs transition-colors cursor-pointer shrink-0 shadow-sm"
+              className="hidden 2xl:flex items-center gap-2 px-3 py-1.5 rounded-xl bg-zinc-900/80 hover:bg-zinc-800/80 border border-zinc-800 text-zinc-400 hover:text-zinc-200 text-xs transition-colors cursor-pointer shrink-0 shadow-sm"
               title={
                 locale === 'ar' ? 'بحث في إدارة (Ctrl+K)'
                 : locale === 'derja' ? 'Lawwej fi Idaara (Ctrl+K)'
