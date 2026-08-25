@@ -94,12 +94,12 @@ export const PDFPreview: React.FC<PDFPreviewProps> = ({ template, formData }) =>
       <div className="bg-zinc-950 p-4 sm:p-8 rounded-2xl border border-zinc-800 overflow-x-auto flex justify-center">
         <div
           id="official-doc-render"
-          className="w-[210mm] min-h-[297mm] bg-white text-zinc-900 p-10 sm:p-12 shadow-2xl flex flex-col justify-between font-serif relative"
+          className="w-[210mm] min-h-[280mm] bg-white text-zinc-900 p-8 sm:p-10 shadow-2xl flex flex-col justify-between font-serif relative"
           style={{ fontFamily: 'Times New Roman, Georgia, serif' }}
         >
           {/* Header Republic & Timbre Box */}
           <div>
-            <div className="flex items-start justify-between border-b-2 border-zinc-800 pb-4 mb-6">
+            <div className="flex items-start justify-between border-b-2 border-zinc-800 pb-3 mb-4">
               <div className="text-left text-xs space-y-0.5">
                 <p className="font-bold uppercase tracking-wider text-xs">République Tunisienne</p>
                 <p className="text-[11px] text-zinc-600">Ministère de l'Intérieur</p>
@@ -107,14 +107,14 @@ export const PDFPreview: React.FC<PDFPreviewProps> = ({ template, formData }) =>
               </div>
 
               {/* Fiscal Stamp Box Guideline */}
-              <div className="w-24 h-24 border-2 border-dashed border-zinc-400 rounded flex flex-col items-center justify-center p-1 text-center bg-zinc-50">
-                <span className="text-[9px] font-sans font-bold uppercase text-zinc-500">
+              <div className="w-20 h-20 border-2 border-dashed border-zinc-400 rounded flex flex-col items-center justify-center p-1 text-center bg-zinc-50">
+                <span className="text-[8px] font-sans font-bold uppercase text-zinc-500">
                   Emplacement
                 </span>
-                <span className="text-[9px] font-sans font-bold text-amber-700">
+                <span className="text-[8px] font-sans font-bold text-amber-700">
                   Timbre Fiscal
                 </span>
-                <span className="text-[8px] font-sans text-zinc-400 mt-1">
+                <span className="text-[8px] font-sans text-zinc-400 mt-0.5">
                   ({template.requiredTimbreTND} DT)
                 </span>
               </div>
@@ -127,20 +127,20 @@ export const PDFPreview: React.FC<PDFPreviewProps> = ({ template, formData }) =>
             </div>
 
             {/* Document Main Title */}
-            <div className="text-center my-6">
-              <h1 className="text-xl sm:text-2xl font-bold uppercase tracking-wide underline decoration-zinc-400 decoration-1 underline-offset-4">
+            <div className="text-center my-4">
+              <h1 className="text-lg sm:text-xl font-bold uppercase tracking-wide underline decoration-zinc-400 decoration-1 underline-offset-4">
                 {template.title.fr}
               </h1>
-              <h2 className="text-lg font-bold mt-1" dir="rtl">
+              <h2 className="text-base font-bold mt-0.5" dir="rtl">
                 {template.title.ar}
               </h2>
-              <p className="text-[10px] text-zinc-500 font-sans mt-1">
+              <p className="text-[10px] text-zinc-500 font-sans mt-0.5">
                 Réf Juridique: {template.legalBasis}
               </p>
             </div>
 
             {/* Document Dynamic Body Content */}
-            <div className="text-xs space-y-5 leading-relaxed text-zinc-800">
+            <div className="text-xs space-y-3 leading-relaxed text-zinc-800">
               {template.slug === 'contrat-location' && (
                 <>
                   <div className="p-4 bg-zinc-50 border border-zinc-200 rounded">
@@ -357,41 +357,78 @@ export const PDFPreview: React.FC<PDFPreviewProps> = ({ template, formData }) =>
           </div>
 
           {/* Bottom Legalization & Signature Box */}
-          <div className="pt-6 border-t-2 border-zinc-800 mt-8">
-            <div className="grid grid-cols-2 gap-4 mb-6">
-              <div className="text-center p-3 border border-zinc-300 rounded min-h-[100px] flex flex-col justify-between">
-                <span className="text-[10px] font-bold uppercase text-zinc-600">
-                  Signature de la Première Partie
-                </span>
-                <span className="text-[9px] text-zinc-400 italic">"Lu et approuvé"</span>
+          <div className="pt-3 border-t-2 border-zinc-800 mt-4">
+            {/* Signatures */}
+            {['declaration-honneur', 'declaration-perte'].includes(template.slug) ? (
+              <div className="max-w-xs mx-auto mb-3">
+                <div className="text-center p-2.5 border border-zinc-400 rounded min-h-[65px] flex flex-col justify-between bg-zinc-50/50">
+                  <span className="text-[10px] font-bold uppercase text-zinc-800">
+                    Signature du Déclarant / إمضاء المصرح
+                  </span>
+                  <span className="text-[8px] text-zinc-500 italic">"Lu et approuvé - Déclaration sincère"</span>
+                </div>
               </div>
+            ) : template.slug === 'attestation-travail' ? (
+              <div className="max-w-xs mx-auto mb-3">
+                <div className="text-center p-2.5 border border-zinc-400 rounded min-h-[65px] flex flex-col justify-between bg-zinc-50/50">
+                  <span className="text-[10px] font-bold uppercase text-zinc-800">
+                    Cachet & Signature de l'Employeur / ختم وإمضاء المؤجر
+                  </span>
+                  <span className="text-[8px] text-zinc-500 italic">"Pour servir et valoir ce que de droit"</span>
+                </div>
+              </div>
+            ) : (
+              <div className="grid grid-cols-2 gap-3 mb-3">
+                <div className="text-center p-2 border border-zinc-400 rounded min-h-[60px] flex flex-col justify-between bg-zinc-50/50">
+                  <span className="text-[9px] font-bold uppercase text-zinc-800">
+                    {template.slug === 'contrat-location'
+                      ? 'Le Bailleur (المسوغ)'
+                      : template.slug === 'contrat-vente-vehicule'
+                      ? 'Le Vendeur (البائع)'
+                      : template.slug === 'procuration-officielle'
+                      ? 'Le Mandant (الموكل)'
+                      : template.slug === 'reconnaissance-dette'
+                      ? 'Le Débiteur (المدين)'
+                      : "L'Hébergeant (المستضيف)"}
+                  </span>
+                  <span className="text-[8px] text-zinc-400 italic">"Lu et approuvé"</span>
+                </div>
 
-              <div className="text-center p-3 border border-zinc-300 rounded min-h-[100px] flex flex-col justify-between">
-                <span className="text-[10px] font-bold uppercase text-zinc-600">
-                  Signature de la Seconde Partie
-                </span>
-                <span className="text-[9px] text-zinc-400 italic">"Lu et approuvé"</span>
+                <div className="text-center p-2 border border-zinc-400 rounded min-h-[60px] flex flex-col justify-between bg-zinc-50/50">
+                  <span className="text-[9px] font-bold uppercase text-zinc-800">
+                    {template.slug === 'contrat-location'
+                      ? 'Le Locataire (المكتري)'
+                      : template.slug === 'contrat-vente-vehicule'
+                      ? "L'Acquéreur (المشتري)"
+                      : template.slug === 'procuration-officielle'
+                      ? 'Le Mandataire (الوكيل)'
+                      : template.slug === 'reconnaissance-dette'
+                      ? 'Le Créancier (الدائن)'
+                      : "L'Hébergé (الضيف)"}
+                  </span>
+                  <span className="text-[8px] text-zinc-400 italic">"Lu et approuvé"</span>
+                </div>
               </div>
-            </div>
+            )}
 
             {/* Baladiya Official Legalization Zone */}
-            <div className="p-3 border-2 border-zinc-700 bg-zinc-50 rounded flex items-center justify-between">
-              <div className="text-left text-[10px] space-y-0.5">
+            <div className="p-2 border-2 border-zinc-700 bg-zinc-50 rounded flex items-center justify-between">
+              <div className="text-left text-[9px] space-y-0.5">
                 <p className="font-bold text-zinc-900">CADRE RÉSERVÉ À L'OFFICIER DE L'ÉTAT CIVIL (BALADIYA)</p>
                 <p className="text-zinc-600">Signature légalisée le : ...... / ...... / 2026</p>
                 <p className="text-zinc-600">Par devant nous, Officier de l'État Civil de la Municipalité de .............................</p>
               </div>
 
               <div className="flex flex-col items-center">
-                <div className="w-12 h-12 border border-zinc-400 bg-white flex items-center justify-center p-1">
-                  <QrCode className="w-8 h-8 text-zinc-800" />
+                <div className="w-10 h-10 border border-zinc-400 bg-white flex items-center justify-center p-1">
+                  <QrCode className="w-6 h-6 text-zinc-800" />
                 </div>
-                <span className="text-[8px] text-zinc-500 font-sans mt-0.5">IDAARA.TN-VERIFIED</span>
+                <span className="text-[7px] text-zinc-500 font-sans mt-0.5">IDAARA.TN-VERIFIED</span>
               </div>
             </div>
 
-            <div className="text-center mt-3 text-[8px] text-zinc-400 font-sans">
-              Document généré électroniquement via la plateforme souveraine Idaara.tn · Conforme aux normes administratives
+            <div className="text-center mt-2 text-[7px] text-zinc-400 font-sans">
+              Document officiel généré via Idaara.tn · Conforme aux normes administratives de la République Tunisienne
             </div>
           </div>
         </div>

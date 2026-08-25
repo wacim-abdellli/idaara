@@ -34,22 +34,28 @@ export async function generatePDFFromElement(elementId: string, filename: string
     compress: true,
   });
 
-  const pdfWidth = 210; // A4 width in mm
+  const pageWidth = 210; // A4 width in mm
   const pageHeight = 297; // A4 height in mm
-  const imgHeight = (canvas.height * pdfWidth) / canvas.width;
-  let heightLeft = imgHeight;
-  let position = 0;
+  const renderedHeightMM = (canvas.height * pageWidth) / canvas.width;
 
-  // First page
-  pdf.addImage(imgData, 'JPEG', 0, position, pdfWidth, imgHeight, undefined, 'FAST');
-  heightLeft -= pageHeight;
+  // Single-page auto-fit: If content is within 1.18x of A4 height, scale it to fit cleanly on EXACTLY 1 page
+  if (renderedHeightMM <= pageHeight * 1.18) {
+    const finalHeight = Math.min(renderedHeightMM, pageHeight);
+    pdf.addImage(imgData, 'JPEG', 0, 0, pageWidth, finalHeight, undefined, 'FAST');
+  } else {
+    // True multi-page document: slice page by page cleanly
+    let heightLeft = renderedHeightMM;
+    let position = 0;
 
-  // Additional pages if content exceeds A4 height
-  while (heightLeft > 5) {
-    position = heightLeft - imgHeight;
-    pdf.addPage();
-    pdf.addImage(imgData, 'JPEG', 0, position, pdfWidth, imgHeight, undefined, 'FAST');
+    pdf.addImage(imgData, 'JPEG', 0, position, pageWidth, renderedHeightMM, undefined, 'FAST');
     heightLeft -= pageHeight;
+
+    while (heightLeft > 10) {
+      position -= pageHeight;
+      pdf.addPage();
+      pdf.addImage(imgData, 'JPEG', 0, position, pageWidth, renderedHeightMM, undefined, 'FAST');
+      heightLeft -= pageHeight;
+    }
   }
 
   const safeFilename = filename.endsWith('.pdf') ? filename : `${filename}.pdf`;

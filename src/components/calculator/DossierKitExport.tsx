@@ -123,7 +123,7 @@ export const DossierKitExport: React.FC<DossierKitExportProps> = ({
       <div className="fixed -left-[9999px] top-0 opacity-0 pointer-events-none z-[-100]" aria-hidden="true">
         <div
           id="printable-procedure-dossier"
-          className="w-[210mm] min-h-[297mm] bg-white text-zinc-900 p-8 sm:p-12 font-sans space-y-6"
+          className="w-[210mm] min-h-[280mm] bg-white text-zinc-900 p-8 sm:p-10 font-sans space-y-4"
           style={{ fontFamily: 'system-ui, -apple-system, sans-serif' }}
         >
           {/* Republic Header */}
