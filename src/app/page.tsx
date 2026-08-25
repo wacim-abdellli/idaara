@@ -1124,7 +1124,207 @@ export default function HomePage() {
 
       </section>
 
-      {/* ── 2. INTERACTIVE FISCAL STAMP & 1% TAX STUDIO ── */}
+      {/* ── 2. UNRIVALED CIVIC SUPERPOWERS (WHAT MAKES IDAARA UNIQUE) ── */}
+      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="space-y-6">
+          <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 pb-4 border-b border-white/[0.08]">
+            <div className="space-y-1">
+              <div className="flex items-center gap-2">
+                <span className="text-[10px] font-mono font-bold uppercase tracking-widest text-emerald-400 px-2.5 py-0.5 rounded-md bg-emerald-950/60 border border-emerald-800/40">
+                  {locale === 'ar'
+                    ? 'ابتكارات حصرية'
+                    : locale === 'derja'
+                    ? 'Superpowers 7asriya'
+                    : locale === 'en'
+                    ? 'Unrivaled Capabilities'
+                    : 'Innovations Exclusives'}
+                </span>
+                <span className="text-[11px] font-mono text-zinc-400">
+                  {locale === 'ar'
+                    ? 'ما يميز المنصة عن أي مصدر آخر'
+                    : locale === 'derja'
+                    ? 'Chnowa tzidék Idaara.tn'
+                    : locale === 'en'
+                    ? 'Why citizens rely on Idaara'
+                    : 'Pourquoi choisir Idaara.tn'}
+                </span>
+              </div>
+              <h2 className="text-xl sm:text-3xl font-extrabold text-white tracking-tight">
+                {locale === 'ar'
+                  ? 'خدمات ومزايا لا تجدها في أي مكان آخر'
+                  : locale === 'derja'
+                  ? '7ajet ma tal9ahom fi 7atta blasa okhra fi Tounes'
+                  : locale === 'en'
+                  ? 'Civic Superpowers You Won’t Find Anywhere Else'
+                  : 'Des Outils Conçus pour la Réalité Tunisienne'}
+              </h2>
+            </div>
+            <Link
+              href="/copilot"
+              className="inline-flex items-center gap-1 text-xs font-bold text-emerald-400 hover:text-emerald-300 transition-colors shrink-0"
+            >
+              <span>{locale === 'ar' ? 'استكشف المساعد الذكي' : locale === 'derja' ? 'Jarreb Idaara AI' : locale === 'en' ? 'Explore Civic AI' : 'Essayer le Copilote'}</span>
+              <ArrowRight className="w-3.5 h-3.5 rtl:rotate-180" />
+            </Link>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+            {/* Superpower 1: Fasserli OCR */}
+            <SpotlightCard className="p-6 border-white/[0.08] bg-[#0c0d11] shadow-xl space-y-4 hover:border-emerald-500/40 transition-all flex flex-col justify-between group">
+              <div className="space-y-3">
+                <div className="w-10 h-10 rounded-2xl bg-emerald-500/10 border border-emerald-500/30 flex items-center justify-center text-emerald-400 group-hover:scale-110 transition-transform">
+                  <FileSearch className="w-5 h-5" />
+                </div>
+                <div>
+                  <h3 className="text-base font-bold text-white group-hover:text-emerald-300 transition-colors">
+                    {locale === 'ar'
+                      ? 'فسرلي هالورقة (OCR)'
+                      : locale === 'derja'
+                      ? 'Fasserli hal War9a'
+                      : locale === 'en'
+                      ? 'Fasserli OCR Decoder'
+                      : 'Fasserli (Décodeur OCR)'}
+                  </h3>
+                  <p className="text-xs text-zinc-400 leading-relaxed mt-2">
+                    {locale === 'ar'
+                      ? 'تفكيك فوري للوثائق المعقدة (تنابيه القباضة، إعلامات عدل المنفذ) وشرحها بالدارجة التونسية في ثوانٍ مع خطة عمل ودون حفظ الملفات.'
+                      : locale === 'derja'
+                      ? 'Tfassarlek ay war9a s3iba (tanbih 9badha, 3adel monfedh) bel Derja fi thweni w ta3tik chnowa lezmek ta3mel b\'zero stockage.'
+                      : locale === 'en'
+                      ? 'Instant plain-Derja translation and actionable checklist for complex legal notices (tax audits, court summons) with zero cloud storage.'
+                      : 'Décryptage instantané en Derja claire de vos documents officiels complexes (redressement fiscal, huissiers) avec zéro stockage.'}
+                  </p>
+                </div>
+              </div>
+              <div className="pt-3 border-t border-white/[0.06]">
+                <Link
+                  href="/fasserli"
+                  className="text-xs font-semibold text-emerald-400 hover:text-emerald-300 flex items-center justify-between"
+                >
+                  <span>{locale === 'ar' ? 'فحص وثيقة الآن' : locale === 'derja' ? 'Scanni war9a' : locale === 'en' ? 'Scan Document' : 'Scanner un document'}</span>
+                  <ArrowRight className="w-3.5 h-3.5 rtl:rotate-180" />
+                </Link>
+              </div>
+            </SpotlightCard>
+
+            {/* Superpower 2: Exact Timbre Calculator */}
+            <SpotlightCard className="p-6 border-white/[0.08] bg-[#0c0d11] shadow-xl space-y-4 hover:border-amber-500/40 transition-all flex flex-col justify-between group">
+              <div className="space-y-3">
+                <div className="w-10 h-10 rounded-2xl bg-amber-500/10 border border-amber-500/30 flex items-center justify-center text-amber-400 group-hover:scale-110 transition-transform">
+                  <Calculator className="w-5 h-5" />
+                </div>
+                <div>
+                  <h3 className="text-base font-bold text-white group-hover:text-amber-300 transition-colors">
+                    {locale === 'ar'
+                      ? 'حاسبة التنابر بالمليم'
+                      : locale === 'derja'
+                      ? 'Calculateur Timbres'
+                      : locale === 'en'
+                      ? 'Exact Stamp Calculator'
+                      : 'Calculateur au Millime'}
+                  </h3>
+                  <p className="text-xs text-zinc-400 leading-relaxed mt-2">
+                    {locale === 'ar'
+                      ? 'حساب دقيق لجميع التنابر والمعاليم الرسمية حسب قوانين المالية المحدثة، لتضمن عدم إرجاعك من شباك البلدية أو القباضة.'
+                      : locale === 'derja'
+                      ? 'Te7seblek 9ad-9ad el masrouf wel timbres mte3 el loi de finances bech ma yraj3oukch mel guichet.'
+                      : locale === 'en'
+                      ? 'Down-to-the-millime statutory calculation of all fiscal and municipal stamps so you never get turned away at the counter.'
+                      : 'Calcul exact au millime près des droits et timbres selon la Loi de Finances pour éviter tout refus au guichet.'}
+                  </p>
+                </div>
+              </div>
+              <div className="pt-3 border-t border-white/[0.06]">
+                <Link
+                  href="/calculator"
+                  className="text-xs font-semibold text-amber-400 hover:text-amber-300 flex items-center justify-between"
+                >
+                  <span>{locale === 'ar' ? 'حساب المعاليم' : locale === 'derja' ? '7seb el timbres' : locale === 'en' ? 'Calculate Stamps' : 'Calculer les timbres'}</span>
+                  <ArrowRight className="w-3.5 h-3.5 rtl:rotate-180" />
+                </Link>
+              </div>
+            </SpotlightCard>
+
+            {/* Superpower 3: 1% Auto-Entrepreneur & BCT Invoicing */}
+            <SpotlightCard className="p-6 border-white/[0.08] bg-[#0c0d11] shadow-xl space-y-4 hover:border-teal-500/40 transition-all flex flex-col justify-between group">
+              <div className="space-y-3">
+                <div className="w-10 h-10 rounded-2xl bg-teal-500/10 border border-teal-500/30 flex items-center justify-center text-teal-400 group-hover:scale-110 transition-transform">
+                  <Rocket className="w-5 h-5" />
+                </div>
+                <div>
+                  <h3 className="text-base font-bold text-white group-hover:text-teal-300 transition-colors">
+                    {locale === 'ar'
+                      ? 'فضاء المستقل وفواتير BCT'
+                      : locale === 'derja'
+                      ? 'Freelance 1% & BCT'
+                      : locale === 'en'
+                      ? 'Freelance 1% & BCT Hub'
+                      : 'Freelance 1% & BCT'}
+                  </h3>
+                  <p className="text-xs text-zinc-400 leading-relaxed mt-2">
+                    {locale === 'ar'
+                      ? 'محاكي ضريبة المبادر الذاتي 1%، مع مولد فواتير تصدير الخدمات بالعملة الصعبة (EUR/USD) معفاة من الأداء ومطابقة للبنك المركزي.'
+                      : locale === 'derja'
+                      ? 'Simulateur Auto-Entrepreneur 1% w factures export devises 0% TVA mrigla m3a el Banque Centrale.'
+                      : locale === 'en'
+                      ? '1% Flat tax simulator and BCT-compliant foreign currency export invoice generator (0% VAT under Article 11 Code TVA).'
+                      : 'Simulateur auto-entrepreneur 1% et génération de factures d’export devises (0% TVA conforme BCT).'}
+                  </p>
+                </div>
+              </div>
+              <div className="pt-3 border-t border-white/[0.06]">
+                <Link
+                  href="/launchpad"
+                  className="text-xs font-semibold text-teal-400 hover:text-teal-300 flex items-center justify-between"
+                >
+                  <span>{locale === 'ar' ? 'فضاء المستقل' : locale === 'derja' ? 'Espace Freelance' : locale === 'en' ? 'Open Launchpad' : 'Espace Freelance'}</span>
+                  <ArrowRight className="w-3.5 h-3.5 rtl:rotate-180" />
+                </Link>
+              </div>
+            </SpotlightCard>
+
+            {/* Superpower 4: 24-Wilaya GPS & Seasonal Hours */}
+            <SpotlightCard className="p-6 border-white/[0.08] bg-[#0c0d11] shadow-xl space-y-4 hover:border-cyan-500/40 transition-all flex flex-col justify-between group">
+              <div className="space-y-3">
+                <div className="w-10 h-10 rounded-2xl bg-cyan-500/10 border border-cyan-500/30 flex items-center justify-center text-cyan-400 group-hover:scale-110 transition-transform">
+                  <Compass className="w-5 h-5" />
+                </div>
+                <div>
+                  <h3 className="text-base font-bold text-white group-hover:text-cyan-300 transition-colors">
+                    {locale === 'ar'
+                      ? 'دليل 24 ولاية والتوقيت الفعلي'
+                      : locale === 'derja'
+                      ? 'Atlas 24 Wilaya'
+                      : locale === 'en'
+                      ? '24-Wilaya Live Atlas'
+                      : 'Atlas des 24 Wilayas'}
+                  </h3>
+                  <p className="text-xs text-zinc-400 leading-relaxed mt-2">
+                    {locale === 'ar'
+                      ? 'أكثر من 110 مصلحة عمومية محددة جغرافياً (بلديات، قباضات، مناجم، محاكم) مع التوقيت الفعلي (رمضان / صيف / شتاء) وروابط Waze.'
+                      : locale === 'derja'
+                      ? 'Akther men 110 masla7a b\'GPS, noumrouwat w aw9at el 5edma el sa7i7a fi Romdhan w sayf.'
+                      : locale === 'en'
+                      ? '110+ geocoded public desks across all 24 governorates with real seasonal shifts (Ramadan / Summer) and instant GPS navigation.'
+                      : 'Plus de 110 guichets géolocalisés à travers les 24 gouvernorats avec horaires saisonniers réels et guidage GPS.'}
+                  </p>
+                </div>
+              </div>
+              <div className="pt-3 border-t border-white/[0.06]">
+                <Link
+                  href="/locator"
+                  className="text-xs font-semibold text-cyan-400 hover:text-cyan-300 flex items-center justify-between"
+                >
+                  <span>{locale === 'ar' ? 'تصفح الخريطة' : locale === 'derja' ? 'Chouf el Khrita' : locale === 'en' ? 'Browse Atlas' : 'Consulter l’Atlas'}</span>
+                  <ArrowRight className="w-3.5 h-3.5 rtl:rotate-180" />
+                </Link>
+              </div>
+            </SpotlightCard>
+          </div>
+        </div>
+      </section>
+
+      {/* ── 3. INTERACTIVE FISCAL STAMP & 1% TAX STUDIO ── */}
       <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <SpotlightCard className="p-6 sm:p-10 border-zinc-800/90 shadow-2xl space-y-8">
           

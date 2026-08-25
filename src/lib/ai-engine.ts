@@ -261,6 +261,91 @@ export function parseAndReason(prompt: string, locale: SupportedLanguage | strin
     };
   }
 
+  // Check for Platform Capabilities / Unique Value intents ("What do you do?", "What makes Idaara unique?", "chnowa ta3mel?", "خدمات الموقع")
+  if (
+    query.includes('unique') ||
+    query.includes('service') ||
+    query.includes('serve') ||
+    query.includes('avantage') ||
+    query.includes('pourquoi') ||
+    query.includes('why') ||
+    query.includes('chnowa tzid') ||
+    query.includes('chnowa ta3mel') ||
+    query.includes('chnia el khadamat') ||
+    query.includes('chnowa fih') ||
+    query.includes('شنوة تقدم') ||
+    query.includes('شنوة الخدمات') ||
+    query.includes('علاش') ||
+    query.includes('مميزات') ||
+    query.includes('خدمات الموقع') ||
+    query.includes('ماذا يقدم')
+  ) {
+    return {
+      content:
+        lang === 'ar'
+          ? "مرحباً بك! منصة **إدارة.تونس** تقدم لك 8 خدمات حصرية لا تتوفر في أي مكان آخر بتونس:\n\n" +
+            "1. 📄 **فسرلي هالورقة (Fasserli OCR)**: تفكيك الأوراق والوثائق المعقدة (تنابيه، خطايا، إعلامات) وشرحها بالدارجة في ثوانٍ دون حفظ الملفات.\n" +
+            "2. 🧮 **حاسبة التنابر بالمليم**: حساب المعاليم الدقيقة حسب قانون المالية لتفادي إرجاعك من شباك الإدارة.\n" +
+            "3. 🗺️ **أطلس الـ 24 ولاية والتوقيت الموسمي**: دليل جغرافي تفاعلي لأكثر من 110 مصلحة عمومية مع أوقات العمل الفعلية (رمضان / الصيف / الشتاء) وروابط Waze.\n" +
+            "4. 💼 **فضاء المستقل وفواتير التصدير BCT**: محاكي ضريبة 1% ومولد فواتير تصدير الخدمات بالعملة الصعبة معفاة من الأداء (TVA 0%).\n" +
+            "5. 📝 **مولد العقود البلدية الرسمية**: استخراج عقود كراء وتوكيلات جاهزة للتعريف بالإمضاء بالبلدية.\n" +
+            "6. 🏆 **رادار المناظرات المباشر**: متابعة مناظرات STEG، SONEDE، الكاباس مع الشروط والوثائق المطلوبة.\n" +
+            "7. 🌐 **الدليل الموحد للبوابات الحكومية**: وصول فوري لـ 15 بوابة وطنية (الهوية الرقمية، B3، CNSS...).\n" +
+            "8. 🔒 **بروتوكول الخصوصية المطلق (INPDP)**: حجب تلقائي لأرقام بطاقة التعريف والحسابات البنكية وحذف فوري للبيانات."
+          : lang === 'en'
+          ? "Welcome! **Idaara.tn** delivers 8 exclusive civic superpowers that don't exist anywhere else in Tunisia:\n\n" +
+            "1. 📄 **Fasserli OCR Decoder**: Instant plain-Derja translation and step-by-step action plans for complex bureaucratic notices (court bailiffs, tax audits, CNSS demands) with zero cloud storage.\n" +
+            "2. 🧮 **Exact Fiscal Stamp Calculator**: Down-to-the-millime calculation of statutory stamps & fees to ensure you never get rejected at the counter.\n" +
+            "3. 🗺️ **24-Wilaya GPS Atlas & Seasonal Shifts**: Geocoded directory of 110+ public offices with Ramadan, Summer, and Regular operating hours + Waze/Maps links.\n" +
+            "4. 💼 **Freelance Launchpad & BCT Export Invoicing**: 1% flat tax simulator and compliant foreign currency export invoice generator (0% VAT under Art. 11 Code TVA).\n" +
+            "5. 📝 **Statutory Municipal Contract Builder**: Instantly generate bilingual PDF contracts (Leases, Power of Attorney) formatted with official stamp boxes for Baladiya legalization.\n" +
+            "6. 🏆 **Live Concours Radar**: Up-to-date tracking of public sector recruitment (STEG, SONEDE, CAPES) with eligibility checklists and salary estimates.\n" +
+            "7. 🌐 **15 Unified e-Gov Portals**: Direct shortcuts to e-Houwiya, B3 online, e-CNSS, and emergency hotlines.\n" +
+            "8. 🔒 **Zero-Storage Privacy Protocol**: 100% in-memory ephemeral processing with automatic PII masking (CIN & bank RIBs)."
+          : lang === 'derja'
+          ? "Mar7ba bik! **Idaara.tn** ta3tik 8 7ajet 7asriya ma tal9ahom fi 7atta blasa okhra fi Tounes:\n\n" +
+            "1. 📄 **Fasserli hal War9a (OCR)**: Tfassarlek ay war9a s3iba (tanbih 9badha, 3adel monfedh, khteyet CNSS) bel Derja fi thweni w ta3tik chnowa lezmek ta3mel b'zero stockage.\n" +
+            "2. 🧮 **Calculateur Timbres bel Mellim**: Te7seblek 9ad-9ad el masrouf wel timbres mte3 el loi de finances bech ma yraj3oukch mel guichet.\n" +
+            "3. 🗺️ **Atlas 24 Wilaya w Taw9it Romdhan/Sayf**: Akther men 110 masla7a b'GPS, noumrouwat w aw9at el 5edma el sa7i7a.\n" +
+            "4. 💼 **Espace Freelance 1% w Facturation BCT**: 7assebet el Auto-Entrepreneur w factures export devises (EUR/USD) 0% TVA mrigla m3a el Banque Centrale.\n" +
+            "5. 📝 **Générateur Contrats Baladiya**: T5arrej contrat kré walla tawkil PDF 7adher lel ta3rif bel imdha2 fel Baladiya.\n" +
+            "6. 🏆 **Radar el Concourat**: Taba3 les concours el maftou7in (STEG, SONEDE, CAPES) m3a el wra9 wel conditions.\n" +
+            "7. 🌐 **Dalil 15 Portail e-Gov**: Dokhol direct l'e-Houwiya, B3 en ligne, e-CNSS w noumrouwat el 7adra.\n" +
+            "8. 🔒 **Sécurité 100% INPDP**: Zero stockage lel CIN walla RIB mte3ek, el traitement fel RAM kahaw."
+          : "Bienvenue ! **Idaara.tn** vous offre 8 super-pouvoirs civiques exclusifs introuvables ailleurs en Tunisie :\n\n" +
+            "1. 📄 **Fasserli (Décodeur OCR Éphémère)** : Décryptage instantané du jargon administratif complexe (avis de redressement, huissier de justice, CNSS) en Derja claire avec zéro stockage de fichiers.\n" +
+            "2. 🧮 **Calculateur de Timbres au Millime Près** : Évaluation exacte des droits fiscaux selon la Loi de Finances pour éviter tout refus au guichet.\n" +
+            "3. 🗺️ **Atlas des 24 Gouvernorats & Horaires Saisonniers** : Plus de 110 guichets géolocalisés avec horaires réels (Ramadan, Séance Unique, Hiver) et itinéraires Waze/Maps.\n" +
+            "4. 💼 **Espace Freelance 1% & Facturation BCT** : Simulateur de régime auto-entrepreneur et génération de factures d'exportation en devises (0% TVA conforme BCT).\n" +
+            "5. 📝 **Générateur de Contrats Prêts pour la Baladiya** : Création instantanée de contrats de bail et procurations conformes pour légalisation de signature.\n" +
+            "6. 🏆 **Radar des Concours Nationaux** : Veille continue sur les recrutements publics (STEG, SONEDE, CAPES) avec critères et pièces requises.\n" +
+            "7. 🌐 **Annuaire Unifié de 15 Portails e-Gov** : Accès direct à e-Houwiya, B3 en ligne, e-CNSS et numéros d'urgence.\n" +
+            "8. 🔒 **Protocole Zéro-Stockage INPDP** : Traitement éphémère en mémoire vive avec masquage automatique des CIN et coordonnées bancaires.",
+      actions: [
+        {
+          label: { derja: '📄 Fasserli OCR', fr: 'Scanner un Document (Fasserli)', ar: 'فحص وتفسير وثيقة (OCR)', en: 'Document OCR' },
+          type: 'procedure_link',
+          payload: '/fasserli',
+        },
+        {
+          label: { derja: '🧮 Calculateur Timbres', fr: 'Calculateur Timbres', ar: 'حاسبة التنابر بالمليم', en: 'Stamp Calculator' },
+          type: 'calculator_link',
+          payload: '/calculator',
+        },
+        {
+          label: { derja: '🚀 Espace Freelance 1%', fr: 'Launchpad Freelance 1%', ar: 'فضاء المستقل 1%', en: 'Freelance Hub' },
+          type: 'procedure_link',
+          payload: '/launchpad',
+        },
+        {
+          label: { derja: '🗺️ Atlas 24 Wilayas', fr: 'Atlas des 24 Wilayas', ar: 'أطلس الـ 24 ولاية', en: '24-Wilaya Atlas' },
+          type: 'office_link',
+          payload: '/locator',
+        },
+      ],
+    };
+  }
+
   // Check for greetings (hi, hello, 3aslema, bonjour, salam, ahla)
   if (
     query === 'hi' ||
