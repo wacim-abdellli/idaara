@@ -11,7 +11,12 @@ export type OfficeCategory =
   | 'rne'
   | 'douane'
   | 'steg'
-  | 'sonede';
+  | 'sonede'
+  | 'tribunal'
+  | 'aneti'
+  | 'hopital'
+  | 'ministere'
+  | 'onas';
 
 export type Governorate =
   | 'Tunis'
@@ -72,4 +77,7 @@ export interface PublicOffice {
   hasConformeService: boolean;
   hasTimbreVendor: boolean;
   tips?: LocalizedString;
+  website?: string;
+  onlinePortal?: string;
+  services?: string[];
 }

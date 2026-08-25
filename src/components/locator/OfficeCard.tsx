@@ -30,6 +30,14 @@ const categoryConfig: Record<string, { label: string; color: string }> = {
   attt:             { label: 'Agence ATTT',              color: 'bg-indigo-500/10 text-indigo-400 border-indigo-500/25' },
   rne:              { label: 'Registre Entreprises',     color: 'bg-rose-500/10 text-rose-400 border-rose-500/25' },
   police_garde:     { label: 'Poste de Police/Garde',   color: 'bg-zinc-700/40 text-zinc-400 border-zinc-600/40' },
+  steg:             { label: 'STEG — Électricité & Gaz', color: 'bg-yellow-500/10 text-yellow-400 border-yellow-500/25' },
+  sonede:           { label: 'SONEDE — Eau',             color: 'bg-sky-500/10 text-sky-400 border-sky-500/25' },
+  tribunal:         { label: 'Tribunal',                 color: 'bg-orange-500/10 text-orange-400 border-orange-500/25' },
+  aneti:            { label: 'Agence ANETI',             color: 'bg-teal-500/10 text-teal-400 border-teal-500/25' },
+  hopital:          { label: 'Hôpital / CHU / CHR',     color: 'bg-red-500/10 text-red-400 border-red-500/25' },
+  ministere:        { label: 'Ministère',                color: 'bg-violet-500/10 text-violet-400 border-violet-500/25' },
+  onas:             { label: 'ONAS — Assainissement',    color: 'bg-lime-500/10 text-lime-400 border-lime-500/25' },
+  douane:           { label: 'Douane',                   color: 'bg-stone-500/10 text-stone-400 border-stone-500/25' },
 };
 
 export const OfficeCard: React.FC<OfficeCardProps> = ({ office, activeScheduleMode }) => {

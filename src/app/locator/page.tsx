@@ -37,6 +37,8 @@ export default function LocatorPage() {
           : 'Tunis & Banlieue',
     },
     { id: 'Ariana', label: locale === 'ar' ? 'أريانة' : 'Ariana' },
+    { id: 'Ben Arous', label: locale === 'ar' ? 'بن عروس' : 'Ben Arous' },
+    { id: 'Manouba', label: locale === 'ar' ? 'منوبة' : 'Manouba' },
     {
       id: 'Sousse',
       label:
@@ -48,6 +50,8 @@ export default function LocatorPage() {
           ? 'Sousse & Sahel'
           : 'Sousse & Sahel',
     },
+    { id: 'Monastir', label: locale === 'ar' ? 'المنستير' : 'Monastir' },
+    { id: 'Mahdia', label: locale === 'ar' ? 'المهدية' : 'Mahdia' },
     { id: 'Sfax', label: locale === 'ar' ? 'صفاقس' : 'Sfax' },
     {
       id: 'Nabeul',
@@ -60,9 +64,18 @@ export default function LocatorPage() {
           ? 'Nabeul / Cap Bon'
           : 'Nabeul / Cap Bon',
     },
+    { id: 'Zaghouan', label: locale === 'ar' ? 'زغوان' : 'Zaghouan' },
     { id: 'Bizerte', label: locale === 'ar' ? 'بنزرت' : 'Bizerte' },
+    { id: 'Béja', label: locale === 'ar' ? 'باجة' : 'Béja' },
+    { id: 'Jendouba', label: locale === 'ar' ? 'جندوبة' : 'Jendouba' },
+    { id: 'Le Kef', label: locale === 'ar' ? 'الكاف' : 'Le Kef' },
+    { id: 'Siliana', label: locale === 'ar' ? 'سليانة' : 'Siliana' },
+    { id: 'Kairouan', label: locale === 'ar' ? 'القيروان' : 'Kairouan' },
+    { id: 'Kasserine', label: locale === 'ar' ? 'القصرين' : 'Kasserine' },
+    { id: 'Sidi Bouzid', label: locale === 'ar' ? 'سيدي بوزيد' : 'Sidi Bouzid' },
+    { id: 'Gabès', label: locale === 'ar' ? 'قابس' : 'Gabès' },
     {
-      id: 'Medenine',
+      id: 'Médenine',
       label:
         locale === 'ar'
           ? 'مدنين وجربة'
@@ -72,6 +85,10 @@ export default function LocatorPage() {
           ? 'Djerba / Médenine'
           : 'Djerba / Médenine',
     },
+    { id: 'Tataouine', label: locale === 'ar' ? 'تطاوين' : 'Tataouine' },
+    { id: 'Gafsa', label: locale === 'ar' ? 'قفصة' : 'Gafsa' },
+    { id: 'Tozeur', label: locale === 'ar' ? 'توزر' : 'Tozeur' },
+    { id: 'Kébili', label: locale === 'ar' ? 'قبلي' : 'Kébili' },
   ];
 
   const categories = [
@@ -151,6 +168,94 @@ export default function LocatorPage() {
           : locale === 'en'
           ? 'RNE Business Registry'
           : 'Bureaux RNE',
+    },
+    {
+      id: 'cnss',
+      label:
+        locale === 'ar'
+          ? 'الضمان الاجتماعي (CNSS)'
+          : locale === 'derja'
+          ? 'Marakez CNSS'
+          : locale === 'en'
+          ? 'CNSS Social Security'
+          : 'Caisses CNSS',
+    },
+    {
+      id: 'police_garde',
+      label:
+        locale === 'ar'
+          ? 'مراكز الشرطة والحرس'
+          : locale === 'derja'
+          ? 'Commissariats & Garde'
+          : locale === 'en'
+          ? 'Police & Garde Nationale'
+          : 'Police & Garde Nationale',
+    },
+    {
+      id: 'steg',
+      label:
+        locale === 'ar'
+          ? 'الكهرباء والغاز (STEG)'
+          : locale === 'derja'
+          ? 'Agences STEG'
+          : locale === 'en'
+          ? 'STEG (Electricity & Gas)'
+          : 'Agences STEG',
+    },
+    {
+      id: 'sonede',
+      label:
+        locale === 'ar'
+          ? 'توزيع المياه (SONEDE)'
+          : locale === 'derja'
+          ? 'Agences SONEDE'
+          : locale === 'en'
+          ? 'SONEDE (Water Authority)'
+          : 'Agences SONEDE',
+    },
+    {
+      id: 'tribunal',
+      label:
+        locale === 'ar'
+          ? 'المحاكم الابتدائية'
+          : locale === 'derja'
+          ? 'Tribunaux'
+          : locale === 'en'
+          ? 'Courts (Tribunaux)'
+          : 'Tribunaux',
+    },
+    {
+      id: 'aneti',
+      label:
+        locale === 'ar'
+          ? 'وكالات التشغيل (ANETI)'
+          : locale === 'derja'
+          ? 'Agences ANETI'
+          : locale === 'en'
+          ? 'ANETI Employment Offices'
+          : 'Agences ANETI',
+    },
+    {
+      id: 'hopital',
+      label:
+        locale === 'ar'
+          ? 'المستشفيات الجهوية'
+          : locale === 'derja'
+          ? 'Hôpitaux'
+          : locale === 'en'
+          ? 'Hospitals (CHU/CHR)'
+          : 'Hôpitaux',
+    },
+    {
+      id: 'ministere',
+      label:
+        locale === 'ar'
+          ? 'الوزارات'
+          : locale === 'derja'
+          ? 'Ministères'
+          : locale === 'en'
+          ? 'Ministries'
+          : 'Ministères',
     },
   ];
 
