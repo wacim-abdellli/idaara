@@ -123,25 +123,38 @@ export const DossierKitExport: React.FC<DossierKitExportProps> = ({
       <div className="fixed -left-[9999px] top-0 opacity-0 pointer-events-none z-[-100]" aria-hidden="true">
         <div
           id="printable-procedure-dossier"
-          className="w-[210mm] min-h-[280mm] bg-white text-zinc-900 p-8 sm:p-10 font-sans space-y-4"
-          style={{ fontFamily: 'system-ui, -apple-system, sans-serif' }}
+          dir={locale === 'ar' || locale === 'derja' ? 'rtl' : 'ltr'}
+          className={`w-[210mm] min-h-[280mm] bg-white text-zinc-900 p-8 sm:p-10 space-y-4 ${
+            locale === 'ar' || locale === 'derja' ? 'text-right' : 'text-left'
+          }`}
+          style={{ fontFamily: locale === 'ar' || locale === 'derja' ? 'Cairo, "Noto Sans Arabic", sans-serif' : 'system-ui, -apple-system, sans-serif' }}
         >
           {/* Republic Header */}
-          <div className="flex items-start justify-between border-b-2 border-zinc-900 pb-4">
-            <div className="text-left text-xs space-y-0.5">
-              <p className="font-bold uppercase tracking-wider text-xs text-zinc-950">République Tunisienne</p>
-              <p className="text-[11px] text-zinc-600">Portail National des Démarches Administratives</p>
+          <div className="flex items-start justify-between border-b-2 border-zinc-900 pb-3">
+            <div className={locale === 'ar' || locale === 'derja' ? 'text-right text-xs space-y-0.5' : 'text-left text-xs space-y-0.5'}>
+              <p className="font-bold uppercase tracking-wider text-xs text-zinc-950">
+                {locale === 'ar' ? 'الجمهورية التونسية' : locale === 'en' ? 'Republic of Tunisia' : 'République Tunisienne'}
+              </p>
+              <p className="text-[11px] text-zinc-600">
+                {locale === 'ar' ? 'البوابة الوطنية للإجراءات الإدارية' : locale === 'en' ? 'National Administrative Procedures Portal' : 'Portail National des Démarches Administratives'}
+              </p>
               <p className="text-[10px] text-zinc-500 font-mono">Idaara.tn · Homologation JORT 2026</p>
             </div>
 
             <div className="text-center px-4 py-1.5 rounded-lg border border-zinc-300 bg-zinc-50">
-              <span className="text-[10px] font-bold uppercase tracking-widest text-zinc-500 block">FICHE OFFICIELLE</span>
+              <span className="text-[9px] font-bold uppercase tracking-widest text-zinc-500 block">
+                {locale === 'ar' ? 'بطاقة إرشادية رسمية' : 'FICHE OFFICIELLE'}
+              </span>
               <span className="text-xs font-extrabold text-emerald-800 uppercase">{procedure.vertical}</span>
             </div>
 
-            <div className="text-right text-xs space-y-0.5" dir="rtl">
-              <p className="font-bold text-xs text-zinc-950">الجمهورية التونسية</p>
-              <p className="text-[11px] text-zinc-600">البوابة الوطنية للإجراءات الإدارية</p>
+            <div className={locale === 'ar' || locale === 'derja' ? 'text-left text-xs space-y-0.5' : 'text-right text-xs space-y-0.5'}>
+              <p className="font-bold text-xs text-zinc-950">
+                {locale === 'ar' ? 'République Tunisienne' : 'الجمهورية التونسية'}
+              </p>
+              <p className="text-[11px] text-zinc-600">
+                {locale === 'ar' ? "Portail de l'Administration" : 'البوابة الوطنية للإجراءات'}
+              </p>
               <p className="text-[10px] text-zinc-500 font-mono">إدارة.تونس</p>
             </div>
           </div>
@@ -149,8 +162,8 @@ export const DossierKitExport: React.FC<DossierKitExportProps> = ({
           {/* Procedure Title & Meta */}
           <div className="bg-zinc-50 p-4 rounded-xl border border-zinc-200 flex items-center justify-between">
             <div className="space-y-1">
-              <span className="text-[10px] font-mono uppercase text-zinc-500 font-bold tracking-wider">
-                Dossier Administratif / الملف الإداري
+              <span className="text-[10px] font-mono uppercase text-zinc-500 font-bold tracking-wider block">
+                {locale === 'ar' ? 'الملف الإداري الرسمي' : 'Dossier Administratif / الملف الإداري'}
               </span>
               <h1 className="text-lg font-extrabold text-zinc-950">{title}</h1>
               <p className="text-xs text-zinc-600">
@@ -158,12 +171,16 @@ export const DossierKitExport: React.FC<DossierKitExportProps> = ({
               </p>
             </div>
 
-            <div className="text-right shrink-0 pl-4 border-l border-zinc-200">
-              <span className="text-[10px] uppercase font-bold text-zinc-500 block">Total Estimé / المجموع</span>
+            <div className={`shrink-0 ${locale === 'ar' || locale === 'derja' ? 'pr-4 border-r text-left' : 'pl-4 border-l text-right'} border-zinc-200`}>
+              <span className="text-[10px] uppercase font-bold text-zinc-500 block">
+                {locale === 'ar' ? 'المجموع التقديري' : locale === 'en' ? 'Estimated Total' : 'Total Estimé'}
+              </span>
               <span className="text-lg font-mono font-extrabold text-emerald-700">
                 {formatTND(total, locale)}
               </span>
-              <span className="text-[10px] text-zinc-500 block">Délai : {procedure.estimatedProcessingTime}</span>
+              <span className="text-[10px] text-zinc-500 block">
+                {locale === 'ar' ? `الأجل : ${procedure.estimatedProcessingTime}` : `Délai : ${procedure.estimatedProcessingTime}`}
+              </span>
             </div>
           </div>
 
@@ -173,8 +190,8 @@ export const DossierKitExport: React.FC<DossierKitExportProps> = ({
             {/* Required Documents */}
             <div className="space-y-3">
               <h3 className="text-xs font-bold uppercase tracking-wider text-zinc-950 pb-1.5 border-b border-zinc-200 flex items-center gap-1.5">
-                <CheckCircle2 className="w-3.5 h-3.5 text-emerald-700" />
-                <span>Pièces Requises (الأوراق المطلوبة)</span>
+                <CheckCircle2 className="w-3.5 h-3.5 text-emerald-700 shrink-0" />
+                <span>{locale === 'ar' ? 'الوثائق والأوراق المطلوبة' : 'Pièces Requises (الأوراق المطلوبة)'}</span>
               </h3>
 
               <div className="space-y-2 text-xs">
@@ -195,39 +212,51 @@ export const DossierKitExport: React.FC<DossierKitExportProps> = ({
             {/* Fees & Stamp Breakdown */}
             <div className="space-y-3">
               <h3 className="text-xs font-bold uppercase tracking-wider text-zinc-950 pb-1.5 border-b border-zinc-200 flex items-center gap-1.5">
-                <Stamp className="w-3.5 h-3.5 text-amber-700" />
-                <span>Timbres & Frais (المعاليم والتنابر)</span>
+                <Stamp className="w-3.5 h-3.5 text-amber-700 shrink-0" />
+                <span>{locale === 'ar' ? 'المعاليم والتنابر الجبائية' : 'Timbres & Frais (المعاليم والتنابر)'}</span>
               </h3>
 
               <table className="w-full text-xs border border-zinc-200 rounded-lg overflow-hidden">
                 <thead className="bg-zinc-100 text-zinc-700 font-bold">
                   <tr>
-                    <th className="p-2 text-left">Désignation</th>
-                    <th className="p-2 text-right">Tarif</th>
+                    <th className={`p-2 ${locale === 'ar' || locale === 'derja' ? 'text-right' : 'text-left'}`}>
+                      {locale === 'ar' ? 'البيان' : 'Désignation'}
+                    </th>
+                    <th className={`p-2 ${locale === 'ar' || locale === 'derja' ? 'text-left' : 'text-right'}`}>
+                      {locale === 'ar' ? 'المبلغ' : 'Tarif'}
+                    </th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-zinc-200">
                   {procedure.costsBreakdown.map((item, idx) => (
                     <tr key={idx}>
                       <td className="p-2 text-zinc-800">{getLocalized(item.label, locale)}</td>
-                      <td className="p-2 text-right font-mono font-bold text-zinc-950">{item.amountTND.toFixed(3)} DT</td>
+                      <td className={`p-2 ${locale === 'ar' || locale === 'derja' ? 'text-left' : 'text-right'} font-mono font-bold text-zinc-950`}>
+                        {item.amountTND.toFixed(3)} {locale === 'ar' ? 'د.ت' : 'DT'}
+                      </td>
                     </tr>
                   ))}
                   <tr className="bg-zinc-100 font-bold">
-                    <td className="p-2 text-zinc-900">Total / المجموع</td>
-                    <td className="p-2 text-right font-mono text-emerald-800">{total.toFixed(3)} DT</td>
+                    <td className="p-2 text-zinc-900">{locale === 'ar' ? 'المجموع الجملي' : 'Total / المجموع'}</td>
+                    <td className={`p-2 ${locale === 'ar' || locale === 'derja' ? 'text-left' : 'text-right'} font-mono text-emerald-800`}>
+                      {total.toFixed(3)} {locale === 'ar' ? 'د.ت' : 'DT'}
+                    </td>
                   </tr>
                 </tbody>
               </table>
 
               {/* Municipal Stamp Placement Box */}
-              <div className="mt-4 p-3 border-2 border-dashed border-zinc-300 rounded-xl bg-zinc-50 flex items-center justify-between">
+              <div className="mt-3 p-2.5 border-2 border-dashed border-zinc-300 rounded-xl bg-zinc-50 flex items-center justify-between">
                 <div>
-                  <span className="text-[10px] font-bold uppercase text-zinc-700 block">Cadre Réservé aux Timbres</span>
-                  <span className="text-[9px] text-zinc-500">Recette des Finances / Baladiya</span>
+                  <span className="text-[10px] font-bold uppercase text-zinc-700 block">
+                    {locale === 'ar' ? 'موضع ختم وتأشيرة الإدارة' : 'Cadre Réservé aux Timbres'}
+                  </span>
+                  <span className="text-[9px] text-zinc-500">
+                    {locale === 'ar' ? 'القباضة المالية / البلدية' : 'Recette des Finances / Baladiya'}
+                  </span>
                 </div>
-                <div className="w-14 h-14 border border-zinc-400 rounded flex items-center justify-center text-[8px] text-zinc-400 text-center uppercase">
-                  Cachet
+                <div className="w-12 h-12 border border-zinc-400 rounded flex items-center justify-center text-[8px] text-zinc-400 text-center uppercase">
+                  {locale === 'ar' ? 'الختم' : 'Cachet'}
                 </div>
               </div>
             </div>
@@ -237,13 +266,13 @@ export const DossierKitExport: React.FC<DossierKitExportProps> = ({
           {/* Procedure Steps Roadmap */}
           <div className="space-y-2 pt-2 border-t border-zinc-200">
             <h3 className="text-xs font-bold uppercase tracking-wider text-zinc-950">
-              Démarches & Guichets (مسار الإيداع)
+              {locale === 'ar' ? 'مسار الإيداع والشبابيك الإدارية' : 'Démarches & Guichets (مسار الإيداع)'}
             </h3>
             <div className="grid grid-cols-3 gap-2">
               {procedure.steps.map((step) => (
                 <div key={step.stepNumber} className="p-2 rounded-lg bg-zinc-50 border border-zinc-200 text-xs">
                   <div className="flex items-center gap-1.5 mb-1">
-                    <span className="w-4 h-4 rounded-full bg-zinc-900 text-white font-bold text-[9px] flex items-center justify-center">
+                    <span className="w-4 h-4 rounded-full bg-zinc-900 text-white font-bold text-[9px] flex items-center justify-center shrink-0">
                       {step.stepNumber}
                     </span>
                     <span className="font-bold text-zinc-900 truncate">{getLocalized(step.title, locale)}</span>
@@ -255,9 +284,13 @@ export const DossierKitExport: React.FC<DossierKitExportProps> = ({
           </div>
 
           {/* Footer certification */}
-          <div className="pt-4 border-t border-zinc-200 flex items-center justify-between text-[10px] text-zinc-500">
-            <span>Généré par Idaara.tn — BCT & JORT Conforme</span>
-            <span>Signature du Citoyen / إمضاء المواطن : ___________________</span>
+          <div className="pt-3 border-t border-zinc-200 flex items-center justify-between text-[10px] text-zinc-500">
+            <span>
+              {locale === 'ar' ? 'محرر عبر بوابة إدارة.تونس الرسمية · مطابقة للتشريع الوطني' : 'Généré par Idaara.tn — BCT & JORT Conforme'}
+            </span>
+            <span>
+              {locale === 'ar' ? 'إمضاء المواطن : ___________________' : 'Signature du Citoyen : ___________________'}
+            </span>
           </div>
 
         </div>
