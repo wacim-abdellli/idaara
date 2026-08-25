@@ -45,14 +45,14 @@ export default function DocumentDetailPage({
   };
 
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-6">
+    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-8">
       {/* Back link & Header */}
-      <div>
+      <div className="space-y-4">
         <Link
           href="/documents"
-          className="inline-flex items-center space-x-1.5 rtl:space-x-reverse text-xs text-zinc-400 hover:text-emerald-400 mb-3 transition-colors"
+          className="inline-flex items-center space-x-2 rtl:space-x-reverse text-xs font-bold text-zinc-400 hover:text-emerald-400 transition-colors group"
         >
-          <ArrowLeft className="w-3.5 h-3.5 rtl:rotate-180" />
+          <ArrowLeft className="w-4 h-4 rtl:rotate-180 transition-transform group-hover:-translate-x-1 rtl:group-hover:translate-x-1" />
           <span>
             {locale === 'ar'
               ? 'الرجوع إلى قائمة النماذج والعقود'
@@ -64,28 +64,28 @@ export default function DocumentDetailPage({
           </span>
         </Link>
 
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-          <div>
-            <div className="flex items-center space-x-2 rtl:space-x-reverse text-xs text-amber-400 font-semibold mb-1">
-              <Stamp className="w-3.5 h-3.5" />
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 p-6 sm:p-7 rounded-3xl bg-[#0d0f14] border border-white/[0.08] shadow-2xl">
+          <div className="space-y-1.5">
+            <div className="flex items-center space-x-2 rtl:space-x-reverse text-xs text-amber-400 font-bold">
+              <Stamp className="w-4 h-4 shrink-0" />
               <span>
                 {locale === 'ar'
-                  ? 'نموذج مطابق لتراتيب البلدية والقباضة المالية'
+                  ? 'نموذج رسمي معتمد ومطابق لتراتيب البلدية والقباضة المالية'
                   : locale === 'derja'
                   ? 'Modèle Homologué Baladiya & Recette'
                   : locale === 'en'
-                  ? 'Certified Model for Baladiya & Recette'
+                  ? 'Certified Legal Model for Baladiya & Recette'
                   : 'Modèle Certifié Baladiya & Recette'}
               </span>
             </div>
-            <h1 className="text-2xl sm:text-3xl font-extrabold text-white tracking-tight">
+            <h1 className="text-2xl sm:text-3xl lg:text-4xl font-extrabold text-white tracking-tight">
               {title}
             </h1>
-            <p className="text-xs text-zinc-400 mt-1 max-w-2xl">{description}</p>
+            <p className="text-xs sm:text-sm text-zinc-400 max-w-3xl leading-relaxed">{description}</p>
           </div>
 
-          <div className="p-3.5 rounded-2xl bg-zinc-900 border border-zinc-800 text-right rtl:text-left shrink-0">
-            <span className="text-[10px] text-zinc-500 block uppercase font-bold">
+          <div className="p-4 rounded-2xl bg-[#07080b] border border-amber-500/25 text-right rtl:text-left shrink-0 shadow-lg">
+            <span className="text-[10px] text-zinc-400 block uppercase font-bold tracking-wider">
               {locale === 'ar'
                 ? 'التنبر المطلوب'
                 : locale === 'derja'
@@ -94,7 +94,7 @@ export default function DocumentDetailPage({
                 ? 'Required Stamp'
                 : 'Timbre Requis'}
             </span>
-            <span className="text-base font-bold text-emerald-400">{template.requiredTimbreTND} DT</span>
+            <span className="text-xl font-extrabold text-amber-400 font-mono">{template.requiredTimbreTND} DT</span>
           </div>
         </div>
       </div>
@@ -107,7 +107,7 @@ export default function DocumentDetailPage({
       />
 
       {/* Grid: Form on Left, PDF Preview on Right */}
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
         {/* Form Wizard */}
         <div className="lg:col-span-5 space-y-6">
           <FormWizard
@@ -118,8 +118,8 @@ export default function DocumentDetailPage({
           />
         </div>
 
-        {/* Live Vector PDF Preview */}
-        <div className="lg:col-span-7">
+        {/* Live Vector PDF Preview with Sticky positioning */}
+        <div className="lg:col-span-7 lg:sticky lg:top-20">
           <PDFPreview template={template} formData={formData} />
         </div>
       </div>

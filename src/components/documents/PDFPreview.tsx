@@ -83,80 +83,108 @@ export const PDFPreview: React.FC<PDFPreviewProps> = ({ template, formData }) =>
   return (
     <div className="space-y-4">
       {/* Top Action Bar with Language Switcher */}
-      <div className="flex flex-col md:flex-row md:items-center justify-between p-4 rounded-2xl bg-zinc-900 border border-zinc-800 gap-4">
-        <div className="flex items-center space-x-2 rtl:space-x-reverse text-xs text-zinc-300">
-          <ShieldCheck className="w-4 h-4 text-emerald-400 shrink-0" />
-          <span>{previewBannerText}</span>
-        </div>
-
-        <div className="flex flex-wrap items-center gap-3">
-          {/* Document Language Selector */}
-          <div className="flex items-center bg-zinc-950 p-1 rounded-xl border border-zinc-800 text-xs">
-            <Globe2 className="w-3.5 h-3.5 text-zinc-400 mx-1.5 shrink-0" />
-            <button
-              type="button"
-              onClick={() => setDocLang('ar')}
-              className={`px-2.5 py-1 rounded-lg font-bold transition-all cursor-pointer ${
-                docLang === 'ar' ? 'bg-emerald-500 text-zinc-950 shadow-sm' : 'text-zinc-400 hover:text-zinc-200'
-              }`}
-            >
-              العربية
-            </button>
-            <button
-              type="button"
-              onClick={() => setDocLang('fr')}
-              className={`px-2.5 py-1 rounded-lg font-bold transition-all cursor-pointer ${
-                docLang === 'fr' ? 'bg-emerald-500 text-zinc-950 shadow-sm' : 'text-zinc-400 hover:text-zinc-200'
-              }`}
-            >
-              Français
-            </button>
-            <button
-              type="button"
-              onClick={() => setDocLang('en')}
-              className={`px-2.5 py-1 rounded-lg font-bold transition-all cursor-pointer ${
-                docLang === 'en' ? 'bg-emerald-500 text-zinc-950 shadow-sm' : 'text-zinc-400 hover:text-zinc-200'
-              }`}
-            >
-              English
-            </button>
-            <button
-              type="button"
-              onClick={() => setDocLang('derja')}
-              className={`px-2.5 py-1 rounded-lg font-bold transition-all cursor-pointer ${
-                docLang === 'derja' ? 'bg-emerald-500 text-zinc-950 shadow-sm' : 'text-zinc-400 hover:text-zinc-200'
-              }`}
-            >
-              Derja
-            </button>
+      <div className="p-4 sm:p-5 rounded-3xl bg-[#0d0f14] border border-white/[0.08] shadow-2xl space-y-4">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 border-b border-zinc-800/80">
+          <div className="flex items-center space-x-2 rtl:space-x-reverse text-xs text-zinc-300">
+            <span className="flex h-2 w-2 relative">
+              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+              <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
+            </span>
+            <span className="font-medium">{previewBannerText}</span>
           </div>
 
           <div className="flex items-center space-x-2 rtl:space-x-reverse shrink-0">
             <button
               onClick={handlePrint}
-              className="flex items-center space-x-1.5 rtl:space-x-reverse px-3.5 py-1.5 rounded-xl bg-zinc-800 hover:bg-zinc-700 text-zinc-300 text-xs font-semibold transition-colors cursor-pointer border border-zinc-700"
+              className="flex items-center space-x-1.5 rtl:space-x-reverse px-3.5 py-2 rounded-xl bg-zinc-800/90 hover:bg-zinc-700 text-zinc-200 text-xs font-bold transition-all cursor-pointer border border-zinc-700 hover:scale-[1.02] shadow-sm"
+              title="Print document"
             >
-              <Printer className="w-3.5 h-3.5" />
+              <Printer className="w-3.5 h-3.5 text-zinc-400" />
               <span>{printBtnText}</span>
             </button>
             <button
               onClick={handleDownload}
               disabled={isGenerating}
-              className="flex items-center space-x-1.5 rtl:space-x-reverse px-4 py-1.5 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-zinc-950 font-bold text-xs shadow-md shadow-emerald-500/20 transition-all hover:scale-105 cursor-pointer disabled:opacity-50"
+              className="flex items-center space-x-1.5 rtl:space-x-reverse px-4 py-2 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-zinc-950 font-extrabold text-xs shadow-lg shadow-emerald-500/20 transition-all hover:scale-[1.03] cursor-pointer disabled:opacity-50"
             >
               <Download className="w-3.5 h-3.5" />
               <span>{isGenerating ? generatingBtnText : downloadBtnText}</span>
             </button>
           </div>
         </div>
+
+        {/* Language Tabs Selector */}
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2.5 pt-0.5">
+          <span className="text-[11px] text-zinc-400 flex items-center gap-1.5 font-medium">
+            <Globe2 className="w-3.5 h-3.5 text-emerald-400" />
+            <span>
+              {docLang === 'ar'
+                ? 'لغة الوثيقة الرسمية المستخرجة :'
+                : docLang === 'en'
+                ? 'Official Document Language:'
+                : 'Langue du document officiel :'}
+            </span>
+          </span>
+
+          <div className="inline-flex p-1 rounded-2xl bg-zinc-950 border border-zinc-800/80 text-xs self-start sm:self-auto">
+            <button
+              type="button"
+              onClick={() => setDocLang('ar')}
+              className={`px-3 py-1.5 rounded-xl font-bold transition-all cursor-pointer ${
+                docLang === 'ar'
+                  ? 'bg-emerald-500 text-zinc-950 shadow-md'
+                  : 'text-zinc-400 hover:text-zinc-200'
+              }`}
+            >
+              🇹🇳 العربية
+            </button>
+            <button
+              type="button"
+              onClick={() => setDocLang('fr')}
+              className={`px-3 py-1.5 rounded-xl font-bold transition-all cursor-pointer ${
+                docLang === 'fr'
+                  ? 'bg-emerald-500 text-zinc-950 shadow-md'
+                  : 'text-zinc-400 hover:text-zinc-200'
+              }`}
+            >
+              🇫🇷 Français
+            </button>
+            <button
+              type="button"
+              onClick={() => setDocLang('en')}
+              className={`px-3 py-1.5 rounded-xl font-bold transition-all cursor-pointer ${
+                docLang === 'en'
+                  ? 'bg-emerald-500 text-zinc-950 shadow-md'
+                  : 'text-zinc-400 hover:text-zinc-200'
+              }`}
+            >
+              🇬🇧 English
+            </button>
+            <button
+              type="button"
+              onClick={() => setDocLang('derja')}
+              className={`px-3 py-1.5 rounded-xl font-bold transition-all cursor-pointer ${
+                docLang === 'derja'
+                  ? 'bg-emerald-500 text-zinc-950 shadow-md'
+                  : 'text-zinc-400 hover:text-zinc-200'
+              }`}
+            >
+              🇹🇳 Derja
+            </button>
+          </div>
+        </div>
       </div>
 
       {/* The Official Document Paper Render Canvas */}
-      <div className="bg-zinc-950 p-4 sm:p-8 rounded-2xl border border-zinc-800 overflow-x-auto flex justify-center">
+      <div className="bg-[#08090c] p-3 sm:p-6 rounded-3xl border border-white/[0.06] overflow-x-auto flex flex-col items-center shadow-inner relative">
+        <div className="self-end mb-2 text-[10px] font-mono text-zinc-400 px-2.5 py-1 rounded-md bg-zinc-900 border border-zinc-800">
+          A4 · 210 × 297 mm · 300 DPI
+        </div>
+
         <div
           id="official-doc-render"
           dir={isRtl ? 'rtl' : 'ltr'}
-          className={`w-[210mm] min-h-[280mm] bg-white text-zinc-900 p-8 sm:p-10 shadow-2xl flex flex-col justify-between relative ${
+          className={`w-[210mm] min-h-[280mm] bg-white text-zinc-900 p-8 sm:p-10 shadow-2xl flex flex-col justify-between relative rounded-sm border border-zinc-200 ${
             isRtl ? 'font-sans text-right' : 'font-serif text-left'
           }`}
           style={{ fontFamily: isRtl ? 'Cairo, "Noto Sans Arabic", Tahoma, sans-serif' : 'Times New Roman, Georgia, serif' }}
