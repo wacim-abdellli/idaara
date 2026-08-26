@@ -1,14 +1,19 @@
 import { describe, it, expect } from 'vitest';
 import { parseAndReason } from '../lib/ai-engine';
 
-describe('ai-engine — language detection', () => {
-  it('responds in Tunisian Derja when prompt uses Arabizi "ena"', () => {
-    const result = parseAndReason('passport w ena etudient', 'fr');
-    // Must contain Arabic script (الدارجة التونسية) — not a French paragraph
-    const hasFrenchOpening =
-      result.content.startsWith('Pour renouveler') ||
-      result.content.startsWith('En tant');
-    expect(hasFrenchOpening, 'Should NOT reply in French for Derja prompt').toBe(false);
+describe('ai-engine — language detection & Arabic Derja enforcement', () => {
+  it('responds in pure Arabic script Derja when prompt is "hi"', () => {
+    const result = parseAndReason('hi', 'derja');
+    // Must contain Arabic characters
+    expect(/[\u0600-\u06FF]/.test(result.content), 'Greeting response should be in Arabic script').toBe(true);
+    // Must NOT start with Latin Arabizi like "3aslema!"
+    expect(result.content.startsWith('3aslema'), 'Should NOT start with Latin Arabizi').toBe(false);
+  });
+
+  it('responds in Arabic script Derja when prompt uses Arabizi "kifech"', () => {
+    const result = parseAndReason('kifech nbeddel el carte grise', 'fr');
+    expect(/[\u0600-\u06FF]/.test(result.content), 'Derja query should get Arabic script response').toBe(true);
+    expect(result.content.toLowerCase()).not.toContain('bech tbeddel');
   });
 
   it('detects student context and returns 25 DT passport fee instead of 80 DT', () => {
@@ -21,7 +26,6 @@ describe('ai-engine — language detection', () => {
 
   it('responds in Arabic for Arabic-script prompt', () => {
     const result = parseAndReason('كيفاش نجدد جواز سفري', 'fr');
-    // Must contain Arabic characters
     const hasArabic = /[\u0600-\u06FF]/.test(result.content);
     expect(hasArabic, 'Arabic-script prompt should get Arabic response').toBe(true);
   });
@@ -42,17 +46,18 @@ describe('ai-engine — language detection', () => {
     expect(hasEnglish, 'English prompt should get English response').toBe(true);
   });
 
-  it('returns B3 procedure data for b3 query', () => {
+  it('returns B3 procedure data in Arabic script for b3 query', () => {
     const result = parseAndReason('b3 sawabi9', 'derja');
     expect(result.content.length).toBeGreaterThan(50);
-    // Should contain B3 reference
-    expect(result.content.toLowerCase()).toMatch(/b3|بطاقة|casier/i);
+    expect(/[\u0600-\u06FF]/.test(result.content)).toBe(true);
+    expect(result.content).toContain('7.500');
   });
 
-  it('returns ATTT/carte grise data for karhba query', () => {
+  it('returns ATTT/carte grise data in Arabic script for karhba query', () => {
     const result = parseAndReason('chrit karhba kifech nbeddel el carte grise', 'derja');
     expect(result.content.length).toBeGreaterThan(50);
-    expect(result.content.toLowerCase()).toMatch(/attt|carte grise|بطاقة رمادية/i);
+    expect(/[\u0600-\u06FF]/.test(result.content)).toBe(true);
+    expect(result.content).toContain('145');
   });
 
   it('returns a timbreBreakdown for passport query', () => {
@@ -61,9 +66,11 @@ describe('ai-engine — language detection', () => {
     expect(result.timbreBreakdown!.totalTND).toBeGreaterThan(0);
   });
 
-  it('returns action links for most procedure queries', () => {
-    const result = parseAndReason('passeport', 'derja');
+  it('returns action links with Arabic script labels for Derja queries', () => {
+    const result = parseAndReason('hi', 'derja');
     expect(result.actions).toBeDefined();
     expect(result.actions!.length).toBeGreaterThan(0);
+    const firstActionDerja = result.actions![0].label.derja;
+    expect(/[\u0600-\u06FF]/.test(firstActionDerja), 'Action label for derja should be in Arabic script').toBe(true);
   });
 });

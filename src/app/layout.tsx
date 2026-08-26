@@ -13,7 +13,7 @@ const BASE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://idaara-flame.verce
 export const metadata: Metadata = {
   metadataBase: new URL(BASE_URL),
   title: {
-    default: 'إدارة.تونس — المساعد الإداري الذكي الأول في تونس',
+    default: 'إدارة.تونس — دليلك الإداري الذكي',
     template: '%s | إدارة.تونس',
   },
   description:
