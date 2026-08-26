@@ -17,6 +17,26 @@ import {
   X,
   Bot,
   Layers,
+  Fingerprint,
+  FileCheck,
+  ScrollText,
+  Rocket,
+  Award,
+  UserCheck,
+  Shield,
+  HeartPulse,
+  Car,
+  Coins,
+  Mail,
+  Building2,
+  BookOpen,
+  Zap,
+  Droplet,
+  PackageCheck,
+  GraduationCap,
+  Landmark,
+  Briefcase,
+  Scale,
 } from 'lucide-react';
 import { useLocale } from '../../context/LocaleContext';
 import { portailsData, portalCategories, EGovPortal } from '../../data/portails';
@@ -83,6 +103,76 @@ export default function PortailsPage() {
   const getLabel = (obj: Record<string, string>) =>
     (obj as Record<SupportedLanguage, string>)[locale as SupportedLanguage] ?? obj.fr;
 
+  const getPortalIcon = (id: string) => {
+    switch (id) {
+      case 'e-houwiya':
+        return <Fingerprint className="w-5 h-5 text-emerald-400" />;
+      case 'b3-interieur':
+        return <FileCheck className="w-5 h-5 text-blue-400" />;
+      case 'madania-etat-civil':
+        return <ScrollText className="w-5 h-5 text-sky-400" />;
+      case 'auto-entrepreneur':
+        return <Rocket className="w-5 h-5 text-amber-400" />;
+      case 'concours-gov':
+        return <Award className="w-5 h-5 text-yellow-400" />;
+      case 'aneti-portal':
+        return <UserCheck className="w-5 h-5 text-teal-400" />;
+      case 'e-cnss':
+        return <Shield className="w-5 h-5 text-purple-400" />;
+      case 'cnam-portal':
+        return <HeartPulse className="w-5 h-5 text-rose-400" />;
+      case 'attt-portal':
+        return <Car className="w-5 h-5 text-orange-400" />;
+      case 'e-finance':
+        return <Coins className="w-5 h-5 text-emerald-400" />;
+      case 'edinar-poste':
+        return <Mail className="w-5 h-5 text-blue-400" />;
+      case 'rne-tn':
+        return <Building2 className="w-5 h-5 text-indigo-400" />;
+      case 'iort-jort':
+        return <BookOpen className="w-5 h-5 text-violet-400" />;
+      case 'steg-online':
+        return <Zap className="w-5 h-5 text-yellow-400" />;
+      case 'sonede-online':
+        return <Droplet className="w-5 h-5 text-cyan-400" />;
+      case 'douane-gov':
+        return <PackageCheck className="w-5 h-5 text-emerald-400" />;
+      case 'mes-tn':
+        return <GraduationCap className="w-5 h-5 text-blue-400" />;
+      case 'bct-tunisie':
+        return <Landmark className="w-5 h-5 text-emerald-400" />;
+      default:
+        return <Globe className="w-5 h-5 text-emerald-400" />;
+    }
+  };
+
+  const getCategoryIcon = (catId: string) => {
+    switch (catId) {
+      case 'all':
+        return <Sparkles className="w-3.5 h-3.5" />;
+      case 'identity':
+        return <Fingerprint className="w-3.5 h-3.5" />;
+      case 'employment':
+        return <Briefcase className="w-3.5 h-3.5" />;
+      case 'business':
+        return <Building2 className="w-3.5 h-3.5" />;
+      case 'finance':
+        return <Coins className="w-3.5 h-3.5" />;
+      case 'social':
+        return <Shield className="w-3.5 h-3.5" />;
+      case 'transport':
+        return <Car className="w-3.5 h-3.5" />;
+      case 'utilities':
+        return <Zap className="w-3.5 h-3.5" />;
+      case 'education':
+        return <GraduationCap className="w-3.5 h-3.5" />;
+      case 'legal':
+        return <Scale className="w-3.5 h-3.5" />;
+      default:
+        return <Globe className="w-3.5 h-3.5" />;
+    }
+  };
+
   // Filter Logic
   const filtered = useMemo(() => {
     return portailsData.filter((portal) => {
@@ -122,14 +212,14 @@ export default function PortailsPage() {
     });
   }, [activeCategory, searchQuery, onlyFavorites, onlyMobile, only24h, favorites, locale]);
 
-  // Quick Tags
+  // Quick Tags with Vector Icons
   const quickSearchTags = [
-    { label: '🪪 B3 & CIN', query: 'b3' },
-    { label: '⚡ STEG & SONEDE', query: 'facture' },
-    { label: '🚗 Carte Grise', query: 'carte grise' },
-    { label: '💼 Auto-Entrepreneur', query: 'auto entrepreneur' },
-    { label: '🏆 Concours', query: 'concours' },
-    { label: '💰 Impôts & Vignette', query: 'impot' },
+    { label: 'B3 & CIN', query: 'b3', icon: Fingerprint },
+    { label: 'STEG & SONEDE', query: 'facture', icon: Zap },
+    { label: 'Carte Grise', query: 'carte grise', icon: Car },
+    { label: 'Auto-Entrepreneur', query: 'auto entrepreneur', icon: Rocket },
+    { label: 'Concours', query: 'concours', icon: Award },
+    { label: 'Impôts & Vignette', query: 'impot', icon: Coins },
   ];
 
   return (
@@ -234,18 +324,22 @@ export default function PortailsPage() {
               <Sparkles className="w-3 h-3 text-amber-400" />
               {locale === 'ar' ? 'بحث سريع:' : 'Accès rapide :'}
             </span>
-            {quickSearchTags.map((tag) => (
-              <button
-                key={tag.label}
-                onClick={() => {
-                  setSearchQuery(tag.query);
-                  setActiveCategory('all');
-                }}
-                className="shrink-0 px-2.5 py-1 rounded-lg bg-zinc-900/60 hover:bg-zinc-800 border border-zinc-800 hover:border-zinc-700 text-zinc-300 text-[11px] transition-all cursor-pointer"
-              >
-                {tag.label}
-              </button>
-            ))}
+            {quickSearchTags.map((tag) => {
+              const TagIcon = tag.icon;
+              return (
+                <button
+                  key={tag.label}
+                  onClick={() => {
+                    setSearchQuery(tag.query);
+                    setActiveCategory('all');
+                  }}
+                  className="shrink-0 px-2.5 py-1 rounded-lg bg-zinc-900/60 hover:bg-zinc-800 border border-zinc-800 hover:border-zinc-700 text-zinc-300 text-[11px] transition-all cursor-pointer flex items-center gap-1.5"
+                >
+                  <TagIcon className="w-3 h-3 text-zinc-400" />
+                  <span>{tag.label}</span>
+                </button>
+              );
+            })}
           </div>
 
           {/* Category Tabs & Quick Toggles */}
@@ -262,7 +356,7 @@ export default function PortailsPage() {
                       : 'bg-zinc-900/50 text-zinc-400 border-zinc-800/80 hover:border-zinc-700 hover:text-zinc-200'
                   }`}
                 >
-                  <span>{cat.icon}</span>
+                  {getCategoryIcon(cat.id)}
                   <span>{getLabel(cat.label)}</span>
                 </button>
               ))}
@@ -378,8 +472,8 @@ export default function PortailsPage() {
                   {/* Top Bar: Icon, Title, Fav & Copy */}
                   <div className="flex items-start justify-between gap-3 mb-3">
                     <div className="flex items-center gap-3 min-w-0">
-                      <div className="w-10 h-10 rounded-xl bg-zinc-900 border border-zinc-800 flex items-center justify-center text-2xl shrink-0 group-hover:scale-105 transition-transform shadow-inner">
-                        {portal.icon}
+                      <div className="w-10 h-10 rounded-xl bg-zinc-900 border border-zinc-800 flex items-center justify-center shrink-0 group-hover:scale-105 transition-transform shadow-inner">
+                        {getPortalIcon(portal.id)}
                       </div>
                       <div className="min-w-0">
                         <h3 className="font-bold text-white text-sm leading-snug truncate group-hover:text-emerald-300 transition-colors">

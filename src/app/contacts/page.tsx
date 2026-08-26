@@ -19,6 +19,15 @@ import {
   Globe,
   Radio,
   LifeBuoy,
+  ShieldAlert,
+  Flame,
+  HeartPulse,
+  HeartHandshake,
+  Baby,
+  Pill,
+  Droplets,
+  AlertTriangle,
+  Package,
 } from 'lucide-react';
 import { useLocale } from '../../context/LocaleContext';
 import { emergencyContacts, ministriesData, EmergencyContact, Ministry } from '../../data/contacts';
@@ -55,14 +64,12 @@ export default function ContactsPage() {
   };
 
   const handleSmartCall = (e: React.MouseEvent, number: string, id: string) => {
-    // Detect mobile device
     const isMobile =
       typeof window !== 'undefined' &&
       (/Android|iPhone|iPad|iPod|Opera Mini|IEMobile|WPDesktop/i.test(navigator.userAgent) ||
         (window.matchMedia && window.matchMedia('(pointer:coarse)').matches && window.innerWidth < 1024));
 
     if (!isMobile) {
-      // On desktop, prevent ugly "Open App" OS dialog and copy to clipboard with toast
       e.preventDefault();
       handleCopy(number.replace(/\s/g, ''), id);
     }
@@ -79,6 +86,41 @@ export default function ContactsPage() {
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, []);
+
+  const getContactIcon = (id: string) => {
+    switch (id) {
+      case 'police':
+        return <ShieldAlert className="w-6 h-6 text-red-400" />;
+      case 'garde-nationale':
+        return <Shield className="w-6 h-6 text-rose-400" />;
+      case 'samu':
+        return <HeartPulse className="w-6 h-6 text-red-400" />;
+      case 'pompiers':
+        return <Flame className="w-6 h-6 text-amber-400" />;
+      case 'sos-violence':
+        return <HeartHandshake className="w-5 h-5 text-pink-400" />;
+      case 'enfance-1809':
+        return <Baby className="w-5 h-5 text-sky-400" />;
+      case 'anti-corruption':
+        return <Scale className="w-5 h-5 text-amber-400" />;
+      case 'cnss-line':
+        return <Shield className="w-5 h-5 text-purple-400" />;
+      case 'centre-empoisonnement':
+        return <AlertTriangle className="w-5 h-5 text-emerald-400" />;
+      case 'pharmacies':
+        return <Pill className="w-5 h-5 text-cyan-400" />;
+      case 'steg-panne':
+        return <Zap className="w-5 h-5 text-yellow-400" />;
+      case 'sonede-fuite':
+        return <Droplets className="w-5 h-5 text-blue-400" />;
+      case 'croissant-rouge':
+        return <Heart className="w-5 h-5 text-red-400" />;
+      case 'douane-hotline':
+        return <Package className="w-5 h-5 text-emerald-400" />;
+      default:
+        return <Phone className="w-5 h-5 text-emerald-400" />;
+    }
+  };
 
   // Top flagship emergency numbers
   const flagshipIds = ['police', 'garde-nationale', 'samu', 'pompiers'];
@@ -230,13 +272,13 @@ export default function ContactsPage() {
   }, [searchQuery, locale]);
 
   const quickTags = [
-    { label: '🚓 Police (197)', query: '197' },
-    { label: '🛡️ Garde (193)', query: '193' },
-    { label: '🚑 SAMU (190)', query: '190' },
-    { label: '🚒 Pompiers (198)', query: '198' },
-    { label: '⚡ STEG', query: 'steg' },
-    { label: '💧 SONEDE', query: 'sonede' },
-    { label: '🆘 SOS Violence', query: '1899' },
+    { label: 'Police (197)', query: '197', icon: ShieldAlert },
+    { label: 'Garde (193)', query: '193', icon: Shield },
+    { label: 'SAMU (190)', query: '190', icon: HeartPulse },
+    { label: 'Pompiers (198)', query: '198', icon: Flame },
+    { label: 'STEG', query: 'steg', icon: Zap },
+    { label: 'SONEDE', query: 'sonede', icon: Droplets },
+    { label: 'SOS Violence', query: '1899', icon: HeartHandshake },
   ];
 
   return (
@@ -303,15 +345,19 @@ export default function ContactsPage() {
               <Sparkles className="w-3 h-3 text-amber-400" />
               {getLabel(i18n.quickSearch)}
             </span>
-            {quickTags.map((tag) => (
-              <button
-                key={tag.label}
-                onClick={() => setSearchQuery(tag.query)}
-                className="shrink-0 px-2.5 py-1 rounded-lg bg-zinc-900/60 hover:bg-zinc-800 border border-zinc-800 hover:border-zinc-700 text-zinc-300 text-[11px] transition-all cursor-pointer"
-              >
-                {tag.label}
-              </button>
-            ))}
+            {quickTags.map((tag) => {
+              const TagIcon = tag.icon;
+              return (
+                <button
+                  key={tag.label}
+                  onClick={() => setSearchQuery(tag.query)}
+                  className="shrink-0 px-2.5 py-1 rounded-lg bg-zinc-900/60 hover:bg-zinc-800 border border-zinc-800 hover:border-zinc-700 text-zinc-300 text-[11px] transition-all cursor-pointer flex items-center gap-1.5"
+                >
+                  <TagIcon className="w-3 h-3 text-zinc-400" />
+                  <span>{tag.label}</span>
+                </button>
+              );
+            })}
           </div>
         </div>
       </section>
@@ -329,8 +375,8 @@ export default function ContactsPage() {
                 >
                   {/* Top Bar with Icon & Status */}
                   <div className="flex items-start justify-between gap-2 mb-3">
-                    <div className="w-11 h-11 rounded-xl bg-zinc-900 border border-zinc-800 flex items-center justify-center text-2xl group-hover:scale-105 transition-transform shadow-inner shrink-0">
-                      {c.icon}
+                    <div className="w-11 h-11 rounded-xl bg-zinc-900 border border-zinc-800 flex items-center justify-center group-hover:scale-105 transition-transform shadow-inner shrink-0">
+                      {getContactIcon(c.id)}
                     </div>
                     <div className="flex items-center gap-1">
                       <span className="inline-flex items-center gap-1 text-[10px] font-mono text-emerald-400 bg-emerald-500/10 px-2 py-0.5 rounded-full border border-emerald-500/20">
@@ -385,53 +431,58 @@ export default function ContactsPage() {
           <div className="flex gap-1.5 overflow-x-auto pb-1 scrollbar-hide text-xs">
             <button
               onClick={() => setActiveCategory('all')}
-              className={`shrink-0 px-3.5 py-1.5 rounded-xl font-semibold border transition-all cursor-pointer ${
+              className={`shrink-0 px-3.5 py-1.5 rounded-xl font-semibold border transition-all cursor-pointer flex items-center gap-1.5 ${
                 activeCategory === 'all'
                   ? 'bg-emerald-500 text-zinc-950 border-emerald-500 font-bold shadow-md shadow-emerald-500/20'
                   : 'bg-zinc-900/50 text-zinc-400 border-zinc-800/80 hover:border-zinc-700 hover:text-zinc-200'
               }`}
             >
-              {getLabel(i18n.allFilter)}
+              <Sparkles className="w-3 h-3" />
+              <span>{getLabel(i18n.allFilter)}</span>
             </button>
             <button
               onClick={() => setActiveCategory('emergency')}
-              className={`shrink-0 px-3.5 py-1.5 rounded-xl font-semibold border transition-all cursor-pointer ${
+              className={`shrink-0 px-3.5 py-1.5 rounded-xl font-semibold border transition-all cursor-pointer flex items-center gap-1.5 ${
                 activeCategory === 'emergency'
                   ? 'bg-emerald-500 text-zinc-950 border-emerald-500 font-bold shadow-md shadow-emerald-500/20'
                   : 'bg-zinc-900/50 text-zinc-400 border-zinc-800/80 hover:border-zinc-700 hover:text-zinc-200'
               }`}
             >
-              {getLabel(i18n.emergencyFilter)}
+              <ShieldAlert className="w-3 h-3" />
+              <span>{getLabel(i18n.emergencyFilter)}</span>
             </button>
             <button
               onClick={() => setActiveCategory('health')}
-              className={`shrink-0 px-3.5 py-1.5 rounded-xl font-semibold border transition-all cursor-pointer ${
+              className={`shrink-0 px-3.5 py-1.5 rounded-xl font-semibold border transition-all cursor-pointer flex items-center gap-1.5 ${
                 activeCategory === 'health'
                   ? 'bg-emerald-500 text-zinc-950 border-emerald-500 font-bold shadow-md shadow-emerald-500/20'
                   : 'bg-zinc-900/50 text-zinc-400 border-zinc-800/80 hover:border-zinc-700 hover:text-zinc-200'
               }`}
             >
-              {getLabel(i18n.healthFilter)}
+              <HeartPulse className="w-3 h-3" />
+              <span>{getLabel(i18n.healthFilter)}</span>
             </button>
             <button
               onClick={() => setActiveCategory('civic')}
-              className={`shrink-0 px-3.5 py-1.5 rounded-xl font-semibold border transition-all cursor-pointer ${
+              className={`shrink-0 px-3.5 py-1.5 rounded-xl font-semibold border transition-all cursor-pointer flex items-center gap-1.5 ${
                 activeCategory === 'civic'
                   ? 'bg-emerald-500 text-zinc-950 border-emerald-500 font-bold shadow-md shadow-emerald-500/20'
                   : 'bg-zinc-900/50 text-zinc-400 border-zinc-800/80 hover:border-zinc-700 hover:text-zinc-200'
               }`}
             >
-              {getLabel(i18n.civicFilter)}
+              <Scale className="w-3 h-3" />
+              <span>{getLabel(i18n.civicFilter)}</span>
             </button>
             <button
               onClick={() => setActiveCategory('utility')}
-              className={`shrink-0 px-3.5 py-1.5 rounded-xl font-semibold border transition-all cursor-pointer ${
+              className={`shrink-0 px-3.5 py-1.5 rounded-xl font-semibold border transition-all cursor-pointer flex items-center gap-1.5 ${
                 activeCategory === 'utility'
                   ? 'bg-emerald-500 text-zinc-950 border-emerald-500 font-bold shadow-md shadow-emerald-500/20'
                   : 'bg-zinc-900/50 text-zinc-400 border-zinc-800/80 hover:border-zinc-700 hover:text-zinc-200'
               }`}
             >
-              {getLabel(i18n.utilityFilter)}
+              <Zap className="w-3 h-3" />
+              <span>{getLabel(i18n.utilityFilter)}</span>
             </button>
           </div>
 
@@ -455,7 +506,9 @@ export default function ContactsPage() {
                 <div>
                   <div className="flex items-start justify-between gap-3 mb-2.5">
                     <div className="flex items-center gap-2.5 min-w-0">
-                      <span className="text-2xl shrink-0">{c.icon}</span>
+                      <div className="w-9 h-9 rounded-xl bg-zinc-900 border border-zinc-800 flex items-center justify-center shrink-0">
+                        {getContactIcon(c.id)}
+                      </div>
                       <div className="min-w-0">
                         <p className="font-bold text-white text-xs leading-snug truncate group-hover:text-emerald-300 transition-colors">
                           {getLabel(c.name)}
