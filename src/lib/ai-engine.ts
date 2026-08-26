@@ -123,7 +123,7 @@ export function parseAndReason(prompt: string, locale: SupportedLanguage | strin
     query.includes('عدلية') ||
     query.includes('سوابق')
   ) {
-    const p = getProcedureById('bulletin-numero-3')!;
+    const p = getProcedureById('bulletin-3-b3');
     return formatProcedureResponse(p, lang, {
       derja: "Bech tekhou B3 (Bita9at el Sawabi9 el 3adliya):\n1. Timbre fiscal mte3 7.500 DT\n2. Copie CIN\n3. Madhmoun wilada asly ken matloub\n\nTnejjem tsebha direct en ligne 3al site mte3 wizarat el dakhiliya (b3.interieur.gov.tn) walla fel markez. To93od bin 3 w 8 jours.",
       fr: "Pour obtenir votre Bulletin N°3 (Casier judiciaire) :\n1. Timbre fiscal de 7.500 TND\n2. Copie conforme de la CIN\n3. Extrait de naissance pour les premières demandes\n\nVous pouvez effectuer la demande en ligne sur b3.interieur.gov.tn ou directement au commissariat de police (Délai : 3 à 8 jours).",
@@ -658,10 +658,16 @@ export function parseAndReason(prompt: string, locale: SupportedLanguage | strin
 }
 
 function formatProcedureResponse(
-  p: Procedure,
+  p: Procedure | undefined,
   lang: 'derja' | 'fr' | 'ar' | 'en',
   contentMap: { derja: string; fr: string; ar: string; en: string }
 ): ReasonerResponse {
+  if (!p) {
+    return {
+      content: contentMap[lang],
+      actions: [],
+    };
+  }
   return {
     content: contentMap[lang],
     relatedProcedureId: p.id,

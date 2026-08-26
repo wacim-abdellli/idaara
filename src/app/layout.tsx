@@ -1,4 +1,4 @@
-import type { Metadata } from 'next';
+import type { Metadata, Viewport } from 'next';
 import './globals.css';
 import { LocaleProvider } from '../context/LocaleContext';
 import { ChecklistProvider } from '../context/ChecklistContext';
@@ -61,10 +61,6 @@ export const metadata: Metadata = {
     apple: '/icon.svg',
   },
   manifest: '/manifest.webmanifest',
-  themeColor: [
-    { media: '(prefers-color-scheme: dark)', color: '#09090b' },
-    { media: '(prefers-color-scheme: light)', color: '#09090b' },
-  ],
   robots: {
     index: true,
     follow: true,
@@ -76,6 +72,15 @@ export const metadata: Metadata = {
       'max-snippet': -1,
     },
   },
+};
+
+export const viewport: Viewport = {
+  themeColor: [
+    { media: '(prefers-color-scheme: dark)', color: '#09090b' },
+    { media: '(prefers-color-scheme: light)', color: '#09090b' },
+  ],
+  width: 'device-width',
+  initialScale: 1,
 };
 
 export default function RootLayout({
