@@ -38,7 +38,7 @@ export default function ContactsPage() {
   const [activeCategory, setActiveCategory] = useState<'all' | 'emergency' | 'health' | 'civic' | 'utility'>('all');
   const [searchQuery, setSearchQuery] = useState<string>('');
   const [copiedId, setCopiedId] = useState<string | null>(null);
-  const [toastMessage, setToastMessage] = useState<string | null>(null);
+  const [toastData, setToastData] = useState<{ number: string; label: string } | null>(null);
 
   const searchInputRef = useRef<HTMLInputElement>(null);
 
@@ -46,21 +46,23 @@ export default function ContactsPage() {
     (obj as Record<SupportedLanguage, string>)[locale as SupportedLanguage] ?? obj.fr;
 
   const handleCopy = (text: string, id: string) => {
-    navigator.clipboard.writeText(text);
+    navigator.clipboard.writeText(text.replace(/\s/g, ''));
     setCopiedId(id);
-    setToastMessage(
-      locale === 'ar'
-        ? `📋 تم نسخ الرقم (${text})`
-        : locale === 'derja'
-        ? `📋 Noumrou (${text}) mnsou5`
-        : locale === 'en'
-        ? `📋 Copied (${text}) to clipboard`
-        : `📋 Numéro (${text}) copié dans le presse-papier`
-    );
+    setToastData({
+      number: text,
+      label:
+        locale === 'ar'
+          ? 'تم نسخ رقم الهاتف بنجاح'
+          : locale === 'derja'
+          ? 'Noumrou tnesa5 fel presse-papier'
+          : locale === 'en'
+          ? 'Phone number copied to clipboard'
+          : 'Numéro copié dans le presse-papier',
+    });
     setTimeout(() => {
       setCopiedId(null);
-      setToastMessage(null);
-    }, 2500);
+      setToastData(null);
+    }, 2400);
   };
 
   const handleSmartCall = (e: React.MouseEvent, number: string, id: string) => {
@@ -71,7 +73,7 @@ export default function ContactsPage() {
 
     if (!isMobile) {
       e.preventDefault();
-      handleCopy(number.replace(/\s/g, ''), id);
+      handleCopy(number, id);
     }
   };
 
@@ -629,11 +631,20 @@ export default function ContactsPage() {
       </section>
 
       {/* ── Toast Notification Banner ── */}
-      {toastMessage && (
+      {toastData && (
         <div className="fixed bottom-6 left-1/2 -translate-x-1/2 z-50 animate-fade-in-up">
-          <div className="flex items-center gap-2.5 px-5 py-3 rounded-2xl bg-zinc-900/95 border border-emerald-500/40 text-emerald-400 text-xs sm:text-sm font-bold shadow-2xl shadow-emerald-500/20 backdrop-blur-md">
-            <Check className="w-4 h-4 text-emerald-400 shrink-0" />
-            <span>{toastMessage}</span>
+          <div className="flex items-center gap-3 px-4 py-2.5 rounded-2xl bg-[#0c0e14]/95 border border-emerald-500/30 text-emerald-400 shadow-[0_12px_40px_-5px_rgba(0,192,127,0.3)] backdrop-blur-xl">
+            <div className="w-6 h-6 rounded-lg bg-emerald-500/15 border border-emerald-500/30 flex items-center justify-center text-emerald-400 shrink-0">
+              <Check className="w-3.5 h-3.5 stroke-[2.5]" />
+            </div>
+            <div className="flex items-center gap-2">
+              <span className="font-mono font-black text-xs sm:text-sm text-white px-2 py-0.5 rounded-lg bg-zinc-800/80 border border-zinc-700/50">
+                {toastData.number}
+              </span>
+              <span className="text-xs text-zinc-300 font-medium whitespace-nowrap">
+                {toastData.label}
+              </span>
+            </div>
           </div>
         </div>
       )}

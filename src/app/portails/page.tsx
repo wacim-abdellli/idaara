@@ -51,6 +51,7 @@ export default function PortailsPage() {
   const [only24h, setOnly24h] = useState<boolean>(false);
   const [favorites, setFavorites] = useState<string[]>([]);
   const [copiedId, setCopiedId] = useState<string | null>(null);
+  const [toastData, setToastData] = useState<{ url: string; label: string } | null>(null);
 
   const searchInputRef = useRef<HTMLInputElement>(null);
 
@@ -85,7 +86,21 @@ export default function PortailsPage() {
   const handleCopyUrl = (url: string, id: string) => {
     navigator.clipboard.writeText(url);
     setCopiedId(id);
-    setTimeout(() => setCopiedId(null), 2000);
+    setToastData({
+      url,
+      label:
+        locale === 'ar'
+          ? 'تم نسخ رابط البوابة بنجاح'
+          : locale === 'derja'
+          ? 'Lien el portail tnesa5'
+          : locale === 'en'
+          ? 'Portal link copied to clipboard'
+          : 'Lien du portail copié dans le presse-papier',
+    });
+    setTimeout(() => {
+      setCopiedId(null);
+      setToastData(null);
+    }, 2400);
   };
 
   // Shortcut key / or ⌘K
@@ -615,6 +630,25 @@ export default function PortailsPage() {
           </Link>
         </div>
       </section>
+
+      {/* ── Toast Notification Banner ── */}
+      {toastData && (
+        <div className="fixed bottom-6 left-1/2 -translate-x-1/2 z-50 animate-fade-in-up">
+          <div className="flex items-center gap-3 px-4 py-2.5 rounded-2xl bg-[#0c0e14]/95 border border-emerald-500/30 text-emerald-400 shadow-[0_12px_40px_-5px_rgba(0,192,127,0.3)] backdrop-blur-xl">
+            <div className="w-6 h-6 rounded-lg bg-emerald-500/15 border border-emerald-500/30 flex items-center justify-center text-emerald-400 shrink-0">
+              <Check className="w-3.5 h-3.5 stroke-[2.5]" />
+            </div>
+            <div className="flex items-center gap-2">
+              <span className="font-mono font-bold text-xs sm:text-sm text-white px-2 py-0.5 rounded-lg bg-zinc-800/80 border border-zinc-700/50 max-w-[200px] truncate">
+                {toastData.url}
+              </span>
+              <span className="text-xs text-zinc-300 font-medium whitespace-nowrap">
+                {toastData.label}
+              </span>
+            </div>
+          </div>
+        </div>
+      )}
     </main>
   );
 }
