@@ -122,12 +122,24 @@ export const OfficeCard: React.FC<OfficeCardProps> = ({ office, activeScheduleMo
           {office.phone && (
             <div className="flex items-center space-x-2 rtl:space-x-reverse text-[11px]">
               <Phone className="w-3 h-3 text-zinc-600 shrink-0" />
-              <a
-                href={`tel:${office.phone}`}
-                className="text-zinc-300 hover:text-emerald-400 transition-colors font-mono tabular-nums"
+              <button
+                type="button"
+                onClick={() => {
+                  if (!office.phone) return;
+                  const isMobile =
+                    typeof window !== 'undefined' &&
+                    (/Android|iPhone|iPad|iPod|Opera Mini|IEMobile|WPDesktop/i.test(navigator.userAgent) ||
+                      (window.matchMedia && window.matchMedia('(pointer:coarse)').matches && window.innerWidth < 1024));
+                  if (isMobile) {
+                    window.location.href = `tel:${office.phone.replace(/\s/g, '')}`;
+                  } else {
+                    navigator.clipboard.writeText(office.phone.replace(/\s/g, ''));
+                  }
+                }}
+                className="text-zinc-300 hover:text-emerald-400 transition-colors font-mono tabular-nums cursor-pointer text-left rtl:text-right"
               >
                 {office.phone}
-              </a>
+              </button>
             </div>
           )}
         </div>

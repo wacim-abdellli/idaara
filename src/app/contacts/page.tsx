@@ -29,6 +29,7 @@ export default function ContactsPage() {
   const [activeCategory, setActiveCategory] = useState<'all' | 'emergency' | 'health' | 'civic' | 'utility'>('all');
   const [searchQuery, setSearchQuery] = useState<string>('');
   const [copiedId, setCopiedId] = useState<string | null>(null);
+  const [toastMessage, setToastMessage] = useState<string | null>(null);
 
   const searchInputRef = useRef<HTMLInputElement>(null);
 
@@ -38,7 +39,33 @@ export default function ContactsPage() {
   const handleCopy = (text: string, id: string) => {
     navigator.clipboard.writeText(text);
     setCopiedId(id);
-    setTimeout(() => setCopiedId(null), 2000);
+    setToastMessage(
+      locale === 'ar'
+        ? `📋 تم نسخ الرقم (${text})`
+        : locale === 'derja'
+        ? `📋 Noumrou (${text}) mnsou5`
+        : locale === 'en'
+        ? `📋 Copied (${text}) to clipboard`
+        : `📋 Numéro (${text}) copié dans le presse-papier`
+    );
+    setTimeout(() => {
+      setCopiedId(null);
+      setToastMessage(null);
+    }, 2500);
+  };
+
+  const handleSmartCall = (e: React.MouseEvent, number: string, id: string) => {
+    // Detect mobile device
+    const isMobile =
+      typeof window !== 'undefined' &&
+      (/Android|iPhone|iPad|iPod|Opera Mini|IEMobile|WPDesktop/i.test(navigator.userAgent) ||
+        (window.matchMedia && window.matchMedia('(pointer:coarse)').matches && window.innerWidth < 1024));
+
+    if (!isMobile) {
+      // On desktop, prevent ugly "Open App" OS dialog and copy to clipboard with toast
+      e.preventDefault();
+      handleCopy(number.replace(/\s/g, ''), id);
+    }
   };
 
   // Keyboard shortcut / or ⌘K
@@ -338,6 +365,7 @@ export default function ContactsPage() {
                   {/* Direct Call Button */}
                   <a
                     href={`tel:${c.number.replace(/\s/g, '')}`}
+                    onClick={(e) => handleSmartCall(e, c.number, c.id)}
                     className="mt-4 flex items-center justify-center gap-2 py-2.5 rounded-xl bg-red-600 hover:bg-red-500 text-white font-bold text-xs shadow-lg shadow-red-600/20 transition-all hover:scale-[1.02] cursor-pointer"
                   >
                     <PhoneCall className="w-3.5 h-3.5" />
@@ -478,6 +506,7 @@ export default function ContactsPage() {
 
                   <a
                     href={`tel:${c.number.replace(/\s/g, '')}`}
+                    onClick={(e) => handleSmartCall(e, c.number, c.id)}
                     className="inline-flex items-center gap-1.5 px-3 py-1 rounded-xl bg-zinc-800 hover:bg-emerald-500 hover:text-zinc-950 text-zinc-200 text-xs font-bold transition-all cursor-pointer border border-zinc-700 hover:border-emerald-500"
                   >
                     <Phone className="w-3 h-3" />
@@ -524,7 +553,8 @@ export default function ContactsPage() {
               <div className="flex items-center justify-between gap-2 pt-2 border-t border-zinc-800/60">
                 <a
                   href={`tel:${m.phone.replace(/\s/g, '')}`}
-                  className="flex items-center gap-1.5 text-xs text-zinc-200 hover:text-white font-mono bg-zinc-900 hover:bg-zinc-800 px-3 py-1.5 rounded-xl border border-zinc-800 transition-colors"
+                  onClick={(e) => handleSmartCall(e, m.phone, m.id)}
+                  className="flex items-center gap-1.5 text-xs text-zinc-200 hover:text-white font-mono bg-zinc-900 hover:bg-zinc-800 px-3 py-1.5 rounded-xl border border-zinc-800 transition-colors cursor-pointer"
                 >
                   <Phone className="w-3 h-3 text-emerald-400" />
                   <span>{m.phone}</span>
@@ -544,7 +574,18 @@ export default function ContactsPage() {
           ))}
         </div>
       </section>
+
+      {/* ── Toast Notification Banner ── */}
+      {toastMessage && (
+        <div className="fixed bottom-6 left-1/2 -translate-x-1/2 z-50 animate-fade-in-up">
+          <div className="flex items-center gap-2.5 px-5 py-3 rounded-2xl bg-zinc-900/95 border border-emerald-500/40 text-emerald-400 text-xs sm:text-sm font-bold shadow-2xl shadow-emerald-500/20 backdrop-blur-md">
+            <Check className="w-4 h-4 text-emerald-400 shrink-0" />
+            <span>{toastMessage}</span>
+          </div>
+        </div>
+      )}
     </main>
   );
 }
+
 
