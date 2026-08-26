@@ -15,9 +15,59 @@ export interface ReasonerResponse {
 
 import { SupportedLanguage } from '../data/translations';
 
+// Smart prompt language detector
+function resolveResponseLanguage(prompt: string, uiLocale: SupportedLanguage | string): 'ar' | 'derja' | 'fr' | 'en' {
+  const q = prompt.toLowerCase();
+
+  // 1. Check for Arabic script
+  if (/[\u0600-\u06FF]/.test(prompt)) {
+    return 'ar';
+  }
+
+  // 2. Check for Tunisian Derja / Arabizi markers
+  const derjaMarkers = [
+    'ena', 'chnowa', 'chnou', 'chnia', 'kifech', 'kifeh', 'lezemni', 'n7eb', 'nheb', 'bech',
+    'fi', 'mte3i', 'mte3ek', 'karhba', 'war9a', 'wra9', 'win', 'wa9tech', 'chkoun', 'bita9a',
+    '3aslema', 'ahla', 'sahbi', 'khouya', 'flous', '9badha', 'chrit', 'etudient', 'etudiant',
+    'talib', 'telmidth', 'mrigel', 'tounes', 'tounsi', 'haka', 'hedhi', 'hada'
+  ];
+
+  const hasDerja = derjaMarkers.some((word) => new RegExp(`\\b${word}\\b`, 'i').test(q));
+  if (hasDerja) {
+    return 'derja';
+  }
+
+  // 3. Check for explicit English
+  if (/^(how|what|where|can i|please|is it|how to|why)\b/i.test(q)) {
+    return 'en';
+  }
+
+  // 4. Check for explicit French
+  if (/^(comment|quels|quelles|combien|est-ce|bonjour|pourriez|je veux|faire)\b/i.test(q)) {
+    return 'fr';
+  }
+
+  // 5. Default to Tunisian Derja / Arabic for sovereign platform experience
+  if (uiLocale === 'ar') return 'ar';
+  if (uiLocale === 'en') return 'en';
+  if (uiLocale === 'fr' && (q.length < 5 || !hasDerja)) return 'fr';
+  return 'derja';
+}
+
 export function parseAndReason(prompt: string, locale: SupportedLanguage | string = 'derja'): ReasonerResponse {
   const query = prompt.toLowerCase().trim();
-  const lang = locale === 'ar' ? 'ar' : locale === 'en' ? 'en' : locale === 'fr' ? 'fr' : 'derja';
+  const lang = resolveResponseLanguage(prompt, locale);
+
+  // Check if student/pupil mentioned
+  const isStudent =
+    query.includes('etudient') ||
+    query.includes('etudiant') ||
+    query.includes('talib') ||
+    query.includes('telmidth') ||
+    query.includes('طالب') ||
+    query.includes('تلميذ') ||
+    query.includes('pupil') ||
+    query.includes('student');
 
   // 1. Check direct matches for known administrative intents
   if (
@@ -29,11 +79,21 @@ export function parseAndReason(prompt: string, locale: SupportedLanguage | strin
     query.includes('سفر')
   ) {
     const p = getProcedureById('passeport-renouvellement')!;
+    const passportFee = isStudent ? 25 : 80;
+
     return formatProcedureResponse(p, lang, {
-      derja: "Bech t'beddel el Passeport mte3ek lezmek:\n1. Timbre fiscal mte3 80 DT (25 DT kenek etudiant/telmidth)\n2. 4 tsawer chamsiya jdod b'khalfiya baydha2\n3. Copie CIN m3a l'original\n4. El passeport el 9dim mte3ek\n\nEl dossier yetsabb fi Markez el Chorta walla el 7aras el marje3 el tourabi mte3 seknek. Yo93od bin 7 w 15 jours bech ye7dher.",
-      fr: "Pour renouveler votre passeport tunisien, vous devez fournir un timbre fiscal de 80 TND (25 TND pour élèves/étudiants), 4 photos d'identité récentes sur fond blanc, une copie de la CIN et l'ancien passeport. Le dépôt s'effectue au poste de police ou brigade de la garde nationale de votre circonscription sous 7 à 15 jours.",
-      ar: "لتجديد جواز السفر التونسي، يتطلب الملف طابعاً جبائياً بقيمة 80 ديناراً (أو 25 ديناراً للتلاميذ والطلبة)، 4 صور شمسية خلفية بيضاء، بطاقة التعريف الوطنية وجواز السفر القديم. يُودع الملف بمركز الأمن الوطني أو الحرس الوطني لمرجع النظر ويستغرق من 7 إلى 15 يوماً.",
-      en: "To renew your Tunisian passport, you must provide an 80 TND fiscal stamp (25 TND for students/pupils), 4 recent white-background photos, a copy of your National ID (CIN), and your expiring passport. Submit your file to your local Police or National Guard station (processing time: 7-15 days).",
+      derja: isStudent
+        ? "بما أنك تلميذ ولا طالب (Étudiant)، معلوم جواز السفر متاعك هو **25 د.ت فقط** (عوضاً عن 80 د.ت)!\n\nالأوراق المطلوبة لتجديد جواز السفر:\n1. **تنبير جبائي بـ 25 DT** (يلزمك شهادة حضور مدرسية أو جامعية أصلية)\n2. **4 تصاور شمسية جدد** بخلفية بيضاء\n3. **نسخة من بطاقة التعريف الوطنية (CIN)** مع الأصل للاستظهار\n4. **جواز السفر القديم** (في حالة التجديد)\n\nيُودع الملف بمركز الشرطة أو الحرس الوطني مرجع النظر لسكناك، ويحضر في غضون **7 إلى 15 يوم عمل**."
+        : "باش تبدل ولا تطلع جواز السفر التونسي يلزمك:\n1. **تنبير جبائي بقيمة 80 DT** (أو 25 DT للطلبة والتلاميذ بشهادة حضور)\n2. **4 تصاور شمسية جدد** بخلفية بيضاء\n3. **نسخة من بطاقة التعريف (CIN)** مع الأصل\n4. **جواز السفر القديم**\n\nالملف يتصب في مركز الشرطة ولا الحرس الوطني مرجع النظر لسكناك، وياخو بين **7 و 15 يوم** باش يحضر.",
+      fr: isStudent
+        ? "En tant qu'élève ou étudiant, vous bénéficiez du tarif réduit de **25 TND** (au lieu de 80 TND) pour le passeport tunisien.\n\nPièces requises :\n1. Timbre fiscal de **25 TND** + Certificat de scolarité / d'inscription universitaire original\n2. 4 photos d'identité récentes sur fond blanc\n3. Copie de la CIN (originale requise au dépôt)\n4. L'ancien passeport (si renouvellement)\n\nDépôt au poste de police ou brigade de la garde nationale sous 7 à 15 jours."
+        : "Pour renouveler votre passeport tunisien, vous devez fournir un timbre fiscal de 80 TND (25 TND pour élèves/étudiants), 4 photos d'identité récentes sur fond blanc, une copie de la CIN et l'ancien passeport. Le dépôt s'effectue au poste de police ou brigade de la garde nationale de votre circonscription sous 7 à 15 jours.",
+      ar: isStudent
+        ? "بصفتك تلميذاً أو طالباً، تتمتع بالمعلوم المخفض لجواز السفر التونسي وقدره **25 ديناراً فقط** (عوضاً عن 80 ديناراً).\n\nالأوراق والوثائق المطلوبة:\n1. **طابع جبائي بقيمة 25 د.ت** + شهادة حضور مدرسية أو ترسيم جامعي أصلية حديثة\n2. **4 صور شمسية حديثة** بخلفية بيضاء\n3. **نسخة من بطاقة التعريف الوطنية (CIN)** مع الاستظهار بالأصل\n4. **جواز السفر القديم** في حالة التجديد\n\nيُودع الملف بمركز الأمن الوطني أو الحرس الوطني لمرجع النظر، ويستغرق استخراجه من **7 إلى 15 يوماً**."
+        : "لتجديد جواز السفر التونسي، يتطلب الملف طابعاً جبائياً بقيمة 80 ديناراً (أو 25 ديناراً للتلاميذ والطلبة)، 4 صور شمسية خلفية بيضاء، بطاقة التعريف الوطنية وجواز السفر القديم. يُودع الملف بمركز الأمن الوطني أو الحرس الوطني لمرجع النظر ويستغرق من 7 إلى 15 يوماً.",
+      en: isStudent
+        ? "As a student or pupil, you are eligible for the reduced **25 TND** fiscal stamp (instead of 80 TND) for your Tunisian passport.\n\nRequired documents:\n1. **25 TND fiscal stamp** + Original valid student registration certificate\n2. **4 recent white-background photos**\n3. **National ID (CIN) copy** + original for verification\n4. **Expiring passport**\n\nSubmit at your local Police or National Guard station (processing time: 7-15 days)."
+        : "To renew your Tunisian passport, you must provide an 80 TND fiscal stamp (25 TND for students/pupils), 4 recent white-background photos, a copy of your National ID (CIN), and your expiring passport. Submit your file to your local Police or National Guard station (processing time: 7-15 days).",
     });
   }
 
