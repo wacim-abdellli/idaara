@@ -330,8 +330,8 @@ export default function CopilotPage() {
                     : locale === 'derja'
                     ? 'El Mosa3ed El Idari Edhki'
                     : locale === 'en'
-                    ? 'Civic AI Copilot'
-                    : 'Assistant Administratif IA'}
+                    ? 'Idaara AI Copilot'
+                    : 'Idaara AI Copilote'}
                 </span>
               </div>
               <h1 className="text-2xl sm:text-4xl font-extrabold text-white tracking-tight">

@@ -51,8 +51,8 @@ export const Footer: React.FC = () => {
           : locale === 'derja'
           ? 'Idaara AI bel Derja'
           : locale === 'en'
-          ? 'Idaara AI (Civic Copilot)'
-          : 'Idaara AI (Copilote Civique)',
+          ? 'Idaara AI Copilot'
+          : 'Idaara AI (Copilote IA)',
     },
     {
       href: '/fasserli',

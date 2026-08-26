@@ -14,7 +14,7 @@ const BASE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://idaara-flame.verce
 export const metadata: Metadata = {
   metadataBase: new URL(BASE_URL),
   title: {
-    default: 'Idaara.tn — AI Civic Copilot & Procedures',
+    default: 'Idaara.tn',
     template: '%s | Idaara.tn',
   },
   description:

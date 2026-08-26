@@ -543,8 +543,8 @@ export default function HomePage() {
         : locale === 'derja'
         ? 'Idaara.tn · El Menassa el Idariya el Thakiya'
         : locale === 'en'
-        ? 'IDAARA AI · NATIONAL CIVIC PLATFORM'
-        : 'IDAARA AI · RÉSEAU CITOYEN NATIONAL',
+        ? 'IDAARA AI · SMART ADMINISTRATIVE PLATFORM'
+        : 'IDAARA AI · PLATEFORME ADMINISTRATIVE',
     jort2026: 'JORT 2026',
     directAccess:
       locale === 'ar'
@@ -827,10 +827,6 @@ export default function HomePage() {
                     <span>
                       {locale === 'ar'
                         ? 'المساعد الذكي'
-                        : locale === 'derja'
-                        ? 'Idaara AI'
-                        : locale === 'en'
-                        ? 'Civic AI'
                         : 'Idaara AI'}
                     </span>
                   </Link>
@@ -1162,7 +1158,7 @@ export default function HomePage() {
                   : locale === 'derja'
                   ? '7ajet ma tal9ahom fi 7atta blasa okhra fi Tounes'
                   : locale === 'en'
-                  ? 'Civic Superpowers You Won’t Find Anywhere Else'
+                  ? 'Idaara AI Superpowers You Won’t Find Anywhere Else'
                   : 'Des Outils Conçus pour la Réalité Tunisienne'}
               </h2>
             </div>
@@ -1170,7 +1166,7 @@ export default function HomePage() {
               href="/copilot"
               className="inline-flex items-center gap-1 text-xs font-bold text-emerald-400 hover:text-emerald-300 transition-colors shrink-0"
             >
-              <span>{locale === 'ar' ? 'استكشف المساعد الذكي' : locale === 'derja' ? 'Jarreb Idaara AI' : locale === 'en' ? 'Explore Civic AI' : 'Essayer le Copilote'}</span>
+              <span>{locale === 'ar' ? 'استكشف المساعد الذكي' : locale === 'derja' ? 'Jarreb Idaara AI' : locale === 'en' ? 'Explore Idaara AI' : 'Essayer Idaara AI'}</span>
               <ArrowRight className="w-3.5 h-3.5 rtl:rotate-180" />
             </Link>
           </div>

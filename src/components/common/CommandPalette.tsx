@@ -86,8 +86,8 @@ export const CommandPalette: React.FC = () => {
             : locale === 'derja'
             ? 'Idaara AI bel Derja'
             : locale === 'en'
-            ? 'Idaara AI (Civic Chat)'
-            : 'Idaara AI (Copilote Civique)',
+            ? 'Idaara AI (Assistant)'
+            : 'Idaara AI (Copilote IA)',
         subtitle:
           locale === 'ar'
             ? 'مساعد إداري وقانوني متكامل للإجراءات والمناظرات'
@@ -436,7 +436,7 @@ export const CommandPalette: React.FC = () => {
                 : locale === 'derja'
                 ? 'Moteur Recherche Idaara'
                 : locale === 'en'
-                ? 'Idaara Civic Search'
+                ? 'Idaara Search'
                 : 'Moteur de Recherche Idaara'}
             </span>
           </div>

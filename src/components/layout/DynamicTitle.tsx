@@ -10,69 +10,69 @@ import { SupportedLanguage } from '../../data/translations';
 
 const ROUTE_TITLES: Record<string, Record<SupportedLanguage, string>> = {
   '/': {
-    ar: 'Idaara.tn — دليلك الإداري الذكي',
-    fr: 'Idaara.tn — AI Copilot & Démarches Administratives',
-    en: 'Idaara.tn — AI Civic Copilot & Procedures',
-    derja: 'Idaara.tn — Assistant Idari Tounsi',
+    ar: 'Idaara.tn',
+    fr: 'Idaara.tn',
+    en: 'Idaara.tn',
+    derja: 'Idaara.tn',
   },
   '/copilot': {
-    ar: 'المساعد الذكي | Idaara.tn',
-    fr: 'AI Copilot | Idaara.tn',
-    en: 'AI Copilot | Idaara.tn',
+    ar: 'Idaara AI | Idaara.tn',
+    fr: 'Idaara AI | Idaara.tn',
+    en: 'Idaara AI | Idaara.tn',
     derja: 'Idaara AI | Idaara.tn',
   },
   '/fasserli': {
-    ar: 'فسّرلي الورقة (OCR) | Idaara.tn',
+    ar: 'Fasserli OCR | Idaara.tn',
     fr: 'Fasserli OCR | Idaara.tn',
     en: 'Fasserli OCR | Idaara.tn',
     derja: 'Fasserli OCR | Idaara.tn',
   },
   '/documents': {
-    ar: 'الوثائق والعقود الرسمية | Idaara.tn',
+    ar: 'الوثائق والعقود | Idaara.tn',
     fr: 'Documents & Contrats | Idaara.tn',
-    en: 'Legal Documents & Contracts | Idaara.tn',
+    en: 'Documents & Contracts | Idaara.tn',
     derja: 'Modélet & 39oud | Idaara.tn',
   },
   '/procedures': {
-    ar: 'دليل الإجراءات الإدارية | Idaara.tn',
+    ar: 'دليل الإجراءات | Idaara.tn',
     fr: 'Guide des Démarches | Idaara.tn',
     en: 'Procedures Directory | Idaara.tn',
     derja: 'Dalil el Démarches | Idaara.tn',
   },
   '/calculator': {
-    ar: 'حاسبة التنابر والرسوم | Idaara.tn',
-    fr: 'Calculateur de Timbres | Idaara.tn',
+    ar: 'حاسبة التنابر | Idaara.tn',
+    fr: 'Calculateur Timbres | Idaara.tn',
     en: 'Stamp Calculator | Idaara.tn',
     derja: 'Calculateur Timbres | Idaara.tn',
   },
   '/concours': {
-    ar: 'رادار المناظرات الوطنية | Idaara.tn',
-    fr: 'Radar des Concours | Idaara.tn',
-    en: 'Public Concours Radar | Idaara.tn',
-    derja: 'Radar el Concourat | Idaara.tn',
+    ar: 'رادار المناظرات | Idaara.tn',
+    fr: 'Radar Concours | Idaara.tn',
+    en: 'Concours Radar | Idaara.tn',
+    derja: 'Radar Concourat | Idaara.tn',
   },
   '/locator': {
-    ar: 'أطلس البلديات والمصالح | Idaara.tn',
-    fr: 'Atlas Baladiyas & Guichets | Idaara.tn',
-    en: 'Baladiyas & Public Offices | Idaara.tn',
-    derja: 'Atlas Baladiyas & 9badhat | Idaara.tn',
+    ar: 'دليل البلديات | Idaara.tn',
+    fr: 'Atlas Baladiyas | Idaara.tn',
+    en: 'Atlas Baladiyas | Idaara.tn',
+    derja: 'Atlas Baladiyas | Idaara.tn',
   },
   '/launchpad': {
     ar: 'فضاء المستقل (1%) | Idaara.tn',
     fr: 'Espace Freelance 1% | Idaara.tn',
-    en: 'Freelance Hub (1% Tax) | Idaara.tn',
+    en: 'Freelance Hub (1%) | Idaara.tn',
     derja: 'Espace Freelance 1% | Idaara.tn',
   },
   '/portails': {
-    ar: 'دليل البوابات الحكومية | Idaara.tn',
+    ar: 'البوابات الحكومية | Idaara.tn',
     fr: 'Portails e-Gov | Idaara.tn',
-    en: 'e-Gov Portals Directory | Idaara.tn',
+    en: 'e-Gov Portals | Idaara.tn',
     derja: 'Portails e-Gov | Idaara.tn',
   },
   '/contacts': {
-    ar: 'أرقام الطوارئ والمصالح | Idaara.tn',
-    fr: "Numéros d'Urgence & Contacts | Idaara.tn",
-    en: 'Emergency Numbers & Helplines | Idaara.tn',
+    ar: 'أرقام الطوارئ | Idaara.tn',
+    fr: "Numéros d'Urgence | Idaara.tn",
+    en: 'Emergency Numbers | Idaara.tn',
     derja: 'Noumrouwet el 7adra | Idaara.tn',
   },
 };
@@ -122,13 +122,7 @@ export function DynamicTitle() {
     }
 
     // Fallback default title
-    const fallbackMap: Record<SupportedLanguage, string> = {
-      ar: 'Idaara.tn — دليلك الإداري الذكي',
-      fr: 'Idaara.tn — AI Copilot & Démarches Administratives',
-      en: 'Idaara.tn — AI Civic Copilot & Procedures',
-      derja: 'Idaara.tn — Assistant Idari Tounsi',
-    };
-    document.title = fallbackMap[locale] || fallbackMap['fr'];
+    document.title = 'Idaara.tn';
   }, [pathname, locale]);
 
   return null;
