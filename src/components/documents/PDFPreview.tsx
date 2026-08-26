@@ -199,8 +199,8 @@ export const PDFPreview: React.FC<PDFPreviewProps> = ({ template, formData }) =>
                 <p className="text-[11px] text-zinc-600">
                   {isRtl ? "Ministère de l'Intérieur" : 'وزارة الداخلية'}
                 </p>
-                <p className="text-[10px] text-zinc-500">
-                  {isRtl ? 'Homologation Idaara.tn' : 'إدارة.تونس'}
+                <p className="text-[10px] text-zinc-500 font-mono">
+                  {isRtl ? 'Homologation Idaara.tn' : 'منظومة Idaara.tn'}
                 </p>
               </div>
             </div>
@@ -721,7 +721,7 @@ export const PDFPreview: React.FC<PDFPreviewProps> = ({ template, formData }) =>
 
             <div className="text-center mt-2 text-[7px] text-zinc-400 font-sans">
               {isRtl
-                ? 'وثيقة رسمية محررة عبر منصة إدارة.تونس السيادية · مطابقة للمواصفات الإدارية للجمهورية التونسية'
+                ? 'وثيقة رسمية محررة عبر منصة Idaara.tn · مطابقة للمواصفات الإدارية للجمهورية التونسية'
                 : 'Document officiel généré via Idaara.tn · Conforme aux normes administratives de la République Tunisienne'}
             </div>
           </div>

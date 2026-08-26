@@ -1,12 +1,12 @@
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
-  title: 'الوثائق والعقود الرسمية',
+  title: 'Documents & Contrats',
   description:
-    'استخرج عقد كراء سكني، توكيل رسمي، تصريح بضياع، إقرار بدين، أو شهادة إيواء بصيغة PDF رسمية جاهزة للتعريف بالإمضاء في البلدية. مجاني وفوري.',
+    'Modèles officiels de contrats de bail, procurations, déclarations de perte et reconnaissances de dette prêts pour légalisation de signature à la Baladiya.',
   openGraph: {
-    title: 'الوثائق والعقود الرسمية | إدارة.تونس',
-    description: 'استخرج عقودك الرسمية PDF جاهزة للتعريف بالإمضاء في البلدية.',
+    title: 'Documents & Contrats | Idaara.tn',
+    description: 'Modèles officiels de contrats et déclarations conformes en Tunisie.',
     url: '/documents',
   },
   alternates: {

@@ -161,7 +161,7 @@ export const DossierKitExport: React.FC<DossierKitExportProps> = ({
               <p className="text-[11px] text-zinc-600">
                 {locale === 'ar' ? "Portail de l'Administration" : 'البوابة الوطنية للإجراءات'}
               </p>
-              <p className="text-[10px] text-zinc-500 font-mono">إدارة.تونس</p>
+              <p className="text-[10px] text-zinc-500 font-mono">Idaara.tn</p>
             </div>
           </div>
 
@@ -292,7 +292,7 @@ export const DossierKitExport: React.FC<DossierKitExportProps> = ({
           {/* Footer certification */}
           <div className="pt-3 border-t border-zinc-200 flex items-center justify-between text-[10px] text-zinc-500">
             <span>
-              {locale === 'ar' ? 'محرر عبر بوابة إدارة.تونس الرسمية · مطابقة للتشريع الوطني' : 'Généré par Idaara.tn — BCT & JORT Conforme'}
+              {locale === 'ar' ? 'محرر عبر بوابة Idaara.tn الرسمية · مطابقة للتشريع الوطني' : 'Généré par Idaara.tn — BCT & JORT Conforme'}
             </span>
             <span>
               {locale === 'ar' ? 'إمضاء المواطن : ___________________' : 'Signature du Citoyen : ___________________'}

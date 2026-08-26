@@ -1,12 +1,12 @@
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
-  title: 'البوابات الحكومية',
+  title: 'Portails e-Gov',
   description:
-    'دليل موحد لـ 18 بوابة حكومية تونسية رسمية: e-Houwiya (الهوية الرقمية)، بطاقة عدد 3 الإلكترونية، e-CNSS، CNAM، ATTT، السجل التجاري RNE، الرائد الرسمي JORT، e-Finance. روابط مباشرة ودليل الاستخدام.',
+    'Annuaire unifié des 18 portails officiels de l\'administration numérique tunisienne : e-Houwiya, B3 en ligne, e-CNSS, ATTT, RNE, JORT et services e-Finance.',
   openGraph: {
-    title: 'البوابات الحكومية | إدارة.تونس',
-    description: 'دليل 18 بوابة حكومية تونسية رسمية مع روابط مباشرة ودليل الاستخدام.',
+    title: 'Portails e-Gov | Idaara.tn',
+    description: 'Accès direct aux services publics numériques officiels de la République Tunisienne.',
     url: '/portails',
   },
   alternates: {

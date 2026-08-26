@@ -1,12 +1,12 @@
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
-  title: 'المساعد الذكي (AI)',
+  title: 'AI Copilot',
   description:
-    'اسأل Idaara AI بالدارجة التونسية عن أي إجراء إداري: جواز السفر (80 د.ت)، بطاقة التعريف (3 د.ت)، بطاقة عدد 3 (7.5 د.ت)، المناظرات الوطنية، عقود الكراء. مساعد ذكي مجاني 24/7.',
+    'Idaara AI Copilot : posez toutes vos questions sur les démarches administratives, passeports, carte grise, B3, timbres fiscaux et concours publics en Tunisie.',
   openGraph: {
-    title: 'المساعد الذكي | إدارة.تونس',
-    description: 'اسأله بالدارجة التونسية، يجاوبك بالقانون. جواز السفر، بطاقة التعريف، التنابر، المناظرات.',
+    title: 'AI Copilot | Idaara.tn',
+    description: 'Le copilote administratif et juridique intelligent en Tunisie.',
     url: '/copilot',
   },
   alternates: {

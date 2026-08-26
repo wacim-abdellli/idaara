@@ -539,7 +539,7 @@ export default function HomePage() {
   const ui = {
     nationalPlatform:
       locale === 'ar'
-        ? 'إدارة.تونس · المنظومة الإدارية الذكية'
+        ? 'Idaara.tn · المنظومة الإدارية الذكية'
         : locale === 'derja'
         ? 'Idaara.tn · El Menassa el Idariya el Thakiya'
         : locale === 'en'

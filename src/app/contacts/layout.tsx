@@ -1,12 +1,12 @@
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
-  title: 'أرقام الطوارئ والمصالح',
+  title: "Numéros d'Urgence",
   description:
-    'دليل شامل لأرقام الطوارئ التونسية: الشرطة 197، SAMU 190، الحماية المدنية 198، الحرس الوطني 193 — ومئات أرقام الوزارات والمصالح الحكومية الأخرى. اتصل مباشرة أو انسخ الرقم.',
+    'Annuaire complet des numéros d\'urgence (197, 190, 198, 193) et contacts officiels des ministères et services publics en Tunisie.',
   openGraph: {
-    title: 'أرقام الطوارئ والمصالح | إدارة.تونس',
-    description: 'دليل أرقام الطوارئ والوزارات والمصالح الحكومية التونسية.',
+    title: 'Numéros d\'Urgence | Idaara.tn',
+    description: 'Numéros d\'urgence et contacts directs des services publics en Tunisie.',
     url: '/contacts',
   },
   alternates: {

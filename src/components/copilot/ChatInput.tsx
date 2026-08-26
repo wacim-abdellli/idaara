@@ -146,7 +146,7 @@ export function ChatInput({
           {/* Micro disclaimer */}
           <p className="text-center text-[11px] text-zinc-600">
             {locale === 'ar'
-              ? 'إدارة.تونس AI يقدم معلومات إرشادية. يرجى التثبت من النصوص بالرائد الرسمي.'
+              ? 'Idaara AI يقدم معلومات إرشادية. يرجى التثبت من النصوص بالرائد الرسمي.'
               : locale === 'derja'
               ? 'Idaara AI ya3tik ma3loumet te9ribiya. Thabbet dima fel JORT.'
               : locale === 'fr'

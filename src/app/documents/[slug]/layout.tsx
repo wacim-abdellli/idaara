@@ -13,16 +13,16 @@ export async function generateMetadata({
 
   if (!template) {
     return {
-      title: 'وثيقة غير موجودة | إدارة.تونس',
+      title: 'Document introuvable',
     };
   }
 
-  const titleAr = template.title?.ar || template.title?.fr || slug;
   const titleFr = template.title?.fr || slug;
+  const titleAr = template.title?.ar || template.title?.fr || slug;
 
   return {
-    title: `${titleAr} — نموذج PDF رسمي جاهز للتعريف بالإمضاء | إدارة.تونس`,
-    description: `استخرج ${titleAr} بصيغة PDF رسمية جاهزة للتعريف بالإمضاء في البلدية التونسية مع إطار التنابر الجبائية الصحيح. مجاني وفوري — ${titleFr} PDF Tunisie.`.slice(0, 160),
+    title: `${titleFr} (PDF)`,
+    description: `Modèle certifié ${titleFr} prêt pour légalisation de signature à la Baladiya en Tunisie.`.slice(0, 160),
     keywords: [
       titleAr, titleFr,
       `${titleFr} PDF tunisie`,

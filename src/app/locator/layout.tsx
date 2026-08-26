@@ -1,12 +1,12 @@
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
-  title: 'أطلس البلديات والمصالح',
+  title: 'Atlas Baladiyas & Guichets',
   description:
-    'دليل جغرافي شامل لأكثر من 130 بلدية وقباضة مالية ومركز شرطة وحرس وطني عبر 24 ولاية تونسية — أوقات عمل توقيت رمضان والصيف والشتاء، العناوين، وروابط Waze و Google Maps.',
+    'Annuaire géolocalisé de plus de 130 baladiyas, recettes des finances, commissariats et agences CNSS/ATTT dans les 24 gouvernorats avec horaires saisonniers réels.',
   openGraph: {
-    title: 'أطلس البلديات والمصالح | إدارة.تونس',
-    description: 'العنوان وأوقات العمل لأكثر من 130 مصلحة إدارية عبر ولايات تونس.',
+    title: 'Atlas Baladiyas & Guichets | Idaara.tn',
+    description: 'Adresses, téléphones et horaires des guichets administratifs dans les 24 gouvernorats.',
     url: '/locator',
   },
   alternates: {

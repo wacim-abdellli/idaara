@@ -3,7 +3,7 @@ export type SupportedLanguage = 'derja' | 'fr' | 'ar' | 'en';
 export const translations: Record<SupportedLanguage, Record<string, string>> = {
   derja: {
     appName: "Idaara.tn",
-    appSubtitle: "إدارة.تونس",
+    appSubtitle: "Assistant Idari Tounsi",
     heroBadge: "Awwel Assistant Idari bel AI fi Tounes",
     heroHeadline: "Awra9ek w Démarchet-ek fi",
     heroHeadlineHighlight: "D9i9a.",
@@ -102,8 +102,8 @@ export const translations: Record<SupportedLanguage, Record<string, string>> = {
     stampGuideSub: "Emplacements obligatoires des timbres et règles de signature",
   },
   ar: {
-    appName: "إدارة.تونس",
-    appSubtitle: "المساعد الإداري الذكي الأول في تونس",
+    appName: "Idaara.tn",
+    appSubtitle: "المساعد الإداري الذكي في تونس",
     heroBadge: "أول مساعد إداري ذكي في تونس",
     heroHeadline: "إجراءاتك الإدارية في تونس بكل",
     heroHeadlineHighlight: "سهولة وسرعة.",
@@ -111,7 +111,7 @@ export const translations: Record<SupportedLanguage, Record<string, string>> = {
     heroCTA: "جرب المساعد الذكي",
     heroSecondaryCTA: "فسّرلي هالورقة (OCR)",
     voiceSearchBarPlaceholder: "اسأل عن أي إجراء... (مثال: 'جواز السفر'، 'بطاقة التعريف')",
-    voiceActivePrompt: "تكلّم بكل تلقائية، إدارة.تونس تسمع فيك...",
+    voiceActivePrompt: "تكلّم بكل تلقائية، Idaara AI يسمع فيك...",
     voiceListening: "جار الاستماع...",
     featuresTitle: "كل الإجراءات الإدارية التونسية في منصة واحدة",
     featuresSubtitle: "وداعاً للمفاجآت عند الشبابيك بفضل حاسبة التنابر والوثائق الرسمية التلقائية.",
@@ -125,7 +125,7 @@ export const translations: Record<SupportedLanguage, Record<string, string>> = {
     concoursNav: "المناظرات الوطنية",
     portailsNav: "البوابات الإلكترونية",
     contactsNav: "الاتصال",
-    footerDisclaimer: "إدارة.تونس منصة مواطنية مستقلة مستندة إلى النصوص القانونية والرائد الرسمي للجمهورية التونسية.",
+    footerDisclaimer: "Idaara.tn منصة مواطنية مستقلة مستندة إلى النصوص القانونية والرائد الرسمي للجمهورية التونسية.",
     ramadanHours: "توقيت شهر رمضان",
     summerHours: "الحصة الواحدة (الصيف)",
     regularHours: "التوقيت العادي (الحصتان)",

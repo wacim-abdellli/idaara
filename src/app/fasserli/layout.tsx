@@ -1,12 +1,12 @@
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
-  title: 'فسّرلي الورقة (OCR)',
+  title: 'Fasserli OCR',
   description:
-    'ارفع وثيقتك الإدارية (تنبيه قباضة، إعلام عدل منفذ، خطية CNSS) وسنفسّرها لك بالدارجة التونسية مع خطة عمل واضحة — بدون حفظ أي ملف (Zero-Storage).',
+    'Fasserli : décodeur OCR de documents et courriers administratifs tunisiens avec plan d\'action instantané et confidentialité garantie sans conservation de fichiers.',
   openGraph: {
-    title: 'فسّرلي الورقة (OCR) | إدارة.تونس',
-    description: 'فسّرلي الورقة الرسمية مع خطة عمل بالدارجة التونسية — بدون حفظ ملفات.',
+    title: 'Fasserli OCR | Idaara.tn',
+    description: 'Analyse et explication de documents administratifs tunisiens en clair.',
     url: '/fasserli',
   },
   alternates: {

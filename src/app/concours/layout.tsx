@@ -1,12 +1,12 @@
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
-  title: 'رادار المناظرات الوطنية',
+  title: 'Radar Concours',
   description:
-    'تابع مناظرات STEG، SONEDE، الكاباس، وزارة التربية والصحة والداخلية — الشروط، الوثائق المطلوبة، تواريخ التسجيل، والرواتب. رادار المناظرات المحدث لسنة 2025/2026.',
+    'Radar des concours de la fonction publique et entreprises nationales en Tunisie (STEG, SONEDE, CAPES, Ministères) : conditions, dossiers et dates limites.',
   openGraph: {
-    title: 'رادار المناظرات الوطنية | إدارة.تونس',
-    description: 'مناظرات STEG، SONEDE، الكاباس، وزارة التربية — الشروط والوثائق والمواعيد.',
+    title: 'Radar Concours | Idaara.tn',
+    description: 'Suivi en temps réel des concours publics et recrutements nationaux en Tunisie.',
     url: '/concours',
   },
   alternates: {

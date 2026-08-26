@@ -219,7 +219,7 @@ export default function CopilotPage() {
 
   const centerHeadline =
     locale === 'ar'
-      ? 'شنوة تحب تعرف اليوم في إدارة.تونس؟'
+      ? 'شنوة تحب تقضي ولا تستفسر اليوم في تونس؟'
       : locale === 'derja'
       ? 'Chnowa thabb ta3ref lyoum fi Tounes?'
       : locale === 'fr'

@@ -1,12 +1,12 @@
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
-  title: 'حاسبة التنابر والرسوم',
+  title: 'Calculateur de Timbres',
   description:
-    'احسب التنابر الجبائية بالمليم حسب قانون المالية 2025/2026: تنبير جواز السفر (80 د.ت)، بطاقة التعريف (3 د.ت)، البطاقة الرمادية، عقد الكراء، الإشهار العقاري، والمعاليم البلدية.',
+    'Calculateur exact de timbres fiscaux et droits d\'enregistrement en Tunisie selon la Loi de Finances 2025/2026 : passeport, CIN, mutation carte grise, contrats et baladiya.',
   openGraph: {
-    title: 'حاسبة التنابر والرسوم | إدارة.تونس',
-    description: 'احسب التنابر الجبائية بالمليم وفق قانون المالية الأخير.',
+    title: 'Calculateur de Timbres | Idaara.tn',
+    description: 'Calculez le coût exact des timbres fiscaux et taxes pour vos démarches en Tunisie.',
     url: '/calculator',
   },
   alternates: {

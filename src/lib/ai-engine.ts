@@ -388,7 +388,7 @@ export function parseAndReason(prompt: string, locale: SupportedLanguage | strin
           ? "Bonjour ! Bienvenue sur **Idaara.tn**. Posez toutes vos questions sur les démarches administratives tunisiennes, les concours publics et le calcul des timbres fiscaux."
           : lang === 'en'
           ? "Hello! Welcome to **Idaara.tn**. Ask me anything about Tunisian administrative procedures, public concours, legal PDF contracts, or fiscal stamp calculations."
-          : "عسلامة ومرحباً بك في **إدارة.تونس**! 🇹🇳\n\nأنا المساعد الإداري الذكي متاعك، تنجم تسألني بالدارجة على أي إجراء إداري، وثيقة رسمية، أو مناظرة عمومية:\n- **جواز السفر وبطاقة التعريف (CIN)** (الأوراق، التنابر والآجال)\n- **البطاقة الرمادية ورخص السياقة (ATTT)**\n- **بطاقة السوابق العدلية (بطاقة عدد 3 - B3)**\n- **المناظرات الوطنية المفتوحة** (STEG، كاباس، SONEDE)\n- **عقود الكراء والتوكيلات الرسمية** (PDF جاهز للبلدية)\n- **نظام المبادر الذاتي 1% وفواتير التصدير**\n\nشنوة تحب تقضي ولا تستفسر عليه بالضبط؟",
+          : "عسلامة ومرحباً بك في **Idaara.tn**! 🇹🇳\n\nأنا المساعد الإداري الذكي متاعك، تنجم تسألني بالدارجة على أي إجراء إداري، وثيقة رسمية، أو مناظرة عمومية:\n- **جواز السفر وبطاقة التعريف (CIN)** (الأوراق، التنابر والآجال)\n- **البطاقة الرمادية ورخص السياقة (ATTT)**\n- **بطاقة السوابق العدلية (بطاقة عدد 3 - B3)**\n- **المناظرات الوطنية المفتوحة** (STEG، كاباس، SONEDE)\n- **عقود الكراء والتوكيلات الرسمية** (PDF جاهز للبلدية)\n- **نظام المبادر الذاتي 1% وفواتير التصدير**\n\nشنوة تحب تقضي ولا تستفسر عليه بالضبط؟",
       actions: [
         {
           label: { derja: '💼 رادار المناظرات', fr: 'Radar des Concours', ar: 'رادار المناظرات', en: 'Concours Radar' },

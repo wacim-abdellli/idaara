@@ -486,7 +486,7 @@ export default function ConcoursPage() {
                             </span>
                             <span className="text-[11px] text-zinc-400">
                               {locale === 'ar'
-                                ? 'اسأل مساعد إدارة.تونس الذكي عن كيفية احتساب السكور وطريقة استخراج الوثائق.'
+                                ? 'اسأل مساعد Idaara AI عن كيفية احتساب السكور وطريقة استخراج الوثائق.'
                                 : locale === 'derja'
                                 ? 'As\'el Idaara AI kifeh ta7seb score-ek w t7adher l\'awra9 mte3ek.'
                                 : locale === 'en'
