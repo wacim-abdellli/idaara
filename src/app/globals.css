@@ -70,20 +70,29 @@ body {
   background-size: auto, auto, 300px 300px;
 }
 
-/* ── RTL / Arabic ──────────────────────────── */
+/* ── RTL / Arabic Typography ──────────────────────────── */
 [dir="rtl"],
 [dir="rtl"] body {
   font-family: var(--font-arabic);
-  letter-spacing: 0;
+  letter-spacing: normal !important;
   text-align: right;
   direction: rtl;
 }
 
+[dir="rtl"] :not(code):not(pre):not(kbd) {
+  letter-spacing: 0 !important;
+}
+
+[dir="rtl"] button,
+[dir="rtl"] input,
+[dir="rtl"] select,
+[dir="rtl"] textarea {
+  font-family: var(--font-arabic) !important;
+}
+
 [dir="rtl"] .font-mono {
-  font-family: var(--font-mono);
-  direction: ltr;
-  display: inline-block;
-  unicode-bidi: embed;
+  font-family: var(--font-arabic), "JetBrains Mono", monospace;
+  letter-spacing: 0 !important;
 }
 
 /* ── Display / Headline type ───────────────── */
@@ -95,8 +104,9 @@ body {
 }
 
 [dir="rtl"] .display-heading {
-  font-family: var(--font-arabic);
+  font-family: var(--font-arabic) !important;
   font-weight: 800;
+  letter-spacing: 0 !important;
 }
 
 /* ── Scrollbar ─────────────────────────────── */

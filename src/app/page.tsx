@@ -770,12 +770,12 @@ export default function HomePage() {
           {/* Left Column: Bold Typographic Narrative & Voice Launcher */}
           <FadeIn direction="up" className="lg:col-span-6 space-y-6 text-left rtl:text-right relative z-10">
             
-            {/* Minimalist Civic Header Index */}
+            {/* Minimalist Header Index */}
             <motion.div
               initial={{ opacity: 0, x: -10 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ duration: 0.5 }}
-              className="flex items-center gap-2.5 text-xs font-mono text-zinc-500 uppercase tracking-widest"
+              className="flex items-center gap-2 text-xs text-zinc-500 font-medium"
             >
               <span className="text-emerald-400 font-bold">/</span>
               <span>{ui.nationalPlatform}</span>
@@ -835,7 +835,7 @@ export default function HomePage() {
 
               {/* Direct Procedure Pills */}
               <div className="flex flex-wrap items-center gap-2 pt-1">
-                <span className="text-[10px] font-mono uppercase tracking-wider text-zinc-500">
+                <span className="text-[10px] font-medium text-zinc-500">
                   {ui.directAccess}
                 </span>
                 {[
@@ -936,7 +936,7 @@ export default function HomePage() {
                 },
                 {
                   id: 'tax' as const,
-                  label: locale === 'ar' ? 'زبلة وخروبة' : locale === 'derja' ? 'Zebla & Khrouba' : locale === 'en' ? 'Tax' : 'Taxe Municipale',
+                  label: locale === 'ar' ? 'الأداء البلدي (العقارات)' : locale === 'derja' ? 'Zebla & Khrouba' : locale === 'en' ? 'Tax' : 'Taxe Municipale',
                   tag: locale === 'ar' ? 'قباضة' : locale === 'derja' ? 'Recette' : locale === 'en' ? 'Tax Office' : 'Recette',
                   icon: FileText,
                 },
@@ -958,7 +958,7 @@ export default function HomePage() {
                     <Icon className={`w-3.5 h-3.5 ${isActive ? 'text-zinc-950' : 'text-zinc-500'}`} />
                     <span>{tab.label}</span>
                     <span
-                      className={`text-[9px] font-mono px-1.5 py-0.5 rounded-md ${
+                      className={`text-[9px] px-1.5 py-0.5 rounded-md font-bold ${
                         isActive
                           ? 'bg-zinc-950/20 text-zinc-950 font-extrabold'
                           : 'bg-zinc-800/80 text-zinc-400'
@@ -981,11 +981,11 @@ export default function HomePage() {
               <div className="flex items-start justify-between pb-4 border-b border-white/[0.08] relative z-10 gap-3">
                 <div className="space-y-1 min-w-0">
                   <div className="flex items-center gap-2">
-                    <span className="text-[10px] font-mono font-bold uppercase tracking-wider text-emerald-400 px-2 py-0.5 rounded-md bg-emerald-950/70 border border-emerald-800/50 flex items-center gap-1">
+                    <span className="text-[10px] font-bold text-emerald-400 px-2 py-0.5 rounded-md bg-emerald-950/70 border border-emerald-800/50 flex items-center gap-1">
                       <ShieldCheck className="w-3 h-3" />
                       <span>{ui.officialDoc}</span>
                     </span>
-                    <span className="text-[10px] font-mono text-zinc-500 hidden sm:inline-block">
+                    <span className="text-[10px] text-zinc-500 hidden sm:inline-block">
                       JORT 2026 · {ui.repTun}
                     </span>
                   </div>
@@ -1002,10 +1002,10 @@ export default function HomePage() {
 
                 {/* Total Cost Badge */}
                 <div className="text-right rtl:text-left shrink-0 pl-3 rtl:pl-0 rtl:pr-3 border-l rtl:border-l-0 rtl:border-r border-white/[0.08]">
-                  <span className="text-[10px] uppercase font-bold text-zinc-500 block">
+                  <span className="text-[10px] font-bold text-zinc-500 block">
                     {ui.totalEst}
                   </span>
-                  <span className="text-base sm:text-xl font-mono font-extrabold text-amber-400">
+                  <span className="text-base sm:text-xl font-extrabold text-amber-400">
                     {currentDoc.fee}
                   </span>
                 </div>
@@ -1097,13 +1097,13 @@ export default function HomePage() {
               </div>
 
               {/* Document Footer Bar Telemetry & Direct Guide Button */}
-              <div className="pt-3.5 border-t border-white/[0.08] flex flex-col sm:flex-row sm:items-center justify-between gap-3 relative z-10 text-xs font-mono">
+              <div className="pt-3.5 border-t border-white/[0.08] flex flex-col sm:flex-row sm:items-center justify-between gap-3 relative z-10 text-xs font-medium">
                 <div className="flex items-center gap-2">
-                  <span className="px-2.5 py-1 rounded-lg bg-zinc-900/90 border border-white/[0.08] text-zinc-300 text-[11px] flex items-center gap-1.5">
+                  <span className="px-2.5 py-1 rounded-lg bg-zinc-900/90 border border-white/[0.08] text-zinc-300 text-[11px] flex items-center gap-1.5 font-medium">
                     <Clock className="w-3 h-3 text-zinc-500" />
                     <span>{currentDoc.time}</span>
                   </span>
-                  <span className="px-2.5 py-1 rounded-lg bg-zinc-900/90 border border-white/[0.08] text-emerald-400 text-[11px]">
+                  <span className="px-2.5 py-1 rounded-lg bg-zinc-900/90 border border-white/[0.08] text-emerald-400 text-[11px] font-medium">
                     {currentDoc.stamp}
                   </span>
                 </div>
@@ -1133,7 +1133,7 @@ export default function HomePage() {
           <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 pb-4 border-b border-white/[0.08]">
             <div className="space-y-1">
               <div className="flex items-center gap-2">
-                <span className="text-[10px] font-mono font-bold uppercase tracking-widest text-emerald-400 px-2.5 py-0.5 rounded-md bg-emerald-950/60 border border-emerald-800/40">
+                <span className="text-[10px] font-bold text-emerald-400 px-2.5 py-0.5 rounded-md bg-emerald-950/60 border border-emerald-800/40">
                   {locale === 'ar'
                     ? 'ابتكارات حصرية'
                     : locale === 'derja'
@@ -1142,7 +1142,7 @@ export default function HomePage() {
                     ? 'Unrivaled Capabilities'
                     : 'Innovations Exclusives'}
                 </span>
-                <span className="text-[11px] font-mono text-zinc-400">
+                <span className="text-[11px] text-zinc-400 font-medium">
                   {locale === 'ar'
                     ? 'ما يميز المنصة عن أي مصدر آخر'
                     : locale === 'derja'
@@ -1333,7 +1333,7 @@ export default function HomePage() {
           
           <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 pb-4 border-b border-zinc-800">
             <div>
-              <div className="inline-flex items-center gap-1.5 text-xs font-bold uppercase tracking-wider text-amber-400 mb-1">
+              <div className="inline-flex items-center gap-1.5 text-xs font-bold text-amber-400 mb-1">
                 <Sliders className="w-3.5 h-3.5" />
                 <span>{ui.simulatorEyebrow}</span>
               </div>
@@ -1368,7 +1368,7 @@ export default function HomePage() {
                   className="w-full accent-emerald-500 cursor-pointer h-2 bg-zinc-800 rounded-lg transition-all"
                 />
 
-                <div className="flex justify-between text-[10px] font-mono text-zinc-500">
+                <div className="flex justify-between text-[10px] text-zinc-500 font-medium">
                   <span>5 000 DT</span>
                   <span>{ui.legalCeiling}</span>
                 </div>
@@ -1392,7 +1392,7 @@ export default function HomePage() {
                 whileHover={{ y: -3, scale: 1.02 }}
                 className="p-5 rounded-2xl bg-zinc-950 border border-zinc-800 flex flex-col justify-between space-y-2 shadow-lg"
               >
-                <span className="text-[10px] font-mono uppercase font-bold text-zinc-500">{ui.taxCardTitle}</span>
+                <span className="text-[10px] font-bold text-zinc-500">{ui.taxCardTitle}</span>
                 <span className="text-xl font-mono font-extrabold text-amber-400">
                   <AnimatedCounter value={simulatedTax} decimals={3} suffix=" DT" />
                 </span>
@@ -1403,7 +1403,7 @@ export default function HomePage() {
                 whileHover={{ y: -3, scale: 1.02 }}
                 className="p-5 rounded-2xl bg-zinc-950 border border-zinc-800 flex flex-col justify-between space-y-2 shadow-lg"
               >
-                <span className="text-[10px] font-mono uppercase font-bold text-zinc-500">{ui.cnssCardTitle}</span>
+                <span className="text-[10px] font-bold text-zinc-500">{ui.cnssCardTitle}</span>
                 <span className="text-xl font-mono font-extrabold text-zinc-200">
                   <AnimatedCounter value={simulatedCnss} decimals={3} suffix=" DT" />
                 </span>
@@ -1414,7 +1414,7 @@ export default function HomePage() {
                 whileHover={{ y: -3, scale: 1.02 }}
                 className="p-5 rounded-2xl bg-emerald-950/40 border border-emerald-500/40 flex flex-col justify-between space-y-2 shadow-lg shadow-emerald-950/50"
               >
-                <span className="text-[10px] font-mono uppercase font-bold text-emerald-300">{ui.netCardTitle}</span>
+                <span className="text-[10px] font-bold text-emerald-300">{ui.netCardTitle}</span>
                 <span className="text-xl font-mono font-extrabold text-emerald-400">
                   <AnimatedCounter value={simulatedNet} decimals={3} suffix=" DT" />
                 </span>
@@ -1435,10 +1435,10 @@ export default function HomePage() {
         <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-4 pb-4 border-b border-white/[0.08]">
           <div className="space-y-1">
             <div className="flex items-center gap-2">
-              <span className="text-[10px] font-mono font-bold uppercase tracking-widest text-cyan-400 px-2.5 py-0.5 rounded-md bg-cyan-950/60 border border-cyan-800/40">
+              <span className="text-[10px] font-bold text-cyan-400 px-2.5 py-0.5 rounded-md bg-cyan-950/60 border border-cyan-800/40">
                 {ui.radarEyebrow}
               </span>
-              <span className="text-[11px] font-mono text-zinc-400">
+              <span className="text-[11px] text-zinc-400 font-medium">
                 {locale === 'ar'
                   ? '24 ولاية · تحديث فوري'
                   : locale === 'derja'
