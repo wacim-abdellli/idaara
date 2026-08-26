@@ -21,20 +21,20 @@ interface OfficeCardProps {
   activeScheduleMode: 'regular' | 'ramadan' | 'summer';
 }
 
-const categoryConfig: Record<string, { label: string; color: string }> = {
-  baladiya:         { label: 'Municipalité / Baladiya', color: 'bg-emerald-500/10 text-emerald-400 border-emerald-500/25' },
-  recette_finances: { label: 'Recette des Finances',   color: 'bg-amber-500/10 text-amber-400 border-amber-500/25' },
-  poste:            { label: 'Bureau de Poste',         color: 'bg-blue-500/10 text-blue-400 border-blue-500/25' },
+const categoryConfig: Record<string, { label: string | Record<string, string>; color: string }> = {
+  baladiya:         { label: { ar: 'بلدية', en: 'Municipality', fr: 'Municipalité / Baladiya' }, color: 'bg-emerald-500/10 text-emerald-400 border-emerald-500/25' },
+  recette_finances: { label: { ar: 'قباضة المالية', en: 'Treasury Office', fr: 'Recette des Finances' }, color: 'bg-amber-500/10 text-amber-400 border-amber-500/25' },
+  poste:            { label: { ar: 'مكتب بريد', en: 'Post Office', fr: 'Bureau de Poste' }, color: 'bg-blue-500/10 text-blue-400 border-blue-500/25' },
   cnss:             { label: 'Caisse CNSS',              color: 'bg-purple-500/10 text-purple-400 border-purple-500/25' },
   cnam:             { label: 'Centre CNAM',              color: 'bg-cyan-500/10 text-cyan-400 border-cyan-500/25' },
   attt:             { label: 'Agence ATTT',              color: 'bg-indigo-500/10 text-indigo-400 border-indigo-500/25' },
-  rne:              { label: 'Registre Entreprises',     color: 'bg-rose-500/10 text-rose-400 border-rose-500/25' },
-  police_garde:     { label: 'Poste de Police/Garde',   color: 'bg-zinc-700/40 text-zinc-400 border-zinc-600/40' },
+  rne:              { label: { ar: 'سجل الشركات', en: 'Business Registry', fr: 'Registre Entreprises' }, color: 'bg-rose-500/10 text-rose-400 border-rose-500/25' },
+  police_garde:     { label: { ar: 'مركز شرطة/حرس', en: 'Police/Guard Post', fr: 'Poste de Police/Garde' }, color: 'bg-zinc-700/40 text-zinc-400 border-zinc-600/40' },
   steg:             { label: 'STEG — Électricité & Gaz', color: 'bg-yellow-500/10 text-yellow-400 border-yellow-500/25' },
   sonede:           { label: 'SONEDE — Eau',             color: 'bg-sky-500/10 text-sky-400 border-sky-500/25' },
   tribunal:         { label: 'Tribunal',                 color: 'bg-orange-500/10 text-orange-400 border-orange-500/25' },
   aneti:            { label: 'Agence ANETI',             color: 'bg-teal-500/10 text-teal-400 border-teal-500/25' },
-  hopital:          { label: 'Hôpital / CHU / CHR',     color: 'bg-red-500/10 text-red-400 border-red-500/25' },
+  hopital:          { label: { ar: 'مستشفى', en: 'Hospital', fr: 'Hôpital / CHU / CHR' }, color: 'bg-red-500/10 text-red-400 border-red-500/25' },
   ministere:        { label: 'Ministère',                color: 'bg-violet-500/10 text-violet-400 border-violet-500/25' },
   onas:             { label: 'ONAS — Assainissement',    color: 'bg-lime-500/10 text-lime-400 border-lime-500/25' },
   douane:           { label: 'Douane',                   color: 'bg-stone-500/10 text-stone-400 border-stone-500/25' },
@@ -46,6 +46,7 @@ export const OfficeCard: React.FC<OfficeCardProps> = ({ office, activeScheduleMo
   const name = getLocalized(office.name, locale);
   const tips = office.tips ? getLocalized(office.tips, locale) : undefined;
   const cat = categoryConfig[office.category] || { label: office.category, color: 'bg-zinc-800 text-zinc-400 border-zinc-700' };
+  const catLabel = typeof cat.label === 'string' ? cat.label : getLocalized(cat.label, locale);
 
   // Determine schedule text
   const scheduleInfo = (() => {
@@ -99,7 +100,7 @@ export const OfficeCard: React.FC<OfficeCardProps> = ({ office, activeScheduleMo
         {/* Category badge + Location */}
         <div className="flex items-center justify-between gap-2 flex-wrap">
           <span className={`text-[9px] font-extrabold uppercase tracking-wider px-2 py-0.5 rounded-lg border ${cat.color}`}>
-            {cat.label}
+            {catLabel}
           </span>
           <span className="text-[10px] text-zinc-400 font-medium flex items-center space-x-1 rtl:space-x-reverse">
             <MapPin className="w-3 h-3 text-emerald-400 shrink-0" />

@@ -128,7 +128,7 @@ export const TaxCalculator: React.FC = () => {
                     : 'bg-zinc-900 text-zinc-400 border-zinc-800'
                 }`}
               >
-                Services / IT (1%)
+                {locale === 'ar' ? 'خدمات / إعلامية (1%)' : 'Services / IT (1%)'}
               </button>
               <button
                 type="button"
@@ -139,7 +139,7 @@ export const TaxCalculator: React.FC = () => {
                     : 'bg-zinc-900 text-zinc-400 border-zinc-800'
                 }`}
               >
-                Commerce / Artisans (0.5%)
+                {locale === 'ar' ? 'تجارة / حرفيون (0.5%)' : 'Commerce / Artisans (0.5%)'}
               </button>
             </div>
           </div>
@@ -169,7 +169,7 @@ export const TaxCalculator: React.FC = () => {
           </div>
 
           <div className="text-[11px] text-zinc-500 pt-1">
-            {effectiveRateLabel} <strong className="text-emerald-400">{effectiveRate}%</strong> {locale === 'en' ? 'only!' : 'seulement!'}
+            {effectiveRateLabel} <strong className="text-emerald-400">{effectiveRate}%</strong> {locale === 'ar' ? 'فقط!' : locale === 'derja' ? 'seulement!' : locale === 'en' ? 'only!' : 'seulement!'}
           </div>
         </div>
       </div>
