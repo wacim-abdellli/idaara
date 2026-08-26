@@ -577,7 +577,7 @@ export default function CopilotPage() {
             <button
               onClick={() => setSidebarOpen(false)}
               className="p-1.5 rounded-lg hover:bg-white/10 text-zinc-400 hover:text-white transition-colors cursor-pointer border-0 outline-none"
-              title={locale === 'ar' ? 'إغلاق القائمة' : locale === 'en' ? 'Close sidebar' : 'Fermer le menu'}
+              title={locale === 'ar' ? 'إغلاق القائمة' : locale === 'derja' ? 'A9el el menu' : locale === 'en' ? 'Close sidebar' : 'Fermer le menu'}
             >
               <PanelLeftClose className="w-4 h-4" />
             </button>
@@ -736,14 +736,14 @@ export default function CopilotPage() {
                             <button
                               onClick={(e) => saveRenamedTitle(e, sess.id)}
                               className="p-1 rounded-md bg-emerald-500/20 text-emerald-400 hover:bg-emerald-500/30 transition-colors cursor-pointer border-0"
-                              title="Save"
+                              title={locale === 'ar' ? 'حفظ' : locale === 'derja' ? 'Sauvegarder' : locale === 'en' ? 'Save' : 'Enregistrer'}
                             >
                               <Check className="w-3 h-3" />
                             </button>
                             <button
                               onClick={cancelRenaming}
                               className="p-1 rounded-md text-zinc-400 hover:text-white hover:bg-white/10 transition-colors cursor-pointer border-0"
-                              title="Cancel"
+                              title={locale === 'ar' ? 'إلغاء' : locale === 'derja' ? 'Annuler' : locale === 'en' ? 'Cancel' : 'Annuler'}
                             >
                               <X className="w-3 h-3" />
                             </button>
@@ -789,7 +789,7 @@ export default function CopilotPage() {
                 {locale === 'ar' ? 'مواطن' : locale === 'en' ? 'Citizen' : locale === 'derja' ? 'Mowaten' : 'Citoyen'}
               </div>
               <div className="text-[10px] text-emerald-400 font-medium">
-                Idaara {locale === 'ar' || locale === 'derja' ? 'مجاني' : locale === 'fr' ? 'Gratuit' : 'Free'}
+                Idaara {locale === 'ar' ? 'مجاني' : locale === 'derja' ? 'Fabor' : locale === 'fr' ? 'Gratuit' : 'Free'}
               </div>
             </div>
           </div>
@@ -850,7 +850,7 @@ export default function CopilotPage() {
             <div className="text-center space-y-2 mb-8 animate-fade-in">
               <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-xs font-medium mb-3">
                 <Sparkles className="w-3.5 h-3.5" />
-                <span>{locale === 'ar' ? 'المساعد الإداري الذكي' : locale === 'en' ? 'Civic AI Copilot' : 'Assistant Administratif IA'}</span>
+                <span>{locale === 'ar' ? 'المساعد الإداري الذكي' : locale === 'derja' ? 'El Mosa3ed El Idari Edhki' : locale === 'en' ? 'Civic AI Copilot' : 'Assistant Administratif IA'}</span>
               </div>
               <h1 className="text-2xl sm:text-4xl font-extrabold text-white tracking-tight">
                 {centerHeadline}
@@ -1084,8 +1084,8 @@ export default function CopilotPage() {
 
                       <span className="text-xs text-zinc-400 font-medium tracking-wide">
                         {thinkMode
-                          ? (locale === 'ar' ? 'جارِ التفكير والتحليل القانوني المعمق...' : locale === 'derja' ? 'N5ammem w n7allel fel 9anoun...' : 'Analyse juridique approfondie...')
-                          : (locale === 'ar' ? 'جارِ البحث والتحضير من المصادر الرسمية...' : locale === 'derja' ? 'Nlawwej w n7adher fel ijaba...' : 'Recherche et traitement officiel...')}
+                          ? (locale === 'ar' ? 'جارِ التفكير والتحليل القانوني المعمق...' : locale === 'derja' ? 'N5ammem w n7allel fel 9anoun...' : locale === 'en' ? 'Deep legal analysis...' : 'Analyse juridique approfondie...')
+                          : (locale === 'ar' ? 'جارِ البحث والتحضير من المصادر الرسمية...' : locale === 'derja' ? 'Nlawwej w n7adher fel ijaba...' : locale === 'en' ? 'Official search & processing...' : 'Recherche et traitement officiel...')}
                       </span>
 
                       {/* Smooth Glowing Shimmer Dots */}
@@ -1125,7 +1125,7 @@ export default function CopilotPage() {
                     {showPlusMenu && (
                       <div className="absolute bottom-full left-0 mb-3 w-72 rounded-2xl bg-[#161820] border border-white/10 shadow-2xl p-2 z-50 animate-fade-in space-y-1">
                         <div className="px-3 py-1 text-[10px] uppercase font-bold tracking-wider text-zinc-400">
-                          {locale === 'ar' ? 'أسئلة شائعة' : locale === 'derja' ? 'As2ela ma3roufa' : 'Popular Inquiries'}
+                          {locale === 'ar' ? 'أسئلة شائعة' : locale === 'derja' ? 'As2ela ma3roufa' : locale === 'en' ? 'Popular Inquiries' : 'Questions populaires'}
                         </div>
                         {quickTopics.map((item, idx) => {
                           const Icon = item.icon;

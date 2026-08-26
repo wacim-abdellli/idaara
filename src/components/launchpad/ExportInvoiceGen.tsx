@@ -45,7 +45,7 @@ export const ExportInvoiceGen: React.FC = () => {
   const btnText =
     isGenerating
       ? (locale === 'en' ? 'Generating...' : 'Export en cours...')
-      : (locale === 'ar' ? 'تحميل الفاتورة PDF' : locale === 'en' ? 'Download Invoice PDF' : 'Télécharger la Facture PDF');
+      : (locale === 'ar' ? 'تحميل الفاتورة PDF' : locale === 'derja' ? 'Generi el facture' : locale === 'en' ? 'Download Invoice PDF' : 'Télécharger la Facture PDF');
 
   return (
     <div className="glass-panel rounded-3xl p-6 sm:p-7 border border-zinc-800 space-y-6">
@@ -64,7 +64,7 @@ export const ExportInvoiceGen: React.FC = () => {
           <button
             onClick={() => printElement('export-invoice-render')}
             className="flex items-center justify-center gap-1.5 px-3.5 py-2.5 rounded-xl bg-zinc-800 hover:bg-zinc-700 text-zinc-200 font-bold text-xs transition-all cursor-pointer border border-zinc-700"
-            title="Imprimer la facture"
+            title={locale === 'ar' ? 'طباعة الفاتورة' : locale === 'derja' ? 'Imprimer la facture' : locale === 'en' ? 'Print invoice' : 'Imprimer la facture'}
           >
             <span>{locale === 'ar' ? 'طباعة' : locale === 'en' ? 'Print' : 'Imprimer'}</span>
           </button>
@@ -84,7 +84,7 @@ export const ExportInvoiceGen: React.FC = () => {
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
         <div>
           <label className="block text-xs font-medium text-zinc-400 mb-1">
-            {locale === 'en' ? 'Your Full Name / Entity:' : 'Votre Nom / Société :'}
+            {locale === 'ar' ? 'اسمك / الشركة :' : locale === 'derja' ? 'Ismek / Société :' : locale === 'en' ? 'Your Name / Company :' : 'Votre Nom / Société :'}
           </label>
           <input
             type="text"
@@ -96,7 +96,7 @@ export const ExportInvoiceGen: React.FC = () => {
 
         <div>
           <label className="block text-xs font-medium text-zinc-400 mb-1">
-            {locale === 'en' ? 'National Tax ID / Matricule:' : 'Matricule / Identifiant :'}
+            {locale === 'ar' ? 'المعرف / المميز :' : locale === 'derja' ? 'Matricule / Identifiant :' : locale === 'en' ? 'ID / Registration No. :' : 'Matricule / Identifiant :'}
           </label>
           <input
             type="text"
@@ -108,7 +108,7 @@ export const ExportInvoiceGen: React.FC = () => {
 
         <div>
           <label className="block text-xs font-medium text-zinc-400 mb-1">
-            {locale === 'en' ? 'Foreign Client & Country:' : 'Client Étranger :'}
+            {locale === 'ar' ? 'العميل الأجنبي :' : locale === 'derja' ? 'Client étranger :' : locale === 'en' ? 'Foreign Client :' : 'Client Étranger :'}
           </label>
           <input
             type="text"
@@ -120,7 +120,7 @@ export const ExportInvoiceGen: React.FC = () => {
 
         <div className="sm:col-span-2">
           <label className="block text-xs font-medium text-zinc-400 mb-1">
-            {locale === 'en' ? 'Service Description:' : 'Prestation de Service :'}
+            {locale === 'ar' ? 'وصف الخدمة :' : locale === 'derja' ? 'Prestation de service :' : locale === 'en' ? 'Service Description :' : 'Prestation de Service :'}
           </label>
           <input
             type="text"
@@ -132,7 +132,7 @@ export const ExportInvoiceGen: React.FC = () => {
 
         <div>
           <label className="block text-xs font-medium text-zinc-400 mb-1">
-            {locale === 'en' ? 'Net Amount (€ EUR):' : 'Montant Net (€ EUR) :'}
+            {locale === 'ar' ? 'المبلغ الصافي (€) :' : locale === 'derja' ? 'Montant net (€ EUR) :' : locale === 'en' ? 'Net Amount (€ EUR) :' : 'Montant Net (€ EUR) :'}
           </label>
           <input
             type="number"
@@ -179,8 +179,8 @@ export const ExportInvoiceGen: React.FC = () => {
               <thead>
                 <tr className="border-b-2 border-zinc-800 text-[10px] uppercase text-zinc-500 font-mono">
                   <th className="py-2">{locale === 'ar' ? 'الوصف / Description' : 'Description'}</th>
-                  <th className="py-2 text-right rtl:text-left">{locale === 'en' ? 'VAT (TVA)' : 'TVA'}</th>
-                  <th className="py-2 text-right rtl:text-left">{locale === 'en' ? 'Total (€ EUR)' : 'Total (€ EUR)'}</th>
+                  <th className="py-2 text-right rtl:text-left">{locale === 'ar' ? 'ضريبة القيمة المضافة (TVA)' : locale === 'derja' ? 'TVA' : locale === 'en' ? 'VAT (TVA)' : 'TVA'}</th>
+                  <th className="py-2 text-right rtl:text-left">{locale === 'ar' ? 'المجموع' : locale === 'derja' ? 'Total' : locale === 'en' ? 'Total (€ EUR)' : 'Total (€ EUR)'}</th>
                 </tr>
               </thead>
               <tbody className="text-xs">

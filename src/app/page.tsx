@@ -342,7 +342,7 @@ export default function HomePage() {
         type: 'recette',
         title: { fr: 'Recette des Finances Principale', ar: 'القباضة المالية المركزية', derja: '9badha Maliya Markaziya', en: 'Central Tax Collection Office' },
         location: { fr: 'Beb Souika & Avenue de Paris', ar: 'باب سويقة وشارع باريس', derja: 'Beb Souika & Chare3 Paris', en: 'Beb Souika & Paris Ave' },
-        hours: '08:15 - 16:30 (Caisse 16:00)',
+        hours: locale === 'ar' ? '08:15 - 16:30 (القباضة 16:00)' : locale === 'derja' ? '08:15 - 16:30 (Caisse 16:00)' : locale === 'en' ? '08:15 - 16:30 (Cash desk 16:00)' : '08:15 - 16:30 (Caisse 16:00)',
         services: { fr: 'Timbres fiscaux (80DT, 15DT, 5DT, 3DT) & Enregistrement baux', ar: 'بيع جميع التنابر الجبائية وتسجيل عقود الكراء والسيارات', derja: 'Chrayen el Timbres wel 3o9oud', en: 'Fiscal stamps (80DT, 15DT, 5DT, 3DT) & lease registration' },
         badge: { fr: 'Stock Timbres Dispo', ar: 'تنابر متوفرة', derja: 'Timbres Mawjoudin', en: 'Stamps in Stock' },
       },
@@ -358,7 +358,7 @@ export default function HomePage() {
         type: 'poste',
         title: { fr: 'Bureau de Poste Central', ar: 'مكتب البريد المركزي', derja: 'El Bosta el Markaziya', en: 'Central Post Office' },
         location: { fr: 'Rue Charles de Gaulle / Thameur', ar: 'شارع الحبيب ثامر / شارل ديغول', derja: 'Chare3 Thameur / Charles de Gaulle', en: 'Habib Thameur / Charles de Gaulle' },
-        hours: '08:00 - 17:00 (Séance continue)',
+        hours: locale === 'ar' ? '08:00 - 17:00 (حصة واحدة)' : locale === 'derja' ? '08:00 - 17:00 (Séance continue)' : locale === 'en' ? '08:00 - 17:00 (Single session)' : '08:00 - 17:00 (Séance continue)',
         services: { fr: 'Services D17, Mandats express & Recommandés avec accusé', ar: 'خدمات D17، الحوالات السريعة، والرسائل المضمونة مع الإشعار بالبلوغ', derja: 'D17, Mandat express w Jwabet Recommandés', en: 'D17 wallet, money orders & registered postal mail' },
         badge: { fr: 'D17 & Mandats', ar: 'حوالات و D17', derja: 'D17 w Mandat', en: 'D17 & Money Orders' },
       },
@@ -450,7 +450,7 @@ export default function HomePage() {
       },
       {
         type: 'attt',
-        title: { fr: 'Agence ATTT Sfax Sud & Nord', ar: 'الوكالة الفنية للنقل البري بصفاقس', derja: 'Agence ATTT Sfax (Thyna)', en: 'ATTT Sousse Vehicle Center' },
+        title: { fr: 'Agence ATTT Sfax Sud & Nord', ar: 'الوكالة الفنية للنقل البري بصفاقس', derja: 'Agence ATTT Sfax (Thyna)', en: 'ATTT Sfax Vehicle Center' },
         location: { fr: 'Route de Gabès Km 3 / Thyna', ar: 'طريق قابس كلم 3 / طينة', derja: 'Thnyet Gabes / Thyna', en: 'Gabes Rd Km 3 / Thyna' },
         hours: '08:00 - 15:00',
         services: { fr: 'Visite technique poids lourds & légers, mutation carte grise', ar: 'الفحص الفني للعربات وتحويل ملكية البطاقة الرمادية', derja: 'Visite technique w Carte Grise', en: 'Vehicle inspection & title transfer' },
@@ -458,7 +458,7 @@ export default function HomePage() {
       },
       {
         type: 'poste',
-        title: { fr: 'Bureau de Poste Sfax El Jadida', ar: 'مكتب بريد صفاقس الجديدة', derja: 'Bosta Sousse el Jadida', en: 'Sfax Central Post' },
+        title: { fr: 'Bureau de Poste Sfax El Jadida', ar: 'مكتب بريد صفاقس الجديدة', derja: 'Bosta Sfax el Jadida', en: 'Sfax Central Post' },
         location: { fr: 'Sfax El Jadida, Boulevard Majida Boulila', ar: 'صفاقس الجديدة، شارع مجيدة بوليلة', derja: 'Chare3 Majida Boulila', en: 'Majida Boulila Blvd, Sfax' },
         hours: '08:00 - 17:00',
         services: { fr: 'D17, recharges e-Dinar, mandats minute et colis postaux', ar: 'شحن بطاقات الدينار الإلكتروني والحوالات الدقيقة والطرود', derja: 'e-Dinar, D17 w Colis', en: 'e-Dinar top-up, D17 & postal parcels' },
@@ -888,7 +888,14 @@ export default function HomePage() {
                         : locale === 'en'
                         ? 'Self-Entrepreneur'
                         : 'Auto-Entrepreneur',
-                    cost: '1% Tax',
+                    cost:
+                      locale === 'ar'
+                        ? 'ضريبة 1%'
+                        : locale === 'derja'
+                        ? '1% Taxe'
+                        : locale === 'en'
+                        ? '1% Tax'
+                        : '1% Impôt',
                     href: '/launchpad',
                   },
                 ].map((item, idx) => (
@@ -934,7 +941,7 @@ export default function HomePage() {
                 {
                   id: 'tax' as const,
                   label: locale === 'ar' ? 'زبلة وخروبة' : locale === 'derja' ? 'Zebla & Khrouba' : locale === 'en' ? 'Tax' : 'Taxe Municipale',
-                  tag: 'Recette',
+                  tag: locale === 'ar' ? 'قباضة' : locale === 'derja' ? 'Recette' : locale === 'en' ? 'Tax Office' : 'Recette',
                   icon: FileText,
                 },
               ].map((tab) => {
@@ -1616,7 +1623,7 @@ export default function HomePage() {
                     {t('zeroStorageBanner')}
                   </h3>
                   <span className="text-[10px] font-mono font-bold text-emerald-300 px-2.5 py-0.5 rounded-full bg-emerald-950/90 border border-emerald-600/40 shadow-sm">
-                    100% Client-Side In-Memory
+                    {locale === 'ar' ? 'معالجة كاملة داخل متصفحك' : locale === 'derja' ? '100% fel navigateur mte3ek' : locale === 'en' ? '100% Client-Side In-Memory' : '100% Côté Client En Mémoire'}
                   </span>
                 </div>
                 <p className="text-xs sm:text-sm text-zinc-400 max-w-2xl leading-relaxed">

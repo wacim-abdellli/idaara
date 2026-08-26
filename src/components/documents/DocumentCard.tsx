@@ -19,7 +19,7 @@ export const DocumentCard: React.FC<DocumentCardProps> = ({ template }) => {
   const description = getLocalized(template.description, locale);
 
   const fillBtnText =
-    locale === 'ar' ? 'تعبئة النموذج' : locale === 'en' ? 'Fill PDF' : 'Remplir le PDF';
+    locale === 'ar' ? 'تعبئة النموذج' : locale === 'derja' ? '3abbi el PDF' : locale === 'en' ? 'Fill PDF' : 'Remplir le PDF';
 
   return (
     <div className="rounded-2xl p-5 sm:p-6 bg-[#0d0e12] border border-white/[0.08] hover:border-white/[0.18] flex flex-col justify-between hover:shadow-2xl transition-all duration-200 group relative overflow-hidden">
@@ -73,7 +73,7 @@ export const DocumentCard: React.FC<DocumentCardProps> = ({ template }) => {
       {/* Footer / CTA */}
       <div className="pt-3.5 border-t border-zinc-800/80 flex items-center justify-between">
         <div className="text-[11px] font-mono text-zinc-500">
-          <span>{template.fields.length} {locale === 'ar' ? 'حقول' : 'champs'}</span>
+          <span>{template.fields.length} {locale === 'ar' ? 'حقول' : locale === 'derja' ? 'champs' : locale === 'en' ? 'fields' : 'champs'}</span>
         </div>
 
         <Link

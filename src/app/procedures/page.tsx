@@ -6,6 +6,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { proceduresData } from '../../data/procedures';
 import { useLocale } from '../../context/LocaleContext';
 import { getLocalized } from '../../lib/locale-utils';
+import { getVerticalLabel } from '../../lib/vertical-labels';
 import { formatTND } from '../../lib/utils';
 import { SpotlightCard } from '../../components/motion/SpotlightCard';
 import { FadeIn, FadeInStagger, FadeInItem } from '../../components/motion/FadeInStagger';
@@ -342,8 +343,22 @@ export default function ProceduresPage() {
           : locale === 'en'
           ? 'Verified Dossiers'
           : 'Démarches Certifiées',
-      val: '11 Procédures',
-      desc: 'JORT & Décrets',
+      val:
+        locale === 'ar'
+          ? '11 إجراءات'
+          : locale === 'derja'
+          ? '11 Procédures'
+          : locale === 'en'
+          ? '11 Procedures'
+          : '11 Procédures',
+      desc:
+        locale === 'ar'
+          ? 'ج.ر.ر و مراسيم'
+          : locale === 'derja'
+          ? 'JORT & Décrets'
+          : locale === 'en'
+          ? 'JORT & Decrees'
+          : 'JORT & Décrets',
     },
     {
       label:
@@ -354,8 +369,22 @@ export default function ProceduresPage() {
           : locale === 'en'
           ? 'Fiscal Stamp Accuracy'
           : 'Précision Timbres',
-      val: '100% Exact',
-      desc: 'Barème Officiel',
+      val:
+        locale === 'ar'
+          ? 'دقة 100%'
+          : locale === 'derja'
+          ? '100% Exact'
+          : locale === 'en'
+          ? '100% Accurate'
+          : '100% Exact',
+      desc:
+        locale === 'ar'
+          ? 'الجدول الرسمي'
+          : locale === 'derja'
+          ? 'Barème Officiel'
+          : locale === 'en'
+          ? 'Official Scale'
+          : 'Barème Officiel',
     },
     {
       label:
@@ -366,8 +395,22 @@ export default function ProceduresPage() {
           : locale === 'en'
           ? 'Average Step Count'
           : 'Étapes Moyennes',
-      val: '3 - 4 Étapes',
-      desc: 'Circuit optimisé',
+      val:
+        locale === 'ar'
+          ? '3 - 4 خطوات'
+          : locale === 'derja'
+          ? '3 - 4 Étapes'
+          : locale === 'en'
+          ? '3 - 4 Steps'
+          : '3 - 4 Étapes',
+      desc:
+        locale === 'ar'
+          ? 'مسار محسّن'
+          : locale === 'derja'
+          ? 'Circuit optimisé'
+          : locale === 'en'
+          ? 'Optimized circuit'
+          : 'Circuit optimisé',
     },
     {
       label:
@@ -379,7 +422,14 @@ export default function ProceduresPage() {
           ? 'Competent Desks'
           : 'Guichets & Baladiyas',
       val: '24 Wilayas',
-      desc: 'Couverture nationale',
+      desc:
+        locale === 'ar'
+          ? 'تغطية وطنية'
+          : locale === 'derja'
+          ? 'Couverture nationale'
+          : locale === 'en'
+          ? 'National coverage'
+          : 'Couverture nationale',
     },
   ];
 
@@ -424,7 +474,7 @@ export default function ProceduresPage() {
             <div className="flex items-center justify-between text-xs pb-2.5 border-b border-zinc-800">
               <span className="font-bold uppercase tracking-wider text-[10px] text-zinc-400 flex items-center gap-1.5">
                 <Building2 className="w-3.5 h-3.5 text-emerald-400" />
-                <span>{locale === 'en' ? 'Public Service Framework' : 'Garanties Civiques'}</span>
+                <span>{locale === 'ar' ? 'ضمانات مدنية' : locale === 'derja' ? 'Garanties Civiques' : locale === 'en' ? 'Public Service Framework' : 'Garanties Civiques'}</span>
               </span>
               <span className="text-[10px] font-mono text-emerald-400 bg-emerald-950/60 border border-emerald-800/50 px-2 py-0.5 rounded-full flex items-center gap-1">
                 <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-ping" />
@@ -532,7 +582,7 @@ export default function ProceduresPage() {
         <div className="flex items-center gap-2 w-full md:w-auto justify-between md:justify-end">
           <div className="flex items-center gap-1.5 text-xs text-zinc-400">
             <ArrowUpDown className="w-3.5 h-3.5 text-zinc-500 shrink-0" />
-            <span className="text-[11px] uppercase font-bold text-zinc-500">{locale === 'en' ? 'Sort:' : 'Trier :'}</span>
+            <span className="text-[11px] uppercase font-bold text-zinc-500">{locale === 'ar' ? 'ترتيب :' : locale === 'derja' ? 'Trier :' : locale === 'en' ? 'Sort:' : 'Trier :'}</span>
           </div>
 
           <select
@@ -540,10 +590,10 @@ export default function ProceduresPage() {
             onChange={(e) => setSortBy(e.target.value as 'default' | 'cost_asc' | 'cost_desc' | 'steps')}
             className="bg-zinc-900 border border-zinc-800 focus:border-emerald-500/50 rounded-xl px-3 py-2 text-xs text-zinc-200 focus:outline-none transition-colors cursor-pointer"
           >
-            <option value="default">{locale === 'en' ? 'Recommended' : 'Par Défaut'}</option>
-            <option value="cost_asc">{locale === 'en' ? 'Budget (Lowest first)' : 'Budget (Moins cher d’abord)'}</option>
-            <option value="cost_desc">{locale === 'en' ? 'Budget (Highest first)' : 'Budget (Plus élevé d’abord)'}</option>
-            <option value="steps">{locale === 'en' ? 'Fewest Steps' : 'Moins d’étapes'}</option>
+            <option value="default">{locale === 'ar' ? 'افتراضي' : locale === 'derja' ? 'Par Défaut' : locale === 'en' ? 'Recommended' : 'Par Défaut'}</option>
+            <option value="cost_asc">{locale === 'ar' ? 'الأقل تكلفة أولاً' : locale === 'derja' ? 'Budget (Moins cher d’abord)' : locale === 'en' ? 'Budget (Lowest first)' : 'Budget (Moins cher d’abord)'}</option>
+            <option value="cost_desc">{locale === 'ar' ? 'الأعلى تكلفة أولاً' : locale === 'derja' ? 'Budget (Plus élevé d’abord)' : locale === 'en' ? 'Budget (Highest first)' : 'Budget (Plus élevé d’abord)'}</option>
+            <option value="steps">{locale === 'ar' ? 'أقل خطوات' : locale === 'derja' ? 'Moins d’étapes' : locale === 'en' ? 'Fewest Steps' : 'Moins d’étapes'}</option>
           </select>
         </div>
       </FadeIn>
@@ -555,7 +605,7 @@ export default function ProceduresPage() {
         <FadeIn direction="right" delay={0.2} className="lg:col-span-4 space-y-4 lg:sticky lg:top-20">
           <div className="glass-panel rounded-3xl p-3 border border-zinc-800/80 space-y-1 shadow-lg">
             <div className="px-3 py-2 text-[10px] font-bold uppercase tracking-wider text-zinc-500">
-              {locale === 'en' ? 'Filter by Sector' : 'Domaines d’administration'}
+              {locale === 'ar' ? 'قطاع الإدارة' : locale === 'derja' ? 'Secteurs :' : locale === 'en' ? 'Filter by Sector' : 'Domaines d’administration'}
             </div>
 
             {verticals.map((v) => {
@@ -600,10 +650,14 @@ export default function ProceduresPage() {
           <SpotlightCard className="p-4 border-emerald-500/20 bg-gradient-to-br from-emerald-950/30 to-zinc-900 space-y-2.5 shadow-xl">
             <div className="flex items-center gap-2 text-emerald-400 text-xs font-bold">
               <Mic className="w-4 h-4" />
-              <span>{locale === 'en' ? 'Voice Question?' : 'Question vocale ?'}</span>
+              <span>{locale === 'ar' ? 'سؤال صوتي ؟' : locale === 'derja' ? 'Question vocale ?' : locale === 'en' ? 'Voice Question?' : 'Question vocale ?'}</span>
             </div>
             <p className="text-[11px] text-zinc-400 leading-relaxed">
-              {locale === 'en'
+              {locale === 'ar'
+                ? 'تحدث بالدارجة أو الفرنسية وسيحدد المساعد الذكي الوثائق المطلوبة ومصاريف التنابر بدقة.'
+                : locale === 'derja'
+                ? 'Ahkel bel derja walla français w Idaara AI t3awnek fel awra9 wel timbres.'
+                : locale === 'en'
                 ? 'Speak in Derja or French and Idaara AI will identify the exact documents and stamp fees.'
                 : 'Posez votre question en Derja ou Français à l’IA Vocale pour obtenir les étapes en direct.'}
             </p>
@@ -612,7 +666,7 @@ export default function ProceduresPage() {
                 href="/copilot"
                 className="inline-flex items-center gap-1.5 text-xs font-bold text-emerald-300 hover:text-emerald-200 hover:underline pt-1"
               >
-                <span>{locale === 'ar' ? 'استشارة المساعد الذكي' : locale === 'en' ? 'Ask Idaara AI' : 'Consulter Idaara AI'}</span>
+                <span>{locale === 'ar' ? 'استشارة المساعد الذكي' : locale === 'derja' ? 'Es2el Idaara AI' : locale === 'en' ? 'Ask Idaara AI' : 'Consulter Idaara AI'}</span>
                 <ArrowRight className="w-3.5 h-3.5 rtl:rotate-180" />
               </Link>
             </motion.div>
@@ -651,7 +705,7 @@ export default function ProceduresPage() {
                         <div className="space-y-1">
                           <div className="flex items-center gap-2">
                             <span className="text-[9px] font-extrabold uppercase tracking-wider px-2.5 py-0.5 rounded-lg bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
-                              {proc.vertical}
+                              {getVerticalLabel(proc.vertical, locale)}
                             </span>
                             <span className="text-zinc-600 text-xs">·</span>
                             <span className="font-mono text-[11px] text-zinc-400 flex items-center gap-1">

@@ -87,7 +87,15 @@ export const LanguageSwitcher: React.FC = () => {
         }`}
         aria-haspopup="listbox"
         aria-expanded={open}
-        aria-label="Language selector"
+        aria-label={
+          locale === 'ar'
+            ? 'مختار اللغة'
+            : locale === 'derja'
+            ? 'Changement de langue'
+            : locale === 'en'
+            ? 'Language selector'
+            : 'Sélecteur de langue'
+        }
       >
         <CurrentFlag className="w-3.5 h-3.5" />
         <span className="font-bold text-xs tracking-tight">{current.label}</span>
@@ -113,7 +121,13 @@ export const LanguageSwitcher: React.FC = () => {
             <div className="flex items-center justify-between px-3 py-2 border-b border-zinc-850 bg-zinc-900/40">
               <span className="text-[10px] font-bold text-zinc-500 uppercase tracking-wider flex items-center gap-1">
                 <Globe className="w-2.5 h-2.5" />
-                {isRtl ? 'اللغة' : 'Langue / Language'}
+                {locale === 'ar'
+                  ? 'اللغة'
+                  : locale === 'derja'
+                  ? 'Lougha'
+                  : locale === 'en'
+                  ? 'Language'
+                  : 'Langue'}
               </span>
             </div>
 

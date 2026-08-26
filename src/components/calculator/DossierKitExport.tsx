@@ -45,11 +45,13 @@ export const DossierKitExport: React.FC<DossierKitExportProps> = ({
   };
 
   const deadlineLabel =
-    locale === 'ar' ? 'الأجل :' : locale === 'en' ? 'Processing Time:' : 'Délai :';
+    locale === 'ar' ? 'الأجل :' : locale === 'derja' ? 'Délai :' : locale === 'en' ? 'Processing Time:' : 'Délai :';
 
   const feesCountLabel =
     locale === 'ar'
       ? `${procedure.costsBreakdown.length} معاليم وتنابر`
+      : locale === 'derja'
+      ? `${procedure.costsBreakdown.length} frais & timbres`
       : locale === 'en'
       ? `${procedure.costsBreakdown.length} stamps & fees items`
       : `${procedure.costsBreakdown.length} frais & timbres`;
@@ -63,6 +65,8 @@ export const DossierKitExport: React.FC<DossierKitExportProps> = ({
             <span>
               {locale === 'ar'
                 ? 'ملخص الإجراء للطباعة والإيداع (Dossier Kit)'
+                : locale === 'derja'
+                ? 'Kit Récapitulatif du Dossier (À Imprimer)'
                 : locale === 'en'
                 ? 'Printable Procedure Dossier Kit'
                 : 'Kit Récapitulatif du Dossier (À Imprimer)'}
@@ -71,6 +75,8 @@ export const DossierKitExport: React.FC<DossierKitExportProps> = ({
           <p className="text-[11px] text-zinc-400 mt-0.5">
             {locale === 'ar'
               ? 'اطبع أو احفظ بطاقة الإجراء مع قائمة الوثائق وميزانية التنابر لأخذها معك'
+              : locale === 'derja'
+              ? 'Emportez ce récapitulatif avec vous pour acheter vos timbres sans imprévu'
               : locale === 'en'
               ? 'Print or save this checklist sheet with exact fees to take with you'
               : 'Emportez ce récapitulatif avec vous pour acheter vos timbres sans imprévu'}
@@ -81,10 +87,10 @@ export const DossierKitExport: React.FC<DossierKitExportProps> = ({
           <button
             onClick={handlePrint}
             className="flex items-center justify-center gap-1.5 px-3.5 py-2 rounded-xl bg-zinc-800 hover:bg-zinc-700 text-zinc-200 font-bold text-xs transition-all cursor-pointer border border-zinc-700"
-            title="Print sheet"
+            title={locale === 'ar' ? 'طباعة الورقة' : locale === 'derja' ? 'Imprimer la fiche' : locale === 'en' ? 'Print sheet' : 'Imprimer la fiche'}
           >
             <Printer className="w-4 h-4 text-zinc-400" />
-            <span>{locale === 'ar' ? 'طباعة' : locale === 'en' ? 'Print' : 'Imprimer'}</span>
+            <span>{locale === 'ar' ? 'طباعة' : locale === 'derja' ? 'Imprimer' : locale === 'en' ? 'Print' : 'Imprimer'}</span>
           </button>
 
           <button
@@ -93,7 +99,7 @@ export const DossierKitExport: React.FC<DossierKitExportProps> = ({
             className="flex items-center justify-center gap-1.5 px-4 py-2 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-zinc-950 font-bold text-xs shadow-md shadow-emerald-500/20 transition-all hover:scale-105 cursor-pointer disabled:opacity-50"
           >
             {isGenerating ? <Loader2 className="w-4 h-4 animate-spin" /> : <Download className="w-4 h-4" />}
-            <span>{locale === 'ar' ? 'حفظ PDF' : locale === 'en' ? 'Export PDF' : 'Télécharger PDF'}</span>
+            <span>{locale === 'ar' ? 'حفظ PDF' : locale === 'derja' ? 'Télécharger PDF' : locale === 'en' ? 'Export PDF' : 'Télécharger PDF'}</span>
           </button>
         </div>
       </div>

@@ -99,7 +99,14 @@ export default function LaunchpadPage() {
           : locale === 'en'
           ? 'Service providers & devs'
           : 'Prestations de services & devs',
-      tag: 'Loi de Finances',
+      tag:
+        locale === 'ar'
+          ? 'قانون المالية'
+          : locale === 'derja'
+          ? 'Loi de Finances'
+          : locale === 'en'
+          ? 'Finance Law'
+          : 'Loi de Finances',
     },
     {
       title:
@@ -118,7 +125,14 @@ export default function LaunchpadPage() {
           : locale === 'en'
           ? 'CNSS Health coverage'
           : 'Couverture santé CNSS',
-      tag: 'Forfaitaire',
+      tag:
+        locale === 'ar'
+          ? 'جزافية'
+          : locale === 'derja'
+          ? 'Forfaitaire'
+          : locale === 'en'
+          ? 'Flat-rate'
+          : 'Forfaitaire',
     },
     {
       title:
@@ -137,7 +151,14 @@ export default function LaunchpadPage() {
           : locale === 'en'
           ? 'EUR / USD repatriation'
           : 'Devises EUR / USD rapatriées',
-      tag: 'Non assujetti',
+      tag:
+        locale === 'ar'
+          ? 'غير خاضع'
+          : locale === 'derja'
+          ? 'Non assujetti'
+          : locale === 'en'
+          ? 'Not subject'
+          : 'Non assujetti',
     },
     {
       title:
@@ -156,7 +177,14 @@ export default function LaunchpadPage() {
           : locale === 'en'
           ? 'Homologated FX invoices'
           : 'Factures export homologuées',
-      tag: 'Banque Centrale',
+      tag:
+        locale === 'ar'
+          ? 'البنك المركزي'
+          : locale === 'derja'
+          ? 'Banque Centrale'
+          : locale === 'en'
+          ? 'Central Bank'
+          : 'Banque Centrale',
     },
   ];
 
@@ -236,7 +264,7 @@ export default function LaunchpadPage() {
             <div className="flex items-center justify-between text-xs pb-2.5 border-b border-zinc-800">
               <span className="font-bold uppercase tracking-wider text-[10px] text-zinc-400 flex items-center gap-1.5">
                 <BadgePercent className="w-3.5 h-3.5 text-emerald-400" />
-                <span>{locale === 'en' ? 'Tax Regime Parameters' : 'Régime Fiscal & Avantages'}</span>
+                <span>{locale === 'ar' ? 'معايير النظام الجبائي' : locale === 'derja' ? 'Paramètres du régime fiscal' : locale === 'en' ? 'Tax Regime Parameters' : 'Régime Fiscal & Avantages'}</span>
               </span>
               <span className="text-[10px] font-mono text-emerald-400 bg-emerald-950/60 border border-emerald-800/50 px-2 py-0.5 rounded-full">
                 Loi 2020-33
@@ -270,7 +298,7 @@ export default function LaunchpadPage() {
 
       {/* ── Segmented Navigation Tabs with Spring Motion ── */}
       <FadeIn direction="up" delay={0.1} className="border-b border-zinc-800">
-        <nav className="flex space-x-2 sm:space-x-4 overflow-x-auto pb-px scrollbar-none" aria-label="Tabs">
+        <nav className="flex space-x-2 sm:space-x-4 overflow-x-auto pb-px scrollbar-none" aria-label={locale === 'ar' ? 'التبويبات' : locale === 'derja' ? 'Onglets' : locale === 'en' ? 'Tabs' : 'Onglets'}>
           {tabs.map((tab) => {
             const isActive = activeTab === tab.id;
             const Icon = tab.icon;

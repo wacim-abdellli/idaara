@@ -43,6 +43,10 @@ export const DocumentUploader: React.FC<DocumentUploaderProps> = ({ onAnalyze, i
       alert(
         locale === 'ar'
           ? 'نوع الملف غير مدعوم. يرجى رفع صورة (JPEG, PNG, WEBP) أو ملف PDF.'
+          : locale === 'derja'
+          ? 'No3 el fichier mahous m3ata. Lezem image (JPEG, PNG, WEBP) walla PDF.'
+          : locale === 'en'
+          ? 'Unsupported file type. Please upload an image (JPEG, PNG, WEBP) or PDF.'
           : 'Format non supporté. Veuillez importer une image (JPEG, PNG, WEBP) ou un PDF.'
       );
       return;
@@ -51,6 +55,10 @@ export const DocumentUploader: React.FC<DocumentUploaderProps> = ({ onAnalyze, i
       alert(
         locale === 'ar'
           ? 'الملف كبير جداً. الحد الأقصى هو 10 ميغابايت.'
+          : locale === 'derja'
+          ? 'El fichier kbir barcha. Max: 10 MB.'
+          : locale === 'en'
+          ? 'File too large. Maximum size: 10 MB.'
           : 'Fichier trop volumineux. Taille maximale : 10 Mo.'
       );
       return;
@@ -123,7 +131,15 @@ export const DocumentUploader: React.FC<DocumentUploaderProps> = ({ onAnalyze, i
                     {/* eslint-disable-next-line @next/next/no-img-element */}
                     <img
                       src={previewUrl}
-                      alt="Document preview"
+                      alt={
+                        locale === 'ar'
+                          ? 'معاينة المستند'
+                          : locale === 'derja'
+                          ? 'Preview mte3 el war9a'
+                          : locale === 'en'
+                          ? 'Document preview'
+                          : 'Aperçu du document'
+                      }
                       className="w-full h-full object-cover"
                     />
                   </>

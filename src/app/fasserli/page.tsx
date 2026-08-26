@@ -80,7 +80,15 @@ export default function FasserliPage() {
       <FadeIn direction="up" className="text-center space-y-3 pb-2">
         <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-xs font-mono font-semibold">
           <Sparkles className="w-3.5 h-3.5" />
-          <span>IDAARA AI · SCANNER & LEGAL DECODER</span>
+          <span>
+            {locale === 'ar'
+              ? 'المساعد الذكي · محلل الوثائق'
+              : locale === 'derja'
+              ? 'IDAARA AI · War9a Decoder'
+              : locale === 'en'
+              ? 'IDAARA AI · Scanner & Legal Decoder'
+              : 'IDAARA AI · Scanner & Décodeur Juridique'}
+          </span>
         </div>
 
         <h1 className="text-3xl sm:text-4xl font-bold tracking-tight text-white">
@@ -98,6 +106,8 @@ export default function FasserliPage() {
             <span>
               {locale === 'ar'
                 ? `مطابق لمجلة الجباية ${currentYear}`
+                : locale === 'derja'
+                ? `Conforme Code Fiscal ${currentYear}`
                 : locale === 'en'
                 ? `Fiscal Code ${currentYear} Compliant`
                 : `Conforme Code Fiscal ${currentYear}`}
@@ -109,6 +119,8 @@ export default function FasserliPage() {
             <span>
               {locale === 'ar'
                 ? 'حماية البيانات وحذف فوري (Zero-Storage)'
+                : locale === 'derja'
+                ? 'Zero-Storage & protection données'
                 : locale === 'en'
                 ? 'Zero-Storage & Privacy Protected'
                 : 'Zero-Storage & Confidentialité'}
@@ -152,6 +164,8 @@ export default function FasserliPage() {
               <span className="text-[11px] font-mono text-emerald-400 bg-emerald-950/60 border border-emerald-500/30 px-2.5 py-0.5 rounded-full font-bold">
                 {locale === 'ar'
                   ? `✓ مطابق للرائد الرسمي JORT ${currentYear}`
+                  : locale === 'derja'
+                  ? `✓ Certifié JORT ${currentYear}`
                   : locale === 'en'
                   ? `✓ JORT ${currentYear} Certified`
                   : `✓ Certifié JORT ${currentYear}`}

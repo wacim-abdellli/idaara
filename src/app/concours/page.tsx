@@ -496,7 +496,15 @@ export default function ConcoursPage() {
                           </div>
 
                           <Link
-                            href={`/copilot?q=${encodeURIComponent(`Comment postuler au concours ${item.institution} ${title} ?`)}`}
+                            href={`/copilot?q=${encodeURIComponent(
+                              locale === 'ar'
+                                ? `كيفاش نقدر نقدم للمناظرة ${item.institution} ${title} ؟`
+                                : locale === 'derja'
+                                ? `Kifech n9adem rou7i lel concours ${item.institution} ${title} ?`
+                                : locale === 'en'
+                                ? `How do I apply for the ${item.institution} ${title} competition?`
+                                : `Comment postuler au concours ${item.institution} ${title} ?`
+                            )}`}
                             className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-zinc-950 font-bold text-xs shadow transition-all shrink-0"
                           >
                             <span>

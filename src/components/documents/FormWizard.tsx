@@ -27,14 +27,16 @@ export const FormWizard: React.FC<FormWizardProps> = ({
       <div className="flex items-center justify-between pb-3.5 border-b border-zinc-800/60">
         <div>
           <h3 className="text-sm font-bold text-white">
-            {locale === 'ar' ? 'بيانات الوثيقة' : locale === 'en' ? 'Document Information' : 'Informations du Document'}
+            {locale === 'ar' ? 'بيانات الوثيقة' : locale === 'derja' ? 'Formulaire ta3bi les données' : locale === 'en' ? 'Document Information' : 'Informations du Document'}
           </h3>
           <p className="text-[11px] text-zinc-400">
             {locale === 'ar'
               ? 'تحديث فوري للمعاينة'
+              : locale === 'derja'
+              ? '3abbi les données mte3ek lena, el PDF yetbaddel en direct'
               : locale === 'en'
-              ? 'Instant live preview update'
-              : 'Mise à jour instantanée du document'}
+              ? 'Fill in your details...'
+              : 'Remplissez vos données, le PDF se met à jour en direct'}
           </p>
         </div>
 
@@ -45,7 +47,7 @@ export const FormWizard: React.FC<FormWizardProps> = ({
             className="flex items-center space-x-1.5 rtl:space-x-reverse px-2.5 py-1 rounded-lg bg-amber-500/10 hover:bg-amber-500/20 border border-amber-500/20 text-amber-300 text-xs font-semibold transition-colors cursor-pointer"
           >
             <Sparkles className="w-3 h-3" />
-            <span>{locale === 'ar' ? 'ملء تجريبي' : 'Exemple'}</span>
+            <span>{locale === 'ar' ? 'ملء تجريبي' : locale === 'derja' ? 'Exemple réel (auto-fill)' : 'Exemple'}</span>
           </button>
         )}
       </div>
@@ -95,7 +97,7 @@ export const FormWizard: React.FC<FormWizardProps> = ({
                           onChange={(e) => onChangeField(field.name, e.target.value)}
                           className="w-full bg-zinc-950/60 border border-zinc-800 focus:border-emerald-500 rounded-xl p-2 text-xs text-zinc-100 focus:outline-none transition-colors cursor-pointer"
                         >
-                          <option value="">{locale === 'ar' ? 'اختر...' : locale === 'en' ? 'Select...' : 'Sélectionner...'}</option>
+                          <option value="">{locale === 'ar' ? 'اختر...' : locale === 'derja' ? 'Ekhtar...' : locale === 'en' ? 'Select...' : 'Sélectionner...'}</option>
                           {field.options?.map((opt) => (
                             <option key={opt.value} value={opt.value}>
                               {getLocalized(opt.label, locale)}

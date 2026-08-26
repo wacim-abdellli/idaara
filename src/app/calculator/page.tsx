@@ -8,6 +8,7 @@ import { ChecklistTracker } from '../../components/calculator/ChecklistTracker';
 import { DossierKitExport } from '../../components/calculator/DossierKitExport';
 import { useLocale } from '../../context/LocaleContext';
 import { getLocalized } from '../../lib/locale-utils';
+import { getVerticalLabel } from '../../lib/vertical-labels';
 import { SpotlightCard } from '../../components/motion/SpotlightCard';
 import { FadeIn, FadeInStagger, FadeInItem } from '../../components/motion/FadeInStagger';
 import { AmbientOrbs } from '../../components/motion/AmbientOrbs';
@@ -92,7 +93,14 @@ export default function CalculatorPage() {
           : locale === 'en'
           ? 'Civil Status & Mandates'
           : 'État Civil & Procuration',
-      desc: 'Recette des Finances',
+      desc:
+        locale === 'ar'
+          ? 'قباضة المالية'
+          : locale === 'derja'
+          ? 'Recette des Finances'
+          : locale === 'en'
+          ? 'Treasury'
+          : 'Recette des Finances',
     },
     {
       amount: '15.000 DT',
@@ -104,7 +112,14 @@ export default function CalculatorPage() {
           : locale === 'en'
           ? 'Commercial Deeds & B3 Record'
           : 'Bail & Bulletin N°3',
-      desc: 'Recette / Enregistrement',
+      desc:
+        locale === 'ar'
+          ? 'قباضة / تحبير'
+          : locale === 'derja'
+          ? 'Recette / Enregistrement'
+          : locale === 'en'
+          ? 'Registry'
+          : 'Recette / Enregistrement',
     },
     {
       amount: '80.000 DT',
@@ -116,7 +131,14 @@ export default function CalculatorPage() {
           : locale === 'en'
           ? 'Ordinary Passport Stamp'
           : 'Passeport Ordinaire',
-      desc: 'Tarif officiel',
+      desc:
+        locale === 'ar'
+          ? 'التعرفة الرسمية'
+          : locale === 'derja'
+          ? 'Tarif officiel'
+          : locale === 'en'
+          ? 'Official rate'
+          : 'Tarif officiel',
     },
   ];
 
@@ -161,7 +183,7 @@ export default function CalculatorPage() {
             <div className="flex items-center justify-between text-xs pb-2.5 border-b border-zinc-800">
               <span className="font-bold uppercase tracking-wider text-[10px] text-zinc-400 flex items-center gap-1.5">
                 <Receipt className="w-3.5 h-3.5 text-emerald-400" />
-                <span>{locale === 'en' ? 'Statutory Stamp Tariffs' : 'Timbres Fiscaux en Vigueur'}</span>
+                <span>{locale === 'ar' ? 'التنابر الجبائية الرسمية' : locale === 'derja' ? 'Timbres Fiscaux oficyel' : locale === 'en' ? 'Statutory Stamp Tariffs' : 'Timbres Fiscaux en Vigueur'}</span>
               </span>
               <span className="text-[10px] font-mono text-emerald-400 bg-emerald-950/60 border border-emerald-800/50 px-2 py-0.5 rounded-full">
                 JORT {new Date().getFullYear()}
@@ -197,7 +219,7 @@ export default function CalculatorPage() {
       <FadeIn direction="up" delay={0.1} className="space-y-3">
         <div className="flex items-center justify-between text-xs text-zinc-500">
           <span className="font-bold uppercase tracking-wider text-[11px] text-zinc-400">
-            {locale === 'ar' ? 'اختر الإجراء المعني :' : locale === 'en' ? 'Select procedure to calculate:' : 'Sélectionner la démarche :'}
+            {locale === 'ar' ? 'اختر الإجراء المعني :' : locale === 'derja' ? 'Ekhtar el procédure :' : locale === 'en' ? 'Select procedure to calculate:' : 'Sélectionner la démarche :'}
           </span>
           <span className="font-mono text-[11px]">
             {proceduresData.length} {getLocalized(ui.procedures, locale)}
@@ -223,7 +245,7 @@ export default function CalculatorPage() {
               >
                 <div>
                   <span className="text-[9px] font-extrabold uppercase tracking-wider block mb-1 text-emerald-400/80">
-                    {p.vertical}
+                    {getVerticalLabel(p.vertical, locale)}
                   </span>
                   <h4 className="text-xs font-semibold leading-snug line-clamp-2">
                     {title}
@@ -251,14 +273,14 @@ export default function CalculatorPage() {
             >
               <div>
                 <p className="text-xs font-bold text-zinc-200 group-hover:text-emerald-300 transition-colors">
-                  {locale === 'ar' ? 'هل تريد الدليل خطوة بخطوة؟' : locale === 'en' ? 'Need the step-by-step guide?' : 'Besoin du guide étape par étape ?'}
+                  {locale === 'ar' ? 'هل تريد الدليل خطوة بخطوة؟' : locale === 'derja' ? 'T7eb dalil khatwa b khatwa ?' : locale === 'en' ? 'Need the step-by-step guide?' : 'Besoin du guide étape par étape ?'}
                 </p>
                 <p className="text-[11px] text-zinc-500 mt-0.5">
-                  {locale === 'ar' ? 'اطلع على الأجل والمكاتب المعنية' : locale === 'en' ? 'Detailed deadlines, offices, and required documents' : 'Délais, bureaux et documents requis en détail'}
+                  {locale === 'ar' ? 'اطلع على الأجل والمكاتب المعنية' : locale === 'derja' ? 'Ajyal, bureaux w awra9 lezma betafsil' : locale === 'en' ? 'Detailed deadlines, offices, and required documents' : 'Délais, bureaux et documents requis en détail'}
                 </p>
               </div>
               <div className="flex items-center gap-1 text-emerald-400 text-xs font-semibold shrink-0">
-                <span>{locale === 'ar' ? 'الدليل' : locale === 'en' ? 'View guide' : 'Voir guide'}</span>
+                <span>{locale === 'ar' ? 'الدليل' : locale === 'derja' ? 'Chouf ed-dalil' : locale === 'en' ? 'View guide' : 'Voir guide'}</span>
                 <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform rtl:rotate-180" />
               </div>
             </Link>

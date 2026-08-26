@@ -69,7 +69,7 @@ export const TimbreCostBreakdown: React.FC<TimbreCostBreakdownProps> = ({ proced
                 : 'Tafassil el Timbres wel Masarif'}
             </h3>
             <span className="text-[10px] text-zinc-500">
-              {locale === 'ar' ? 'تقدير ميزانية الإجراء' : locale === 'en' ? 'Budget estimate' : 'Budget estimatif'}
+              {locale === 'ar' ? 'تقدير ميزانية الإجراء' : locale === 'derja' ? 'Estimation mte3 budget el procédure' : locale === 'en' ? 'Budget estimate' : 'Budget estimatif'}
             </span>
           </div>
         </div>
@@ -77,7 +77,7 @@ export const TimbreCostBreakdown: React.FC<TimbreCostBreakdownProps> = ({ proced
         {/* Total badge */}
         <div className="flex flex-col items-end shrink-0">
           <span className="text-[9px] text-zinc-500 mb-0.5">
-            {locale === 'ar' ? 'المجموع' : locale === 'en' ? 'Total' : 'Total'}
+            {locale === 'ar' ? 'المجموع' : locale === 'derja' ? 'Total' : locale === 'en' ? 'Total' : 'Total'}
           </span>
           <span className="px-3 py-1 rounded-xl bg-emerald-500 text-zinc-950 font-mono font-extrabold text-sm shadow-md shadow-emerald-500/30">
             {formatTND(total, locale)}
@@ -122,7 +122,7 @@ export const TimbreCostBreakdown: React.FC<TimbreCostBreakdownProps> = ({ proced
         <div className="py-6 rounded-2xl bg-emerald-500/5 border border-emerald-500/20 text-center space-y-1">
           <Sparkles className="w-5 h-5 text-emerald-400 mx-auto" />
           <p className="text-xs text-emerald-400 font-semibold">
-            {locale === 'ar' ? 'هذا الإجراء مجاني تماماً' : locale === 'en' ? 'This procedure is completely free' : 'Cette démarche est totalement gratuite'}
+            {locale === 'ar' ? 'هذا الإجراء مجاني تماماً' : locale === 'derja' ? 'Had el démarche fabor tottement' : locale === 'en' ? 'This procedure is completely free' : 'Cette démarche est totalement gratuite'}
           </p>
         </div>
       )}

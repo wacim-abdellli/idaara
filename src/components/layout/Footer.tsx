@@ -170,7 +170,15 @@ export const Footer: React.FC = () => {
             </p>
             <div className="inline-flex items-center space-x-2 rtl:space-x-reverse text-emerald-400/90 bg-emerald-950/30 border border-emerald-800/40 px-3 py-1.5 rounded-xl text-[11px]">
               <ShieldCheck className="w-3.5 h-3.5 shrink-0 text-emerald-400" />
-              <span>Zero-Storage Privacy Protocol</span>
+              <span>
+                {locale === 'ar'
+                  ? 'بروتوكول عدم تخزين البيانات'
+                  : locale === 'derja'
+                  ? 'Zero-Storage Protocol'
+                  : locale === 'en'
+                  ? 'Zero-Storage Privacy Protocol'
+                  : 'Protocole Zéro-Stockage'}
+              </span>
             </div>
           </div>
 
@@ -216,7 +224,15 @@ export const Footer: React.FC = () => {
                   rel="noopener noreferrer"
                   className="inline-flex items-center space-x-1 rtl:space-x-reverse text-zinc-400 hover:text-emerald-400 transition-colors text-xs"
                 >
-                  <span>Journal Officiel (JORT)</span>
+                  <span>
+                    {locale === 'ar'
+                      ? 'الرائد الرسمي (JORT)'
+                      : locale === 'derja'
+                      ? 'Journal Officiel (JORT)'
+                      : locale === 'en'
+                      ? 'Official Gazette (JORT)'
+                      : 'Journal Officiel (JORT)'}
+                  </span>
                   <ExternalLink className="w-3 h-3 text-zinc-600" />
                 </a>
               </li>

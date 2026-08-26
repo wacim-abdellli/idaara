@@ -87,7 +87,18 @@ export const Navbar: React.FC = () => {
             <BrandLogo />
 
             {/* Desktop Navigation Links */}
-            <nav className="hidden lg:flex items-center gap-0.5" aria-label="Main Navigation">
+            <nav
+              className="hidden lg:flex items-center gap-0.5"
+              aria-label={
+                locale === 'ar'
+                  ? 'التنقل الرئيسي'
+                  : locale === 'derja'
+                  ? 'Navigation principale'
+                  : locale === 'en'
+                  ? 'Main Navigation'
+                  : 'Navigation principale'
+              }
+            >
               {PRIMARY_LINKS.map(({ href, tKey }) => {
                 const isActive = pathname === href || pathname.startsWith(href);
                 const label = t(tKey);
@@ -150,7 +161,13 @@ export const Navbar: React.FC = () => {
                     >
                       <div className="px-2.5 py-1.5 mb-1 border-b border-zinc-850">
                         <p className="text-[10px] font-bold text-zinc-500 uppercase tracking-widest">
-                          {isRtl ? 'الخدمات والأدوات الإضافية' : 'Services & Outils'}
+                          {locale === 'ar'
+                            ? 'خدمات وأدوات إضافية'
+                            : locale === 'derja'
+                            ? 'Services w Outils zyeda'
+                            : locale === 'en'
+                            ? 'More Services & Tools'
+                            : 'Services & Outils'}
                         </p>
                       </div>
 

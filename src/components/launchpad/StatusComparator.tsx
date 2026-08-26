@@ -10,38 +10,38 @@ export const StatusComparator: React.FC = () => {
   const statuses = [
     {
       id: 'auto-entrepreneur',
-      name: locale === 'ar' ? 'المبادر الذاتي' : locale === 'en' ? 'Auto-Entrepreneur Status' : "Statut Auto-Entrepreneur",
-      badge: locale === 'ar' ? 'موصى به للمستقلين والمبرمجين' : locale === 'en' ? 'Recommended for Freelancers & Tech' : "Recommandé Freelances & Devs",
+      name: locale === 'ar' ? 'المبادر الذاتي' : locale === 'derja' ? "Statut Auto-Entrepreneur" : locale === 'en' ? 'Auto-Entrepreneur Status' : "Statut Auto-Entrepreneur",
+      badge: locale === 'ar' ? 'موصى به للمستقلين والمبرمجين' : locale === 'derja' ? "Recommandé Freelances & Devs" : locale === 'en' ? 'Recommended for Freelancers & Tech' : "Recommandé Freelances & Devs",
       taxRate: "1% (Services) / 0.5% (Commerce)",
-      cnss: locale === 'ar' ? 'مبلغ رمزي جزافي (~50 د.ت / 3 أشهر)' : locale === 'en' ? 'Symbolic flat fee (~50 DT / quarter)' : "Forfaitaire symbolique (~50 DT / trimestre)",
-      comptable: locale === 'ar' ? 'غير مطلوب (منصة رقمية)' : locale === 'en' ? 'Not required (100% digital portal)' : "Non requis (Plateforme en ligne)",
+      cnss: locale === 'ar' ? 'مبلغ رمزي جزافي (~50 د.ت / 3 أشهر)' : locale === 'derja' ? "Forfaitaire symbolique (~50 DT / trimestre)" : locale === 'en' ? 'Symbolic flat fee (~50 DT / quarter)' : "Forfaitaire symbolique (~50 DT / trimestre)",
+      comptable: locale === 'ar' ? 'غير مطلوب (منصة رقمية)' : locale === 'derja' ? "Non requis (Plateforme en ligne)" : locale === 'en' ? 'Not required (100% digital portal)' : "Non requis (Plateforme en ligne)",
       capital: "0 DT",
-      facturation: locale === 'ar' ? 'فواتير بمعرف وطني QR' : locale === 'en' ? 'QR Code Invoicing with National ID' : "Factures avec Matricule National QR",
-      maxChiffreAffaire: locale === 'ar' ? 'حتى 75,000 د.ت / سنة' : locale === 'en' ? 'Up to 75,000 TND / year' : "Jusqu'à 75 000 DT / an",
+      facturation: locale === 'ar' ? 'فواتير بمعرف وطني QR' : locale === 'derja' ? "Factures avec Matricule National QR" : locale === 'en' ? 'QR Code Invoicing with National ID' : "Factures avec Matricule National QR",
+      maxChiffreAffaire: locale === 'ar' ? 'حتى 75,000 د.ت / سنة' : locale === 'derja' ? "Jusqu'à 75 000 DT / an" : locale === 'en' ? 'Up to 75,000 TND / year' : "Jusqu'à 75 000 DT / an",
       color: "border-emerald-500 bg-emerald-950/20",
     },
     {
       id: 'patente-personne-physique',
-      name: locale === 'ar' ? 'براءة شخص طبيعي (Patente)' : locale === 'en' ? 'Sole Proprietorship (Patente)' : "Patente Personne Physique",
-      badge: locale === 'ar' ? 'المهن الحرة والحرفيون' : locale === 'en' ? 'Craftsmen & Liberal Professions' : "Professions libérales & Artisans",
-      taxRate: locale === 'ar' ? 'جدول تصاعدي IRPP (حتى 35%)' : locale === 'en' ? 'Progressive IRPP scale (Up to 35%)' : "Barème progressif IRPP (Jusqu'à 35%)",
-      cnss: locale === 'ar' ? 'نظام المستقلين حسب الشريحة' : locale === 'en' ? 'Self-employed scale by declared bracket' : "Régime des Indépendants (Palier déclaré)",
-      comptable: locale === 'ar' ? 'موصى به / موازنة سنوية' : locale === 'en' ? 'Recommended / Simplified balance sheet' : "Recommandé / Bilan annuel simplifié",
+      name: locale === 'ar' ? 'براءة شخص طبيعي (Patente)' : locale === 'derja' ? "Patente Personne Physique" : locale === 'en' ? 'Sole Proprietorship (Patente)' : "Patente Personne Physique",
+      badge: locale === 'ar' ? 'المهن الحرة والحرفيون' : locale === 'derja' ? "Professions libérales & Artisans" : locale === 'en' ? 'Craftsmen & Liberal Professions' : "Professions libérales & Artisans",
+      taxRate: locale === 'ar' ? 'جدول تصاعدي IRPP (حتى 35%)' : locale === 'derja' ? "Barème progressif IRPP (Jusqu'à 35%)" : locale === 'en' ? 'Progressive IRPP scale (Up to 35%)' : "Barème progressif IRPP (Jusqu'à 35%)",
+      cnss: locale === 'ar' ? 'نظام المستقلين حسب الشريحة' : locale === 'derja' ? "Régime des Indépendants (Palier déclaré)" : locale === 'en' ? 'Self-employed scale by declared bracket' : "Régime des Indépendants (Palier déclaré)",
+      comptable: locale === 'ar' ? 'موصى به / موازنة سنوية' : locale === 'derja' ? "Recommandé / Bilan annuel simplifié" : locale === 'en' ? 'Recommended / Simplified balance sheet' : "Recommandé / Bilan annuel simplifié",
       capital: "0 DT",
-      facturation: locale === 'ar' ? 'فواتير بمعرف جبائي قباضة' : locale === 'en' ? 'Invoices with Recette Tax ID' : "Factures avec Matricule Fiscal Recette",
-      maxChiffreAffaire: locale === 'ar' ? 'غير محدود' : locale === 'en' ? 'Unlimited' : "Illimité",
+      facturation: locale === 'ar' ? 'فواتير بمعرف جبائي قباضة' : locale === 'derja' ? "Factures avec Matricule Fiscal Recette" : locale === 'en' ? 'Invoices with Recette Tax ID' : "Factures avec Matricule Fiscal Recette",
+      maxChiffreAffaire: locale === 'ar' ? 'غير محدود' : locale === 'derja' ? "Illimité" : locale === 'en' ? 'Unlimited' : "Illimité",
       color: "border-zinc-800 bg-zinc-900/60",
     },
     {
       id: 'suarl',
-      name: locale === 'ar' ? 'شركة الشخص الواحد (SUARL)' : locale === 'en' ? 'Single-Member LLC (SUARL)' : "Société SUARL (Personne Morale)",
-      badge: locale === 'ar' ? 'الشركات الناشئة والتصدير' : locale === 'en' ? 'Startups & Export Companies' : "Startups & Sociétés d'Export",
+      name: locale === 'ar' ? 'شركة الشخص الواحد (SUARL)' : locale === 'derja' ? "Société SUARL (Personne Morale)" : locale === 'en' ? 'Single-Member LLC (SUARL)' : "Société SUARL (Personne Morale)",
+      badge: locale === 'ar' ? 'الشركات الناشئة والتصدير' : locale === 'derja' ? "Startups & Sociétés d'Export" : locale === 'en' ? 'Startups & Export Companies' : "Startups & Sociétés d'Export",
       taxRate: "15% IS (Impôt sur les Sociétés)",
-      cnss: locale === 'ar' ? 'وكيل مسير غير أجير' : locale === 'en' ? 'Non-salaried majority manager' : "Gérant majoritaire non salarié",
-      comptable: locale === 'ar' ? 'إجباري (خبير محاسب)' : locale === 'en' ? 'Mandatory (Certified Accountant)' : "Obligatoire (Comptable agréé)",
+      cnss: locale === 'ar' ? 'وكيل مسير غير أجير' : locale === 'derja' ? "Gérant majoritaire non salarié" : locale === 'en' ? 'Non-salaried majority manager' : "Gérant majoritaire non salarié",
+      comptable: locale === 'ar' ? 'إجباري (خبير محاسب)' : locale === 'derja' ? "Obligatoire (Comptable agréé)" : locale === 'en' ? 'Mandatory (Certified Accountant)' : "Obligatoire (Comptable agréé)",
       capital: "1 000 DT (Bloqué en banque)",
-      facturation: locale === 'ar' ? 'شركة تجارية بالسجل الوطني RNE' : locale === 'en' ? 'Commercial entity registered at RNE' : "Société commerciale RNE",
-      maxChiffreAffaire: locale === 'ar' ? 'غير محدود' : locale === 'en' ? 'Unlimited' : "Illimité",
+      facturation: locale === 'ar' ? 'شركة تجارية بالسجل الوطني RNE' : locale === 'derja' ? "Société commerciale RNE" : locale === 'en' ? 'Commercial entity registered at RNE' : "Société commerciale RNE",
+      maxChiffreAffaire: locale === 'ar' ? 'غير محدود' : locale === 'derja' ? "Illimité" : locale === 'en' ? 'Unlimited' : "Illimité",
       color: "border-zinc-800 bg-zinc-900/60",
     },
   ];
@@ -49,6 +49,8 @@ export const StatusComparator: React.FC = () => {
   const heading =
     locale === 'ar'
       ? 'مقارنة الأنظمة القانونية والجبائية في تونس'
+      : locale === 'derja'
+      ? 'Comparaison el statuts'
       : locale === 'en'
       ? 'Comparative Matrix of Tunisian Legal & Tax Statuses'
       : 'Comparateur des Statuts Juridiques en Tunisie';
@@ -56,15 +58,17 @@ export const StatusComparator: React.FC = () => {
   const sub =
     locale === 'ar'
       ? 'اختر الهيكل القانوني الأنسب لنشاطك المستقل أو مشروعك التجاري.'
+      : locale === 'derja'
+      ? 'Chnoua el régime el asla7 lek ?'
       : locale === 'en'
       ? 'Find the ideal legal and tax structure for your freelance or company venture.'
       : "Trouvez la structure fiscale et juridique idéale pour votre activité de freelance ou d'entreprise.";
 
-  const taxRateLbl = locale === 'ar' ? 'نسبة الضريبة :' : locale === 'en' ? 'Tax Rate:' : 'Régime Fiscal :';
-  const cnssLbl = locale === 'ar' ? 'تغطية الـ CNSS :' : locale === 'en' ? 'CNSS Healthcare:' : 'Sécurité Sociale (CNSS) :';
-  const comptableLbl = locale === 'ar' ? 'المحاسب :' : locale === 'en' ? 'Accountant:' : 'Comptable :';
-  const capLbl = locale === 'ar' ? 'رأس المال :' : locale === 'en' ? 'Min. Capital:' : 'Capital Initial :';
-  const maxLbl = locale === 'ar' ? 'السقف السنوي :' : locale === 'en' ? 'Annual Cap:' : 'Plafond Annuel :';
+  const taxRateLbl = locale === 'ar' ? 'نسبة الضريبة :' : locale === 'derja' ? 'Taux impôt :' : locale === 'en' ? 'Tax Rate:' : 'Régime Fiscal :';
+  const cnssLbl = locale === 'ar' ? 'تغطية الـ CNSS :' : locale === 'derja' ? 'CNSS :' : locale === 'en' ? 'CNSS Healthcare:' : 'Sécurité Sociale (CNSS) :';
+  const comptableLbl = locale === 'ar' ? 'المحاسب :' : locale === 'derja' ? 'Comptable :' : locale === 'en' ? 'Accountant:' : 'Comptable :';
+  const capLbl = locale === 'ar' ? 'رأس المال :' : locale === 'derja' ? 'Capital :' : locale === 'en' ? 'Min. Capital:' : 'Capital Initial :';
+  const maxLbl = locale === 'ar' ? 'السقف السنوي :' : locale === 'derja' ? 'Plafond :' : locale === 'en' ? 'Annual Cap:' : 'Plafond Annuel :';
 
   return (
     <div className="space-y-6">
@@ -85,7 +89,7 @@ export const StatusComparator: React.FC = () => {
           >
             {s.id === 'auto-entrepreneur' && (
               <div className="absolute top-0 right-0 bg-emerald-500 text-zinc-950 font-bold text-[9px] uppercase px-3 py-1 rounded-bl-xl tracking-wider">
-                1% Flat Tax
+                {locale === 'ar' ? 'ضريبة جزافية 1%' : locale === 'derja' ? '1% Flat Tax' : locale === 'en' ? '1% Flat Tax' : 'Taxe 1% Forfaitaire'}
               </div>
             )}
 

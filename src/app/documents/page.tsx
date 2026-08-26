@@ -33,6 +33,8 @@ export default function DocumentsPage() {
       label:
         locale === 'ar'
           ? 'عقود الكراء والبيع'
+          : locale === 'derja'
+          ? '3qoud & Kraya'
           : locale === 'en'
           ? 'Contracts & Leases'
           : 'Contrats & Baux',
@@ -42,6 +44,8 @@ export default function DocumentsPage() {
       label:
         locale === 'ar'
           ? 'التواكيل والتفويض'
+          : locale === 'derja'
+          ? 'Tesmihat'
           : locale === 'en'
           ? 'Power of Attorney & Mandates'
           : 'Procurations & Mandats',
@@ -51,6 +55,8 @@ export default function DocumentsPage() {
       label:
         locale === 'ar'
           ? 'تصاريح على الشرف'
+          : locale === 'derja'
+          ? 'Déclarations'
           : locale === 'en'
           ? 'Sworn Declarations'
           : 'Déclarations sur l’honneur',
@@ -210,10 +216,10 @@ export default function DocumentsPage() {
             <div className="flex items-center justify-between text-xs pb-2.5 border-b border-zinc-800">
               <span className="font-bold uppercase tracking-wider text-[10px] text-zinc-400 flex items-center gap-1.5">
                 <Stamp className="w-3.5 h-3.5 text-amber-400" />
-                <span>{locale === 'en' ? 'Legal Form Specifications' : 'Normes Administratives'}</span>
+                <span>{locale === 'ar' ? 'المواصفات القانونية للنماذج' : locale === 'derja' ? 'Normes Administratives' : locale === 'en' ? 'Legal Form Specifications' : 'Normes Administratives'}</span>
               </span>
               <span className="text-[10px] font-mono text-emerald-400 bg-emerald-950/60 border border-emerald-800/50 px-2 py-0.5 rounded-full">
-                100% Conforme
+                {locale === 'ar' ? 'متوافق 100%' : locale === 'derja' ? '100% Conforme' : locale === 'en' ? '100% Compliant' : '100% Conforme'}
               </span>
             </div>
 

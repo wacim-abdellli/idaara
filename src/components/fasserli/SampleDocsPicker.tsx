@@ -36,7 +36,14 @@ export const SampleDocsPicker: React.FC<SampleDocsPickerProps> = ({
           <span>{sectionHeading}</span>
         </div>
         <span className="text-[11px] font-mono text-zinc-500">
-          {sampleDocumentsList.length} {locale === 'ar' ? 'نماذج متوفرة' : 'modèles certifiés'}
+          {sampleDocumentsList.length}{' '}
+          {locale === 'ar'
+            ? 'نماذج متوفرة'
+            : locale === 'derja'
+            ? 'modèles disponibles'
+            : locale === 'en'
+            ? 'sample docs'
+            : 'modèles certifiés'}
         </span>
       </div>
 
@@ -58,7 +65,8 @@ export const SampleDocsPicker: React.FC<SampleDocsPickerProps> = ({
                   badge: 'bg-amber-500/15 text-amber-300 border-amber-500/30',
                 }
               : {
-                  label: locale === 'ar' ? 'عادي' : locale === 'en' ? 'Normal' : 'Normal',
+                  label:
+                    locale === 'ar' ? 'عادي' : locale === 'en' ? 'Normal' : locale === 'fr' ? 'Normal' : 'Normal',
                   badge: 'bg-blue-500/15 text-blue-300 border-blue-500/30',
                 };
 
@@ -98,10 +106,27 @@ export const SampleDocsPicker: React.FC<SampleDocsPickerProps> = ({
               <div className="flex items-center justify-between text-[11px] text-zinc-400 mt-3 pt-2.5 border-t border-white/[0.06]">
                 <span className="flex items-center gap-1 text-zinc-400 font-mono text-[10px]">
                   <Clock className="w-3 h-3 text-zinc-500" />
-                  <span>{(doc.simulatedOCRResult.deadlineDate || '').split('(')[0].trim() || 'Délai légal'}</span>
+                  <span>
+                    {(doc.simulatedOCRResult.deadlineDate || '').split('(')[0].trim() ||
+                      (locale === 'ar'
+                        ? 'الأجل القانوني'
+                        : locale === 'en'
+                        ? 'Legal deadline'
+                        : locale === 'fr'
+                        ? 'Délai légal'
+                        : 'Délai légal')}
+                  </span>
                 </span>
                 <span className="text-emerald-400 group-hover:translate-x-0.5 rtl:group-hover:-translate-x-0.5 transition-transform flex items-center gap-1 font-semibold text-[10px]">
-                  <span>{locale === 'ar' ? 'تحليل' : 'Tester'}</span>
+                  <span>
+                    {locale === 'ar'
+                      ? 'تحليل'
+                      : locale === 'derja'
+                      ? 'Tester'
+                      : locale === 'en'
+                      ? 'Test'
+                      : 'Tester'}
+                  </span>
                   <ArrowRight className="w-3 h-3 rtl:rotate-180" />
                 </span>
               </div>

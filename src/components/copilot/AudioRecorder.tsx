@@ -381,7 +381,23 @@ export const AudioRecorder: React.FC<AudioRecorderProps> = ({
             <button
               onClick={toggleRecording}
               disabled={isProcessing}
-              aria-label={isRecording ? 'Stop recording and send' : 'Start voice recording'}
+              aria-label={
+                isRecording
+                  ? locale === 'ar'
+                    ? 'إيقاف التسجيل والإرسال'
+                    : locale === 'derja'
+                    ? 'Arresti el recording w ab3ath'
+                    : locale === 'en'
+                    ? 'Stop recording and send'
+                    : "Arrêter l'enregistrement et envoyer"
+                  : locale === 'ar'
+                  ? 'بدء التسجيل الصوتي'
+                  : locale === 'derja'
+                  ? 'Bda el recording'
+                  : locale === 'en'
+                  ? 'Start voice recording'
+                  : "Démarrer l'enregistrement vocal"
+              }
               className={`relative flex items-center justify-center w-16 h-16 sm:w-20 sm:h-20 rounded-full transition-all duration-300 shadow-2xl cursor-pointer ${
                 isRecording
                   ? 'bg-red-500 hover:bg-red-600 text-white shadow-red-500/50 scale-105 ring-4 ring-red-500/30'

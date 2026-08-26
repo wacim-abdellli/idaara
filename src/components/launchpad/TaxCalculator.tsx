@@ -37,11 +37,13 @@ export const TaxCalculator: React.FC = () => {
       : "Chiffre d'Affaires fi l'3am (TND) :";
 
   const activityLabel =
-    locale === 'ar' ? 'نوع النشاط :' : locale === 'en' ? 'Activity Type:' : "Type d'Activité :";
+    locale === 'ar' ? 'نوع النشاط :' : locale === 'derja' ? 'Type el activité :' : locale === 'en' ? 'Activity Type:' : "Type d'Activité :";
 
   const taxLabel =
     locale === 'ar'
       ? 'الضريبة الجزافية السنوية :'
+      : locale === 'derja'
+      ? 'Impôt forfaitaire fi l3am :'
       : locale === 'en'
       ? 'Annual Flat Tax:'
       : 'Impôt Forfaitaire Annuel :';
@@ -49,6 +51,8 @@ export const TaxCalculator: React.FC = () => {
   const cnssLabel =
     locale === 'ar'
       ? 'مساهمة الضمان الاجتماعي (CNSS) :'
+      : locale === 'derja'
+      ? 'Cotisation CNSS fi l3am :'
       : locale === 'en'
       ? 'Annual CNSS Contribution:'
       : 'Cotisation CNSS Annuelle :';
@@ -56,6 +60,8 @@ export const TaxCalculator: React.FC = () => {
   const netLabel =
     locale === 'ar'
       ? 'الدخل الصافي في جيبك :'
+      : locale === 'derja'
+      ? 'Revenu net fi jibek :'
       : locale === 'en'
       ? 'Net Income in Your Pocket:'
       : 'Revenu Net dans votre poche :';
@@ -63,6 +69,8 @@ export const TaxCalculator: React.FC = () => {
   const effectiveRateLabel =
     locale === 'ar'
       ? 'نسبة الاقتطاع الإجمالية الفعلية :'
+      : locale === 'derja'
+      ? 'Taux el prélèvement el kol :'
       : locale === 'en'
       ? 'Effective total deduction rate:'
       : 'Taux de prélèvement effectif global :';
@@ -79,7 +87,7 @@ export const TaxCalculator: React.FC = () => {
           </h3>
         </div>
         <span className="text-[11px] px-3 py-1 rounded-full bg-emerald-500/20 text-emerald-300 font-semibold border border-emerald-500/30">
-          {locale === 'en' ? 'Flat Regime' : 'Régime Simplifié'}
+          {locale === 'ar' ? 'النظام الجزافي' : locale === 'derja' ? 'Régime simplifié' : locale === 'en' ? 'Flat Regime' : 'Régime Simplifié'}
         </span>
       </div>
 

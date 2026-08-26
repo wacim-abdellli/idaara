@@ -11,11 +11,66 @@ export const MobileBottomNav: React.FC = () => {
   const pathname = usePathname();
 
   const items = [
-    { href: '/copilot', label: locale === 'ar' ? 'المساعد' : 'Idaara AI', icon: Sparkles },
-    { href: '/fasserli', label: locale === 'ar' ? 'فسّرلي' : locale === 'en' ? 'OCR' : 'Fasserli', icon: FileSearch },
-    { href: '/documents', label: locale === 'ar' ? 'عقود' : locale === 'en' ? 'Forms' : 'PDFs', icon: FileText },
-    { href: '/calculator', label: locale === 'ar' ? 'تنابر' : locale === 'en' ? 'Stamps' : 'Timbres', icon: Calculator },
-    { href: '/locator', label: locale === 'ar' ? 'بلديات' : locale === 'en' ? 'Offices' : 'Guichets', icon: MapPin },
+    {
+      href: '/copilot',
+      label:
+        locale === 'ar'
+          ? 'المساعد'
+          : locale === 'derja'
+          ? 'Idaara AI'
+          : locale === 'en'
+          ? 'AI'
+          : 'Idaara AI',
+      icon: Sparkles,
+    },
+    {
+      href: '/fasserli',
+      label:
+        locale === 'ar'
+          ? 'فسّرلي'
+          : locale === 'derja'
+          ? 'Fasserli'
+          : locale === 'en'
+          ? 'Scan'
+          : 'Scanner',
+      icon: FileSearch,
+    },
+    {
+      href: '/documents',
+      label:
+        locale === 'ar'
+          ? 'الوثائق'
+          : locale === 'derja'
+          ? 'PDFs'
+          : locale === 'en'
+          ? 'Docs'
+          : 'PDFs',
+      icon: FileText,
+    },
+    {
+      href: '/calculator',
+      label:
+        locale === 'ar'
+          ? 'التنابر'
+          : locale === 'derja'
+          ? 'Timbres'
+          : locale === 'en'
+          ? 'Stamps'
+          : 'Timbres',
+      icon: Calculator,
+    },
+    {
+      href: '/locator',
+      label:
+        locale === 'ar'
+          ? 'الدليل'
+          : locale === 'derja'
+          ? 'Guichets'
+          : locale === 'en'
+          ? 'Offices'
+          : 'Guichets',
+      icon: MapPin,
+    },
   ];
 
   if (!pathname || pathname === '/copilot' || pathname.startsWith('/copilot')) {

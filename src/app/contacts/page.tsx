@@ -60,7 +60,10 @@ export default function ContactsPage() {
       <section className="relative px-4 sm:px-6 lg:px-8 pt-14 pb-10 max-w-5xl mx-auto text-center">
         <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-red-500/10 border border-red-500/20 text-red-400 text-xs font-mono mb-5">
           <Phone className="w-3.5 h-3.5" />
-          <span>{emergencyContacts.length} numéros essentiels</span>
+          <span>
+            {emergencyContacts.length}{' '}
+            {locale === 'ar' ? 'أرقام أساسية' : locale === 'derja' ? 'numéros mohemmin' : locale === 'en' ? 'essential numbers' : 'numéros essentiels'}
+          </span>
         </div>
         <h1 className="text-3xl sm:text-4xl lg:text-5xl font-black tracking-tight mb-4">
           {getLabel(heroTitle)}

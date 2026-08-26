@@ -338,12 +338,12 @@ export default function LocatorPage() {
     {
       title: locale === 'ar' ? 'توقيت الفصول' : locale === 'derja' ? 'Aw9at Romdhan w Sayf' : locale === 'en' ? 'Seasonal Hours' : 'Séances Saisons',
       desc: locale === 'ar' ? 'رمضان وحصة الصيف' : locale === 'derja' ? 'Romdhan w Séance Unique' : locale === 'en' ? 'Ramadan & Summer shift' : 'Ramadan & Été synchro',
-      tag: 'Temps réel',
+      tag: locale === 'ar' ? 'فوري' : locale === 'derja' ? 'Temps réel' : locale === 'en' ? 'Real-time' : 'Temps réel',
     },
     {
       title: locale === 'ar' ? 'اتصال هاتفي مباشر' : locale === 'derja' ? 'Talifoun Direct' : locale === 'en' ? 'Direct Phone Call' : 'Appel Direct',
       desc: locale === 'ar' ? 'أرقام هواتف موثقة' : locale === 'derja' ? 'Numérowet vérifiés' : locale === 'en' ? 'Verified phone lines' : 'Standards téléphoniques',
-      tag: 'Vérifiés',
+      tag: locale === 'ar' ? 'موثقة' : locale === 'derja' ? 'Vérifiés' : locale === 'en' ? 'Verified' : 'Vérifiés',
     },
   ];
 
@@ -390,7 +390,7 @@ export default function LocatorPage() {
             <div className="flex items-center justify-between text-xs pb-2.5 border-b border-zinc-800">
               <span className="font-bold uppercase tracking-wider text-[10px] text-zinc-400 flex items-center gap-1.5">
                 <Navigation2 className="w-3.5 h-3.5 text-emerald-400" />
-                <span>{locale === 'en' ? 'Territorial Civic Radar' : locale === 'ar' ? 'الشبكة الإدارية الوطنية' : 'Réseau Administratif National'}</span>
+                <span>{locale === 'ar' ? 'الشبكة الإدارية الوطنية' : locale === 'derja' ? 'Echbéka el idariya el wataniya' : locale === 'en' ? 'Territorial Civic Radar' : 'Réseau Administratif National'}</span>
               </span>
               <span className="text-[10px] font-mono text-emerald-400 bg-emerald-950/60 border border-emerald-800/50 px-2 py-0.5 rounded-full">
                 24 Wilayas
@@ -429,6 +429,8 @@ export default function LocatorPage() {
             <span>
               {locale === 'ar'
                 ? 'الجداول الزمنية الرسمية حسب الفصل :'
+                : locale === 'derja'
+                ? 'Taw9it rasmiye 7asb el fasl :'
                 : locale === 'en'
                 ? 'Official Operating Hours by Season:'
                 : 'Horaires Officiels selon la Saison :'}
@@ -486,7 +488,7 @@ export default function LocatorPage() {
         {/* Governorate */}
         <div className="space-y-1.5">
           <label className="block text-[10px] font-bold text-zinc-500 uppercase tracking-wider">
-            {locale === 'ar' ? 'الولاية :' : locale === 'en' ? 'Governorate (Wilaya):' : 'Gouvernorat (Wilaya) :'}
+            {locale === 'ar' ? 'الولاية :' : locale === 'derja' ? 'El Wilaya :' : locale === 'en' ? 'Governorate (Wilaya):' : 'Gouvernorat (Wilaya) :'}
           </label>
           <select
             value={selectedGovernorate}
@@ -503,7 +505,7 @@ export default function LocatorPage() {
         {/* Category */}
         <div className="space-y-1.5">
           <label className="block text-[10px] font-bold text-zinc-500 uppercase tracking-wider">
-            {locale === 'ar' ? "نوع الإدارة :" : locale === 'en' ? "Administration Type:" : "Type d'Administration :"}
+            {locale === 'ar' ? "نوع الإدارة :" : locale === 'derja' ? 'Naw3iyet el idara :' : locale === 'en' ? "Administration Type:" : "Type d'Administration :"}
           </label>
           <select
             value={selectedCategory}

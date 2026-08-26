@@ -10,6 +10,7 @@ import { TimbreCostBreakdown } from '../../../components/calculator/TimbreCostBr
 import { ChecklistTracker } from '../../../components/calculator/ChecklistTracker';
 import { DossierKitExport } from '../../../components/calculator/DossierKitExport';
 import { getLocalized } from '../../../lib/locale-utils';
+import { getVerticalLabel } from '../../../lib/vertical-labels';
 import {
   ArrowLeft,
   Clock,
@@ -67,7 +68,7 @@ export default function ProcedureDetailPage({
         <div className="flex flex-wrap items-center justify-between gap-3">
           <div className="flex items-center gap-2">
             <span className="text-[10px] font-extrabold uppercase tracking-wider px-3 py-1 rounded-xl bg-emerald-500/10 text-emerald-400 border border-emerald-500/25">
-              {procedure.vertical}
+              {getVerticalLabel(procedure.vertical, locale)}
             </span>
             <span className="text-xs text-zinc-400 flex items-center gap-1">
               <Clock className="w-3.5 h-3.5 text-zinc-500" />

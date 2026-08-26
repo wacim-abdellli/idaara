@@ -8,6 +8,7 @@ export const publicOfficesData: PublicOffice[] = [
       derja: "Baladiyat Tunis el Markaziya (Hôtel de Ville)",
       fr: "Municipalité de Tunis - Hôtel de Ville (La Kasbah)",
       ar: "بلدية تونس - القصر البلدي (القصبة)",
+      en: "Municipality of Tunis - City Hall (La Kasbah)",
     },
     category: 'baladiya',
     governorate: 'Tunis',
@@ -27,6 +28,7 @@ export const publicOfficesData: PublicOffice[] = [
       derja: "Femme guichet express lel copie conforme. A7sen wa9t bech temchi: 08:45 sbe7.",
       fr: "Guichet rapide pour légalisation de signature. Affluence modérée entre 8h30 et 10h.",
       ar: "شباك سريع للتعريف بالإمضاء ومطابقة الأصل. أفضل وقت لتفادي الاكتظاظ: 8:45 صباحاً.",
+      en: "Fast-track counter for signature legalization. Moderately busy between 8:30 and 10:00.",
     }
   },
   {
@@ -35,6 +37,7 @@ export const publicOfficesData: PublicOffice[] = [
       derja: "Recette des Finances Bab El Dzirah",
       fr: "Recette des Finances - Bab El Jazira",
       ar: "القباضة المالية باب الجزيرة - تونس",
+      en: "Treasury Office (Recette des Finances) - Bab El Jazira",
     },
     category: 'recette_finances',
     governorate: 'Tunis',
@@ -54,6 +57,7 @@ export const publicOfficesData: PublicOffice[] = [
       derja: "Tnajjem techri timbres passeport, permis, w contrat kré lena. 5alles bel espèce walla carte bancaire.",
       fr: "Tous timbres fiscaux disponibles. Paiement par carte bancaire ou espèces.",
       ar: "توفر جميع التنابر الجبائية (جواز، سيارات، عقود). الدفع نقداً أو بالبطاقة البنكية.",
+      en: "All tax stamps available (passport, vehicles, contracts). Pay by card or cash.",
     }
   },
   {
@@ -62,6 +66,7 @@ export const publicOfficesData: PublicOffice[] = [
       derja: "Poste Centrale Tunis (Rue Charles de Gaulle)",
       fr: "Poste Centrale de Tunis - Charles de Gaulle",
       ar: "مكتب البريد المركزي - شارع شارل ديغول تونس",
+      en: "Central Post Office of Tunis - Charles de Gaulle",
     },
     category: 'poste',
     governorate: 'Tunis',
@@ -84,6 +89,7 @@ export const publicOfficesData: PublicOffice[] = [
       derja: "Agence ATTT Tunis (El Menzah)",
       fr: "Agence Technique des Transports Terrestres - El Menzah",
       ar: "الوكالة الفنية للنقل البري - المنزه تونس",
+      en: "Land Transport Technical Agency (ATTT) - El Menzah",
     },
     category: 'attt',
     governorate: 'Tunis',
@@ -106,6 +112,7 @@ export const publicOfficesData: PublicOffice[] = [
       derja: "Siège RNE Centre Urbain Nord",
       fr: "Centre National du Registre des Entreprises (RNE)",
       ar: "المركز الوطني للسجل الوطني للمؤسسات - المركز العمراني الشمالي",
+      en: "National Business Register (RNE) Center",
     },
     category: 'rne',
     governorate: 'Tunis',
@@ -130,6 +137,7 @@ export const publicOfficesData: PublicOffice[] = [
       derja: "Baladiyat Ariana (Centre-ville)",
       fr: "Municipalité de l'Ariana - Siège Central",
       ar: "بلدية أريانة - المقر المركزي",
+      en: "Municipality of Ariana - Main Office",
     },
     category: 'baladiya',
     governorate: 'Ariana',
@@ -152,6 +160,7 @@ export const publicOfficesData: PublicOffice[] = [
       derja: "Centre Régional CNAM Ariana",
       fr: "Centre Régional CNAM - Ariana",
       ar: "المركز الجهوي للصندوق الوطني للتأمين على المرض - أريانة",
+      en: "Regional CNAM Center - Ariana",
     },
     category: 'cnam',
     governorate: 'Ariana',
@@ -176,6 +185,7 @@ export const publicOfficesData: PublicOffice[] = [
       derja: "Baladiyat Sousse (Corniche / Boujaafar)",
       fr: "Municipalité de Sousse - Siège Central",
       ar: "بلدية سوسة - المقر المركزي (الكورنيش)",
+      en: "Municipality of Sousse - Main Office",
     },
     category: 'baladiya',
     governorate: 'Sousse',
@@ -198,6 +208,7 @@ export const publicOfficesData: PublicOffice[] = [
       derja: "Recette des Finances Sousse Port",
       fr: "Recette des Finances - Sousse Port",
       ar: "القباضة المالية سوسة الميناء",
+      en: "Treasury Office (Recette des Finances) - Sousse Port",
     },
     category: 'recette_finances',
     governorate: 'Sousse',
@@ -222,6 +233,7 @@ export const publicOfficesData: PublicOffice[] = [
       derja: "Baladiyat Sfax (Hédi Chaker)",
       fr: "Municipalité de Sfax - Siège Central",
       ar: "بلدية صفاقس - قصر البلدية (ساحة الاستقلال)",
+      en: "Municipality of Sfax - Main Office",
     },
     category: 'baladiya',
     governorate: 'Sfax',
@@ -244,6 +256,7 @@ export const publicOfficesData: PublicOffice[] = [
       derja: "Agence ATTT Sfax (Route de Gabès)",
       fr: "Agence Technique des Transports Terrestres - Sfax",
       ar: "الوكالة الفنية للنقل البري - صفاقس (طريق قابس)",
+      en: "Land Transport Technical Agency (ATTT) - Sfax",
     },
     category: 'attt',
     governorate: 'Sfax',
@@ -268,6 +281,7 @@ export const publicOfficesData: PublicOffice[] = [
       derja: "Baladiyat Nabeul (Jarre)",
       fr: "Municipalité de Nabeul - Siège Central",
       ar: "بلدية نابل - المقر المركزي",
+      en: "Municipality of Nabeul - Main Office",
     },
     category: 'baladiya',
     governorate: 'Nabeul',
@@ -292,6 +306,7 @@ export const publicOfficesData: PublicOffice[] = [
       derja: "Baladiyat Bizerte (Vieux Port)",
       fr: "Municipalité de Bizerte - Siège Central",
       ar: "بلدية بنزرت - المقر المركزي",
+      en: "Municipality of Bizerte - Main Office",
     },
     category: 'baladiya',
     governorate: 'Bizerte',
@@ -316,6 +331,7 @@ export const publicOfficesData: PublicOffice[] = [
       derja: "Baladiyat Monastir (Bourguiba)",
       fr: "Municipalité de Monastir",
       ar: "بلدية المنستير - المقر المركزي",
+      en: "Municipality of Monastir",
     },
     category: 'baladiya',
     governorate: 'Monastir',
@@ -340,6 +356,7 @@ export const publicOfficesData: PublicOffice[] = [
       derja: "Baladiyat Gabès (Centre Ville)",
       fr: "Municipalité de Gabès",
       ar: "بلدية قابس - المقر المركزي",
+      en: "Municipality of Gabès",
     },
     category: 'baladiya',
     governorate: 'Gabès',
@@ -364,6 +381,7 @@ export const publicOfficesData: PublicOffice[] = [
       derja: "Baladiyat el Kairouan",
       fr: "Municipalité de Kairouan",
       ar: "بلدية القيروان - المقر الرئيسي",
+      en: "Municipality of Kairouan",
     },
     category: 'baladiya',
     governorate: 'Kairouan',
@@ -388,6 +406,7 @@ export const publicOfficesData: PublicOffice[] = [
       derja: "Baladiyat Djerba Houmt Souk",
       fr: "Municipalité de Djerba - Houmt Souk",
       ar: "بلدية جربة حومة السوق",
+      en: "Municipality of Djerba - Houmt Souk",
     },
     category: 'baladiya',
     governorate: 'Médenine',
@@ -407,46 +426,46 @@ export const publicOfficesData: PublicOffice[] = [
 
   // ================= CNSS — ALL 24 GOUVERNORATS =================
   {
-    id: 'cnss-tunis-centre', name: { derja: 'CNSS Tunis Centre (Avenue de Paris)', fr: 'CNSS Tunis Centre — Avenue de Paris', ar: 'الصندوق الوطني للضمان الاجتماعي — تونس المركز' }, category: 'cnss', governorate: 'Tunis', delegation: 'Tunis Ville', address: 'Avenue de Paris, 1000 Tunis', phone: '+216 71 354 600', coordinates: { lat: 36.8065, lng: 10.1815 }, googleMapsUrl: 'https://maps.google.com/?q=36.8065,10.1815', hasConformeService: false, hasTimbreVendor: false, website: 'https://e-cnss.tn', schedule: { regular: { days: 'Lundi - Vendredi', hours: '08:30 - 16:00' }, ramadan: { days: 'Lundi - Vendredi', hours: '08:00 - 14:00' }, summer: { days: 'Lundi - Vendredi', hours: '07:30 - 13:30' } }, tips: { derja: '7adher shéhéda el CNSS mte3ek online 3al e-cnss.tn qbal ma temchi.', fr: 'Téléchargez votre attestation CNSS sur e-cnss.tn avant de vous déplacer.', ar: 'حمّل شهادة الانخراط من e-cnss.tn قبل التنقل لتوفير الوقت.' }
+    id: 'cnss-tunis-centre', name: { derja: 'CNSS Tunis Centre (Avenue de Paris)', fr: 'CNSS Tunis Centre — Avenue de Paris', ar: 'الصندوق الوطني للضمان الاجتماعي — تونس المركز', en: 'CNSS Tunis Centre — Avenue de Paris' }, category: 'cnss', governorate: 'Tunis', delegation: 'Tunis Ville', address: 'Avenue de Paris, 1000 Tunis', phone: '+216 71 354 600', coordinates: { lat: 36.8065, lng: 10.1815 }, googleMapsUrl: 'https://maps.google.com/?q=36.8065,10.1815', hasConformeService: false, hasTimbreVendor: false, website: 'https://e-cnss.tn', schedule: { regular: { days: 'Lundi - Vendredi', hours: '08:30 - 16:00' }, ramadan: { days: 'Lundi - Vendredi', hours: '08:00 - 14:00' }, summer: { days: 'Lundi - Vendredi', hours: '07:30 - 13:30' } }, tips: { derja: '7adher shéhéda el CNSS mte3ek online 3al e-cnss.tn qbal ma temchi.', fr: 'Téléchargez votre attestation CNSS sur e-cnss.tn avant de vous déplacer.', ar: 'حمّل شهادة الانخراط من e-cnss.tn قبل التنقل لتوفير الوقت.', en: 'Download your CNSS certificate from e-cnss.tn before you go.' }
   },
   {
-    id: 'cnss-ariana', name: { derja: 'CNSS Ariana', fr: 'CNSS Ariana — Cité Ennasr', ar: 'الصندوق الوطني للضمان الاجتماعي — أريانة' }, category: 'cnss', governorate: 'Ariana', delegation: 'Ariana Ville', address: 'Cité Ennasr, Ariana', phone: '+216 71 703 000', coordinates: { lat: 36.8625, lng: 10.1946 }, googleMapsUrl: 'https://maps.google.com/?q=36.8625,10.1946', hasConformeService: false, hasTimbreVendor: false, schedule: { regular: { days: 'Lundi - Vendredi', hours: '08:30 - 16:00' }, ramadan: { days: 'Lundi - Vendredi', hours: '08:00 - 14:00' }, summer: { days: 'Lundi - Vendredi', hours: '07:30 - 13:30' } }
+    id: 'cnss-ariana', name: { derja: 'CNSS Ariana', fr: 'CNSS Ariana — Cité Ennasr', ar: 'الصندوق الوطني للضمان الاجتماعي — أريانة', en: 'CNSS Ariana — Cité Ennasr' }, category: 'cnss', governorate: 'Ariana', delegation: 'Ariana Ville', address: 'Cité Ennasr, Ariana', phone: '+216 71 703 000', coordinates: { lat: 36.8625, lng: 10.1946 }, googleMapsUrl: 'https://maps.google.com/?q=36.8625,10.1946', hasConformeService: false, hasTimbreVendor: false, schedule: { regular: { days: 'Lundi - Vendredi', hours: '08:30 - 16:00' }, ramadan: { days: 'Lundi - Vendredi', hours: '08:00 - 14:00' }, summer: { days: 'Lundi - Vendredi', hours: '07:30 - 13:30' } }
   },
   {
-    id: 'cnss-ben-arous', name: { derja: 'CNSS Ben Arous', fr: 'CNSS Ben Arous', ar: 'الصندوق الوطني للضمان الاجتماعي — بن عروس' }, category: 'cnss', governorate: 'Ben Arous', delegation: 'Ben Arous', address: 'Avenue Habib Bourguiba, Ben Arous', phone: '+216 71 382 000', coordinates: { lat: 36.7533, lng: 10.2277 }, googleMapsUrl: 'https://maps.google.com/?q=36.7533,10.2277', hasConformeService: false, hasTimbreVendor: false, schedule: { regular: { days: 'Lundi - Vendredi', hours: '08:30 - 16:00' }, ramadan: { days: 'Lundi - Vendredi', hours: '08:00 - 14:00' }, summer: { days: 'Lundi - Vendredi', hours: '07:30 - 13:30' } }
+    id: 'cnss-ben-arous', name: { derja: 'CNSS Ben Arous', fr: 'CNSS Ben Arous', ar: 'الصندوق الوطني للضمان الاجتماعي — بن عروس', en: 'CNSS Ben Arous' }, category: 'cnss', governorate: 'Ben Arous', delegation: 'Ben Arous', address: 'Avenue Habib Bourguiba, Ben Arous', phone: '+216 71 382 000', coordinates: { lat: 36.7533, lng: 10.2277 }, googleMapsUrl: 'https://maps.google.com/?q=36.7533,10.2277', hasConformeService: false, hasTimbreVendor: false, schedule: { regular: { days: 'Lundi - Vendredi', hours: '08:30 - 16:00' }, ramadan: { days: 'Lundi - Vendredi', hours: '08:00 - 14:00' }, summer: { days: 'Lundi - Vendredi', hours: '07:30 - 13:30' } }
   },
   {
-    id: 'cnss-manouba', name: { derja: 'CNSS Manouba', fr: 'CNSS Manouba', ar: 'الصندوق الوطني للضمان الاجتماعي — منوبة' }, category: 'cnss', governorate: 'Manouba', delegation: 'Manouba', address: 'Manouba Centre', phone: '+216 71 601 000', coordinates: { lat: 36.8081, lng: 10.0986 }, googleMapsUrl: 'https://maps.google.com/?q=36.8081,10.0986', hasConformeService: false, hasTimbreVendor: false, schedule: { regular: { days: 'Lundi - Vendredi', hours: '08:30 - 16:00' }, ramadan: { days: 'Lundi - Vendredi', hours: '08:00 - 14:00' }, summer: { days: 'Lundi - Vendredi', hours: '07:30 - 13:30' } }
+    id: 'cnss-manouba', name: { derja: 'CNSS Manouba', fr: 'CNSS Manouba', ar: 'الصندوق الوطني للضمان الاجتماعي — منوبة', en: 'CNSS Manouba' }, category: 'cnss', governorate: 'Manouba', delegation: 'Manouba', address: 'Manouba Centre', phone: '+216 71 601 000', coordinates: { lat: 36.8081, lng: 10.0986 }, googleMapsUrl: 'https://maps.google.com/?q=36.8081,10.0986', hasConformeService: false, hasTimbreVendor: false, schedule: { regular: { days: 'Lundi - Vendredi', hours: '08:30 - 16:00' }, ramadan: { days: 'Lundi - Vendredi', hours: '08:00 - 14:00' }, summer: { days: 'Lundi - Vendredi', hours: '07:30 - 13:30' } }
   },
   {
-    id: 'cnss-sfax', name: { derja: 'CNSS Sfax', fr: 'CNSS Sfax — Direction Régionale', ar: 'الصندوق الوطني للضمان الاجتماعي — صفاقس' }, category: 'cnss', governorate: 'Sfax', delegation: 'Sfax Ville', address: 'Avenue Habib Bourguiba, 3000 Sfax', phone: '+216 74 224 000', coordinates: { lat: 34.7406, lng: 10.7603 }, googleMapsUrl: 'https://maps.google.com/?q=34.7406,10.7603', hasConformeService: false, hasTimbreVendor: false, website: 'https://e-cnss.tn', schedule: { regular: { days: 'Lundi - Vendredi', hours: '08:30 - 16:00' }, ramadan: { days: 'Lundi - Vendredi', hours: '08:00 - 14:00' }, summer: { days: 'Lundi - Vendredi', hours: '07:30 - 13:30' } }, tips: { derja: 'Sfax wadhmar — 7adher le numéro de dossier mte3ek.', fr: 'Sfax très fréquenté — préparez votre numéro de dossier.', ar: 'مزدحم في صفاقس — احضر رقم الملف مسبقاً.' }
+    id: 'cnss-sfax', name: { derja: 'CNSS Sfax', fr: 'CNSS Sfax — Direction Régionale', ar: 'الصندوق الوطني للضمان الاجتماعي — صفاقس', en: 'CNSS Sfax — Regional Directorate' }, category: 'cnss', governorate: 'Sfax', delegation: 'Sfax Ville', address: 'Avenue Habib Bourguiba, 3000 Sfax', phone: '+216 74 224 000', coordinates: { lat: 34.7406, lng: 10.7603 }, googleMapsUrl: 'https://maps.google.com/?q=34.7406,10.7603', hasConformeService: false, hasTimbreVendor: false, website: 'https://e-cnss.tn', schedule: { regular: { days: 'Lundi - Vendredi', hours: '08:30 - 16:00' }, ramadan: { days: 'Lundi - Vendredi', hours: '08:00 - 14:00' }, summer: { days: 'Lundi - Vendredi', hours: '07:30 - 13:30' } }, tips: { derja: 'Sfax wadhmar — 7adher le numéro de dossier mte3ek.', fr: 'Sfax très fréquenté — préparez votre numéro de dossier.', ar: 'مزدحم في صفاقس — احضر رقم الملف مسبقاً.', en: 'Very busy in Sfax — have your file number ready.' }
   },
   {
-    id: 'cnss-sousse', name: { derja: 'CNSS Sousse', fr: 'CNSS Sousse', ar: 'الصندوق الوطني للضمان الاجتماعي — سوسة' }, category: 'cnss', governorate: 'Sousse', delegation: 'Sousse Ville', address: 'Avenue Léopold Senghor, 4000 Sousse', phone: '+216 73 224 000', coordinates: { lat: 35.8245, lng: 10.6346 }, googleMapsUrl: 'https://maps.google.com/?q=35.8245,10.6346', hasConformeService: false, hasTimbreVendor: false, schedule: { regular: { days: 'Lundi - Vendredi', hours: '08:30 - 16:00' }, ramadan: { days: 'Lundi - Vendredi', hours: '08:00 - 14:00' }, summer: { days: 'Lundi - Vendredi', hours: '07:30 - 13:30' } }
+    id: 'cnss-sousse', name: { derja: 'CNSS Sousse', fr: 'CNSS Sousse', ar: 'الصندوق الوطني للضمان الاجتماعي — سوسة', en: 'CNSS Sousse' }, category: 'cnss', governorate: 'Sousse', delegation: 'Sousse Ville', address: 'Avenue Léopold Senghor, 4000 Sousse', phone: '+216 73 224 000', coordinates: { lat: 35.8245, lng: 10.6346 }, googleMapsUrl: 'https://maps.google.com/?q=35.8245,10.6346', hasConformeService: false, hasTimbreVendor: false, schedule: { regular: { days: 'Lundi - Vendredi', hours: '08:30 - 16:00' }, ramadan: { days: 'Lundi - Vendredi', hours: '08:00 - 14:00' }, summer: { days: 'Lundi - Vendredi', hours: '07:30 - 13:30' } }
   },
   {
-    id: 'cnss-nabeul', name: { derja: 'CNSS Nabeul', fr: 'CNSS Nabeul', ar: 'الصندوق الوطني للضمان الاجتماعي — نابل' }, category: 'cnss', governorate: 'Nabeul', delegation: 'Nabeul', address: 'Avenue Habib Bourguiba, 8000 Nabeul', phone: '+216 72 286 000', coordinates: { lat: 36.4561, lng: 10.7376 }, googleMapsUrl: 'https://maps.google.com/?q=36.4561,10.7376', hasConformeService: false, hasTimbreVendor: false, schedule: { regular: { days: 'Lundi - Vendredi', hours: '08:30 - 16:00' }, ramadan: { days: 'Lundi - Vendredi', hours: '08:00 - 14:00' }, summer: { days: 'Lundi - Vendredi', hours: '07:30 - 13:30' } }
+    id: 'cnss-nabeul', name: { derja: 'CNSS Nabeul', fr: 'CNSS Nabeul', ar: 'الصندوق الوطني للضمان الاجتماعي — نابل', en: 'CNSS Nabeul' }, category: 'cnss', governorate: 'Nabeul', delegation: 'Nabeul', address: 'Avenue Habib Bourguiba, 8000 Nabeul', phone: '+216 72 286 000', coordinates: { lat: 36.4561, lng: 10.7376 }, googleMapsUrl: 'https://maps.google.com/?q=36.4561,10.7376', hasConformeService: false, hasTimbreVendor: false, schedule: { regular: { days: 'Lundi - Vendredi', hours: '08:30 - 16:00' }, ramadan: { days: 'Lundi - Vendredi', hours: '08:00 - 14:00' }, summer: { days: 'Lundi - Vendredi', hours: '07:30 - 13:30' } }
   },
   {
-    id: 'cnss-bizerte', name: { derja: 'CNSS Bizerte', fr: 'CNSS Bizerte', ar: 'الصندوق الوطني للضمان الاجتماعي — بنزرت' }, category: 'cnss', governorate: 'Bizerte', delegation: 'Bizerte Nord', address: 'Avenue Habib Bourguiba, 7000 Bizerte', phone: '+216 72 433 000', coordinates: { lat: 37.2744, lng: 9.8739 }, googleMapsUrl: 'https://maps.google.com/?q=37.2744,9.8739', hasConformeService: false, hasTimbreVendor: false, schedule: { regular: { days: 'Lundi - Vendredi', hours: '08:30 - 16:00' }, ramadan: { days: 'Lundi - Vendredi', hours: '08:00 - 14:00' }, summer: { days: 'Lundi - Vendredi', hours: '07:30 - 13:30' } }
+    id: 'cnss-bizerte', name: { derja: 'CNSS Bizerte', fr: 'CNSS Bizerte', ar: 'الصندوق الوطني للضمان الاجتماعي — بنزرت', en: 'CNSS Bizerte' }, category: 'cnss', governorate: 'Bizerte', delegation: 'Bizerte Nord', address: 'Avenue Habib Bourguiba, 7000 Bizerte', phone: '+216 72 433 000', coordinates: { lat: 37.2744, lng: 9.8739 }, googleMapsUrl: 'https://maps.google.com/?q=37.2744,9.8739', hasConformeService: false, hasTimbreVendor: false, schedule: { regular: { days: 'Lundi - Vendredi', hours: '08:30 - 16:00' }, ramadan: { days: 'Lundi - Vendredi', hours: '08:00 - 14:00' }, summer: { days: 'Lundi - Vendredi', hours: '07:30 - 13:30' } }
   },
   {
-    id: 'cnss-beja', name: { derja: 'CNSS Béja', fr: 'CNSS Béja', ar: 'الصندوق الوطني للضمان الاجتماعي — باجة' }, category: 'cnss', governorate: 'Béja', delegation: 'Béja Nord', address: 'Béja Centre', phone: '+216 78 456 000', coordinates: { lat: 36.7256, lng: 9.1817 }, googleMapsUrl: 'https://maps.google.com/?q=36.7256,9.1817', hasConformeService: false, hasTimbreVendor: false, schedule: { regular: { days: 'Lundi - Vendredi', hours: '08:30 - 16:00' }, ramadan: { days: 'Lundi - Vendredi', hours: '08:00 - 14:00' }, summer: { days: 'Lundi - Vendredi', hours: '07:30 - 13:30' } }
+    id: 'cnss-beja', name: { derja: 'CNSS Béja', fr: 'CNSS Béja', ar: 'الصندوق الوطني للضمان الاجتماعي — باجة', en: 'CNSS Béja' }, category: 'cnss', governorate: 'Béja', delegation: 'Béja Nord', address: 'Béja Centre', phone: '+216 78 456 000', coordinates: { lat: 36.7256, lng: 9.1817 }, googleMapsUrl: 'https://maps.google.com/?q=36.7256,9.1817', hasConformeService: false, hasTimbreVendor: false, schedule: { regular: { days: 'Lundi - Vendredi', hours: '08:30 - 16:00' }, ramadan: { days: 'Lundi - Vendredi', hours: '08:00 - 14:00' }, summer: { days: 'Lundi - Vendredi', hours: '07:30 - 13:30' } }
   },
   {
-    id: 'cnss-jendouba', name: { derja: 'CNSS Jendouba', fr: 'CNSS Jendouba', ar: 'الصندوق الوطني للضمان الاجتماعي — جندوبة' }, category: 'cnss', governorate: 'Jendouba', delegation: 'Jendouba Nord', address: 'Avenue Habib Bourguiba, Jendouba', phone: '+216 78 630 000', coordinates: { lat: 36.5011, lng: 8.7803 }, googleMapsUrl: 'https://maps.google.com/?q=36.5011,8.7803', hasConformeService: false, hasTimbreVendor: false, schedule: { regular: { days: 'Lundi - Vendredi', hours: '08:30 - 16:00' }, ramadan: { days: 'Lundi - Vendredi', hours: '08:00 - 14:00' }, summer: { days: 'Lundi - Vendredi', hours: '07:30 - 13:30' } }
+    id: 'cnss-jendouba', name: { derja: 'CNSS Jendouba', fr: 'CNSS Jendouba', ar: 'الصندوق الوطني للضمان الاجتماعي — جندوبة', en: 'CNSS Jendouba' }, category: 'cnss', governorate: 'Jendouba', delegation: 'Jendouba Nord', address: 'Avenue Habib Bourguiba, Jendouba', phone: '+216 78 630 000', coordinates: { lat: 36.5011, lng: 8.7803 }, googleMapsUrl: 'https://maps.google.com/?q=36.5011,8.7803', hasConformeService: false, hasTimbreVendor: false, schedule: { regular: { days: 'Lundi - Vendredi', hours: '08:30 - 16:00' }, ramadan: { days: 'Lundi - Vendredi', hours: '08:00 - 14:00' }, summer: { days: 'Lundi - Vendredi', hours: '07:30 - 13:30' } }
   },
   {
-    id: 'cnss-kef', name: { derja: 'CNSS Le Kef', fr: 'CNSS Le Kef', ar: 'الصندوق الوطني للضمان الاجتماعي — الكاف' }, category: 'cnss', governorate: 'Le Kef', delegation: 'Le Kef Ouest', address: 'Le Kef Centre', phone: '+216 78 221 000', coordinates: { lat: 36.1824, lng: 8.7148 }, googleMapsUrl: 'https://maps.google.com/?q=36.1824,8.7148', hasConformeService: false, hasTimbreVendor: false, schedule: { regular: { days: 'Lundi - Vendredi', hours: '08:30 - 16:00' }, ramadan: { days: 'Lundi - Vendredi', hours: '08:00 - 14:00' }, summer: { days: 'Lundi - Vendredi', hours: '07:30 - 13:30' } }
+    id: 'cnss-kef', name: { derja: 'CNSS Le Kef', fr: 'CNSS Le Kef', ar: 'الصندوق الوطني للضمان الاجتماعي — الكاف', en: 'CNSS Le Kef' }, category: 'cnss', governorate: 'Le Kef', delegation: 'Le Kef Ouest', address: 'Le Kef Centre', phone: '+216 78 221 000', coordinates: { lat: 36.1824, lng: 8.7148 }, googleMapsUrl: 'https://maps.google.com/?q=36.1824,8.7148', hasConformeService: false, hasTimbreVendor: false, schedule: { regular: { days: 'Lundi - Vendredi', hours: '08:30 - 16:00' }, ramadan: { days: 'Lundi - Vendredi', hours: '08:00 - 14:00' }, summer: { days: 'Lundi - Vendredi', hours: '07:30 - 13:30' } }
   },
   {
-    id: 'cnss-siliana', name: { derja: 'CNSS Siliana', fr: 'CNSS Siliana', ar: 'الصندوق الوطني للضمان الاجتماعي — سليانة' }, category: 'cnss', governorate: 'Siliana', delegation: 'Siliana Nord', address: 'Siliana Centre', phone: '+216 78 870 000', coordinates: { lat: 36.0843, lng: 9.3708 }, googleMapsUrl: 'https://maps.google.com/?q=36.0843,9.3708', hasConformeService: false, hasTimbreVendor: false, schedule: { regular: { days: 'Lundi - Vendredi', hours: '08:30 - 16:00' }, ramadan: { days: 'Lundi - Vendredi', hours: '08:00 - 14:00' }, summer: { days: 'Lundi - Vendredi', hours: '07:30 - 13:30' } }
+    id: 'cnss-siliana', name: { derja: 'CNSS Siliana', fr: 'CNSS Siliana', ar: 'الصندوق الوطني للضمان الاجتماعي — سليانة', en: 'CNSS Siliana' }, category: 'cnss', governorate: 'Siliana', delegation: 'Siliana Nord', address: 'Siliana Centre', phone: '+216 78 870 000', coordinates: { lat: 36.0843, lng: 9.3708 }, googleMapsUrl: 'https://maps.google.com/?q=36.0843,9.3708', hasConformeService: false, hasTimbreVendor: false, schedule: { regular: { days: 'Lundi - Vendredi', hours: '08:30 - 16:00' }, ramadan: { days: 'Lundi - Vendredi', hours: '08:00 - 14:00' }, summer: { days: 'Lundi - Vendredi', hours: '07:30 - 13:30' } }
   },
   {
-    id: 'cnss-monastir', name: { derja: 'CNSS Monastir', fr: 'CNSS Monastir', ar: 'الصندوق الوطني للضمان الاجتماعي — المنستير' }, category: 'cnss', governorate: 'Monastir', delegation: 'Monastir', address: 'Avenue Habib Bourguiba, 5000 Monastir', phone: '+216 73 461 000', coordinates: { lat: 35.7643, lng: 10.8113 }, googleMapsUrl: 'https://maps.google.com/?q=35.7643,10.8113', hasConformeService: false, hasTimbreVendor: false, schedule: { regular: { days: 'Lundi - Vendredi', hours: '08:30 - 16:00' }, ramadan: { days: 'Lundi - Vendredi', hours: '08:00 - 14:00' }, summer: { days: 'Lundi - Vendredi', hours: '07:30 - 13:30' } }
+    id: 'cnss-monastir', name: { derja: 'CNSS Monastir', fr: 'CNSS Monastir', ar: 'الصندوق الوطني للضمان الاجتماعي — المنستير', en: 'CNSS Monastir' }, category: 'cnss', governorate: 'Monastir', delegation: 'Monastir', address: 'Avenue Habib Bourguiba, 5000 Monastir', phone: '+216 73 461 000', coordinates: { lat: 35.7643, lng: 10.8113 }, googleMapsUrl: 'https://maps.google.com/?q=35.7643,10.8113', hasConformeService: false, hasTimbreVendor: false, schedule: { regular: { days: 'Lundi - Vendredi', hours: '08:30 - 16:00' }, ramadan: { days: 'Lundi - Vendredi', hours: '08:00 - 14:00' }, summer: { days: 'Lundi - Vendredi', hours: '07:30 - 13:30' } }
   },
   {
-    id: 'cnss-mahdia', name: { derja: 'CNSS Mahdia', fr: 'CNSS Mahdia', ar: 'الصندوق الوطني للضمان الاجتماعي — المهدية' }, category: 'cnss', governorate: 'Mahdia', delegation: 'Mahdia', address: 'Avenue Habib Bourguiba, 5100 Mahdia', phone: '+216 73 681 000', coordinates: { lat: 35.5047, lng: 11.0622 }, googleMapsUrl: 'https://maps.google.com/?q=35.5047,11.0622', hasConformeService: false, hasTimbreVendor: false, schedule: { regular: { days: 'Lundi - Vendredi', hours: '08:30 - 16:00' }, ramadan: { days: 'Lundi - Vendredi', hours: '08:00 - 14:00' }, summer: { days: 'Lundi - Vendredi', hours: '07:30 - 13:30' } }
+    id: 'cnss-mahdia', name: { derja: 'CNSS Mahdia', fr: 'CNSS Mahdia', ar: 'الصندوق الوطني للضمان الاجتماعي — المهدية', en: 'CNSS Mahdia' }, category: 'cnss', governorate: 'Mahdia', delegation: 'Mahdia', address: 'Avenue Habib Bourguiba, 5100 Mahdia', phone: '+216 73 681 000', coordinates: { lat: 35.5047, lng: 11.0622 }, googleMapsUrl: 'https://maps.google.com/?q=35.5047,11.0622', hasConformeService: false, hasTimbreVendor: false, schedule: { regular: { days: 'Lundi - Vendredi', hours: '08:30 - 16:00' }, ramadan: { days: 'Lundi - Vendredi', hours: '08:00 - 14:00' }, summer: { days: 'Lundi - Vendredi', hours: '07:30 - 13:30' } }
   },
   {
     id: 'cnss-kairouan', name: { derja: 'CNSS Kairouan', fr: 'CNSS Kairouan', ar: 'الصندوق الوطني للضمان الاجتماعي — القيروان' }, category: 'cnss', governorate: 'Kairouan', delegation: 'Kairouan Nord', address: 'Avenue de la République, 3100 Kairouan', phone: '+216 77 231 000', coordinates: { lat: 35.6772, lng: 10.0978 }, googleMapsUrl: 'https://maps.google.com/?q=35.6772,10.0978', hasConformeService: false, hasTimbreVendor: false, schedule: { regular: { days: 'Lundi - Vendredi', hours: '08:30 - 16:00' }, ramadan: { days: 'Lundi - Vendredi', hours: '08:00 - 14:00' }, summer: { days: 'Lundi - Vendredi', hours: '07:30 - 13:30' } }
