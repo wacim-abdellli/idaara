@@ -17,18 +17,6 @@ const VALID_LOCALES: SupportedLanguage[] = ['derja', 'fr', 'ar', 'en'];
 export function LocaleProvider({ children }: { children: React.ReactNode }) {
   const [locale, setLocaleState] = useState<SupportedLanguage>('derja');
 
-  useEffect(() => {
-    try {
-      const saved = localStorage.getItem('idaara_locale') as SupportedLanguage;
-      if (saved && VALID_LOCALES.includes(saved)) {
-        setLocaleState(saved);
-        applyDomLocale(saved);
-      }
-    } catch {
-      // localStorage not available (private mode / restricted browser)
-    }
-  }, []);
-
   const applyDomLocale = (l: SupportedLanguage) => {
     const isRtlLocale = l === 'ar';
     document.documentElement.setAttribute('dir', isRtlLocale ? 'rtl' : 'ltr');
@@ -40,6 +28,19 @@ export function LocaleProvider({ children }: { children: React.ReactNode }) {
     };
     document.documentElement.setAttribute('lang', langMap[l] || 'fr');
   };
+
+  useEffect(() => {
+    try {
+      const saved = localStorage.getItem('idaara_locale') as SupportedLanguage;
+      if (saved && VALID_LOCALES.includes(saved)) {
+        // eslint-disable-next-line react-hooks/set-state-in-effect -- hydration-safe localStorage sync
+        setLocaleState(saved);
+        applyDomLocale(saved);
+      }
+    } catch {
+      // localStorage not available (private mode / restricted browser)
+    }
+  }, []);
 
   const setLocale = (newLocale: SupportedLanguage) => {
     setLocaleState(newLocale);

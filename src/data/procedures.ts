@@ -27,7 +27,7 @@ export const proceduresData: Procedure[] = [
       en: "The passport renewal application is filed at the police station or National Guard brigade territorially competent for your place of residence.",
     },
     estimatedTotalCostTND: 86.0,
-    estimatedProcessingTime: "7 - 15 jours",
+    estimatedProcessingTime: { derja: "7 - 15 iyam", fr: "7 - 15 jours", ar: "7 - 15 أيام", en: "7 - 15 days" },
     urgencyLevel: 'medium',
     relatedOfficeTypes: ['police_garde', 'recette_finances', 'baladiya'],
     costsBreakdown: [
@@ -80,21 +80,21 @@ export const proceduresData: Procedure[] = [
         stepNumber: 1,
         title: { derja: "Achri el Timbre Fiscal", fr: "Acheter le timbre fiscal", ar: "اقتناء التنبر الجبائي", en: "Buy the fiscal stamp" },
         description: { derja: "Imchi lel Recette des Finances (80 DT tarif 3adi walla 25 DT etudiant)", fr: "Rendez-vous à la Recette des Finances la plus proche", ar: "التوجه للقباضة المالية لاقتناء التنبر الجبائي المناسب", en: "Go to the nearest Treasury Office" },
-        targetOffice: "Recette des Finances",
+        targetOffice: { derja: "Recette des Finances", fr: "Recette des Finances", ar: "القباضة المالية", en: "Treasury Office" },
         estimatedDuration: "15 min",
       },
       {
         stepNumber: 2,
         title: { derja: "A3mel copie conforme lel CIN", fr: "Légalisation copie CIN", ar: "استخراج نسخة مطابقة للأصل لبطاقة التعريف", en: "Legalize the CIN copy" },
         description: { derja: "Fi a9reb Baladiya walla Da2ira Baladiya", fr: "À la municipalité la plus proche", ar: "لدى أقرب دائرة بلدية", en: "At the nearest Municipality" },
-        targetOffice: "Baladiya",
+        targetOffice: { derja: "Baladiya", fr: "Baladiya", ar: "البلدية", en: "Municipality (Baladiya)" },
         estimatedDuration: "10 min",
       },
       {
         stepNumber: 3,
         title: { derja: "Sobb el dossier fel Markez", fr: "Dépôt du dossier au poste", ar: "إيداع الملف بمركز الأمن", en: "Submit the dossier at the station" },
         description: { derja: "Hazz el dossier el kemel lel markez el marje3 el tourabi mte3 CIN mte3ek", fr: "Déposer l'ensemble des pièces au poste territorialement compétent", ar: "إيداع الملف بالمركز المختص ترابياً وأخذ وصل الاستلام", en: "Hand in all documents at the territorially competent station" },
-        targetOffice: "Poste de Police / Garde Nationale",
+        targetOffice: { derja: "Poste de Police / Garde Nationale", fr: "Poste de Police / Garde Nationale", ar: "مركز الشرطة / الحرس الوطني", en: "Police Station / National Guard" },
         estimatedDuration: "20 min",
       }
     ]
@@ -124,7 +124,7 @@ export const proceduresData: Procedure[] = [
       en: "The national ID card is mandatory from age 18. The dossier requires a birth extract under 3 months old, a residence certificate, a work certificate and a 3-dinar fiscal stamp.",
     },
     estimatedTotalCostTND: 12.0,
-    estimatedProcessingTime: "10 - 20 jours",
+    estimatedProcessingTime: { derja: "10 - 20 iyam", fr: "10 - 20 jours", ar: "10 - 20 أيام", en: "10 - 20 days" },
     urgencyLevel: 'medium',
     relatedOfficeTypes: ['police_garde', 'recette_finances', 'baladiya'],
     costsBreakdown: [
@@ -177,21 +177,21 @@ export const proceduresData: Procedure[] = [
         stepNumber: 1,
         title: { derja: "Talla3 el Madhmoun mel Baladiya", fr: "Extraire l'acte de naissance", ar: "استخراج مضمون الولادة من البلدية أو عبر الإنترنت", en: "Get the birth extract" },
         description: { derja: "Baladiya walla en ligne 3la madhmoun.tn", fr: "En mairie ou en ligne sur le portail madhmoun.tn", ar: "لدى البلدية أو عبر المنصة الوطنية", en: "At the town hall or online via madhmoun.tn" },
-        targetOffice: "Baladiya",
+        targetOffice: { derja: "Baladiya", fr: "Baladiya", ar: "البلدية", en: "Municipality (Baladiya)" },
         estimatedDuration: "10 min",
       },
       {
         stepNumber: 2,
         title: { derja: "Khou Ch'hadet I9ama mel Markez", fr: "Obtenir le certificat de résidence", ar: "الحصول على شهادة الإقامة من مركز الأمن", en: "Obtain the residence certificate" },
         description: { derja: "Hazz wathi9at el kré walla faktouret STEG/SONEDE lel markez", fr: "Fournir quittance STEG/SONEDE ou contrat de bail", ar: "الاستظهار بفاتورة الكهرباء أو عقد الكراء", en: "Provide a STEG/SONEDE bill or lease contract" },
-        targetOffice: "Poste de Police / Garde Nationale",
+        targetOffice: { derja: "Poste de Police / Garde Nationale", fr: "Poste de Police / Garde Nationale", ar: "مركز الشرطة / الحرس الوطني", en: "Police Station / National Guard" },
         estimatedDuration: "15 min",
       },
       {
         stepNumber: 3,
         title: { derja: "Dépôt dossier CIN fel Markez", fr: "Dépôt de la demande", ar: "إيداع ملف بطاقة التعريف وأخذ البصمات", en: "Submit the application" },
         description: { derja: "Ta3mel el basmat fel markez w te5ou el wasl", fr: "Prise d'empreintes digitales et remise du récépissé", ar: "إتمام إجراءات البصمات وتسلم وصل السحب", en: "Fingerprinting and issuance of the receipt" },
-        targetOffice: "Poste de Police / Garde Nationale",
+        targetOffice: { derja: "Poste de Police / Garde Nationale", fr: "Poste de Police / Garde Nationale", ar: "مركز الشرطة / الحرس الوطني", en: "Police Station / National Guard" },
         estimatedDuration: "25 min",
       }
     ]
@@ -221,7 +221,7 @@ export const proceduresData: Procedure[] = [
       en: "Bulletin No. 3 is the official document certifying your criminal record. It can be ordered online with secure home delivery via Rapide-Poste or filed at the police station.",
     },
     estimatedTotalCostTND: 7.5,
-    estimatedProcessingTime: "3 - 8 jours",
+    estimatedProcessingTime: { derja: "3 - 8 iyam", fr: "3 - 8 jours", ar: "3 - 8 أيام", en: "3 - 8 days" },
     urgencyLevel: 'low',
     relatedOfficeTypes: ['police_garde', 'poste', 'recette_finances'],
     costsBreakdown: [
@@ -257,7 +257,7 @@ export const proceduresData: Procedure[] = [
         stepNumber: 1,
         title: { derja: "Talab en ligne 3la portail ministère", fr: "Commande en ligne sécurisée", ar: "التقديم عبر البوابة الإلكترونية لوزارة الداخلية", en: "Secure online order" },
         description: { derja: "3abbi el ma3loumet 3la b3.interieur.gov.tn w 5alles bel carte bancaire walla e-Dinar", fr: "Remplir le formulaire et payer en ligne", ar: "ملء الاستمارة والدفع الإلكتروني", en: "Fill in the form and pay online" },
-        targetOffice: "Portail en ligne / Poste de Police",
+        targetOffice: { derja: "Portail en ligne / Poste de Police", fr: "Portail en ligne / Poste de Police", ar: "البوابة الإلكترونية / مركز الشرطة", en: "Online portal / Police Station" },
         estimatedDuration: "5 min",
       }
     ]
@@ -289,7 +289,7 @@ export const proceduresData: Procedure[] = [
       en: "The buyer has a legal deadline of 15 days after signature to register the contract at the Treasury Office and file the new carte grise application with the ATTT.",
     },
     estimatedTotalCostTND: 145.0,
-    estimatedProcessingTime: "1 - 3 jours",
+    estimatedProcessingTime: { derja: "1 - 3 iyam", fr: "1 - 3 jours", ar: "1 - 3 أيام", en: "1 - 3 days" },
     urgencyLevel: 'high',
     templateSlug: 'contrat-vente-vehicule',
     relatedOfficeTypes: ['recette_finances', 'attt', 'baladiya'],
@@ -344,21 +344,21 @@ export const proceduresData: Procedure[] = [
         stepNumber: 1,
         title: { derja: "Sa77e7 el Contrat fel Baladiya", fr: "Légalisation du contrat en mairie", ar: "التعريف بإمضاء الطرفين في البلدية", en: "Legalize the contract at the town hall" },
         description: { derja: "Beye3 w chari ysa777ou fel Baladiya", fr: "Signature conjointe devant l'officier d'état civil", ar: "إمضاء البائع والمشتري لدى ضابط الحالة المدنية", en: "Buyer and seller sign together before the civil status officer" },
-        targetOffice: "Baladiya",
+        targetOffice: { derja: "Baladiya", fr: "Baladiya", ar: "البلدية", en: "Municipality (Baladiya)" },
         estimatedDuration: "15 min",
       },
       {
         stepNumber: 2,
         title: { derja: "Sajjel el Contrat fel Recette des Finances", fr: "Enregistrement à la Recette des Finances", ar: "تسجيل العقد بالقباضة المالية ودفع المعاليم", en: "Register the contract at the Treasury Office" },
         description: { derja: "5alles droits d'enregistrement fel Recette", fr: "Payer les taxes proportionnelles d'enregistrement", ar: "دفع معاليم التسجيل القانونية", en: "Pay the proportional registration duties" },
-        targetOffice: "Recette des Finances",
+        targetOffice: { derja: "Recette des Finances", fr: "Recette des Finances", ar: "القباضة المالية", en: "Treasury Office" },
         estimatedDuration: "30 min",
       },
       {
         stepNumber: 3,
         title: { derja: "Sobb el Dossier fel ATTT", fr: "Dépôt du dossier à l'agence ATTT", ar: "إيداع الملف بمركز الفحص الفني والنقل البري (ATTT)", en: "Submit the dossier at the ATTT agency" },
         description: { derja: "Te5ou el récépissé w t'capti el carte grise jidida", fr: "Obtenir la nouvelle carte grise définitive", ar: "تسليم الملف وتسلم البطاقة الرمادية الجديدة", en: "Collect the definitive new carte grise" },
-        targetOffice: "ATTT (Agence Technique des Transports Terrestres)",
+        targetOffice: { derja: "ATTT (Agence Technique des Transports Terrestres)", fr: "ATTT (Agence Technique des Transports Terrestres)", ar: "الوكالة الفنية للنقل البري (ATTT)", en: "ATTT (Land Transport Technical Agency)" },
         estimatedDuration: "45 min",
       }
     ]
@@ -388,7 +388,7 @@ export const proceduresData: Procedure[] = [
       en: "Renewal requires a medical certificate of physical and visual fitness, 2 ID photos and payment of the card production fee at the ATTT.",
     },
     estimatedTotalCostTND: 45.0,
-    estimatedProcessingTime: "5 - 10 jours",
+    estimatedProcessingTime: { derja: "5 - 10 iyam", fr: "5 - 10 jours", ar: "5 - 10 أيام", en: "5 - 10 days" },
     urgencyLevel: 'medium',
     relatedOfficeTypes: ['attt', 'recette_finances'],
     costsBreakdown: [
@@ -436,14 +436,14 @@ export const proceduresData: Procedure[] = [
         stepNumber: 1,
         title: { derja: "Visite tebbeya 3and tbib", fr: "Visite médicale d'aptitude", ar: "إجراء الفحص الطبي لدى طبيب عام أو معتمد", en: "Medical fitness examination" },
         description: { derja: "Ta3mel kachf tebbi 3al 3inin w se7a", fr: "Obtenir le certificat médical visuel et physique", ar: "الحصول على الشهادة الطبية", en: "Obtain the visual and physical medical certificate" },
-        targetOffice: "Cabinet Médical",
+        targetOffice: { derja: "Cabinet Médical", fr: "Cabinet Médical", ar: "عيادة طبية", en: "Doctor's Office" },
         estimatedDuration: "20 min",
       },
       {
         stepNumber: 2,
         title: { derja: "Sobb el dossier fel ATTT", fr: "Dépôt du dossier à l'ATTT", ar: "إيداع الملف بالوكالة الفنية للنقل البري", en: "Submit the dossier at the ATTT" },
         description: { derja: "T5alles el frais w te5ou permis provisoire", fr: "Paiement et délivrance d'un permis provisoire", ar: "تسليم الملف وتسلم رخصة وقتية إلى حين جهوزية البطاقة", en: "Payment and issuance of a provisional license" },
-        targetOffice: "ATTT",
+        targetOffice: { derja: "ATTT", fr: "ATTT", ar: "الوكالة الفنية للنقل البري (ATTT)", en: "ATTT (Land Transport Technical Agency)" },
         estimatedDuration: "30 min",
       }
     ]
@@ -475,7 +475,7 @@ export const proceduresData: Procedure[] = [
       en: "The Tunisian auto-entrepreneur status lets freelancers and service providers work fully legally with a reduced tax rate (1% services, 0.5% commerce/crafts) and a single flat CNSS contribution.",
     },
     estimatedTotalCostTND: 10.0,
-    estimatedProcessingTime: "24 - 48 heures",
+    estimatedProcessingTime: { derja: "24 - 48 swaye3", fr: "24 - 48 heures", ar: "24 - 48 ساعة", en: "24 - 48 hours" },
     urgencyLevel: 'low',
     relatedOfficeTypes: ['rne', 'recette_finances', 'cnss'],
     costsBreakdown: [
@@ -516,14 +516,14 @@ export const proceduresData: Procedure[] = [
         stepNumber: 1,
         title: { derja: "Inscris-toi 3la portail autoentrepreneur.tn", fr: "Créer un compte sur la plateforme nationale", ar: "إنشاء حساب على البوابة الوطنية للمبادر الذاتي", en: "Create an account on the national platform" },
         description: { derja: "Dakhil les coordonnées mte3ek w ekhtar l'activité", fr: "Renseigner les informations et choisir l'activité", ar: "تسجيل البيانات واختيار قطاع النشاط المهني", en: "Enter your details and choose your activity" },
-        targetOffice: "Portail Auto-Entrepreneur",
+        targetOffice: { derja: "Portail Auto-Entrepreneur", fr: "Portail Auto-Entrepreneur", ar: "بوابة المبادر الذاتي", en: "Auto-Entrepreneur Portal" },
         estimatedDuration: "10 min",
       },
       {
         stepNumber: 2,
         title: { derja: "Telechargi el Carte d'Auto-Entrepreneur", fr: "Téléchargement de la carte officielle avec QR", ar: "تحميل بطاقة المبادر الذاتي الرسمية المشفرة", en: "Download the official QR-coded card" },
         description: { derja: "Touslek validation fi 48h w tabda tfaktour", fr: "Validation sous 48h et début de facturation", ar: "المصادقة الفورية والبدء في إصدار الفواتير القانونية", en: "Validation within 48h, then start invoicing" },
-        targetOffice: "Plateforme Numérique",
+        targetOffice: { derja: "Plateforme Numérique", fr: "Plateforme Numérique", ar: "منصة رقمية", en: "Digital Platform" },
         estimatedDuration: "24h",
       }
     ]
@@ -553,7 +553,7 @@ export const proceduresData: Procedure[] = [
       en: "Forming a commercial company requires drafting the articles of association, blocking the share capital at a bank, registering the deeds at the Treasury Office to obtain the Patente, then final registration with the RNE.",
     },
     estimatedTotalCostTND: 220.0,
-    estimatedProcessingTime: "3 - 7 jours",
+    estimatedProcessingTime: { derja: "3 - 7 iyam", fr: "3 - 7 jours", ar: "3 - 7 أيام", en: "3 - 7 days" },
     urgencyLevel: 'medium',
     relatedOfficeTypes: ['rne', 'recette_finances', 'baladiya'],
     costsBreakdown: [
@@ -601,21 +601,21 @@ export const proceduresData: Procedure[] = [
         stepNumber: 1,
         title: { derja: "Sa77e7 el Statuts fel Baladiya", fr: "Signature et légalisation des statuts", ar: "إمضاء القانون الأساسي والتعريف به في البلدية", en: "Sign and legalize the articles of association" },
         description: { derja: "5 nsa5 men el statuts", fr: "Légaliser 5 exemplaires des statuts", ar: "التعريف بإمضاء المؤسسين", en: "Legalize 5 copies of the articles" },
-        targetOffice: "Baladiya",
+        targetOffice: { derja: "Baladiya", fr: "Baladiya", ar: "البلدية", en: "Municipality (Baladiya)" },
         estimatedDuration: "20 min",
       },
       {
         stepNumber: 2,
         title: { derja: "Talla3 el Patente mel Recette des Finances", fr: "Obtention de la Patente (Déclaration d'existence)", ar: "إيداع تصريح بالوجود واستخراج المعرف الجبائي (Patente)", en: "Obtain the Patente (declaration of existence)" },
         description: { derja: "Te5ou el matricule fiscal w déclaration d'existence", fr: "Obtenir l'immatriculation fiscale et code TVA", ar: "استخراج البطاقة الجبائية ورمز الأداء على القيمة المضافة", en: "Get the tax registration and VAT code" },
-        targetOffice: "Recette des Finances",
+        targetOffice: { derja: "Recette des Finances", fr: "Recette des Finances", ar: "القباضة المالية", en: "Treasury Office" },
         estimatedDuration: "45 min",
       },
       {
         stepNumber: 3,
         title: { derja: "Immatriculation RNE", fr: "Immatriculation au Registre National des Entreprises", ar: "الترسيم بالسجل الوطني للمؤسسات (RNE)", en: "Register with the National Business Register (RNE)" },
         description: { derja: "Te5ou l'Extrait RNE el rasmi", fr: "Délivrance de l'Extrait RNE officiel", ar: "الحصول على المضمون الرسمي للسجل التجاري", en: "Receive the official RNE extract" },
-        targetOffice: "RNE (Registre National des Entreprises)",
+        targetOffice: { derja: "RNE (Registre National des Entreprises)", fr: "RNE (Registre National des Entreprises)", ar: "السجل الوطني للمؤسسات (RNE)", en: "RNE (National Business Register)" },
         estimatedDuration: "30 min",
       }
     ]
@@ -647,7 +647,7 @@ export const proceduresData: Procedure[] = [
       en: "The lease governs the rights and duties of landlord and tenant. It must state the rent, the security deposit and the inventory of fixtures, then be signature-legalized and tax-registered.",
     },
     estimatedTotalCostTND: 35.0,
-    estimatedProcessingTime: "1 jour",
+    estimatedProcessingTime: { derja: "Yom wa7ed", fr: "1 jour", ar: "يوم واحد", en: "1 day" },
     urgencyLevel: 'low',
     templateSlug: 'contrat-location',
     relatedOfficeTypes: ['baladiya', 'recette_finances'],
@@ -684,14 +684,14 @@ export const proceduresData: Procedure[] = [
         stepNumber: 1,
         title: { derja: "Imprimer w sa77e7 fel Baladiya", fr: "Légalisation des signatures en mairie", ar: "التعريف بإمضاء الطرفين لدى البلدية", en: "Legalize the signatures at the town hall" },
         description: { derja: "Hazz el 3 nsa5 lel Baladiya m3a el CIN", fr: "Présentation des 3 exemplaires originaux", ar: "الاستظهار ببطاقات التعريف وإمضاء العقود", en: "Present the 3 original copies" },
-        targetOffice: "Baladiya",
+        targetOffice: { derja: "Baladiya", fr: "Baladiya", ar: "البلدية", en: "Municipality (Baladiya)" },
         estimatedDuration: "15 min",
       },
       {
         stepNumber: 2,
         title: { derja: "Enregistrement fel Recette des Finances", fr: "Enregistrement du bail à la Recette", ar: "تسجيل العقد بالقباضة المالية", en: "Register the lease at the Treasury Office" },
         description: { derja: "T5alles droits d'enregistrement bech yabda el contrat opposable aux tiers", fr: "Payer le droit d'enregistrement pour lui conférer date certaine", ar: "إكساء العقد التاريخ الثابت وإبراء الذمة الجبائية", en: "Pay the registration duty to give it a legally certain date" },
-        targetOffice: "Recette des Finances",
+        targetOffice: { derja: "Recette des Finances", fr: "Recette des Finances", ar: "القباضة المالية", en: "Treasury Office" },
         estimatedDuration: "20 min",
       }
     ]
@@ -721,7 +721,7 @@ export const proceduresData: Procedure[] = [
       en: "The subscription and connection request requires the municipal building permit or connection certificate, the installer's conformity attestation, a copy of the CIN and proof of ownership.",
     },
     estimatedTotalCostTND: 180.0,
-    estimatedProcessingTime: "7 - 20 jours",
+    estimatedProcessingTime: { derja: "7 - 20 iyam", fr: "7 - 20 jours", ar: "7 - 20 أيام", en: "7 - 20 days" },
     urgencyLevel: 'medium',
     relatedOfficeTypes: ['steg', 'baladiya'],
     costsBreakdown: [
@@ -755,7 +755,7 @@ export const proceduresData: Procedure[] = [
         stepNumber: 1,
         title: { derja: "Sobb el dossier fel Agence STEG", fr: "Dépôt de la demande en agence STEG", ar: "إيداع المطلب بإقليم الشركة التونسية للكهرباء والغاز", en: "File the request at the STEG agency" },
         description: { derja: "Dépôt des pièces w te5ou numéro dossier", fr: "Enregistrement et planification de la visite technique", ar: "تسجيل المطلب وتحديد موعد المعاينة الفنية", en: "Registration and scheduling of the technical site visit" },
-        targetOffice: "District STEG",
+        targetOffice: { derja: "District STEG", fr: "District STEG", ar: "إقليم الشركة التونسية للكهرباء والغاز (STEG)", en: "STEG District Office" },
         estimatedDuration: "30 min",
       }
     ]
@@ -787,7 +787,7 @@ export const proceduresData: Procedure[] = [
       en: "Insured members in the reimbursement system must file their care forms within 60 days of the prescription date, with original medicine vignettes and stamps.",
     },
     estimatedTotalCostTND: 0.0,
-    estimatedProcessingTime: "15 - 30 jours",
+    estimatedProcessingTime: { derja: "15 - 30 iyam", fr: "15 - 30 jours", ar: "15 - 30 أيام", en: "15 - 30 days" },
     urgencyLevel: 'medium',
     relatedOfficeTypes: ['cnam'],
     costsBreakdown: [],
@@ -808,7 +808,7 @@ export const proceduresData: Procedure[] = [
         stepNumber: 1,
         title: { derja: "Sobb fel Bureau CNAM walla Boîte aux lettres", fr: "Dépôt au centre régional CNAM", ar: "إيداع الملف بالمركز الجهوي أو المحلي للكنام", en: "File at the regional CNAM center" },
         description: { derja: "Fel guichet walla fel boîte réservée aux bulletins", fr: "Au guichet ou dans la boîte de collecte rapide", ar: "بالشباك أو عبر الصندوق المخصص للإيداع السريع", en: "At the counter or in the express drop-off box" },
-        targetOffice: "Centre CNAM",
+        targetOffice: { derja: "Centre CNAM", fr: "Centre CNAM", ar: "المركز الجهوي للكنام (CNAM)", en: "CNAM Regional Center" },
         estimatedDuration: "10 min",
       }
     ]
@@ -840,7 +840,7 @@ export const proceduresData: Procedure[] = [
       en: "The FCR scheme is granted to Tunisians residing abroad who prove effective residence of at least 2 years outside Tunisia, with stays not exceeding 120 days per 365-day period.",
     },
     estimatedTotalCostTND: 50.0,
-    estimatedProcessingTime: "2 - 5 jours",
+    estimatedProcessingTime: { derja: "2 - 5 iyam", fr: "2 - 5 jours", ar: "2 - 5 أيام", en: "2 - 5 days" },
     urgencyLevel: 'high',
     relatedOfficeTypes: ['douane'],
     costsBreakdown: [
@@ -874,7 +874,7 @@ export const proceduresData: Procedure[] = [
         stepNumber: 1,
         title: { derja: "Dépôt dossier au Bureau des Douanes", fr: "Dépôt de la déclaration douanière", ar: "إيداع التصريح الديواني بفرع الإدارة العامة للديوانة", en: "File the customs declaration" },
         description: { derja: "Verifcation des conditions de séjour w calculate droits", fr: "Vérification des conditions de séjour et délivrance du certificat d'apurement", ar: "التثبت في شروط الإقامة وتسوية الوضعية الديوانية", en: "Verify residence conditions and receive the clearance certificate" },
-        targetOffice: "Bureau Régional des Douanes / Port",
+        targetOffice: { derja: "Bureau Régional des Douanes / Port", fr: "Bureau Régional des Douanes / Port", ar: "الإدارة الجهوية للديوانة / الميناء", en: "Regional Customs Office / Port" },
         estimatedDuration: "1 jour",
       }
     ]
@@ -904,7 +904,7 @@ export const proceduresData: Procedure[] = [
       ar: "يُودع مطلب تصفية جراية الشيخوخة لدى المكتب الجهوي أو المحلي للصندوق الوطني للضمان الاجتماعي مرجع النظر، إثر بلوغ السن القانونية (60 سنة عموماً أو 50 سنة للتقاعد النسبي المشروط بـ 180 ثلاثية) وتوفر شرط 120 ثلاثية من الاشتراكات الفعلية على الأقل.",
     },
     estimatedTotalCostTND: 0.0,
-    estimatedProcessingTime: "30 - 60 jours",
+    estimatedProcessingTime: { derja: "30 - 60 iyam", fr: "30 - 60 jours", ar: "30 - 60 أيام", en: "30 - 60 days" },
     urgencyLevel: 'medium',
     relatedOfficeTypes: ['cnss', 'poste'],
     costsBreakdown: [
@@ -949,21 +949,21 @@ export const proceduresData: Procedure[] = [
         stepNumber: 1,
         title: { derja: "Etba3 relevé de carrière men CNSS", fr: "Retirer le relevé de carrière", ar: "استخراج كشف الحياة المهنية وتصفية الفترات" },
         description: { derja: "A3mel kachf 3la el trimestres mte3ek fel bureau CNSS walla 3la el portail e-cnss.tn bech tet2akkad men 120 trimestres", fr: "Vérifier le nombre de trimestres validés au guichet CNSS ou sur le portail e-cnss.tn", ar: "التثبت من استيفاء 120 ثلاثية مصرح بها عبر المنصة الرقمية أو الشباك" },
-        targetOffice: "CNSS",
+        targetOffice: { derja: "CNSS", fr: "CNSS", ar: "الصندوق الوطني للضمان الاجتماعي (CNSS)", en: "CNSS (Social Security Office)" },
         estimatedDuration: "1 jour",
       },
       {
         stepNumber: 2,
         title: { derja: "5outh chhadet in9ita3 men el mo2ajjer", fr: "Obtenir l'attestation de cessation de travail", ar: "الحصول على شهادة توقف عن العمل من المؤجر" },
         description: { derja: "El mo2ajjer lezem ysakker e5er trimestre w ya3tik l'attestation officielle", fr: "L'employeur clôture la dernière déclaration trimestrielle et délivre l'attestation", ar: "قيام المؤجر بالتصريح الأخير وتسليم شهادة التوقف القانونية" },
-        targetOffice: "Employeur",
+        targetOffice: { derja: "El mo2ajjer", fr: "Employeur", ar: "المؤجّر", en: "Employer" },
         estimatedDuration: "3 jours",
       },
       {
         stepNumber: 3,
         title: { derja: "Sobb el dossier kemel fel CNSS", fr: "Dépôt du dossier au bureau régional CNSS", ar: "إيداع الملف بالصندوق الوطني للضمان الاجتماعي" },
         description: { derja: "Hazz el awra9 l'el bureau CNSS marje3 el nadhar w 5outh récépissé de dépôt", fr: "Déposer l'ensemble des pièces et récupérer le récépissé de liquidation", ar: "تسليم الوثائق وأخذ وصل الإيداع الرسمي لمتابعة صرف الجراية" },
-        targetOffice: "CNSS",
+        targetOffice: { derja: "CNSS", fr: "CNSS", ar: "الصندوق الوطني للضمان الاجتماعي (CNSS)", en: "CNSS (Social Security Office)" },
         estimatedDuration: "30 min",
       }
     ]
@@ -992,7 +992,7 @@ export const proceduresData: Procedure[] = [
       ar: "يخول لكل مضمون اجتماعي منخرط بالصندوق الوطني للضمان الاجتماعي الحصول على بطاقة علاج كنام واختيار إحدى المنظومات العلاجية الثلاث: المنظومة العلاجية العمومية، المنظومة الخاصة (طبيب العائلة)، أو نظام استرجاع المصاريف، مع إمكانية تغيير المنظومة سنوياً خلال الآجال القانونية.",
     },
     estimatedTotalCostTND: 0.0,
-    estimatedProcessingTime: "15 - 30 jours",
+    estimatedProcessingTime: { derja: "15 - 30 iyam", fr: "15 - 30 jours", ar: "15 - 30 أيام", en: "15 - 30 days" },
     urgencyLevel: 'medium',
     relatedOfficeTypes: ['cnam', 'cnss'],
     costsBreakdown: [
@@ -1037,21 +1037,21 @@ export const proceduresData: Procedure[] = [
         stepNumber: 1,
         title: { derja: "Ekhtar el mandhouma el mounasba", fr: "Choisir la filière de soins", ar: "تحديد المنظومة العلاجية المناسبة" },
         description: { derja: "Ekhtar bin filière privée (tbib famille), publique (sbitar), walla remboursement", fr: "Sélectionner la filière privée conventionnée, publique ou remboursement", ar: "المقارنة والاختيار بين المنظومة الخاصة أو العمومية أو استرجاع المصاريف" },
-        targetOffice: "En ligne / CNAM",
+        targetOffice: { derja: "En ligne / CNAM", fr: "En ligne / CNAM", ar: "عبر الإنترنت / الكنام", en: "Online / CNAM" },
         estimatedDuration: "10 min",
       },
       {
         stepNumber: 2,
         title: { derja: "Sobb el dossier fel Centre CNAM", fr: "Dépôt au centre régional CNAM", ar: "إيداع الملف بالمركز الجهوي للكنام" },
         description: { derja: "Hazz el dossier l'el centre CNAM marje3 el nadhar w 5outh récépissé", fr: "Déposer le formulaire d'adhésion et pièces justificatives", ar: "تقديم الاستمارة والوثائق وأخذ وصل الإيداع" },
-        targetOffice: "CNAM",
+        targetOffice: { derja: "CNAM", fr: "CNAM", ar: "الصندوق الوطني للتأمين على المرض (CNAM)", en: "CNAM (Health Insurance Fund)" },
         estimatedDuration: "30 min",
       },
       {
         stepNumber: 3,
         title: { derja: "Istlem el Carnet", fr: "Retrait du carnet de soins", ar: "استلام بطاقة العلاج" },
         description: { derja: "Isti3mel el carnet 3and el tbib walla el pharmacien ba3d ma ye7dher", fr: "Récupérer le carnet valide pour l'année en cours", ar: "تسلم بطاقة العلاج صالحة للاستعمال لدى مسدي الخدمات الصحية" },
-        targetOffice: "CNAM",
+        targetOffice: { derja: "CNAM", fr: "CNAM", ar: "الصندوق الوطني للتأمين على المرض (CNAM)", en: "CNAM (Health Insurance Fund)" },
         estimatedDuration: "15 jours",
       }
     ]
@@ -1081,7 +1081,7 @@ export const proceduresData: Procedure[] = [
       ar: "تخضع كل عملية إقامة بناء جديد أو توسيع أو تغيير صبغة عقار إلى ترخيص مسبق في البناء يُسلّم من طرف رئيس البلدية مرجع النظر الترابي طبقاً لمجلة التهيئة الترابية والتعمير. حُدد الأجل القانوني للبت في المطلب بـ 45 يوماً من تاريخ إيداع الملف مستوفياً لجميع الوثائق.",
     },
     estimatedTotalCostTND: 120.0,
-    estimatedProcessingTime: "30 - 45 jours",
+    estimatedProcessingTime: { derja: "30 - 45 iyam", fr: "30 - 45 jours", ar: "30 - 45 أيام", en: "30 - 45 days" },
     urgencyLevel: 'high',
     relatedOfficeTypes: ['baladiya', 'recette_finances'],
     costsBreakdown: [
@@ -1133,21 +1133,21 @@ export const proceduresData: Procedure[] = [
         stepNumber: 1,
         title: { derja: "Ekhtar architecte agréé w a3mel les plans", fr: "Élaboration du dossier architectural", ar: "إعداد الملف الفني لدى مهندس معماري مرخص" },
         description: { derja: "L'architecte ya3mel les plans conformes lel plan d'aménagement mte3 el Baladiya", fr: "L'architecte conçoit le projet selon le plan d'aménagement urbain (PAU)", ar: "إعداد التصاميم ومطابقتها لمثال التهيئة العمرانية للبلدية" },
-        targetOffice: "Architecte agréé",
+        targetOffice: { derja: "Architecte agréé", fr: "Architecte agréé", ar: "مهندس معماري مرسم", en: "Licensed Architect" },
         estimatedDuration: "10 jours",
       },
       {
         stepNumber: 2,
         title: { derja: "5allas el ma3alim el baladiya w jaded titre foncier", fr: "Paiement taxes locales et certificat CPF", ar: "تسوية المعاليم البلدية واستخراج شهادة الملكية" },
         description: { derja: "5allas zebla w kharrouba fel 9badha w 5arraj chhadet melkiya men CPF", fr: "Régler la taxe des immeubles et retirer l'extrait foncier à la CPF", ar: "خلاص الأداء البلدي واستخراج رسم الملكية المحين" },
-        targetOffice: "Recette des Finances & CPF",
+        targetOffice: { derja: "Recette des Finances & CPF", fr: "Recette des Finances & CPF", ar: "القباضة المالية وإدارة الملكية العقارية", en: "Treasury Office & Land Registry (CPF)" },
         estimatedDuration: "2 jours",
       },
       {
         stepNumber: 3,
         title: { derja: "Sobb el dossier fel Bureau d'Ordre mte3 el Baladiya", fr: "Dépôt du dossier au Bureau d'Ordre municipal", ar: "إيداع الملف بمكتب الضبط بالبلدية" },
         description: { derja: "5outh récépissé fih date exacte. El Baladiya 3andha 45 jours delai legal", fr: "Récupérer le récépissé daté pour le calcul du délai légal de 45 jours", ar: "تسلم وصل إيداع مرقم ومؤرخ لاحتساب الأجل القانوني (45 يوماً)" },
-        targetOffice: "Baladiya",
+        targetOffice: { derja: "Baladiya", fr: "Baladiya", ar: "البلدية", en: "Municipality (Baladiya)" },
         estimatedDuration: "45 jours",
       }
     ]
@@ -1176,7 +1176,7 @@ export const proceduresData: Procedure[] = [
       ar: "يُودع مطلب الربط بشبكة الماء الصالح للشرب لدى إقليم الشركة الوطنية لاستغلال وتوزيع المياه (SONEDE) مرجع النظر. يتضمن الملف إثبات الملكية أو رخصة البناء، مثال الموقع، وترخيص البلدية في الحفر إذا اقتضت الأشغال شق الطريق العام.",
     },
     estimatedTotalCostTND: 350.0,
-    estimatedProcessingTime: "15 - 30 jours",
+    estimatedProcessingTime: { derja: "15 - 30 iyam", fr: "15 - 30 jours", ar: "15 - 30 أيام", en: "15 - 30 days" },
     urgencyLevel: 'medium',
     relatedOfficeTypes: ['sonede', 'baladiya'],
     costsBreakdown: [
@@ -1227,21 +1227,21 @@ export const proceduresData: Procedure[] = [
         stepNumber: 1,
         title: { derja: "Sobb el dossier fel District SONEDE", fr: "Dépôt de la demande au district SONEDE", ar: "إيداع المطلب بإقليم الشركة الوطنية للماء" },
         description: { derja: "Hazz el dossier l'el district SONEDE marje3 el nadhar", fr: "Déposer le dossier complet auprès du bureau d'accueil du district", ar: "تقديم الملف الكامل بمكتب العلاقات مع المواطن بالإقليم" },
-        targetOffice: "SONEDE",
+        targetOffice: { derja: "SONEDE", fr: "SONEDE", ar: "الشركة الوطنية لاستغلال وتوزيع المياه (SONEDE)", en: "SONEDE (National Water Company)" },
         estimatedDuration: "1 jour",
       },
       {
         stepNumber: 2,
         title: { derja: "Visite technique w calcul devis", fr: "Visite sur site et établissement du devis", ar: "المعاينة الميدانية وإعداد المقايسة الفنية" },
         description: { derja: "Technicien SONEDE yji y9iss el distance mel canalisation principale", fr: "L'agent SONEDE évalue la distance et le matériel nécessaire", ar: "معاينة العقار وتحديد مسافة الربط بالأنبوب الرئيسي" },
-        targetOffice: "SONEDE",
+        targetOffice: { derja: "SONEDE", fr: "SONEDE", ar: "الشركة الوطنية لاستغلال وتوزيع المياه (SONEDE)", en: "SONEDE (National Water Company)" },
         estimatedDuration: "5 - 7 jours",
       },
       {
         stepNumber: 3,
         title: { derja: "5allas el devis w tarkib el compteur", fr: "Paiement du devis et exécution des travaux", ar: "خلاص المقايسة وتركيب العداد وفتح الماء" },
         description: { derja: "5allas el montant fel caisse SONEDE w l'équipe tji terkeb el compteur", fr: "Régler le montant du devis pour déclencher la pose du compteur", ar: "دفع المعاليم وتدخل الفريق الفني لتركيب العداد والتزويد" },
-        targetOffice: "SONEDE",
+        targetOffice: { derja: "SONEDE", fr: "SONEDE", ar: "الشركة الوطنية لاستغلال وتوزيع المياه (SONEDE)", en: "SONEDE (National Water Company)" },
         estimatedDuration: "7 - 10 jours",
       }
     ]
@@ -1270,7 +1270,7 @@ export const proceduresData: Procedure[] = [
       ar: "تعد شهادة الملكية المسلمة من الإدارة العامة للملكية العقارية الحجة القاطعة لإثبات ملكية العقارات المسجلة (الرسم العقاري / Titre Bleu). تتضمن بيانات المالكين، المنابات المشاعة، والتحملات العقارية كالرهون والارتفاقات والقيود الاحتياطية. يمكن استخراجها مباشرة أو عبر المنصة الإلكترونية cpf.tn.",
     },
     estimatedTotalCostTND: 15.0,
-    estimatedProcessingTime: "24 - 48 heures",
+    estimatedProcessingTime: { derja: "24 - 48 swaye3", fr: "24 - 48 heures", ar: "24 - 48 ساعة", en: "24 - 48 hours" },
     urgencyLevel: 'medium',
     relatedOfficeTypes: ['baladiya', 'recette_finances'],
     costsBreakdown: [
@@ -1299,14 +1299,14 @@ export const proceduresData: Procedure[] = [
         stepNumber: 1,
         title: { derja: "Hadher nomrou el rasm el 3a9ari", fr: "Identifier le numéro du titre foncier", ar: "تحديد رقم الرسم العقاري والمنطقة العقارية" },
         description: { derja: "Nomrou el rasm mawjoud fel 3a9d el 9dim walla el rasm el azra9", fr: "Le numéro est mentionné sur les actes antérieurs ou contrats notariés", ar: "الاطلاع على رقم الرسم المسجل بعقد الملكية السابق" },
-        targetOffice: "CPF",
+        targetOffice: { derja: "CPF", fr: "CPF", ar: "إدارة الملكية العقارية (CPF)", en: "CPF (Land Registry Office)" },
         estimatedDuration: "5 min",
       },
       {
         stepNumber: 2,
         title: { derja: "Ed5ol 3al site cpf.tn walla emchi l'el bureau", fr: "Demande en ligne ou au guichet CPF", ar: "تقديم المطلب إلكترونياً أو بشباك الإدارة الجهوية" },
         description: { derja: "5allas 15 DT b'carte bancaire en ligne walla fel guichet", fr: "Payer les droits de 15 DT par carte bancaire ou en espèces", ar: "دفع المعاليم القانونية واستخراج الشهادة فورا أو إلكترونيا" },
-        targetOffice: "Conservation de la Propriété Foncière",
+        targetOffice: { derja: "Conservation de la Propriété Foncière", fr: "Conservation de la Propriété Foncière", ar: "الإدارة العامة للملكية العقارية", en: "Land Registry (Conservation Foncière)" },
         estimatedDuration: "15 min",
       }
     ]
@@ -1336,7 +1336,7 @@ export const proceduresData: Procedure[] = [
       ar: "يخضع فتح واستغلال المحلات التجارية والمهنية المفتوحة للعموم إلى ترخيص بلدي مسبق أو كراس شروط مصادق عليه. يشترط الملف إثبات الملكية أو الكراء المسجل، شهادة الوقاية من الحماية المدنية للمحلات المصنفة، ومطابقة شروط حفظ الصحة والسلامة المهنية.",
     },
     estimatedTotalCostTND: 60.0,
-    estimatedProcessingTime: "15 - 30 jours",
+    estimatedProcessingTime: { derja: "15 - 30 iyam", fr: "15 - 30 jours", ar: "15 - 30 أيام", en: "15 - 30 days" },
     urgencyLevel: 'medium',
     relatedOfficeTypes: ['baladiya', 'recette_finances'],
     costsBreakdown: [
@@ -1387,21 +1387,21 @@ export const proceduresData: Procedure[] = [
         stepNumber: 1,
         title: { derja: "5arraj el Patente men el 9badha", fr: "Déclaration d'existence à la Recette", ar: "التصريح بالوجود واستخراج الباتيندة من القباضة" },
         description: { derja: "A3mel matricule fiscal fel 9badha el maliya marje3 el local", fr: "Obtenir l'identifiant fiscal auprès de la Recette des Finances compétente", ar: "الحصول على المعرف الجبائي وتحديد النظام الجبائي للنشاط" },
-        targetOffice: "Recette des Finances",
+        targetOffice: { derja: "Recette des Finances", fr: "Recette des Finances", ar: "القباضة المالية", en: "Treasury Office" },
         estimatedDuration: "1 jour",
       },
       {
         stepNumber: 2,
         title: { derja: "Sobb dossier el Baladiya", fr: "Dépôt du dossier au service économique municipal", ar: "إيداع الملف بالمصلحة الاقتصادية بالبلدية" },
         description: { derja: "Hazz el dossier l'el Baladiya w 5outh récépissé de dépôt", fr: "Déposer l'ensemble des pièces requises et cahiers des charges", ar: "تقديم الملف وتوقيع الالتزام بكراس الشروط الخاص بالنشاط" },
-        targetOffice: "Baladiya",
+        targetOffice: { derja: "Baladiya", fr: "Baladiya", ar: "البلدية", en: "Municipality (Baladiya)" },
         estimatedDuration: "15 jours",
       },
       {
         stepNumber: 3,
         title: { derja: "Visite commission w istlem el rokhsa", fr: "Visite de contrôle et remise de l'arrêté", ar: "المعاينة الميدانية واستلام قرار الترخيص" },
         description: { derja: "Commission el hifdh el se77i tji tchouf el local w ta5ou el rokhsa", fr: "La commission municipale effectue la visite d'hygiène et délivre l'autorisation", ar: "قيام اللجنة الفنية بمعاينة المحل وتسليم قرار الترخيص البلدي" },
-        targetOffice: "Baladiya",
+        targetOffice: { derja: "Baladiya", fr: "Baladiya", ar: "البلدية", en: "Municipality (Baladiya)" },
         estimatedDuration: "10 jours",
       }
     ]
@@ -1431,7 +1431,7 @@ export const proceduresData: Procedure[] = [
       ar: "تُسلّم رخصة السياقة الدولية طبقاً للاتفاقيات الدولية المنظمة للجولان الطرقي (اتفاقيتا جنيف وفيينا) حصرياً من طرف النادي التونسي للسياحة والسيارات (TCT). تمكن حاملها من سياقة العربات بالخارج لأكثر من 150 دولة، ومدة صلوحيتها سنة واحدة قابلة للتجديد مصحوبة وجوباً بالرخصة الوطنية الأصلية.",
     },
     estimatedTotalCostTND: 35.0,
-    estimatedProcessingTime: "24 - 72 heures",
+    estimatedProcessingTime: { derja: "24 - 72 swaye3", fr: "24 - 72 heures", ar: "24 - 72 ساعة", en: "24 - 72 hours" },
     urgencyLevel: 'low',
     relatedOfficeTypes: ['attt', 'poste'],
     costsBreakdown: [
@@ -1477,21 +1477,21 @@ export const proceduresData: Procedure[] = [
         stepNumber: 1,
         title: { derja: "7adher les copies wel tsawer", fr: "Constituer les pièces du dossier", ar: "إعداد الوثائق والصور الشمسية" },
         description: { derja: "Copie permis, copie CIN, w 2 tsawer fond blanc", fr: "Vérifier la validité du permis tunisien original", ar: "التثبت من صلوحية رخصة السياقة التونسية وإعداد النسخ" },
-        targetOffice: "Domicile",
+        targetOffice: { derja: "Fel dar", fr: "Domicile", ar: "في المنزل", en: "At Home" },
         estimatedDuration: "10 min",
       },
       {
         stepNumber: 2,
         title: { derja: "Emchi l'el Touring Club de Tunisie", fr: "Dépôt au siège du Touring Club de Tunisie", ar: "إيداع الملف بمقر النادي التونسي للسيارات" },
         description: { derja: "Hazz el dossier l'el siège fel Rue de Hollande Tunis walla bureau régional", fr: "Se présenter au siège (Rue de Hollande, Tunis) ou délégation régionale", ar: "التوجه لمقر النادي (نهج هولندا تونس) أو الفروع الجهوية" },
-        targetOffice: "Touring Club de Tunisie",
+        targetOffice: { derja: "Touring Club de Tunisie", fr: "Touring Club de Tunisie", ar: "النادي التونسي للسياحة والسيارات", en: "Touring Club of Tunisia" },
         estimatedDuration: "15 min",
       },
       {
         stepNumber: 3,
         title: { derja: "Istlem el Permis International", fr: "Retrait du livret international", ar: "استلام دفتر رخصة السياقة الدولية" },
         description: { derja: "El permis ye7dher fi 24h walla sur place", fr: "Délivrance immédiate ou sous 24 à 48 heures", ar: "استلام الدفتر فوراً أو خلال 24 إلى 48 ساعة" },
-        targetOffice: "Touring Club de Tunisie",
+        targetOffice: { derja: "Touring Club de Tunisie", fr: "Touring Club de Tunisie", ar: "النادي التونسي للسياحة والسيارات", en: "Touring Club of Tunisia" },
         estimatedDuration: "24h",
       }
     ]
@@ -1521,7 +1521,7 @@ export const proceduresData: Procedure[] = [
       ar: "تخضع السيارات الموردة تحت النظام التوقيفي ن.ت (RS) إلى حجر التفويت بالبيع ما لم يتم تسوية وضعيتها الجبائية والديوانية. تمكن التسوية من خلاص المعاليم المستوجبة (أو الانتفاع بامتيازات قوانين المالية التخفيضية) والحصول على شهادة إبراء ديواني لتحويل التسجيل بالسلسلة التونسية العادية لدى الوكالة الفنية للنقل البري (ATTT).",
     },
     estimatedTotalCostTND: 850.0,
-    estimatedProcessingTime: "15 - 30 jours",
+    estimatedProcessingTime: { derja: "15 - 30 iyam", fr: "15 - 30 jours", ar: "15 - 30 أيام", en: "15 - 30 days" },
     urgencyLevel: 'high',
     relatedOfficeTypes: ['douane', 'attt', 'recette_finances'],
     costsBreakdown: [
@@ -1567,21 +1567,21 @@ export const proceduresData: Procedure[] = [
         stepNumber: 1,
         title: { derja: "Dépôt dossier fel Bureau Régional des Douanes", fr: "Dépôt au bureau régional des douanes", ar: "إيداع الملف بالإدارة الجهوية للديوانة" },
         description: { derja: "Hazz el dossier l'el bureau des douanes marje3 el tourabi", fr: "Déposer le dossier pour calcul de la liquidation des droits", ar: "إيداع الملف واحتساب قيمة المعاليم الديوانية المستوجبة" },
-        targetOffice: "Bureau Régional des Douanes",
+        targetOffice: { derja: "Bureau Régional des Douanes", fr: "Bureau Régional des Douanes", ar: "الإدارة الجهوية للديوانة", en: "Regional Customs Office" },
         estimatedDuration: "3 - 5 jours",
       },
       {
         stepNumber: 2,
         title: { derja: "5allas el diwana fel 9badha", fr: "Paiement de la quittance douanière", ar: "خلاص المعاليم بالقباضة الديوانية" },
         description: { derja: "5allas el montant w 5outh شهادة إبراء ديواني (Certificat d'apurement)", fr: "Régler les droits et retirer le certificat d'apurement douanier", ar: "دفع المعاليم واستلام شهادة الإبراء وخلاص الأداءات" },
-        targetOffice: "Recette des Douanes",
+        targetOffice: { derja: "Recette des Douanes", fr: "Recette des Douanes", ar: "القباضة الديوانية", en: "Customs Treasury Office" },
         estimatedDuration: "1 jour",
       },
       {
         stepNumber: 3,
         title: { derja: "Baddel carte grise fi ATTT l'série TU", fr: "Immatriculation définitive à l'ATTT", ar: "استخراج البطاقة الرمادية بالسلسلة العادية لدى ATTT" },
         description: { derja: "Hazz chhadet el ifraj l'el centre ATTT bech te5ou carte grise jdida", fr: "Présenter le certificat d'apurement au centre ATTT pour l'immatriculation TU", ar: "تقديم شهادة الإبراء لدى مصالح النقل البري واستلام البطاقة الرمادية الجديدة" },
-        targetOffice: "ATTT",
+        targetOffice: { derja: "ATTT", fr: "ATTT", ar: "الوكالة الفنية للنقل البري (ATTT)", en: "ATTT (Land Transport Technical Agency)" },
         estimatedDuration: "3 jours",
       }
     ]
@@ -1611,7 +1611,7 @@ export const proceduresData: Procedure[] = [
       ar: "يُعد التعريف بالإمضاء ومطابقة النسخ للأصل اختصاصاً مخولاً لضباط الحالة المدنية بكافة بلديات ودوائر الجمهورية التونسية والمعتمدين والعمداء (القانون عدد 103 لسنة 1994). يشترط الحضور المادي للشخص المعني والاستظهار ببطاقة التعريف الوطنية الأصلية، ويحجر التعريف بالإمضاء على الوثائق المحررة على بياض أو المخالفة للنظام العام والأخلاق الحميدة.",
     },
     estimatedTotalCostTND: 3.0,
-    estimatedProcessingTime: "10 - 15 minutes",
+    estimatedProcessingTime: { derja: "10 - 15 d9ayes", fr: "10 - 15 minutes", ar: "10 - 15 دقيقة", en: "10 - 15 minutes" },
     urgencyLevel: 'low',
     relatedOfficeTypes: ['baladiya'],
     costsBreakdown: [
@@ -1645,14 +1645,14 @@ export const proceduresData: Procedure[] = [
         stepNumber: 1,
         title: { derja: "Emchi l'el Baladiya walla Da2ira Baladiya", fr: "Présentation au guichet municipal", ar: "التوجه لشباك التعريف بالإمضاء بالبلدية أو الدائرة" },
         description: { derja: "Emchi l'a9reb baladiya m3ak el CIN wel wathaye9", fr: "Se présenter physiquement au guichet d'état civil avec sa CIN originale", ar: "الحضور الشخصي بالشباك مصحوباً بالوثائق وبطاقة التعريف" },
-        targetOffice: "Baladiya",
+        targetOffice: { derja: "Baladiya", fr: "Baladiya", ar: "البلدية", en: "Municipality (Baladiya)" },
         estimatedDuration: "5 min",
       },
       {
         stepNumber: 2,
         title: { derja: "Sa77a7 9oddem el 3awn w 5allas el timbre", fr: "Signature devant l'officier et paiement du timbre", ar: "الإمضاء بحضور الضابط ودفع معلوم الطابع البلدي" },
         description: { derja: "Sa77a7 fel registre el baladi w 5allas 3 DT", fr: "Apposer la signature sur le document et sur le registre officiel", ar: "توقيع الوثيقة بدفتر الحالة المدنية ودفع معلوم 3 دنانير" },
-        targetOffice: "Baladiya",
+        targetOffice: { derja: "Baladiya", fr: "Baladiya", ar: "البلدية", en: "Municipality (Baladiya)" },
         estimatedDuration: "5 min",
       }
     ]
@@ -1682,7 +1682,7 @@ export const proceduresData: Procedure[] = [
       ar: "تعد حجة الوفاة وحصر الإرث وثيقة رسمية وحيدة لإثبات صفة الورثة الشرعيين وتحديد أنصبتهم طبقاً لأحكام مجلة الأحوال الشخصية. يتولى تحريرها عدلا إشهاد بحضور شاهدين عارفين بالهالك وورثته، ثم تخضع للتسجيل بالقباضة المالية ومصادقة قاضي الناحية لتمكين الورثة من التصرف في التركة والحسابات البنكية والعقارات.",
     },
     estimatedTotalCostTND: 45.0,
-    estimatedProcessingTime: "7 - 15 jours",
+    estimatedProcessingTime: { derja: "7 - 15 iyam", fr: "7 - 15 jours", ar: "7 - 15 أيام", en: "7 - 15 days" },
     urgencyLevel: 'high',
     relatedOfficeTypes: ['tribunal', 'recette_finances', 'baladiya'],
     costsBreakdown: [
@@ -1728,21 +1728,21 @@ export const proceduresData: Procedure[] = [
         stepNumber: 1,
         title: { derja: "7adher madhmoun el wafet wel ouratha", fr: "Collecter les extraits d'état civil", ar: "استخراج مضامين الوفاة والولادة لكافة الورثة" },
         description: { derja: "5arraj madhmoun wafet mel Baladiya w madhamin el 3ayla kol", fr: "Retirer l'extrait de décès et les extraits de tous les descendants/conjoint", ar: "استخراج مضمون وفاة الهالك ومضامين ولادة الورثة من البلدية" },
-        targetOffice: "Baladiya",
+        targetOffice: { derja: "Baladiya", fr: "Baladiya", ar: "البلدية", en: "Municipality (Baladiya)" },
         estimatedDuration: "1 jour",
       },
       {
         stepNumber: 2,
         title: { derja: "Emchi l'2 3doul ichhed m3a 2 chhoud", fr: "Rédaction de l'acte chez l'Adoul", ar: "تحرير الحجة لدى عدلي إشهاد بحضور الشهود" },
         description: { derja: "El 3doul yektbou el hojja w y7addou les parts char3iya", fr: "Les notaires dressent l'acte et établissent la dévolution successorale", ar: "تلقي تصريحات الشهود وضبط الفريضة الشرعية وتوقيع العقد" },
-        targetOffice: "Cabinet Adoul",
+        targetOffice: { derja: "Cabinet Adoul", fr: "Cabinet Adoul", ar: "مكتب عدلي إشهاد", en: "Notary Office (Adoul)" },
         estimatedDuration: "2 jours",
       },
       {
         stepNumber: 3,
         title: { derja: "Sajjel fel 9badha w sadeda9 fel Ma7kama", fr: "Enregistrement et homologation au tribunal", ar: "التسجيل بالقباضة المالية ومصادقة قاضي الناحية" },
         description: { derja: "Sajjal fel 9badha el maliya w 5outh ta2shira mel Ma7kama el Ibtida2iya", fr: "Enregistrer l'acte à la Recette et faire apposer le visa du juge cantonal", ar: "تسجيل الحجة بالقباضة واستكمال الإمضاء القضائي لتصبح نافذة المفعول" },
-        targetOffice: "Recette des Finances & Tribunal",
+        targetOffice: { derja: "Recette des Finances & Tribunal", fr: "Recette des Finances & Tribunal", ar: "القباضة المالية والمحكمة", en: "Treasury Office & Court" },
         estimatedDuration: "5 jours",
       }
     ]
@@ -1771,7 +1771,7 @@ export const proceduresData: Procedure[] = [
       ar: "يجب التصريح بكل ولادة في الجمهورية التونسية لدى ضابط الحالة المدنية للبلدية التي وقعت فيها الولادة في أجل أقصاه 10 أيام من تاريخ الوضع (القانون عدد 3 لسنة 1957 المنظم للحالة المدنية). في صورة انقضاء هذا الأجل القانوني، لا يمكن ترسيم الولادة إلا بمقتضى إذن قضائي صادر عن رئيس المحكمة الابتدائية المختصة.",
     },
     estimatedTotalCostTND: 0.0,
-    estimatedProcessingTime: "15 minutes",
+    estimatedProcessingTime: { derja: "15 d9aye9a", fr: "15 minutes", ar: "15 دقيقة", en: "15 minutes" },
     urgencyLevel: 'high',
     relatedOfficeTypes: ['baladiya', 'hopital'],
     costsBreakdown: [
@@ -1805,21 +1805,21 @@ export const proceduresData: Procedure[] = [
         stepNumber: 1,
         title: { derja: "5outh chhadet el wilada mel sbitar", fr: "Récupérer le certificat d'accouchement", ar: "استلام شهادة الولادة من المستشفى أو المصحة" },
         description: { derja: "El clinique walla sbitar ya3tiwk chhadet el wilada msa77a mel tbib", fr: "L'établissement de santé délivre l'attestation avec date et heure exactes", ar: "تسلم الشهادة الطبية متضمنة تاريخ وساعة الولادة وجنس المولود" },
-        targetOffice: "Hôpital / Clinique",
+        targetOffice: { derja: "Sbitar / Clinique", fr: "Hôpital / Clinique", ar: "المستشفى / المصحة", en: "Hospital / Clinic" },
         estimatedDuration: "1 jour",
       },
       {
         stepNumber: 2,
         title: { derja: "Emchi l'el Baladiya fi a9al men 10 ayem", fr: "Déclaration à la Baladiya (Délai : 10 jours)", ar: "التصريح بالبلدية خلال أجل أقصاه 10 أيام" },
         description: { derja: "Emchi l'service état civil fel Baladiya mte3 blaset el wilada", fr: "Présenter le certificat et le livret de famille à l'officier d'état civil", ar: "تقديم الوثائق لضابط الحالة المدنية وترسيم اسم المولود بدفاتر الولادات" },
-        targetOffice: "Baladiya",
+        targetOffice: { derja: "Baladiya", fr: "Baladiya", ar: "البلدية", en: "Municipality (Baladiya)" },
         estimatedDuration: "15 min",
       },
       {
         stepNumber: 3,
         title: { derja: "5arraj el madhamin (Extraits de naissance)", fr: "Retrait immédiat des extraits de naissance", ar: "استلام مضامين الولادة الأصلية للمولود" },
         description: { derja: "5arraj des extraits de naissance jdod (Madhmoun) b'500 millimes", fr: "L'officier remet sur-le-champ les extraits de naissance officiels", ar: "تسلم مضامين الولادة فوراً بعد الترسيم لاستعمالها في ملفات CNAM والتغطية" },
-        targetOffice: "Baladiya",
+        targetOffice: { derja: "Baladiya", fr: "Baladiya", ar: "البلدية", en: "Municipality (Baladiya)" },
         estimatedDuration: "5 min",
       }
     ]
@@ -1849,7 +1849,7 @@ export const proceduresData: Procedure[] = [
       ar: "تخضع الشهادات والمؤهلات الجامعية المسلمة من مؤسسات التعليم العالي الأجنبية إلى وجوبية المعادلة من طرف الإدارة العامة للتعليم العالي بوزارة التعليم العالي والبحث العلمي (الأمر عدد 912 لسنة 2007). تعتبر المعادلة شرطاً جوهرياً للترشح للمناظرات الوطنية بالوظيفة العمومية والترسيم بالعمادات والمهن المنظمة.",
     },
     estimatedTotalCostTND: 40.0,
-    estimatedProcessingTime: "60 - 90 jours",
+    estimatedProcessingTime: { derja: "60 - 90 iyam", fr: "60 - 90 jours", ar: "60 - 90 أيام", en: "60 - 90 days" },
     urgencyLevel: 'medium',
     relatedOfficeTypes: ['ministere', 'poste'],
     costsBreakdown: [
@@ -1902,21 +1902,21 @@ export const proceduresData: Procedure[] = [
         stepNumber: 1,
         title: { derja: "3ammer el مطلب en ligne 3al site mesrs.tn", fr: "Saisie de la demande sur le portail MESRS", ar: "تعمير مطلب المعادلة عبر المنصة الرقمية للوزارة" },
         description: { derja: "Ed5ol 3al site mte3 wizarat el ta3lim el 3ali w 3ammer el formulaire", fr: "Créer un compte sur mesrs.tn et saisir le cursus d'études", ar: "تسجيل المطلب بالمنظومة الإلكترونية وإدراج البيانات الأكاديمية" },
-        targetOffice: "En ligne (mesrs.tn)",
+        targetOffice: { derja: "En ligne (mesrs.tn)", fr: "En ligne (mesrs.tn)", ar: "عبر الإنترنت (mesrs.tn)", en: "Online (mesrs.tn)" },
         estimatedDuration: "20 min",
       },
       {
         stepNumber: 2,
         title: { derja: "Sobb el dossier fel Bureau d'Ordre mte3 el Wihara", fr: "Dépôt physique ou postal au Ministère", ar: "إيداع الملف الورقي بمكتب الضبط بوزارة التعليم العالي" },
         description: { derja: "Hazz el dossier l'el bureau d'ordre central (Avenue Ouled Haffouz, Tunis) walla b'Rapide Poste", fr: "Déposer le dossier physique complet ou l'envoyer par lettre recommandée", ar: "تسليم الملف بمكتب الضبط المركزي (شارع أولاد حفوز تونس) أو عبر البريد السريع" },
-        targetOffice: "Ministère de l'Enseignement Supérieur",
+        targetOffice: { derja: "Ministère de l'Enseignement Supérieur", fr: "Ministère de l'Enseignement Supérieur", ar: "وزارة التعليم العالي والبحث العلمي", en: "Ministry of Higher Education" },
         estimatedDuration: "1 jour",
       },
       {
         stepNumber: 3,
         title: { derja: "Moutaba3et el commission w istlem el 9arar", fr: "Instruction en commission et notification", ar: "متابعة مداولات اللجنة واستلام قرار المعادلة" },
         description: { derja: "Taba3 dossierk en ligne 7atta to5rej l'attestation d'équivalence officielle", fr: "Suivre l'état du dossier jusqu'à la publication de l'attestation d'équivalence", ar: "متابعة القرار وسحب شهادة المعادلة الرسمية للاستظهار بها لدى الإدارات" },
-        targetOffice: "Ministère de l'Enseignement Supérieur",
+        targetOffice: { derja: "Ministère de l'Enseignement Supérieur", fr: "Ministère de l'Enseignement Supérieur", ar: "وزارة التعليم العالي والبحث العلمي", en: "Ministry of Higher Education" },
         estimatedDuration: "60 jours",
       }
     ]
@@ -1945,7 +1945,7 @@ export const proceduresData: Procedure[] = [
       ar: "تسند المنح والقروض الجامعية الوطنية من طرف دواوين الخدمات الجامعية الثلاثة (ديوان الشمال، ديوان الوسط، وديوان الجنوب) للطلبة التونسيين المسجلين بمؤسسات التعليم العالي العمومي. يتم إيداع المطالب وجوباً عبر المنصات الرقمية للدواوين إثر التوجيه الجامعي، ويخضع الإسناد لمقاييس الدخل السنوي الإجمالي للأولياء والعبء العائلي.",
     },
     estimatedTotalCostTND: 0.0,
-    estimatedProcessingTime: "30 - 45 jours",
+    estimatedProcessingTime: { derja: "30 - 45 iyam", fr: "30 - 45 jours", ar: "30 - 45 أيام", en: "30 - 45 days" },
     urgencyLevel: 'medium',
     relatedOfficeTypes: ['ministere', 'poste'],
     costsBreakdown: [
@@ -1990,21 +1990,21 @@ export const proceduresData: Procedure[] = [
         stepNumber: 1,
         title: { derja: "3ammer el candidature en ligne 3al site OOUS", fr: "Candidature sur le portail de l'Office", ar: "التسجيل بالمنظومة الإلكترونية لديوان الخدمات الجامعية" },
         description: { derja: "Ed5ol 3al site mte3 l'Office marje3 el tourabi (ooun.rnu.tn / oouc.rnu.tn / oous.rnu.tn)", fr: "Remplir le formulaire en ligne avec les données de revenus familiaux", ar: "إدراج معطيات الدخل العائلي ومقر السكنى والترسيم الجامعي" },
-        targetOffice: "En ligne",
+        targetOffice: { derja: "En ligne", fr: "En ligne", ar: "عبر الإنترنت", en: "Online" },
         estimatedDuration: "15 min",
       },
       {
         stepNumber: 2,
         title: { derja: "Eb3ath el dossier el war9i b'Rapide Poste", fr: "Envoi du dossier physique par Rapide Poste", ar: "إرسال الملف الورقي المدعم عبر البريد السريع" },
         description: { derja: "Ijm3 el wra9 el koll w eb3athhoum fel delai l'adresse mte3 l'Office", fr: "Envoyer le dossier complet avec la fiche imprimée avant la date limite", ar: "توجيه الوثائق المؤيدة مع الاستمارة قبل انقضاء الأجل الرسمي للترشح" },
-        targetOffice: "Poste Tunisienne",
+        targetOffice: { derja: "Poste Tunisienne", fr: "Poste Tunisienne", ar: "البريد التونسي", en: "Tunisian Post" },
         estimatedDuration: "1 jour",
       },
       {
         stepNumber: 3,
         title: { derja: "Taba3 el nate2ej w versements el men7a", fr: "Publication des résultats et versement des tranches", ar: "الإعلان عن النتائج وصرف أقساط المنحة بالحساب" },
         description: { derja: "Taba3 el résultat en ligne w el men7a tetsabb kol trimestre 3al compte", fr: "Consulter la décision d'octroi et versement trimestriel sur le compte", ar: "الاطلاع على قائمة المقبولين وصرف المنحة دورياً بالحساب البنكي أو البريدي" },
-        targetOffice: "En ligne / OOUS",
+        targetOffice: { derja: "En ligne / OOUS", fr: "En ligne / OOUS", ar: "عبر الإنترنت / ديوان الخدمات الجامعية", en: "Online / OOUS" },
         estimatedDuration: "30 jours",
       }
     ]

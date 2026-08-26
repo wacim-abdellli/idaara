@@ -3,7 +3,7 @@ import { ConcoursItem } from '../types/concours';
 export const concoursData: ConcoursItem[] = [
   {
     id: 'steg-recrutement-ingenieurs-2026',
-    institution: 'STEG',
+    institution: { derja: 'STEG', fr: 'STEG', ar: 'الشركة التونسية للكهرباء والغاز (STEG)', en: 'STEG (Tunisian Electricity & Gas Company)' },
     referenceNumber: 'STEG/RH/2026/01',
     category: 'energy_industry',
     educationLevel: 'ingenieur',
@@ -105,7 +105,7 @@ export const concoursData: ConcoursItem[] = [
   },
   {
     id: 'education-capes-professeurs-2026',
-    institution: "Ministère de l'Éducation",
+    institution: { derja: "Ministère de l'Éducation", fr: "Ministère de l'Éducation", ar: 'وزارة التربية', en: 'Ministry of Education' },
     referenceNumber: 'ED-CAPES-2026',
     category: 'education',
     educationLevel: 'master',
@@ -189,7 +189,7 @@ export const concoursData: ConcoursItem[] = [
   },
   {
     id: 'sonede-techniciens-superieurs-2026',
-    institution: 'SONEDE',
+    institution: { derja: 'SONEDE', fr: 'SONEDE', ar: 'الشركة الوطنية لاستغلال وتوزيع المياه (SONEDE)', en: 'SONEDE (National Water Distribution Company)' },
     referenceNumber: 'SONEDE/REC/2026/02',
     category: 'energy_industry',
     educationLevel: 'technicien',
@@ -267,7 +267,7 @@ export const concoursData: ConcoursItem[] = [
   },
   {
     id: 'finances-inspecteurs-impots-2026',
-    institution: 'Direction Générale des Impôts (DGI)',
+    institution: { derja: 'Direction Générale des Impôts (DGI)', fr: 'Direction Générale des Impôts (DGI)', ar: 'الديوان العام للأداءات (DGI)', en: 'General Directorate of Taxes (DGI)' },
     referenceNumber: 'MF-DGI-2026-01',
     category: 'finance',
     educationLevel: 'master',
@@ -351,7 +351,7 @@ export const concoursData: ConcoursItem[] = [
   },
   {
     id: 'sante-medecins-infirmiers-2026',
-    institution: 'Ministère de la Santé Publique',
+    institution: { derja: 'Ministère de la Santé Publique', fr: 'Ministère de la Santé Publique', ar: 'وزارة الصحة العمومية', en: 'Ministry of Public Health' },
     referenceNumber: 'MSP-REC-2026',
     category: 'health',
     educationLevel: 'licence',
@@ -429,7 +429,7 @@ export const concoursData: ConcoursItem[] = [
   },
   {
     id: 'mtc-cybersecurite-cloud-2026',
-    institution: 'ANSI / Ministère des Technologies de la Communication',
+    institution: { derja: 'ANSI / Ministère des Technologies de la Communication', fr: 'ANSI / Ministère des Technologies de la Communication', ar: 'الوكالة الوطنية للسلامة السيبرنية / وزارة تكنولوجيات الاتصال', en: 'ANSI / Ministry of Communication Technologies' },
     referenceNumber: 'MTC-ANSI-2026/04',
     category: 'tech_telecom',
     educationLevel: 'ingenieur',
@@ -507,7 +507,7 @@ export const concoursData: ConcoursItem[] = [
   },
   {
     id: 'interieur-protection-civile-officiers-2026',
-    institution: 'Office National de la Protection Civile (ONPC)',
+    institution: { derja: 'Office National de la Protection Civile (ONPC)', fr: 'Office National de la Protection Civile (ONPC)', ar: 'الديوان الوطني للحماية المدنية (ONPC)', en: 'National Office of Civil Protection (ONPC)' },
     referenceNumber: 'ONPC-REC-2026-03',
     category: 'interior_security',
     educationLevel: 'bac',
@@ -603,7 +603,7 @@ export const concoursData: ConcoursItem[] = [
   },
   {
     id: 'poste-tunisienne-guichetiers-2026',
-    institution: 'La Poste Tunisienne (البريد التونسي)',
+    institution: { derja: 'La Poste Tunisienne (El Bosta)', fr: 'La Poste Tunisienne (البريد التونسي)', ar: 'البريد التونسي', en: 'Tunisian Post Office' },
     referenceNumber: 'POSTE/RH/2026/02',
     category: 'transport_postal',
     educationLevel: 'bac',

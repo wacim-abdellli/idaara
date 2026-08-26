@@ -110,7 +110,7 @@ export default function CopilotPage() {
 
       try {
         const savedSessions = localStorage.getItem(STORAGE_SESSIONS_KEY);
-        let loadedSessions: ChatSession[] = [];
+        const loadedSessions: ChatSession[] = [];
         if (savedSessions) {
           const parsed = JSON.parse(savedSessions);
           if (Array.isArray(parsed)) {
@@ -122,6 +122,7 @@ export default function CopilotPage() {
                 loadedSessions.push(s);
               }
             }
+            // eslint-disable-next-line react-hooks/set-state-in-effect -- hydration-safe localStorage restore
             setSessions(loadedSessions);
             localStorage.setItem(STORAGE_SESSIONS_KEY, JSON.stringify(loadedSessions));
           }
@@ -131,7 +132,9 @@ export default function CopilotPage() {
         if (savedActiveId && loadedSessions.length > 0) {
           const activeSession = loadedSessions.find((s) => s.id === savedActiveId);
           if (activeSession) {
+            // eslint-disable-next-line react-hooks/set-state-in-effect -- hydration-safe localStorage restore
             setCurrentSessionId(activeSession.id);
+            // eslint-disable-next-line react-hooks/set-state-in-effect -- hydration-safe localStorage restore
             setMessages(activeSession.messages || []);
           }
         }
@@ -145,7 +148,10 @@ export default function CopilotPage() {
       if (q && q.trim()) {
         // Sanitize: max 500 chars, strip control characters
         const sanitized = q.trim().slice(0, 500).replace(/[\x00-\x1F\x7F]/g, '');
-        if (sanitized.length > 0) handleSendMessage(sanitized);
+        if (sanitized.length > 0) {
+          // eslint-disable-next-line react-hooks/immutability -- intentional one-shot deep-link handling on mount
+          handleSendMessage(sanitized);
+        }
       }
     }
 
@@ -167,6 +173,7 @@ export default function CopilotPage() {
         const firstUserMsg = messages.find((m) => m.sender === 'user')?.content || 'Discussion';
         const defaultTitle = firstUserMsg.slice(0, 32) + (firstUserMsg.length > 32 ? '...' : '');
 
+        // eslint-disable-next-line react-hooks/set-state-in-effect -- persists messages & auto-title into the sessions list on every change
         setSessions((prev) => {
           const exists = prev.find((s) => s.id === currentSessionId);
           let updated: ChatSession[];

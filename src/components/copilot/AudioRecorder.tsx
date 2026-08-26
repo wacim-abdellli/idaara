@@ -57,10 +57,6 @@ export const AudioRecorder: React.FC<AudioRecorderProps> = ({
   const finalTranscriptRef = useRef<string>('');
   const isRecordingRef = useRef(false);
 
-  useEffect(() => {
-    return () => cleanup();
-  }, []);
-
   const cleanup = () => {
     if (timerRef.current) {
       clearInterval(timerRef.current);
@@ -76,6 +72,10 @@ export const AudioRecorder: React.FC<AudioRecorderProps> = ({
     }
     isRecordingRef.current = false;
   };
+
+  useEffect(() => {
+    return () => cleanup();
+  }, []);
 
   const startRecording = async () => {
     cleanup();
@@ -361,7 +361,7 @@ export const AudioRecorder: React.FC<AudioRecorderProps> = ({
           <div className="min-h-[44px] w-full my-2 flex items-center justify-center px-3 z-10">
             {isRecording && interimText ? (
               <p className="text-emerald-300 font-bold text-xs sm:text-sm tracking-wide line-clamp-2 bg-zinc-950/80 border border-emerald-500/30 px-3 py-1.5 rounded-xl">
-                "{interimText}"
+                “{interimText}”
               </p>
             ) : isProcessing ? (
               <div className="flex items-center gap-2 text-emerald-400 text-xs font-semibold">

@@ -31,7 +31,7 @@ export interface StepGuide {
   stepNumber: number;
   title: LocalizedString;
   description: LocalizedString;
-  targetOffice: string;
+  targetOffice: LocalizedString;
   estimatedDuration: string;
   tips?: LocalizedString;
 }
@@ -46,7 +46,7 @@ export interface Procedure {
   iconName: string;
   tags: string[];
   estimatedTotalCostTND: number;
-  estimatedProcessingTime: string;
+  estimatedProcessingTime: LocalizedString;
   urgencyLevel?: 'low' | 'medium' | 'high';
   requiredDocuments: RequiredDocument[];
   costsBreakdown: TimbreCostItem[];

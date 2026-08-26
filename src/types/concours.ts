@@ -26,7 +26,7 @@ export interface ConcoursItem {
   id: string;
   title: LocalizedString;
   ministry: LocalizedString;
-  institution: string; // e.g. "STEG", "SONEDE", "Ministère de l'Éducation"
+  institution: LocalizedString; // e.g. "STEG", "SONEDE", "Ministère de l'Éducation"
   category: ConcoursCategory;
   educationLevel: EducationLevel;
   positionsCount: number;

@@ -24,7 +24,7 @@ export function filterConcours(
     if (q) {
       const title = (item.title.fr + ' ' + item.title.ar + ' ' + item.title.derja + ' ' + (item.title.en || '')).toLowerCase();
       const ministry = (item.ministry.fr + ' ' + item.ministry.ar + ' ' + item.ministry.derja + ' ' + (item.ministry.en || '')).toLowerCase();
-      const inst = item.institution.toLowerCase();
+      const inst = (item.institution.fr + ' ' + item.institution.ar + ' ' + item.institution.derja + ' ' + (item.institution.en || '')).toLowerCase();
       const ref = item.referenceNumber.toLowerCase();
 
       const matches =
@@ -86,7 +86,7 @@ export function buildConcoursGroundingPrompt(query: string, locale: string = 'de
     const docs = c.requiredDocuments.map((d) => `- ${getLocalized(d, locale)}`).join('\n');
     const conditions = c.conditions.map((cond) => `- ${getLocalized(cond, locale)}`).join('\n');
 
-    promptContext += `--- OFFICIAL FRAMEWORK: ${title} (${c.institution}) ---
+    promptContext += `--- OFFICIAL FRAMEWORK: ${title} (${getLocalized(c.institution, locale)}) ---
 - Organisme / Ministère: ${ministry}
 - Cadre Juridique: Décrets d'organisation de la fonction publique (JORT)
 - Niveau d'Études Requis: ${c.educationLevel.toUpperCase()}

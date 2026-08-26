@@ -710,7 +710,7 @@ export default function ProceduresPage() {
                             <span className="text-zinc-600 text-xs">·</span>
                             <span className="font-mono text-[11px] text-zinc-400 flex items-center gap-1">
                               <Clock className="w-3 h-3 text-zinc-500" />
-                              <span>{proc.estimatedProcessingTime}</span>
+                              <span>{getLocalized(proc.estimatedProcessingTime, locale)}</span>
                             </span>
                           </div>
                           <h3 className="text-sm sm:text-base font-bold text-white group-hover:text-emerald-300 transition-colors leading-snug">

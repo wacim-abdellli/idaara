@@ -63,12 +63,13 @@ export const CommandPalette: React.FC = () => {
 
   // Focus input when modal opens
   useEffect(() => {
-    if (isOpen) {
-      setTimeout(() => inputRef.current?.focus(), 50);
+    if (!isOpen) return;
+    const timer = setTimeout(() => {
+      inputRef.current?.focus();
       setSelectedIndex(0);
-    } else {
       setQuery('');
-    }
+    }, 50);
+    return () => clearTimeout(timer);
   }, [isOpen]);
 
   // Build searchable index
@@ -183,7 +184,7 @@ export const CommandPalette: React.FC = () => {
         id: `proc-${p.id}`,
         category: 'procedure',
         title: getLocalized(p.title, locale),
-        subtitle: `${p.estimatedProcessingTime} · ${p.estimatedTotalCostTND.toFixed(3)} DT`,
+        subtitle: `${getLocalized(p.estimatedProcessingTime, locale)} · ${p.estimatedTotalCostTND.toFixed(3)} DT`,
         url: `/procedures/${p.id}`,
         badge: locale === 'ar' ? 'دليل' : locale === 'derja' ? 'Dalil' : locale === 'en' ? 'Guide' : 'Guide',
         icon: BookOpen,

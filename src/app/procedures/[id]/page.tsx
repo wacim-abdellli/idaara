@@ -80,7 +80,7 @@ export default function ProcedureDetailPage({
                   : locale === 'en'
                   ? 'Est. duration:'
                   : 'Délai estimé :'}{' '}
-                <strong className="text-zinc-200 font-semibold">{procedure.estimatedProcessingTime}</strong>
+                <strong className="text-zinc-200 font-semibold">{getLocalized(procedure.estimatedProcessingTime, locale)}</strong>
               </span>
             </span>
           </div>
@@ -167,7 +167,7 @@ export default function ProcedureDetailPage({
                       <div className="flex flex-wrap items-center gap-3 pt-1 text-[11px] text-zinc-500">
                         <span className="flex items-center gap-1 text-emerald-400 font-semibold">
                           <Building2 className="w-3.5 h-3.5" />
-                          <span>{step.targetOffice}</span>
+                          <span>{getLocalized(step.targetOffice, locale)}</span>
                         </span>
                         <span className="flex items-center gap-1">
                           <Clock className="w-3.5 h-3.5" />

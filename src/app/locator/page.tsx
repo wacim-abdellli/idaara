@@ -1,9 +1,13 @@
 'use client';
 
 import React, { useState } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
 import { publicOfficesData, GOVERNORATES_LIST } from '../../data/offices';
 import { OfficeCard } from '../../components/locator/OfficeCard';
 import { useLocale } from '../../context/LocaleContext';
+import { SpotlightCard } from '../../components/motion/SpotlightCard';
+import { FadeIn, FadeInStagger, FadeInItem } from '../../components/motion/FadeInStagger';
+import { AmbientOrbs } from '../../components/motion/AmbientOrbs';
 import { MapPin, Search, Moon, Sun, Clock, Building2, Navigation2, PhoneCall } from 'lucide-react';
 
 export default function LocatorPage() {
@@ -348,12 +352,15 @@ export default function LocatorPage() {
   ];
 
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-10 space-y-10">
+    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-10 space-y-10 relative overflow-hidden">
+
+      {/* Cinematic Ambient Glow */}
+      <AmbientOrbs variant="emerald" />
 
       {/* ── 2-Column Hero Header (Balances Left & Right space) ── */}
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center pb-4 border-b border-zinc-800/80">
+      <FadeIn direction="up" className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center pb-4 border-b border-zinc-800/80 relative">
         {/* Left: Titles & Context */}
-        <div className="lg:col-span-7 space-y-3">
+        <div className="lg:col-span-7 space-y-3 relative z-10">
           <div className="flex items-center gap-2 text-xs font-mono text-zinc-500 uppercase tracking-widest">
             <span className="text-emerald-400 font-bold">/</span>
             <span>
@@ -371,12 +378,15 @@ export default function LocatorPage() {
             <span className="display-heading block text-3xl sm:text-5xl text-[#F5F4F0]">
               {headlineMain}
             </span>
-            <span
+            <motion.span
+              initial={{ opacity: 0, scale: 0.95 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ duration: 0.5, delay: 0.2 }}
               className="display-heading block text-3xl sm:text-5xl italic"
               style={{ color: 'var(--stamp-green)' }}
             >
               {headlineAccent}
-            </span>
+            </motion.span>
           </h1>
 
           <p className="text-xs sm:text-sm text-zinc-400 leading-relaxed max-w-xl pt-1">
@@ -385,44 +395,54 @@ export default function LocatorPage() {
         </div>
 
         {/* Right: Coverage & Radar Hub Widget (Fills empty space) */}
-        <div className="lg:col-span-5">
-          <div className="glass-panel rounded-3xl p-4 sm:p-5 border border-zinc-800/90 bg-gradient-to-br from-zinc-900/80 via-zinc-900/50 to-zinc-950 shadow-xl space-y-3">
+        <div className="lg:col-span-5 relative z-10">
+          <SpotlightCard className="p-4 sm:p-5 border-zinc-800/90 shadow-xl space-y-3">
             <div className="flex items-center justify-between text-xs pb-2.5 border-b border-zinc-800">
               <span className="font-bold uppercase tracking-wider text-[10px] text-zinc-400 flex items-center gap-1.5">
                 <Navigation2 className="w-3.5 h-3.5 text-emerald-400" />
-                <span>{locale === 'ar' ? 'الشبكة الإدارية الوطنية' : locale === 'derja' ? 'Echbéka el idariya el wataniya' : locale === 'en' ? 'Territorial Civic Radar' : 'Réseau Administratif National'}</span>
+                <span>
+                  {locale === 'ar'
+                    ? 'الشبكة الإدارية الوطنية'
+                    : locale === 'derja'
+                    ? 'Echbéka el idariya el wataniya'
+                    : locale === 'en'
+                    ? 'Territorial Civic Radar'
+                    : 'Réseau Administratif National'}
+                </span>
               </span>
-              <span className="text-[10px] font-mono text-emerald-400 bg-emerald-950/60 border border-emerald-800/50 px-2 py-0.5 rounded-full">
+              <span className="text-[10px] font-mono text-emerald-400 bg-emerald-950/60 border border-emerald-800/50 px-2 py-0.5 rounded-full font-bold">
                 24 Wilayas
               </span>
             </div>
 
             <div className="grid grid-cols-2 gap-2">
               {coverageSpecs.map((spec, idx) => (
-                <div
+                <motion.div
                   key={idx}
-                  className="p-2.5 rounded-xl bg-zinc-950/60 border border-zinc-800/80 flex flex-col justify-between"
+                  whileHover={{ y: -2 }}
+                  transition={{ duration: 0.15 }}
+                  className="p-2.5 rounded-xl bg-zinc-950/60 border border-zinc-800/80 flex flex-col justify-between hover:border-emerald-500/30 transition-colors"
                 >
                   <div className="flex items-center justify-between mb-1">
                     <span className="font-bold text-xs text-white truncate">
                       {spec.title}
                     </span>
-                    <span className="text-[9px] font-mono text-emerald-400">
+                    <span className="text-[9px] font-mono text-emerald-400 font-semibold">
                       {spec.tag}
                     </span>
                   </div>
                   <span className="text-[9px] text-zinc-500 line-clamp-1">
                     {spec.desc}
                   </span>
-                </div>
+                </motion.div>
               ))}
             </div>
-          </div>
+          </SpotlightCard>
         </div>
-      </div>
+      </FadeIn>
 
       {/* ── Schedule Season Control Banner ── */}
-      <div className="p-4 sm:p-5 rounded-2xl glass-panel border border-zinc-800/80 flex flex-col md:flex-row md:items-center justify-between gap-4">
+      <FadeIn direction="up" delay={0.1} className="p-4 sm:p-5 rounded-2xl glass-panel border border-zinc-800/80 flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div className="space-y-0.5">
           <div className="flex items-center gap-2 text-xs font-bold text-zinc-200">
             <Clock className="w-3.5 h-3.5 text-emerald-400" />
@@ -449,28 +469,32 @@ export default function LocatorPage() {
 
         <div className="flex items-center gap-1.5 bg-zinc-950 p-1.5 rounded-2xl border border-zinc-800">
           {scheduleButtons.map(({ id, icon, label, active, idle }) => (
-            <button
+            <motion.button
               key={id}
               onClick={() => setScheduleMode(id)}
+              whileHover={{ scale: 1.02 }}
+              whileTap={{ scale: 0.97 }}
               className={`px-3.5 py-1.5 rounded-xl text-xs font-semibold flex items-center gap-1.5 transition-all cursor-pointer ${
                 scheduleMode === id ? active : idle
               }`}
             >
               {icon}
               <span>{label}</span>
-            </button>
+            </motion.button>
           ))}
         </div>
-      </div>
+      </FadeIn>
 
       {/* ── Quick Regions Bar ── */}
-      <div className="flex items-center gap-2 overflow-x-auto pb-1 scrollbar-none">
+      <FadeIn direction="up" delay={0.15} className="flex items-center gap-2 overflow-x-auto pb-1 scrollbar-none">
         {regions.map((r) => {
           const isSelected = (r.id === 'all' && selectedGovernorate === 'all') || selectedGovernorate === r.id;
           return (
-            <button
+            <motion.button
               key={r.id}
               onClick={() => setSelectedGovernorate(r.id)}
+              whileHover={{ y: -1 }}
+              whileTap={{ scale: 0.95 }}
               className={`px-3.5 py-1.5 rounded-xl text-xs font-semibold whitespace-nowrap transition-all border shrink-0 cursor-pointer ${
                 isSelected
                   ? 'bg-emerald-500 text-zinc-950 border-emerald-400 font-bold shadow-sm'
@@ -478,13 +502,13 @@ export default function LocatorPage() {
               }`}
             >
               {r.label}
-            </button>
+            </motion.button>
           );
         })}
-      </div>
+      </FadeIn>
 
       {/* ── Filter Dropdowns & Search ── */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+      <FadeIn direction="up" delay={0.2} className="grid grid-cols-1 md:grid-cols-3 gap-3">
         {/* Governorate */}
         <div className="space-y-1.5">
           <label className="block text-[10px] font-bold text-zinc-500 uppercase tracking-wider">
@@ -548,10 +572,10 @@ export default function LocatorPage() {
             />
           </div>
         </div>
-      </div>
+      </FadeIn>
 
       {/* ── Results Count ── */}
-      <div className="flex items-center justify-between text-xs text-zinc-500 px-1">
+      <FadeIn direction="up" delay={0.25} className="flex items-center justify-between text-xs text-zinc-500 px-1">
         <span>
           {filteredOffices.length > 0
             ? locale === 'ar'
@@ -563,42 +587,56 @@ export default function LocatorPage() {
               : `${filteredOffices.length} organisme${filteredOffices.length > 1 ? 's' : ''} répertorié${filteredOffices.length > 1 ? 's' : ''}`
             : ''}
         </span>
-      </div>
+      </FadeIn>
 
       {/* ── Offices Grid ── */}
-      {filteredOffices.length > 0 ? (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-          {filteredOffices.map((office) => (
-            <OfficeCard
-              key={office.id}
-              office={office}
-              activeScheduleMode={scheduleMode}
-            />
-          ))}
-        </div>
-      ) : (
-        <div className="glass-panel rounded-3xl p-16 text-center border border-zinc-800">
-          <Building2 className="w-10 h-10 mx-auto text-zinc-700 mb-4" />
-          <h3 className="text-sm font-bold text-zinc-400 mb-1">
-            {locale === 'ar'
-              ? 'لا توجد نتائج'
-              : locale === 'derja'
-              ? 'Ma l9inéch masla7a'
-              : locale === 'en'
-              ? 'No offices found'
-              : 'Aucun organisme trouvé'}
-          </h3>
-          <p className="text-xs text-zinc-600">
-            {locale === 'ar'
-              ? 'حاول تعديل المرشحات أو تغيير الولاية.'
-              : locale === 'derja'
-              ? 'Baddel el filtre walla el wilaya bech tal9a el masale7.'
-              : locale === 'en'
-              ? 'Try changing the filters or governorate.'
-              : 'Essayez de modifier les filtres ou le gouvernorat.'}
-          </p>
-        </div>
-      )}
+      <AnimatePresence mode="popLayout">
+        {filteredOffices.length > 0 ? (
+          <FadeInStagger
+            key={`${selectedGovernorate}-${selectedCategory}-${searchQuery}`}
+            faster
+            className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4"
+          >
+            {filteredOffices.map((office) => (
+              <FadeInItem key={office.id}>
+                <OfficeCard
+                  office={office}
+                  activeScheduleMode={scheduleMode}
+                />
+              </FadeInItem>
+            ))}
+          </FadeInStagger>
+        ) : (
+          <motion.div
+            key="no-results"
+            initial={{ opacity: 0, scale: 0.98 }}
+            animate={{ opacity: 1, scale: 1 }}
+            exit={{ opacity: 0, scale: 0.98 }}
+            transition={{ duration: 0.25 }}
+            className="glass-panel rounded-3xl p-16 text-center border border-zinc-800"
+          >
+            <Building2 className="w-10 h-10 mx-auto text-zinc-700 mb-4" />
+            <h3 className="text-sm font-bold text-zinc-400 mb-1">
+              {locale === 'ar'
+                ? 'لا توجد نتائج'
+                : locale === 'derja'
+                ? 'Ma l9inéch masla7a'
+                : locale === 'en'
+                ? 'No offices found'
+                : 'Aucun organisme trouvé'}
+            </h3>
+            <p className="text-xs text-zinc-600">
+              {locale === 'ar'
+                ? 'حاول تعديل المرشحات أو تغيير الولاية.'
+                : locale === 'derja'
+                ? 'Baddel el filtre walla el wilaya bech tal9a el masale7.'
+                : locale === 'en'
+                ? 'Try changing the filters or governorate.'
+                : 'Essayez de modifier les filtres ou le gouvernorat.'}
+            </p>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   );
 }

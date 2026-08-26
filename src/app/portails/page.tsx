@@ -60,6 +60,7 @@ export default function PortailsPage() {
     try {
       const saved = localStorage.getItem('idaara_portal_favorites');
       if (saved) {
+        // eslint-disable-next-line react-hooks/set-state-in-effect -- hydration-safe localStorage restore
         setFavorites(JSON.parse(saved));
       }
     } catch {
@@ -505,7 +506,9 @@ export default function PortailsPage() {
                     <div className="flex items-center gap-1 shrink-0">
                       <button
                         onClick={() => toggleFavorite(portal.id)}
-                        title={isFav ? 'Retirer des favoris' : 'Ajouter aux favoris'}
+                        title={isFav
+                          ? (locale === 'ar' ? 'إزالة من المفضلة' : locale === 'derja' ? 'Retirer des favoris' : locale === 'en' ? 'Remove from favorites' : 'Retirer des favoris')
+                          : (locale === 'ar' ? 'أضف إلى المفضلة' : locale === 'derja' ? 'Ajouter aux favoris' : locale === 'en' ? 'Add to favorites' : 'Ajouter aux favoris')}
                         className={`p-1.5 rounded-lg border transition-colors cursor-pointer ${
                           isFav
                             ? 'bg-amber-500/15 border-amber-500/30 text-amber-400'
@@ -516,7 +519,7 @@ export default function PortailsPage() {
                       </button>
                       <button
                         onClick={() => handleCopyUrl(portal.url, portal.id)}
-                        title="Copier le lien"
+                        title={locale === 'ar' ? 'نسخ الرابط' : locale === 'derja' ? 'Copier le lien' : locale === 'en' ? 'Copy link' : 'Copier le lien'}
                         className="p-1.5 rounded-lg bg-zinc-900 border border-zinc-800 text-zinc-500 hover:text-zinc-300 transition-colors cursor-pointer"
                       >
                         {isCopied ? <Check className="w-3.5 h-3.5 text-emerald-400" /> : <Copy className="w-3.5 h-3.5" />}
@@ -529,7 +532,7 @@ export default function PortailsPage() {
                     {portal.isOnline24h ? (
                       <span className="inline-flex items-center gap-1 text-[10px] font-mono text-emerald-400 bg-emerald-500/10 px-2 py-0.5 rounded-full border border-emerald-500/20 font-medium">
                         <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
-                        24/7 En ligne
+                        {locale === 'ar' ? 'متاح 24/7' : locale === 'derja' ? '24/7 En ligne' : locale === 'en' ? '24/7 Online' : '24/7 En ligne'}
                       </span>
                     ) : (
                       <span className="inline-flex items-center gap-1 text-[10px] font-mono text-zinc-400 bg-zinc-900 px-2 py-0.5 rounded-full border border-zinc-800">
@@ -576,12 +579,20 @@ export default function PortailsPage() {
                   {/* Action Link Button */}
                   <div className="pt-3 border-t border-zinc-800/80 mt-auto flex items-center justify-between gap-2">
                     <Link
-                      href={`/copilot?q=${encodeURIComponent(`Comment utiliser le portail officiel ${portal.name} (${portal.domain}) et quelles sont les démarches ?`)}`}
+                      href={`/copilot?q=${encodeURIComponent(
+                        locale === 'ar'
+                          ? `كيفاش نستعمل البوابة الرسمية ${portal.name} (${portal.domain}) وشنوة الإجراءات؟`
+                          : locale === 'derja'
+                          ? `Kifech nesta3mel el portail rasmi ${portal.name} (${portal.domain}) w chnowa les démarches ?`
+                          : locale === 'en'
+                          ? `How do I use the official portal ${portal.name} (${portal.domain}) and what are the procedures?`
+                          : `Comment utiliser le portail officiel ${portal.name} (${portal.domain}) et quelles sont les démarches ?`
+                      )}`}
                       className="inline-flex items-center gap-1 text-[11px] text-zinc-500 hover:text-emerald-400 transition-colors"
-                      title="Demander à l'assistant IA"
+                      title={locale === 'ar' ? 'اسأل المساعد الذكي' : locale === 'derja' ? 'Es2el Idaara AI' : locale === 'en' ? 'Ask the AI assistant' : 'Demander à l’assistant IA'}
                     >
                       <Bot className="w-3.5 h-3.5" />
-                      <span>{locale === 'ar' ? 'إرشاد ذكي' : 'Aide IA'}</span>
+                      <span>{locale === 'ar' ? 'إرشاد ذكي' : locale === 'derja' ? 'Aide IA' : locale === 'en' ? 'AI Help' : 'Aide IA'}</span>
                     </Link>
 
                     <a
@@ -590,7 +601,7 @@ export default function PortailsPage() {
                       rel="noopener noreferrer"
                       className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-zinc-950 font-bold text-xs shadow-md shadow-emerald-500/15 transition-all hover:scale-105 cursor-pointer"
                     >
-                      <span>{locale === 'ar' ? 'فتح البوابة' : locale === 'en' ? 'Open Portal' : 'Accéder au portail'}</span>
+                      <span>{locale === 'ar' ? 'فتح البوابة' : locale === 'derja' ? '7el el portail' : locale === 'en' ? 'Open Portal' : 'Accéder au portail'}</span>
                       <ExternalLink className="w-3.5 h-3.5" />
                     </a>
                   </div>

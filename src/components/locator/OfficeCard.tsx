@@ -1,6 +1,7 @@
 'use client';
 
 import React from 'react';
+import { motion } from 'framer-motion';
 import { PublicOffice } from '../../types/office';
 import { useLocale } from '../../context/LocaleContext';
 import { getLocalized } from '../../lib/locale-utils';
@@ -94,7 +95,11 @@ export const OfficeCard: React.FC<OfficeCardProps> = ({ office, activeScheduleMo
       : 'Itinéraire GPS';
 
   return (
-    <div className="glass-panel rounded-2xl p-4 sm:p-5 border border-zinc-800/80 flex flex-col justify-between hover:border-zinc-700 hover:shadow-xl transition-all duration-200 group">
+    <motion.div
+      whileHover={{ y: -4 }}
+      transition={{ duration: 0.2, ease: 'easeOut' }}
+      className="glass-panel rounded-2xl p-4 sm:p-5 border border-zinc-800/80 flex flex-col justify-between hover:border-emerald-500/40 hover:shadow-2xl hover:shadow-emerald-500/5 transition-colors duration-200 group h-full"
+    >
       <div className="space-y-3">
 
         {/* Category badge + Location */}
@@ -185,16 +190,18 @@ export const OfficeCard: React.FC<OfficeCardProps> = ({ office, activeScheduleMo
 
       {/* Navigation Button */}
       <div className="mt-4 pt-3 border-t border-zinc-800/60">
-        <a
+        <motion.a
+          whileHover={{ scale: 1.02 }}
+          whileTap={{ scale: 0.98 }}
           href={office.googleMapsUrl}
           target="_blank"
           rel="noopener noreferrer"
-          className="flex items-center justify-center space-x-2 rtl:space-x-reverse w-full px-4 py-2 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-zinc-950 font-bold text-xs shadow-md shadow-emerald-500/20 transition-all hover:scale-[1.02] hover:shadow-emerald-500/30"
+          className="flex items-center justify-center space-x-2 rtl:space-x-reverse w-full px-4 py-2 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-zinc-950 font-bold text-xs shadow-md shadow-emerald-500/20 transition-all cursor-pointer"
         >
           <Navigation2 className="w-3.5 h-3.5" />
           <span>{directionsLabel}</span>
-        </a>
+        </motion.a>
       </div>
-    </div>
+    </motion.div>
   );
 };

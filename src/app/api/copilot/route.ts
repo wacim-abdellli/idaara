@@ -116,7 +116,7 @@ function buildGroundingContext(query: string, locale: string): string {
       const title = getLocalized(proc.title, 'ar') || proc.title.fr;
       const docs = proc.requiredDocuments.map((d) => `  - ${getLocalized(d.name, 'ar') || d.name.fr}`).join('\n');
       const costs = proc.costsBreakdown.map((c) => `  - ${getLocalized(c.label, 'ar') || c.label.fr}: ${c.amountTND} DT`).join('\n');
-      context += `\nPROCEDURE: ${title}\nTotal Cost: ${proc.estimatedTotalCostTND} DT | Delay: ${proc.estimatedProcessingTime}\nRequired Documents:\n${docs}\nCosts:\n${costs}\n`;
+      context += `\nPROCEDURE: ${title}\nTotal Cost: ${proc.estimatedTotalCostTND} DT | Delay: ${getLocalized(proc.estimatedProcessingTime, 'ar') || proc.estimatedProcessingTime.fr}\nRequired Documents:\n${docs}\nCosts:\n${costs}\n`;
     }
   }
 

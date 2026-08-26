@@ -8,13 +8,50 @@ import { CommandPalette } from '../components/common/CommandPalette';
 import { MobileBottomNav } from '../components/layout/MobileBottomNav';
 import { ScrollToTop } from '../components/common/ScrollToTop';
 
+const BASE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://idaara-flame.vercel.app';
+
 export const metadata: Metadata = {
+  metadataBase: new URL(BASE_URL),
   title: {
-    default: "Idaara.tn — AI Copilot & Smart Administrative Services",
-    template: "%s | Idaara.tn",
+    default: 'إدارة.تونس — المساعد الإداري الذكي الأول في تونس',
+    template: '%s | إدارة.تونس',
   },
-  description: "Fasserli, 3abbi w a3tini l'awra9 — Conquer Tunisian administrative red tape with Derja AI Copilot, live concours radar, document OCR, and certified PDF forms.",
-  keywords: ['Idaara', 'Baladiya', 'Tunisie', 'Derja AI', 'AI Copilot', 'Passeport Tunisien', 'Carte Grise', 'Timbres Fiscaux', 'Auto-Entrepreneur'],
+  description:
+    'المساعد الإداري الذكي الأول في تونس — احسب التنابر، فسّر الوثائق، استخرج العقود الرسمية، وتابع مناظرات الوظيفة العمومية. Idaara.tn — Fasserli, timbres, concours, passeport & démarches administratives tunisiennes.',
+  keywords: [
+    'إدارة تونس', 'جواز السفر التونسي', 'بطاقة التعريف', 'تنابر جبائية', 'مناظرات تونس',
+    'بطاقة عدد 3', 'مبادر ذاتي', 'Idaara', 'Baladiya', 'Tunisie', 'Passeport Tunisien',
+    'Timbres Fiscaux', 'Concours Publics', 'Auto-Entrepreneur', 'Carte Grise', 'Derja AI',
+    'passeport tunisie', 'renouveler passeport', 'bulletin n3 tunisie', 'timbre fiscal tunisie',
+  ],
+  authors: [{ name: 'Idaara.tn', url: BASE_URL }],
+  creator: 'Idaara.tn',
+  publisher: 'Idaara.tn',
+  openGraph: {
+    type: 'website',
+    locale: 'ar_TN',
+    alternateLocale: ['fr_TN', 'en_US'],
+    url: BASE_URL,
+    siteName: 'إدارة.تونس | Idaara.tn',
+    title: 'إدارة.تونس — المساعد الإداري الذكي الأول في تونس',
+    description:
+      'احسب التنابر الجبائية، فسّر وثائقك الرسمية، وتابع مناظرات الوظيفة العمومية بالدارجة التونسية.',
+    images: [
+      {
+        url: '/og-image.png',
+        width: 1200,
+        height: 630,
+        alt: 'إدارة.تونس — المساعد الإداري الذكي',
+      },
+    ],
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'إدارة.تونس — المساعد الإداري الذكي الأول في تونس',
+    description: 'احسب التنابر، فسّر الوثائق، تابع المناظرات — بالدارجة التونسية.',
+    images: ['/og-image.png'],
+    creator: '@idaaratn',
+  },
   icons: {
     icon: [
       { url: '/favicon.svg', type: 'image/svg+xml' },
@@ -22,6 +59,22 @@ export const metadata: Metadata = {
     ],
     shortcut: '/favicon.svg',
     apple: '/icon.svg',
+  },
+  manifest: '/manifest.webmanifest',
+  themeColor: [
+    { media: '(prefers-color-scheme: dark)', color: '#09090b' },
+    { media: '(prefers-color-scheme: light)', color: '#09090b' },
+  ],
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      'max-video-preview': -1,
+      'max-image-preview': 'large',
+      'max-snippet': -1,
+    },
   },
 };
 

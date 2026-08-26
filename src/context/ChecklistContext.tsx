@@ -19,6 +19,7 @@ export function ChecklistProvider({ children }: { children: React.ReactNode }) {
     try {
       const saved = localStorage.getItem('idaara_checklist');
       if (saved) {
+        // eslint-disable-next-line react-hooks/set-state-in-effect -- hydration-safe localStorage restore
         setCheckedItems(JSON.parse(saved));
       }
     } catch {

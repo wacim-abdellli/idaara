@@ -395,15 +395,16 @@ export function parseAndReason(prompt: string, locale: SupportedLanguage | strin
   if (matchedProcedure) {
     const title = getLocalized(matchedProcedure.title, lang === 'derja' ? 'fr' : lang);
     const desc = getLocalized(matchedProcedure.shortDescription, lang === 'derja' ? 'fr' : lang);
+    const delay = getLocalized(matchedProcedure.estimatedProcessingTime, lang === 'derja' ? 'fr' : lang);
     const cost = matchedProcedure.estimatedTotalCostTND;
 
     return {
       content:
         lang === 'ar'
-          ? `بخصوص ${title} :\n${desc}\n\nالمدة التقديرية : ${matchedProcedure.estimatedProcessingTime}.\nالميزانية التقديرية للتنابر والمعاليم : ${cost.toFixed(3)} د.ت.`
+          ? `بخصوص ${title} :\n${desc}\n\nالمدة التقديرية : ${delay}.\nالميزانية التقديرية للتنابر والمعاليم : ${cost.toFixed(3)} د.ت.`
           : lang === 'en'
-          ? `Regarding ${title} :\n${desc}\n\nEstimated Processing Time: ${matchedProcedure.estimatedProcessingTime}.\nEstimated Total Statutory Cost: ${cost.toFixed(3)} TND.`
-          : `Concernant ${title} :\n${desc}\n\nDélai moyen estimé : ${matchedProcedure.estimatedProcessingTime}.\nBudget estimé des frais et timbres : ${cost.toFixed(3)} DT.`,
+          ? `Regarding ${title} :\n${desc}\n\nEstimated Processing Time: ${delay}.\nEstimated Total Statutory Cost: ${cost.toFixed(3)} TND.`
+          : `Concernant ${title} :\n${desc}\n\nDélai moyen estimé : ${delay}.\nBudget estimé des frais et timbres : ${cost.toFixed(3)} DT.`,
       relatedProcedureId: matchedProcedure.id,
       timbreBreakdown: {
         totalTND: cost,

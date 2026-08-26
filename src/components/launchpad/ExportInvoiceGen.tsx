@@ -161,7 +161,7 @@ export const ExportInvoiceGen: React.FC = () => {
 
               <div className="text-right">
                 <span className="text-sm font-bold uppercase tracking-wider text-emerald-600 block">
-                  FACTURE D'EXPORTATION
+                  FACTURE D’EXPORTATION
                 </span>
                 <p className="font-mono text-xs text-zinc-700">{invoiceNumber}</p>
                 <p className="text-[10px] text-zinc-400">Date: {new Date().toLocaleDateString()}</p>
@@ -215,7 +215,7 @@ export const ExportInvoiceGen: React.FC = () => {
                   ? 'Mandatory Legal & Tax Notice:'
                   : 'Mention légale fiscale obligatoire :'}
               </strong>{' '}
-              Facture établie hors taxes conformément aux dispositions de l'article 11 du Code de la TVA tunisien (Exportation de services). Rapatriement de devises soumis à la réglementation de la Banque Centrale de Tunisie (BCT).
+              Facture établie hors taxes conformément aux dispositions de l’article 11 du Code de la TVA tunisien (Exportation de services). Rapatriement de devises soumis à la réglementation de la Banque Centrale de Tunisie (BCT).
             </div>
           </div>
         </div>

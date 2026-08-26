@@ -310,7 +310,7 @@ export default function ConcoursPage() {
                   <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 border-b border-white/[0.06]">
                     <div className="flex flex-wrap items-center gap-2">
                       <span className="px-2.5 py-0.5 rounded-md bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 text-[10px] font-extrabold uppercase tracking-wider font-mono">
-                        {item.institution}
+                        {getLocalized(item.institution, locale)}
                       </span>
                       <span className="text-[10px] font-mono text-zinc-500">· {item.referenceNumber}</span>
                       <span className="text-zinc-600 text-xs">·</span>
@@ -498,12 +498,12 @@ export default function ConcoursPage() {
                           <Link
                             href={`/copilot?q=${encodeURIComponent(
                               locale === 'ar'
-                                ? `كيفاش نقدر نقدم للمناظرة ${item.institution} ${title} ؟`
+                                ? `كيفاش نقدر نقدم للمناظرة ${getLocalized(item.institution, locale)} ${title} ؟`
                                 : locale === 'derja'
-                                ? `Kifech n9adem rou7i lel concours ${item.institution} ${title} ?`
+                                ? `Kifech n9adem rou7i lel concours ${getLocalized(item.institution, locale)} ${title} ?`
                                 : locale === 'en'
-                                ? `How do I apply for the ${item.institution} ${title} competition?`
-                                : `Comment postuler au concours ${item.institution} ${title} ?`
+                                ? `How do I apply for the ${getLocalized(item.institution, locale)} ${title} competition?`
+                                : `Comment postuler au concours ${getLocalized(item.institution, locale)} ${title} ?`
                             )}`}
                             className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-zinc-950 font-bold text-xs shadow transition-all shrink-0"
                           >

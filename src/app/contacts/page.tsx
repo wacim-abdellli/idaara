@@ -387,7 +387,7 @@ export default function ContactsPage() {
                       </span>
                       <button
                         onClick={() => handleCopy(c.number, c.id)}
-                        title="Copier le numéro"
+                        title={locale === 'ar' ? 'نسخ الرقم' : locale === 'derja' ? 'Copier el numéro' : locale === 'en' ? 'Copy number' : 'Copier le numéro'}
                         className="p-1 rounded-lg bg-zinc-900 border border-zinc-800 text-zinc-400 hover:text-white transition-colors cursor-pointer"
                       >
                         {isCopied ? <Check className="w-3.5 h-3.5 text-emerald-400" /> : <Copy className="w-3.5 h-3.5" />}
@@ -526,7 +526,7 @@ export default function ContactsPage() {
 
                     <button
                       onClick={() => handleCopy(c.number, c.id)}
-                      title="Copier"
+                      title={locale === 'ar' ? 'نسخ' : locale === 'derja' ? 'Copier' : locale === 'en' ? 'Copy' : 'Copier'}
                       className="p-1.5 rounded-lg bg-zinc-900 border border-zinc-800 text-zinc-500 hover:text-zinc-300 transition-colors cursor-pointer shrink-0"
                     >
                       {isCopied ? <Check className="w-3.5 h-3.5 text-emerald-400" /> : <Copy className="w-3.5 h-3.5" />}

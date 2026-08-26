@@ -116,7 +116,7 @@ export const DossierKitExport: React.FC<DossierKitExportProps> = ({
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-[11px] text-zinc-400 pt-2 border-t border-zinc-800">
           <div className="flex items-center gap-1.5">
             <Clock className="w-3.5 h-3.5 text-zinc-500" />
-            <span>{deadlineLabel} {procedure.estimatedProcessingTime}</span>
+            <span>{deadlineLabel} {getLocalized(procedure.estimatedProcessingTime, locale)}</span>
           </div>
           <div className="flex items-center gap-1.5">
             <Stamp className="w-3.5 h-3.5 text-amber-400" />
@@ -185,7 +185,7 @@ export const DossierKitExport: React.FC<DossierKitExportProps> = ({
                 {formatTND(total, locale)}
               </span>
               <span className="text-[10px] text-zinc-500 block">
-                {locale === 'ar' ? `الأجل : ${procedure.estimatedProcessingTime}` : `Délai : ${procedure.estimatedProcessingTime}`}
+                {locale === 'ar' ? `الأجل : ${getLocalized(procedure.estimatedProcessingTime, locale)}` : `Délai : ${getLocalized(procedure.estimatedProcessingTime, locale)}`}
               </span>
             </div>
           </div>
@@ -283,7 +283,7 @@ export const DossierKitExport: React.FC<DossierKitExportProps> = ({
                     </span>
                     <span className="font-bold text-zinc-900 truncate">{getLocalized(step.title, locale)}</span>
                   </div>
-                  <p className="text-[10px] text-emerald-700 font-semibold">{step.targetOffice}</p>
+                  <p className="text-[10px] text-emerald-700 font-semibold">{getLocalized(step.targetOffice, locale)}</p>
                 </div>
               ))}
             </div>

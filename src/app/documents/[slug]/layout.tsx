@@ -1,0 +1,46 @@
+import type { Metadata } from 'next';
+import { getTemplateBySlug } from '../../../data/documentTemplates';
+
+const BASE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://idaara-flame.vercel.app';
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ slug: string }>;
+}): Promise<Metadata> {
+  const { slug } = await params;
+  const template = getTemplateBySlug(slug);
+
+  if (!template) {
+    return {
+      title: 'وثيقة غير موجودة | إدارة.تونس',
+    };
+  }
+
+  const titleAr = template.title?.ar || template.title?.fr || slug;
+  const titleFr = template.title?.fr || slug;
+
+  return {
+    title: `${titleAr} — نموذج PDF رسمي جاهز للتعريف بالإمضاء | إدارة.تونس`,
+    description: `استخرج ${titleAr} بصيغة PDF رسمية جاهزة للتعريف بالإمضاء في البلدية التونسية مع إطار التنابر الجبائية الصحيح. مجاني وفوري — ${titleFr} PDF Tunisie.`.slice(0, 160),
+    keywords: [
+      titleAr, titleFr,
+      `${titleFr} PDF tunisie`,
+      `modèle ${titleFr} tunisie`,
+      `نموذج ${titleAr}`,
+      'عقود بلدية تونس', 'documents officiels tunisie',
+    ].filter(Boolean) as string[],
+    openGraph: {
+      title: `${titleAr} — PDF جاهز | Idaara.tn`,
+      description: `استخرج ${titleAr} PDF مجاناً وفورياً.`,
+      url: `${BASE_URL}/documents/${slug}`,
+    },
+    alternates: {
+      canonical: `/documents/${slug}`,
+    },
+  };
+}
+
+export default function DocumentDetailLayout({ children }: { children: React.ReactNode }) {
+  return children;
+}

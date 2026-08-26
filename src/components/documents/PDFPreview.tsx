@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { DocumentTemplate } from '../../types/document';
 import { generatePDFFromElement, printElement } from '../../lib/pdf-generator';
 import { Download, Printer, ShieldCheck, QrCode, Globe2 } from 'lucide-react';
@@ -15,11 +15,13 @@ interface PDFPreviewProps {
 export const PDFPreview: React.FC<PDFPreviewProps> = ({ template, formData }) => {
   const { locale } = useLocale();
   const [docLang, setDocLang] = useState<'ar' | 'fr' | 'en' | 'derja'>(locale);
+  const [prevLocale, setPrevLocale] = useState(locale);
   const [isGenerating, setIsGenerating] = useState(false);
 
-  useEffect(() => {
+  if (locale !== prevLocale) {
+    setPrevLocale(locale);
     setDocLang(locale);
-  }, [locale]);
+  }
 
   const isRtl = docLang === 'ar' || docLang === 'derja';
 
@@ -268,11 +270,11 @@ export const PDFPreview: React.FC<PDFPreviewProps> = ({ template, formData }) =>
                     </div>
                     <div>
                       <h3 className="font-bold uppercase text-[11px] mb-0.5 text-zinc-900">Article 1 : Objet du Contrat</h3>
-                      <p>Le bailleur donne en location au preneur, qui accepte, le local à usage d'habitation situé à : <strong>{formData.bien_address || '...........................................................................'}</strong>.</p>
+                      <p>Le bailleur donne en location au preneur, qui accepte, le local à usage d’habitation situé à : <strong>{formData.bien_address || '...........................................................................'}</strong>.</p>
                     </div>
                     <div>
-                      <h3 className="font-bold uppercase text-[11px] mb-0.5 text-zinc-900">Article 2 : Durée & Prise d'Effet</h3>
-                      <p>Le présent bail est consenti pour une durée de <strong>{formData.duree_mois || '12'} mois</strong>, prenant effet à compter du <strong>{formData.date_debut || '../../....'}</strong>, renouvelable d'accord exprès.</p>
+                      <h3 className="font-bold uppercase text-[11px] mb-0.5 text-zinc-900">Article 2 : Durée & Prise d’Effet</h3>
+                      <p>Le présent bail est consenti pour une durée de <strong>{formData.duree_mois || '12'} mois</strong>, prenant effet à compter du <strong>{formData.date_debut || '../../....'}</strong>, renouvelable d’accord exprès.</p>
                     </div>
                     <div>
                       <h3 className="font-bold uppercase text-[11px] mb-0.5 text-zinc-900">Article 3 : Loyer & Caution</h3>
@@ -280,7 +282,7 @@ export const PDFPreview: React.FC<PDFPreviewProps> = ({ template, formData }) =>
                     </div>
                     <div>
                       <h3 className="font-bold uppercase text-[11px] mb-0.5 text-zinc-900">Article 4 : Enregistrement & Légalisation</h3>
-                      <p>Les parties s'engagent à faire légaliser leurs signatures auprès de la Municipalité et à enregistrer le présent acte à la Recette des Finances.</p>
+                      <p>Les parties s’engagent à faire légaliser leurs signatures auprès de la Municipalité et à enregistrer le présent acte à la Recette des Finances.</p>
                     </div>
                   </>
                 )
@@ -305,7 +307,7 @@ export const PDFPreview: React.FC<PDFPreviewProps> = ({ template, formData }) =>
                     <div>
                       <h3 className="font-bold uppercase text-[11px] mb-1 text-zinc-900">موضوع التوكيل والصلاحيات الممنوحة :</h3>
                       <p className="p-3 bg-white border border-zinc-300 rounded italic text-zinc-900 leading-relaxed">
-                        "{formData.objet_procuration || 'القيام مقامي وباسمي في كافة الإجراءات الإدارية وتوقيع جميع الوثائق والاستمارات الرسمية وسحب المستخرجات لدى المصالح والإدارات العمومية والخاصة.'}"
+                        «{formData.objet_procuration || 'القيام مقامي وباسمي في كافة الإجراءات الإدارية وتوقيع جميع الوثائق والاستمارات الرسمية وسحب المستخرجات لدى المصالح والإدارات العمومية والخاصة.'}»
                       </p>
                     </div>
                     <p className="text-[10px] text-zinc-500">
@@ -329,7 +331,7 @@ export const PDFPreview: React.FC<PDFPreviewProps> = ({ template, formData }) =>
                     <div>
                       <h3 className="font-bold uppercase text-[11px] mb-1 text-zinc-900">Objet et Étendue du Mandat :</h3>
                       <p className="p-3 bg-white border border-zinc-300 rounded italic text-zinc-900">
-                        "{formData.objet_procuration || 'Effectuer en mon nom et pour mon compte toutes démarches administratives, signer tout document et formulaire officiel requis auprès des administrations et organismes publics.'}"
+                        «{formData.objet_procuration || 'Effectuer en mon nom et pour mon compte toutes démarches administratives, signer tout document et formulaire officiel requis auprès des administrations et organismes publics.'}»
                       </p>
                     </div>
                   </>
@@ -349,7 +351,7 @@ export const PDFPreview: React.FC<PDFPreviewProps> = ({ template, formData }) =>
                         أصرح بشرفي وبكامل وعيي ومسؤوليتي القانونية بما يلي :
                       </p>
                       <div className="p-3 bg-white border border-zinc-300 rounded italic text-zinc-900 leading-relaxed">
-                        "{formData.details_declaration || 'أصرح بشرفي بصحة البيانات المذكورة أعلاه للإدلاء بها لدى المصالح المعنية لكل ما يقتضيه القانون.'}"
+                        «{formData.details_declaration || 'أصرح بشرفي بصحة البيانات المذكورة أعلاه للإدلاء بها لدى المصالح المعنية لكل ما يقتضيه القانون.'}»
                       </div>
                     </div>
                     <p className="text-[10px] text-zinc-500">
@@ -361,13 +363,13 @@ export const PDFPreview: React.FC<PDFPreviewProps> = ({ template, formData }) =>
                     <div className="p-3.5 bg-zinc-50 border border-zinc-200 rounded space-y-2">
                       <p>
                         Je soussigné(e) : <strong>{formData.declarant_name || '...........................................'}</strong>, 
-                        titulaire de la Carte d'Identité Nationale n° <strong>{formData.declarant_cin || '................'}</strong>,
+                        titulaire de la Carte d’Identité Nationale n° <strong>{formData.declarant_cin || '................'}</strong>,
                       </p>
                       <p className="font-bold text-zinc-900 pt-1">
-                        Déclare sur l'honneur et en pleine conscience juridique :
+                        Déclare sur l’honneur et en pleine conscience juridique :
                       </p>
                       <div className="p-3 bg-white border border-zinc-300 rounded italic text-zinc-900 leading-relaxed">
-                        "{formData.details_declaration || 'Déclaration sur l honneur établie pour servir et valoir ce que de droit.'}"
+                        «{formData.details_declaration || 'Déclaration sur l honneur établie pour servir et valoir ce que de droit.'}»
                       </div>
                     </div>
                   </>
@@ -416,7 +418,7 @@ export const PDFPreview: React.FC<PDFPreviewProps> = ({ template, formData }) =>
                         </p>
                       </div>
                       <p className="text-[11px] text-zinc-700">
-                        Le vendeur cède le véhicule en l'état et l'acquéreur s'engage à effectuer la mutation auprès de l'ATTT.
+                        Le vendeur cède le véhicule en l’état et l’acquéreur s’engage à effectuer la mutation auprès de l’ATTT.
                       </p>
                     </div>
                   </>
@@ -471,7 +473,7 @@ export const PDFPreview: React.FC<PDFPreviewProps> = ({ template, formData }) =>
                         <strong>Échéance :</strong> Remboursement intégral exigible le <strong>{formData.date_echeance || 'JJ/MM/AAAA'}</strong>. {formData.modalites_paiement || ''}
                       </p>
                       <p className="text-[10px] text-zinc-500 italic">
-                        Engagement pris sous l'empire des dispositions des articles 339 et suivants du Code des Obligations et des Contrats (COC).
+                        Engagement pris sous l’empire des dispositions des articles 339 et suivants du Code des Obligations et des Contrats (COC).
                       </p>
                     </div>
                   </>
@@ -498,7 +500,7 @@ export const PDFPreview: React.FC<PDFPreviewProps> = ({ template, formData }) =>
                       </div>
                       {formData.circonstances_perte && (
                         <p className="text-[11px] italic text-zinc-700">
-                          <strong>ظروف الضياع :</strong> "{formData.circonstances_perte}"
+                          <strong>ظروف الضياع :</strong> «{formData.circonstances_perte}»
                         </p>
                       )}
                       <p className="text-[10px] text-red-700 italic">
@@ -511,11 +513,11 @@ export const PDFPreview: React.FC<PDFPreviewProps> = ({ template, formData }) =>
                     <div className="p-3.5 bg-zinc-50 border border-zinc-200 rounded space-y-2">
                       <p>
                         Je soussigné(e) : <strong>{formData.declarant_name || '...........................................'}</strong>, 
-                        titulaire de la pièce d'identité n° <strong>{formData.declarant_cin || '................'}</strong>,<br/>
+                        titulaire de la pièce d’identité n° <strong>{formData.declarant_cin || '................'}</strong>,<br/>
                         Demeurant à : <strong>{formData.declarant_address || '...........................................................................'}</strong>.
                       </p>
                       <p className="font-bold text-zinc-900">
-                        Déclare sur l'honneur avoir égaré le document officiel suivant :
+                        Déclare sur l’honneur avoir égaré le document officiel suivant :
                       </p>
                       <div className="p-2.5 bg-white border border-zinc-300 rounded space-y-1">
                         <p><strong>Nature du document :</strong> {formData.nature_document || '...........................................'}</p>
@@ -524,11 +526,11 @@ export const PDFPreview: React.FC<PDFPreviewProps> = ({ template, formData }) =>
                       </div>
                       {formData.circonstances_perte && (
                         <p className="text-[11px] italic text-zinc-700">
-                          <strong>Circonstances :</strong> "{formData.circonstances_perte}"
+                          <strong>Circonstances :</strong> «{formData.circonstances_perte}»
                         </p>
                       )}
                       <p className="text-[10px] text-red-700 italic">
-                        Fait pour servir et valoir ce que de droit. Toute fausse déclaration expose son auteur aux peines de l'Article 173 du Code Pénal.
+                        Fait pour servir et valoir ce que de droit. Toute fausse déclaration expose son auteur aux peines de l’Article 173 du Code Pénal.
                       </p>
                     </div>
                   </>
@@ -562,15 +564,15 @@ export const PDFPreview: React.FC<PDFPreviewProps> = ({ template, formData }) =>
                   <>
                     <div className="p-3.5 bg-zinc-50 border border-zinc-200 rounded space-y-2">
                       <p>
-                        Je soussigné(e) (L'Hébergeant) : <strong>{formData.host_name || '...........................................'}</strong>, 
+                        Je soussigné(e) (L’Hébergeant) : <strong>{formData.host_name || '...........................................'}</strong>, 
                         titulaire de la CIN n° <strong>{formData.host_cin || '................'}</strong>,<br/>
                         Demeurant au logement sis à : <strong>{formData.host_address || '...........................................................................'}</strong>.
                       </p>
                       <p className="font-bold text-zinc-900">
-                        Certifie sur l'honneur héberger à mon domicile la personne suivante :
+                        Certifie sur l’honneur héberger à mon domicile la personne suivante :
                       </p>
                       <div className="p-2.5 bg-white border border-zinc-300 rounded space-y-1">
-                        <p><strong>Nom de l'Invité :</strong> {formData.guest_name || '...........................................'}</p>
+                        <p><strong>Nom de l’Invité :</strong> {formData.guest_name || '...........................................'}</p>
                         <p><strong>Nationalité :</strong> {formData.guest_nationality || '................'} | <strong>N° Passeport :</strong> {formData.guest_passport || '................'}</p>
                         <p><strong>Période du séjour :</strong> Du <strong>{formData.date_debut || 'JJ/MM/AAAA'}</strong> au <strong>{formData.date_fin || 'JJ/MM/AAAA'}</strong></p>
                       </div>
@@ -622,7 +624,7 @@ export const PDFPreview: React.FC<PDFPreviewProps> = ({ template, formData }) =>
                         <p>Sous contrat : <strong>{formData.type_contrat || 'CDI'}</strong> depuis le <strong>{formData.date_embauche || 'JJ/MM/AAAA'}</strong>.</p>
                       </div>
                       <p className="text-[11px] text-zinc-700">
-                        Certificat délivré en application de l'Article 14 du Code du Travail tunisien pour servir et valoir ce que de droit.
+                        Certificat délivré en application de l’Article 14 du Code du Travail tunisien pour servir et valoir ce que de droit.
                       </p>
                     </div>
                   </>

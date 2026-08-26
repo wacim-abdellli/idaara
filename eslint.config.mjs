@@ -12,6 +12,8 @@ const eslintConfig = defineConfig([
     "out/**",
     "build/**",
     "next-env.d.ts",
+    // Throwaway experiment scripts (CommonJS Node, not app code):
+    "scratch/**",
   ]),
 ]);
 
