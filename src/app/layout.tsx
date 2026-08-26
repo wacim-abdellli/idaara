@@ -7,13 +7,14 @@ import { Footer } from '../components/layout/Footer';
 import { CommandPalette } from '../components/common/CommandPalette';
 import { MobileBottomNav } from '../components/layout/MobileBottomNav';
 import { ScrollToTop } from '../components/common/ScrollToTop';
+import { DynamicTitle } from '../components/layout/DynamicTitle';
 
 const BASE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://idaara-flame.vercel.app';
 
 export const metadata: Metadata = {
   metadataBase: new URL(BASE_URL),
   title: {
-    default: 'Idaara.tn — AI Copilot & Démarches Administratives',
+    default: 'Idaara.tn — AI Civic Copilot & Procedures',
     template: '%s | Idaara.tn',
   },
   description:
@@ -92,6 +93,7 @@ export default function RootLayout({
     <html lang="fr" dir="ltr" className="dark scroll-smooth" suppressHydrationWarning>
       <body className="antialiased min-h-screen flex flex-col selection:bg-emerald-500/30 selection:text-emerald-200 pb-[calc(4rem+env(safe-area-inset-bottom,0px))] lg:pb-0" suppressHydrationWarning>
         <LocaleProvider>
+          <DynamicTitle />
           <ChecklistProvider>
             <ScrollToTop />
             <Navbar />

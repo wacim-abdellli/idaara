@@ -33,4 +33,10 @@ describe('i18n — 4-locale parity', () => {
       `Locale key count mismatch: ${JSON.stringify(counts)}`
     ).toBe(1);
   });
+
+  it('appName is consistently "Idaara.tn" across all 4 locales', () => {
+    for (const l of LOCALES) {
+      expect(translations[l].appName).toBe('Idaara.tn');
+    }
+  });
 });
