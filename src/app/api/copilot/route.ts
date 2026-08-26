@@ -195,7 +195,7 @@ export async function POST(req: NextRequest) {
   try {
     // Rate limit check (max 30 requests per minute per IP)
     const ip = getClientIp(req);
-    if (!checkRateLimit(ip, 30)) {
+    if (!await checkRateLimit(ip, 30)) {
       return NextResponse.json({ error: 'Too many requests. Please wait a minute.' }, { status: 429 });
     }
 
