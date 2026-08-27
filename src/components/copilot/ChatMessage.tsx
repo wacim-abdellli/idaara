@@ -416,11 +416,11 @@ export const ChatMessage: React.FC<ChatMessageProps> = ({ message }) => {
           {message.content}
         </div>
 
-        <div className="flex items-center gap-1.5 pt-1 px-1 text-[11px] text-zinc-500 font-mono select-none">
+        <div className="flex items-center gap-1.5 pt-1 px-1 text-[11px] text-zinc-500 font-mono select-none opacity-0 group-hover:opacity-100 transition-opacity">
           {message.timestamp && <span>{message.timestamp}</span>}
           <button
             onClick={copyToClipboard}
-            className="p-1 rounded-md hover:bg-white/10 text-zinc-500 hover:text-zinc-300 transition-colors cursor-pointer border-0 outline-none flex items-center gap-1 text-[11px] opacity-0 group-hover:opacity-100"
+            className="p-1 rounded-md hover:bg-white/10 text-zinc-500 hover:text-zinc-300 transition-colors cursor-pointer border-0 outline-none flex items-center gap-1 text-[11px]"
             title={copyTitleLabels[locale] ?? 'Copy'}
           >
             {copied ? (
@@ -441,7 +441,7 @@ export const ChatMessage: React.FC<ChatMessageProps> = ({ message }) => {
   return (
     <div
       dir={isArabicScript ? 'rtl' : 'ltr'}
-      className={`w-full py-3 space-y-3 ${isArabicScript ? 'text-right' : 'text-left'}`}
+      className={`w-full py-3 space-y-3 group ${isArabicScript ? 'text-right' : 'text-left'}`}
     >
       <div
         style={{ unicodeBidi: 'plaintext' }}
@@ -512,7 +512,7 @@ export const ChatMessage: React.FC<ChatMessageProps> = ({ message }) => {
 
       {/* ChatGPT-style Icon Toolbar (Timestamp + Copy) */}
       {!message.isStreaming && message.content && (
-        <div className="flex items-center gap-2 pt-1 text-zinc-500 animate-fade-in">
+        <div className="flex items-center gap-2 pt-1 text-zinc-500 opacity-0 group-hover:opacity-100 transition-opacity animate-fade-in">
           {message.timestamp && (
             <span className="text-[11px] text-zinc-500 font-mono select-none">
               {message.timestamp}
