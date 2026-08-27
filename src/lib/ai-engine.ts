@@ -409,6 +409,57 @@ export function parseAndReason(prompt: string, locale: SupportedLanguage | strin
     };
   }
 
+  // ── 11b. STRICT DOMAIN BOUNDARIES & CODING GUARDRAIL ──────────────────────
+  const isOffTopic =
+    query.includes('npm ') ||
+    query.includes('npm run') ||
+    query.includes('git ') ||
+    query.includes('python') ||
+    query.includes('javascript') ||
+    query.includes('typescript') ||
+    query.includes('docker') ||
+    query.includes('const ') ||
+    query.includes('function ') ||
+    query.includes('class ') ||
+    query.includes('select *') ||
+    query.includes('react') ||
+    query.includes('html') ||
+    query.includes('css') ||
+    query.includes('bash') ||
+    query.includes('linux') ||
+    query.includes('code ') ||
+    query.includes('script') ||
+    query.includes('2>&1') ||
+    query.includes('build');
+
+  if (isOffTopic) {
+    return {
+      content:
+        lang === 'fr'
+          ? "Bonjour ! Je suis **Idaara AI**, l'assistant officiel dédié exclusivement aux démarches administratives, lois et procédures civiques en Tunisie 🇹🇳 (et non un assistant de programmation informatique 😄).\n\nVous pouvez me poser toutes vos questions sur :\n- 🛂 **Documents & Dossiers** : Passeport, Carte d'Identité (CIN), Bulletin N°3, Mutation Carte Grise (ATTT)\n- 💼 **Entreprises & Auto-Entrepreneur** : Impôt 1%, Déclaration CNSS, Factures en devises\n- 🏛️ **Recette & Municipalité** : Timbres fiscaux, Contrats de bail, Taxes locales\n- 🏆 **Concours Publics** : CAPES, STEG, SONEDE, Postes ministériels\n\nQuelle démarche administrative tunisienne souhaitez-vous accomplir aujourd'hui ?"
+          : lang === 'en'
+          ? "Hello! I am **Idaara AI**, the dedicated civic copilot for Tunisian public administration, legal procedures, and government paperwork 🇹🇳 (not a general coding assistant 😄).\n\nYou can ask me about:\n- 🛂 **Official Documents**: Passport, National ID (CIN), B3 Criminal Record, Vehicle Registration (ATTT)\n- 💼 **Business & Self-Employment**: 1% Tax regime, CNSS declaration, Export invoices\n- 🏛️ **Taxes & Municipalities**: Fiscal stamps, Lease contracts, Local municipal taxes\n- 🏆 **Public Job Contests**: CAPES, STEG, SONEDE, Ministry competitions\n\nWhich Tunisian administrative procedure can I help you with today?"
+          : "عسلامة! راهو أنا **Idaara AI** مخصص حصرياً للإجراءات الإدارية، الأوراق، والبيروقراطية التونسية 🇹🇳 (موش للمطورين ولا البرمجة والكود 😄).\n\nتنجم تسألني على:\n- 🛂 **الأوراق والوثائق**: جواز السفر، بطاقة التعريف (CIN)، بطاقة عدد 3، نقل ملكية سيارة (ATTT)\n- 💼 **المبادر الذاتي والشركات**: خلاص الأداء 1%، فواتير التصدير، الضمان الاجتماعي (CNSS)\n- 🏛️ **القباضة والبلدية**: التنابر الجبائية، عقود الكراء، التوكيلات، المعاليم البلدية\n- 🏆 **المناظرات العمومية**: الكاباس، STEG، SONEDE، الوظيفة العمومية\n\nشنوة الإجراء الإداري اللي تحب تقضيه اليوم؟",
+      actions: [
+        {
+          label: { derja: '📋 دليل الإجراءات', fr: 'Toutes les démarches', ar: 'جميع الإجراءات', en: 'All Procedures' },
+          type: 'procedure_link',
+          payload: '/procedures',
+        },
+        {
+          label: { derja: '🧮 حاسبة التنابر', fr: 'Calculateur de Timbres', ar: 'حاسبة التنابر', en: 'Stamp Calculator' },
+          type: 'calculator_link',
+          payload: '/calculator',
+        },
+        {
+          label: { derja: '💼 رادار المناظرات', fr: 'Radar des Concours', ar: 'رادار المناظرات', en: 'Concours Radar' },
+          type: 'procedure_link',
+          payload: '/concours',
+        },
+      ],
+    };
+  }
+
   // ── 12. DYNAMIC PROCEDURE MATCHING ─────────────────────────────────────────
   const matchedProcedure = proceduresData.find((p) => {
     const title = getLocalized(p.title, 'fr').toLowerCase();
