@@ -33,22 +33,22 @@ const DEEP_CIVIC_KNOWLEDGE = `
 - Required: CIN originale + copie, 4 photos fond blanc, madhmoun récent, ancien passeport (si renouvellement), timbre fiscal 80 DT (ou 25 DT).
 
 [BULLETIN N°3 / بطاقة عدد 3 — Casier Judiciaire]
-- Authority: b3.interieur.gov.tn (en ligne) ou Commissariat
-- Cost: 7.500 DT timbre fiscal (+ 2.500 DT Rapide Poste si livraison)
+- Authority: b3.interieur.gov.tn (en ligne) ou Commissariat de police
+- Cost: 3 DT timbre fiscal (+ 4.500 DT frais de livraison Rapide Poste = 7.500 DT au total pour commande en ligne)
 - Delay: 3 à 8 jours ouvrables
 - Validity: 3 mois
 
 [CARTE GRISE / نقل ملكية سيارة]
 - Authority: ATTT (Agence Technique des Transports Terrestres)
-- Total Cost: ~145 à 250 DT (Légalisation contrat 5 DT + Recette 30-50 DT + Visite ATTT 40-60 DT + Timbre 20-40 DT)
+- Total Cost: ~145 à 250 DT (Légalisation contrat 6 DT [3 DT x 2 signatures] + Recette 30-50 DT + Visite ATTT 40-60 DT + Timbre 20-40 DT)
 - Required: Contrat de vente légalisé (3 copies), ancienne carte grise, certificat de visite technique valide, attestation de non-gage, CIN vendeur et acheteur.
 
 [AUTO-ENTREPRENEUR / المبادر الذاتي]
-- Platform: www.auto-entrepreneur.tn (100% gratuit)
+- Platform: www.autoentrepreneur.tn / auto-entrepreneur.tn (Inscription 100% gratuite)
 - Impôt unique: 1% sur CA (Services, Freelance, IT, Design) / 0.5% (Commerce, Industrie)
-- TVA: 0% (exonération totale)
+- TVA: 0% (exonération totale Art. 13 Code TVA)
 - Plafond CA: 75 000 DT/an (Services)
-- Facturation en devises (EUR/USD) légale via BCT. Crédit possible jusqu'à 15 000 DT.
+- Facturation en devises (EUR/USD) légale via BCT. Cotisation CNSS forfaitaire trimestrielle.
 
 [CONCOURS CAPES — وزارة التربية]
 - Recrutement: 1 250 postes (Maths 230, Arabe 200, Physique 180, SVT 160, Français 110, Anglais 95, Info 85, Histoire-Géo 80...)

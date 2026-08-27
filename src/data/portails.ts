@@ -15,9 +15,9 @@ export interface EGovPortal {
 export const portailsData: EGovPortal[] = [
   {
     id: 'e-houwiya',
-    name: 'e-Houwiya (الهوية الرقمية)',
-    url: 'https://e-houwiya.tn',
-    domain: 'e-houwiya.tn',
+    name: 'Mobile-ID / e-Houwiya (الهوية الرقمية)',
+    url: 'https://www.mobile-id.tn',
+    domain: 'mobile-id.tn',
     icon: '🪪',
     category: 'identity',
     description: {
@@ -82,8 +82,8 @@ export const portailsData: EGovPortal[] = [
   {
     id: 'auto-entrepreneur',
     name: 'Auto-Entrepreneur.tn (المبادر الذاتي)',
-    url: 'https://www.auto-entrepreneur.tn',
-    domain: 'auto-entrepreneur.tn',
+    url: 'https://www.autoentrepreneur.tn',
+    domain: 'autoentrepreneur.tn',
     icon: '💼',
     category: 'business',
     description: {

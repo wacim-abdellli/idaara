@@ -474,23 +474,23 @@ export const proceduresData: Procedure[] = [
       ar: "يمكّن نظام المبادر الذاتي الشباب والمستقلين من ممارسة نشاطهم المهني بصورة قانونية مبسطة مع إعفاءات جبائية هامة ومساهمة اجتماعية مخفضة دون اشتراط محاسب.",
       en: "The Tunisian auto-entrepreneur status lets freelancers and service providers work fully legally with a reduced tax rate (1% services, 0.5% commerce/crafts) and a single flat CNSS contribution.",
     },
-    estimatedTotalCostTND: 10.0,
+    estimatedTotalCostTND: 0.0,
     estimatedProcessingTime: { derja: "24 - 48 swaye3", fr: "24 - 48 heures", ar: "24 - 48 ساعة", en: "24 - 48 hours" },
     urgencyLevel: 'low',
     relatedOfficeTypes: ['rne', 'recette_finances', 'cnss'],
     costsBreakdown: [
       {
         id: 'ae-1',
-        label: { derja: "Inscripition 3la plateforme (Majjenan)", fr: "Frais d'adhésion au registre national", ar: "معلوم التسجيل بالمنصة الوطنية للمبادر الذاتي", en: "National registry registration fee" },
+        label: { derja: "Inscripition 3la plateforme (100% Majjenan)", fr: "Frais d'adhésion et d'inscription (100% Gratuit)", ar: "معلوم التسجيل بالمنصة الوطنية للمبادر الذاتي (مجاني تماماً)", en: "National registry registration fee (100% Free)" },
         amountTND: 0.0,
         quantity: 1,
         category: 'frais_dossier',
       },
       {
         id: 'ae-2',
-        label: { derja: "Cotisation CNSS trimestrielle symbolique", fr: "Cotisation sociale trimestrielle forfaitaire", ar: "المساهمة الاجتماعية الثلاثية الجزافية", en: "Flat quarterly social contribution (CNSS)" },
+        label: { derja: "Cotisation CNSS trimestrielle forfaitaire", fr: "Cotisation sociale trimestrielle forfaitaire CNSS", ar: "المساهمة الاجتماعية الثلاثية الجزافية بالضمان الاجتماعي", en: "Flat quarterly social contribution (CNSS)" },
         amountTND: 50.0,
-        quantity: 1,
+        quantity: 0,
         category: 'autre',
       }
     ],

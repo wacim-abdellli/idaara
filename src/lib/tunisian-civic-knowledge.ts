@@ -35,14 +35,14 @@ export const TUNISIAN_CIVIC_KNOWLEDGE: CivicProcedureKnowledge[] = [
       "Déclaration de perte de la police (en cas de passeport perdu/volé + timbre de 150 DT)"
     ],
     steps: [
-      "Acheter le timbre fiscal à la Recette des Finances (القباضة المالية) ou en ligne sur e-timbres.finances.gov.tn",
+      "Acheter le timbre fiscal à la Recette des Finances (القباضة المالية) ou en ligne sur e-timbre.finances.gov.tn",
       "Prendre 4 photos d'identité chez un photographe agréé (fond blanc obligatoire)",
       "Déposer le dossier complet au commissariat de police ou poste de garde nationale de votre zone",
       "Récupérer le reçu de dépôt et retirer le passeport sous 10 à 15 jours"
     ],
     proTips: [
       "Les étudiants doivent impérativement ramener un Certificat de scolarité original récent pour bénéficier du tarif de 25 DT au lieu de 80 DT.",
-      "Vous pouvez désormais acheter le timbre fiscal électronique sur e-timbres.finances.gov.tn et présenter le code SMS au guichet."
+      "Vous pouvez désormais acheter le timbre fiscal électronique sur e-timbre.finances.gov.tn et présenter le code SMS au guichet."
     ]
   },
 
