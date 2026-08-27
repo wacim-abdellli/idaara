@@ -89,6 +89,25 @@ const DEEP_CIVIC_KNOWLEDGE = `
 - Cost: 0 DT (Gratuit) | Extrait: 0.500 DT
 - Required: Certificat médical d'accouchement, livret de famille / acte de mariage, CIN du déclarant.
 
+[FCR — Franchise Changement de Résidence / الامتياز الجبائي للسيارات للتونسيين بالخارج]
+- Authority: Direction Générale des Douanes (الديوانة التونسية — douane.gov.tn)
+- Conditions: Être Tunisien(ne) résidant à l'étranger (TRE) depuis 2 ans minimum sans avoir séjourné plus de 120 jours en Tunisie par période de 365 jours. Âge minimum 18 ans.
+- Âge maximum du véhicule: 5 ans (véhicule de tourisme) / 7 ans (camionnette ou utilitaire).
+- Options de dédouanement:
+  1. الإعفاء الكلي (Régime Suspensif - RS / ن.ت): إعفاء تام 100% من المعاليم الديوانية، السيارة تاخذ لوحة "ن.ت" ولا تباع إلا للأقارب من الدرجة الأولى. بعد مرور سنة، يمكن تسوية وضعيتها الجبائية ودفع 25% أو 30% لتحويلها إلى لوحة منجمية تونسية عادية وتصبح قابلة للبيع بحرية دون قيود (قانون المالية 2024/2025).
+  2. الإعفاء الجزئي (25% أو 30% مع نمرة تونسية عادية): خلاص 25% من المعاليم الديوانية للسيارات سعة محرك أقل من 2000cm³ (بنزين) أو 2500cm³ (ديزل). السيارة تاخذ مباشرة لوحة تونسية عادية وقابلة للبيع فوراً دون أي شرط أو تأخير.
+- Required: Passeport de l'expatrié avec cachets d'entrée/sortie, carte de séjour étrangère, carte grise originale du véhicule, facture d'achat ou certificat d'immatriculation, demande de privilège FCR.
+
+[FREELANCE — COMPTE DEVISES & EXPORT IT — البنك المركزي والمبادر الذاتي]
+- Authority: Banque Centrale de Tunisie (BCT — Circulaire 2017-06 & 2024) / RNE / Ministère des Finances
+- Statut 1: المبادر الذاتي (Auto-Entrepreneur) عبر auto-entrepreneur.tn: ضريبة موحدة 1% فقط على رقم المعاملات، إعفاء تام 100% من الأداء على القيمة المضافة TVA (الفصل 13 من مجلة الأداء على القيمة المضافة لخدمات التصدير)، انخراط CNSS بنظام العاملين غير الأجراء (Régime 14).
+- Statut 2: شركة الشخص الواحد (SUARL) عبر rne.tn: ضريبة 15% على الأرباح الصافية مع محاسب قانوني.
+- الدخول بالعملة الصعبة وحساب البنك (BCT): لا يحتاج المستقل التونسي إلى رخصة مسبقة من البنك المركزي لتحويل مستحقاته من الخارج (EUR/USD). تفتح البنوك التونسية (BIAT, Attijari, STB, UIB, BH...) مباشرة "حساب مهني بالعملة الصعبة أو بالدينار القابل للتحويل" للمطورين والمصممين بمجرد تقديم بطاقة المبادر الذاتي أو معرف جبائي + عقد العمل أو الفاتورة الرسمية الصادرة للشركة الأجنبية.
+
+[VISAS — CANADA & SCHENGEN / تأشيرات السفر من تونس]
+- Visa Canada (IRCC / VFS Global): تقديم إلكتروني حصري عبر canada.ca (بوابة IRCC). أخذ البصمات بمركز VFS Global البحيرة 1 بتونس. الرسوم: 100 CAD (الطلب) + 85 CAD (البصمات). الوثائق: جواز سفر > 6 أشهر، استمارة IMM 5257، كشوفات بنكية لآخر 3-6 أشهر مختومة، شهادة عمل وكشف CNSS، حجز فندقي وتأمين سفر.
+- Visa France / Schengen (TLScontact / BLS): تقديم عبر france-visas.gouv.fr وحجز موعد بمركز TLScontact (تونس/صفاقس) أو BLS International. الرسوم: 90 EUR (حوالي 300 د.ت). الوثائق: جواز سفر + نسخ، صور شمسية بيومترية، كشف حساب بنكي لـ 3 أشهر أصلي ومختوم، شهادة عمل وتصريح بالراتب + كشف انخراط CNSS، حجز طيران وفندق أو شهادة إيواء، تأمين سفر دولي يغطي 30,000 EUR.
+
 [ÉQUIVALENCE DIPLÔMES ÉTRANGERS / معادلة الشهائد العلمية]
 - Authority: Ministère de l'Enseignement Supérieur (MESRS)
 - Portal: www.mesrs.tn | Cost: 20 DT frais de dossier | Delay: 60 à 90 jours
