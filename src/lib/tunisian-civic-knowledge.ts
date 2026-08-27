@@ -693,6 +693,292 @@ export const TUNISIAN_CIVIC_KNOWLEDGE: CivicProcedureKnowledge[] = [
     proTips: [
       "Les étudiants orphelins, handicapés ou dont les deux parents sont sans emploi bénéficient d'une bonification de points prioritaire dans le barème national d'attribution."
     ]
+  },
+
+  // 28. PRIVILÈGE FISCAL FCR POUR LES TUNISIENS À L'ÉTRANGER (DOUANE)
+  {
+    keywords: ['fcr', 'tre', 'douane voiture', 'importation voiture', 'rs', 'تغيير إقامة', 'ديوانة', 'سيارة ن.ت', 'امتياز جبائي'],
+    title: 'Privilège Fiscal FCR (Franchise Changement de Résidence) — Véhicules TRE',
+    authority: 'Direction Générale des Douanes Tunisiennes (douane.gov.tn)',
+    statutoryCost: '0 DT (Régime RS) ou 25% à 30% des droits de douane pour immatriculation TU normale',
+    delay: '3 à 7 jours au port de débarquement ou bureau régional',
+    derjaSummary: "El FCR houwa el imtiyez el jibé2i elli ya3tih el 9anoun lel twensa el 9atnin fel kharej (TRE) bech ydakhlou karhba l tounes. El chourout: 2 ans d'i9ama fel kharej bla ma t3addi akther men 120 jours fi tounes par an, w 3mor el karhba ma yfoutsh 5 ans (tourisme) walla 7 ans (utilitaire). 3andek 2 choix: Régime Suspensif (RS / ن.ت) ma t5allash diwana ama ma tbi3hash, walla t5allas 25% diwana w tekhou plaque TU 3adiya tbi3ha wa9t ma t7ebb.",
+    requiredDocuments: [
+      "Passeport tunisien original avec l'ensemble des cachets de voyage d'entrée et sortie",
+      "Copie de la carte de séjour étrangère valide ou titre d'identité étranger",
+      "Carte grise originale du véhicule au nom de l'expatrié ou certificat d'immatriculation étranger",
+      "Facture d'achat d'origine pour les véhicules neufs ou certificat d'expertise argus pour véhicules d'occasion",
+      "Formulaire officiel de demande de privilège FCR (rempli auprès des services douaniers)",
+      "Certificat d'identification technique délivré par l'ATTT au port d'entrée"
+    ],
+    steps: [
+      "Vérifier le respect strict des 2 ans de séjour à l'étranger et du quota max de 120 jours/an en Tunisie",
+      "Débarquer le véhicule au port (La Goulette, Zarzis...) avec le permis de circulation temporaire (Diptyque)",
+      "Déposer le dossier de dédouanement FCR au bureau des douanes compétent",
+      "Choisir l'option de liquidation : RS (franchise totale) ou paiement de 25%/30% des taxes pour série normale TU",
+      "Retirer le certificat de dédouanement et procéder à l'immatriculation définitive auprès de l'ATTT"
+    ],
+    proTips: [
+      "Depuis la loi de finances 2024-2025, les véhicules immatriculés sous le régime RS (ن.ت) peuvent être régularisés après un an par le paiement de 25% des droits de douane pour devenir librement cessibles en série TU normale."
+    ]
+  },
+
+  // 29. DIVORCE, PENSION ALIMENTAIRE & GARDE DES ENFANTS
+  {
+    keywords: ['divorce', 'tala9', 'nafa9a', 'hadhana', 'famille', 'طلاق', 'نفقة', 'حضانة', 'محكمة', 'قاضي الأسرة'],
+    title: 'Procédures de Divorce, Pension Alimentaire & Garde des Enfants',
+    authority: 'Tribunal de Première Instance — Juge de la Famille (قاضي الأسرة)',
+    statutoryCost: 'Frais d’avocat (selon convention) + 30 DT timbres de plaidoirie + 15 DT enregistrement jugement',
+    delay: '2 à 6 mois (Divorce par consentement) / 6 à 18 mois (Divorce pour préjudice / Caprice)',
+    derjaSummary: "El Tala9 fi tounes 3andou 3 anwé3 7asb Majallat el A7wal el Chakhsiya (Art. 31): Tala9 bel taradhi (consentement), Tala9 incha2 (be talab men a7ad el zawjayn), w Tala9 lel dharar (faute/préjudice). Avocat obligatoire. El 9adhi ya3mel 3 jalasat sol7iya obligatoires ken famma sghar. El omm 3andha el awlawiya fel 7adhana, wel bou yalzem yedfa3 el nafa9a w sakan el 7adhana. Ken el bou ma y5allash, el omm tekhou floussha men Sandou9 Dhamen el Nafa9a fel CNSS.",
+    requiredDocuments: [
+      "Extrait de l'acte de mariage original récent (< 3 mois)",
+      "Extraits de naissance de l'ensemble des enfants mineurs (< 3 mois)",
+      "Requête introductive d'instance rédigée et signée par un avocat inscrit au Barreau",
+      "Justificatifs de revenus des conjoints (fiches de paie, relevés bancaires, déclarations fiscales IRPP)",
+      "Preuves documentées en cas de divorce pour faute/préjudice (constats d'huissier, certificats médicaux, PV police)"
+    ],
+    steps: [
+      "Désigner un avocat pour déposer la requête en divorce auprès du greffe du Tribunal de Première Instance",
+      "Assister obligatoirement aux séances de conciliation (Jalasat Sol7iya) devant le Juge de la Famille",
+      "Ordonnance de référé fixant les mesures provisoires (garde, pension alimentaire d'urgence, droit de visite)",
+      "Plaidoirie sur le fond et prononcé du jugement de divorce fixant la pension et les rentes compensatoires",
+      "Transcription officielle du divorce sur les registres d'état civil de la Baladiya par le greffier"
+    ],
+    proTips: [
+      "Le non-paiement de la pension alimentaire fixée par jugement exécutoire constitue un délit pénal d'abandon de famille passible de prison ferme (Art. 53 bis CSP)."
+    ]
+  },
+
+  // 30. DROIT DU TRAVAIL, CONTRATS & LICENCIEMENT ABUSIF
+  {
+    keywords: ['travail', 'licenciement', 'tard', 'khedma', 'inspection travail', 'smig', 'شغل', 'طرد', 'عقد عمل', 'تفقدية الشغل', 'قانون الشغل'],
+    title: 'Droit du Travail : Contrats (CDI/CDD/SIVP), Licenciement Abusif & Indemnités',
+    authority: 'Inspection du Travail (تفقدية الشغل) & Conseil des Prud’hommes (الدائرة الشغلية بالمحكمة)',
+    statutoryCost: '0 DT (Procédure gratuite à l’Inspection et devant le tribunal de travail sans timbre fiscal)',
+    delay: '15 jours à l’Inspection / 6 à 12 mois devant la chambre prud’homale',
+    derjaSummary: "Majallat el Choghl el Tounsiya ta7mi el 5addem men el tard el ta3assoufi. Ken tarrdouk bla faute grave: 3andek el 7a9 fi Préavis (chhar walla chharin m5alsin), Indemnité de fin de service (nhar 3la kol chhar khedma fel 7oudoud mte3 3 chhour salaire), w Ghrémet el Tard el Ta3assoufi (men chhar l'2 chhour salaire 3la kol 3am khedma, max 36 chhour). Lezem temshi direct l'Tafaqoudiyat el Choghl fi dharf 15 jours bech ta3mel chkwaya w ma yti7esh 7a9ek.",
+    requiredDocuments: [
+      "Contrat de travail original (CDI, CDD, CIVP/SIVP) ou attestation de travail",
+      "Lettre de notification de licenciement écrite remise par l'employeur",
+      "Bulletins de paie des 12 derniers mois de travail",
+      "Historique des cotisations CNSS (Relevé de carrière CNSS)",
+      "Lettre de réclamation déposée auprès de l'Inspection Régionale du Travail"
+    ],
+    steps: [
+      "Déposer une plainte auprès de l'Inspection du Travail territorialement compétente",
+      "Séance de conciliation contradictoire entre l'employeur et l'employé convoquée par l'inspecteur",
+      "En cas d'échec de la conciliation, rédaction du Procès-Verbal de non-conciliation officiel",
+      "Saisine de la Chambre des Prud'hommes du Tribunal de Première Instance pour réclamer l'ensemble des indemnités légales"
+    ],
+    proTips: [
+      "Tout licenciement verbal sans lettre recommandée motivée avec accusé de réception est automatiquement qualifié d'abusif par la jurisprudence tunisienne."
+    ]
+  },
+
+  // 31. RETRAITE CNRPS — SECTEUR PUBLIC
+  {
+    keywords: ['cnrps', 'retraite fonctionnaire', 'wadhifa', 'te9a3od', 'تقاعد عمومي', 'وظيفة عمومية', 'جراية تقاعد'],
+    title: 'Pension de Retraite du Secteur Public (CNRPS)',
+    authority: 'Caisse Nationale de Retraite et de Prévoyance Sociale (CNRPS)',
+    statutoryCost: '0 DT (Gratuit)',
+    delay: '30 à 60 jours',
+    derjaSummary: "El Retraite mte3 el fonctionnaires fel wadhifa el 3oumoumiya tetsabb mel CNRPS. El 3mor el 9anouni houwa 62 ans (Loi 2019-37), w ynejjem yousel l'65 ans sur demande lel asatdha el jame3iyin wel 9odhat. El chort: 15 ans de service validé minimum. El jréya tet7seb: 2% 3la kol 3am fel 10 snin lowlin + 3% 3la kol 3am ba3d, plafonné l'90% men e5er salaire brut khdhitou.",
+    requiredDocuments: [
+      "Formulaire officiel de liquidation de pension de retraite CNRPS",
+      "Arrêté de mise à la retraite ou de cessation de fonction signé par le ministère de tutelle",
+      "Relevé de carrière récapitulatif délivré par l'administration d'origine",
+      "Copie de la Carte d'Identité Nationale (CIN) certifiée",
+      "Extrait de naissance original du retraité (< 3 mois)",
+      "Relevé d'Identité Bancaire ou Postal (RIB) original"
+    ],
+    steps: [
+      "L'administration employeuse transmet le dossier administratif complet à la CNRPS 6 mois avant la date de départ",
+      "Contrôle de validation des années de cotisations et calcul des droits à pension par la commission CNRPS",
+      "Notification du montant mensuel de la pension et versement direct sur le compte bancaire/postal"
+    ],
+    proTips: [
+      "Les agents de police, protection civile et douane bénéficient d'un départ anticipé à la retraite dès l'âge de 57 ans avec jouissance immédiate de la pension."
+    ]
+  },
+
+  // 32. CARTE DE RÉSIDENCE POUR ÉTRANGERS EN TUNISIE
+  {
+    keywords: ['etranger', 'sejour', 'residence tunisie', 'ajnabi', 'i9ama', 'إقامة', 'أجانب', 'بطاقة إقامة', 'شرطة الأجانب'],
+    title: 'Carte de Séjour & Titre de Résidence pour Étrangers en Tunisie',
+    authority: 'Direction des Frontières et des Étrangers — Commissariat de Police de secteur',
+    statutoryCost: '15 DT (Étudiants / stagiaires) / 150 DT (Travailleurs salariés, investisseurs et conjoints de Tunisiens)',
+    delay: '15 à 45 jours (Délivrance d’un récépissé provisoire immédiat)',
+    derjaSummary: "Ay ajnabi y7eb yosken fi tounes akther men 90 jours lezem ya3mel Carte de Séjour fel markez mte3 el police (bureau des étrangers). Famma plusieurs motifs: 9raya (inscription jame3a), 5edma (contrat msa7a7 men Wizarat el Tachghil), investissement (patente w RNE), walla zawaj b mouwaten tounsi. El visa d'entrée lezem tkoun en règle 9bal ma ykammel el 90 jours.",
+    requiredDocuments: [
+      "Passeport en cours de validité avec cachet d'entrée régulier sur le territoire tunisien (< 90 jours)",
+      "Contrat de bail enregistré à la Recette des Finances ou titre de propriété du logement",
+      "Justificatif de motif : Contrat de travail visé par le Ministère de l'Emploi, certificat d'inscription universitaire, ou acte de mariage avec un conjoint tunisien",
+      "Justificatifs de ressources financières (attestation bancaire en devises, virements ou fiches de paie)",
+      "4 Photos d'identité récentes fond blanc",
+      "Timbre fiscal de 15 DT ou 150 DT selon le statut"
+    ],
+    steps: [
+      "Rassembler les justificatifs avant l'expiration des 3 mois de séjour touristique sans visa",
+      "Déposer le dossier complet au bureau des étrangers du commissariat de police de votre résidence",
+      "Recevoir le récépissé de dépôt provisoire (valable 3 mois avec droit de circulation)",
+      "Retirer la carte de séjour plastifiée biométrique dès notification SMS/téléphonique"
+    ],
+    proTips: [
+      "Dépasser la durée légale de séjour de 90 jours sans carte de séjour entraîne une pénalité financière de 20 DT par semaine de retard payable à la frontière lors du départ."
+    ]
+  },
+
+  // 33. CNAM — PRISE EN CHARGE APET (MALADIES CHRONIQUES ALD 100%)
+  {
+    keywords: ['cnam apet', 'maladie chronique', 'ald', 'diabete', 'cancer', 'sokker', 'dhem', 'أمراض مزمنة', 'كنام', 'تكفل 100%'],
+    title: 'Prise en Charge Intégrale CNAM — APET (Affections de Longue Durée / ALD 100%)',
+    authority: 'Caisse Nationale d’Assurance Maladie (CNAM)',
+    statutoryCost: '0 DT (Procédure 100% gratuite)',
+    delay: '15 à 30 jours',
+    derjaSummary: "El CNAM tetkaffel 100% b'masrouf el dwa wel tbib wel 3amaliyat mte3 el Amradh el Mozmena (ALD - Affections de Longue Durée) kima el Sokker, el Dhem el 3ali, el Cancer, Qsour el Kléwi, el Qalb... Tsob dossier fih Formulaire APET y3ammrou el tbib el spécialiste mte3ek m3a bilan complet. Ba3d ma twafe9 el commission médicale fel CNAM, yzidoulek code el maladie 3al Carnet de soins mte3ek w ywalli el dwa gratuit bla plafond.",
+    requiredDocuments: [
+      "Formulaire officiel de demande de prise en charge APET rempli et signé par le médecin spécialiste traitant",
+      "Rapport médical détaillé et résultats complets des examens biologiques et radiologiques récents",
+      "Copie de la carte de soins CNAM (Carnet de soins) en cours de validité",
+      "Copie de la CIN de l'assuré social principal"
+    ],
+    steps: [
+      "Faire remplir le protocole de soins APET par le médecin spécialiste conventionné avec la CNAM",
+      "Déposer le dossier au centre CNAM de rattachement au bureau du contrôle médical",
+      "Examen par le médecin-conseil de la CNAM pour validation de l'affection dans la liste des 25 ALD",
+      "Réception de la décision d'accord et mise à jour de la puce du carnet de soins pour gratuité intégrale"
+    ],
+    proTips: [
+      "Les médicaments et actes médicaux liés directement à une ALD reconnue ne sont pas décomptés du plafond annuel ordinaire de remboursement CNAM."
+    ]
+  },
+
+  // 34. TITRE FONCIER & REGISTRE FONCIER (CONSERVATION DE LA PROPRIÉTÉ FONCIÈRE - CPF)
+  {
+    keywords: ['titre foncier', 'cpf', 'dafter khana', 'chhadet melkiya', 'rasm 3aqari', 'ملكية عقارية', 'رسم عقاري', 'شهادة ملكية', 'دفتر خانة'],
+    title: 'Certificat de Propriété Immobilière & Titre Foncier (CPF — Daftat Khana)',
+    authority: 'Conservation de la Propriété Foncière (CPF — cpf.gov.tn)',
+    statutoryCost: '20 DT (Certificat de propriété) / 1% de la valeur vénale (Inscription contrat d’achat)',
+    delay: '24 à 48 heures (En ligne sur cpf.gov.tn) / 7 jours au guichet régional',
+    derjaSummary: "Chhadet el Melkiya mel Daftat Khana (CPF) hiya el wathi9a el rasmiya elli tethbet chkoun moula el dar walla el ardh w tbayyen ken famma rhen (hypothèque) walla 3o9la 3al 3aqar. Tnejjem t5arrejha en ligne fi 24h men موقع cpf.gov.tn b'20 DT. Ken chrit 3aqar fih rasm 3aqari, lezem tressmou direct fel CPF bech ywalli mte3ek 9anounan 9oddém el ness el kol.",
+    requiredDocuments: [
+      "Numéro exact du Titre Foncier (Rasm 3aqari) et nom de la circonscription régionale",
+      "Copie de la CIN du demandeur (propriétaire, ayant droit ou mandataire)",
+      "Pour inscription d'un achat : Contrat d'achat rédigé par avocat/notaire enregistré à la Recette des Finances + Quittance de paiement des droits CPF (1%)"
+    ],
+    steps: [
+      "Accéder au portail officiel en ligne cpf.gov.tn ou se rendre à la direction régionale de la CPF",
+      "Saisir le numéro du titre foncier et effectuer le paiement électronique de 20 DT par carte bancaire ou e-Dinar",
+      "Télécharger instantanément le certificat de propriété numérique muni du cachet électronique QR-Code sécurisé"
+    ],
+    proTips: [
+      "N'achetez jamais un bien immobilier sans vérifier au préalable son certificat de propriété récent auprès de la CPF pour vous assurer de l'absence de saisies conservatoires ou d'hypothèques bancaires."
+    ]
+  },
+
+  // 35. CRÉATION D'ENTREPRISE SARL / SUARL (RNE & GUICHET UNIQUE APII)
+  {
+    keywords: ['creation societe', 'sarl', 'suarl', 'rne', 'registre commerce', 'apii', 'تأسيس شركة', 'سجل تجاري', 'سجل المؤسسات'],
+    title: 'Création d’Entreprise (SARL, SUARL & SAS) — Registre National des Entreprises (RNE)',
+    authority: 'Registre National des Entreprises (RNE — rne.tn) & APII / Recette des Finances',
+    statutoryCost: '150 DT (Enregistrement statuts Recette) + 50 à 100 DT (Frais RNE et publication JORT)',
+    delay: '48 à 72 heures au Guichet Unique ou 100% en ligne sur rne.tn',
+    derjaSummary: "Bech t2asses Charka SARL walla SUARL fi tounes: Tekteb el Statuts (3a9d ta2sis) 3and mo7ami walla expert-comptable, tsajjelhoum fel 9badha (150 DT droit fixe), tsob el dossier fel RNE (en ligne 3la rne.tn walla fel Guichet Unique APII), tekhou el Identifiant Unique (Matricule Fiscal / Patente) wel Mostakhraj el Rasmi fel JORT électronique fi 48h.",
+    requiredDocuments: [
+      "Statuts de la société signés et paraphés en 3 exemplaires originaux",
+      "Contrat de bail du siège social enregistré à la Recette ou titre de propriété",
+      "Certificat de blocage du capital bancaire (si capital supérieur aux seuils statutaires)",
+      "Copie des pièces d'identité (CIN ou Passeport) des associés et du gérant légal",
+      "Déclaration de non-condamnation et déclaration des bénéficiaires effectifs du RNE"
+    ],
+    steps: [
+      "Rédiger les statuts et procéder à la légalisation des signatures à la Baladiya",
+      "Enregistrer les statuts auprès de la Recette des Finances compétente",
+      "Déposer la demande d'immatriculation sur le portail numérique du RNE (rne.tn)",
+      "Payer les frais d'insertion et télécharger l'extrait officiel du Registre de Commerce et la Patente fiscale"
+    ],
+    proTips: [
+      "La législation tunisienne n'impose plus de capital social minimum pour les SARL/SUARL (1 DT symbolique permis par le Code des Sociétés Commerciales)."
+    ]
+  },
+
+  // 36. CONTRAT DE MARIAGE & ACTE D'ÉTAT CIVIL (BALADIYA / ADOUL)
+  {
+    keywords: ['mariage', 'zawaj', '3a9d zawaj', 'adoul zawaj', 'ischtirak amlak', 'زواج', 'عقد زواج', 'عدول إشهاد', 'اشتراك في الأملاك'],
+    title: 'Contrat de Mariage & Acte Notarié d’État Civil (Baladiya / Adoul Ichhad)',
+    authority: 'Municipalité (Baladiya) ou 2 Notaires (Adoul Ichhad)',
+    statutoryCost: '30 à 100 DT (Frais de célébration municipale ou honoraires des notaires) + 15 DT timbres',
+    delay: 'Immédiat le jour de la signature et remise du livret de famille sous 48h',
+    derjaSummary: "3a9d el Zawaj fi tounes yetsallam soit fel Baladiya 9oddém 3awn el 7ala el madaniya, soit 3and 2 3doul ichhed. El wathaye9: Chhadet tebiyya sébi9a lel zawaj (< 2 mois), madhmoun wilada (< 20 jours) lel 3roussat el zouz, CIN, w 2 chhoud kbar. Lezem t5atrou bin Nizam Fasl el Amlék (Séparation) walla Nizam el Ishtirak fel Amlék el Mabniya (Loi 98-91).",
+    requiredDocuments: [
+      "Extraits de naissance originaux récents portant la mention 'Célibataire' (< 20 jours)",
+      "Certificats médicaux prénuptiaux officiels délivrés par un médecin assermenté (< 2 mois)",
+      "Copies des Cartes d'Identité Nationale (CIN) des deux futurs époux et des 2 témoins majeurs",
+      "Autorisation judiciaire délivrée par le juge de la famille si l'un des conjoints est mineur (< 18 ans)",
+      "Déclaration d'option de régime matrimonial : Séparation des biens ou Communauté des biens acquêts"
+    ],
+    steps: [
+      "Passer la visite médicale prénuptiale auprès d'un centre de santé ou médecin conventionné",
+      "Déposer le dossier complet d'état civil à la Baladiya au moins 7 jours avant la date de la cérémonie",
+      "Célébration officielle du mariage en présence des conjoints, de l'officier et des deux témoins",
+      "Retrait de l'acte de mariage original et du Livret de Famille tunisien officiel"
+    ],
+    proTips: [
+      "Le régime légal par défaut en droit tunisien est la séparation des biens. L'option pour le régime de l'engagement communautaire (Ishtirak) doit être expressément déclarée et consignée dans l'acte."
+    ]
+  },
+
+  // 37. BRANCHEMENT ÉLECTRICITÉ & GAZ (STEG)
+  {
+    keywords: ['steg', 'compteur steg', 'electricite', 'gaz', 'courant', 'dhaw', 'gaz de ville', 'كهرباء', 'غاز', 'عداد', 'ربط الكهرباء'],
+    title: 'Branchement et Abonnement Compteur Électricité & Gaz (STEG)',
+    authority: 'Société Tunisienne de l’Électricité et du Gaz (STEG — steg.com.tn)',
+    statutoryCost: 'Devis technique sur mesure (~350 à 900 DT selon puissance et distance réseau)',
+    delay: '15 à 30 jours après paiement du devis',
+    derjaSummary: "Bech trakkeb compteur Dhaw walla Gaz steg fel dar: Tsob dossier fih 3a9d melkiya walla 3a9d kré, rokhset bna walla chhadet motaba9a mel Baladiya, CIN, w Chhadet selémet el tarkibat el dakhiliya men 3and électricien agréé. STEG teb3ath agent ya3mel visite w ya3tik Devis t5allsou fel agence, ba3d yjiw yrakkbou el compteur.",
+    requiredDocuments: [
+      "Formulaire officiel de demande de raccordement rempli auprès du district STEG",
+      "Titre de propriété enregistré, contrat d'achat ou contrat de location légalisé",
+      "Copie conforme du Permis de bâtir ou certificat de conformité de construction délivré par la Baladiya",
+      "Attestation de conformité des installations intérieures certifiée par un électricien agréé",
+      "Copie de la CIN du demandeur"
+    ],
+    steps: [
+      "Déposer le dossier au district STEG de votre circonscription",
+      "Visite technique sur site par un agent métreur STEG pour évaluer le tracé et la puissance nécessaire",
+      "Réception et règlement du devis de raccordement à la caisse du district",
+      "Pose du compteur électrique/gaz et mise sous tension du local"
+    ],
+    proTips: [
+      "La STEG refuse systématiquement le raccordement définitif des habitations construites sans permis de bâtir légal, sauf dérogation administrative exceptionnelle accordée par le Gouvernorat."
+    ]
+  },
+
+  // 38. BRANCHEMENT EN EAU POTABLE (SONEDE)
+  {
+    keywords: ['sonede', 'compteur eau', 'eau potable', 'me2', 'branchement sonede', 'ماء', 'صوناد', 'عداد ماء', 'ربط الماء الصالح للشرب'],
+    title: 'Branchement et Abonnement Compteur Eau Potable (SONEDE)',
+    authority: 'Société Nationale d’Exploitation et de Distribution des Eaux (SONEDE — sonede.com.tn)',
+    statutoryCost: 'Devis sur métrage (~250 à 650 DT selon proximité de la canalisation principale)',
+    delay: '15 à 25 jours après paiement du devis',
+    derjaSummary: "Bech tda5al el Me2 el صالح للشرب mel SONEDE: Tsob dossier fel district fih wathi9at melkiyet el 3aqar, rokhset el bna mel baladiya, tarkhis hafr el kayyas (autorisation de voirie) ken lezem, w CIN. SONEDE t5arraj métreur ya3mel devis, t5allas, w yjiw yrakkbou el compteur fel niche mte3ek.",
+    requiredDocuments: [
+      "Demande d'abonnement sur formulaire fourni par le district SONEDE",
+      "Justificatif de propriété du local (Titre foncier, contrat de vente enregistré, contrat de bail)",
+      "Copie du permis de bâtir ou autorisation municipale de raccordement",
+      "Autorisation municipale de fouille de voirie (Tarkhis 7afr) si la canalisation traverse la voie publique",
+      "Copie de la CIN de l'abonné"
+    ],
+    steps: [
+      "Déposer le dossier au bureau d'accueil du district SONEDE territorialement compétent",
+      "Visite de métrage sur place pour calculer le linéaire de tuyauterie et les accessoires nécessaires",
+      "Paiement du devis d'installation et signature du contrat d'abonnement",
+      "Exécution des travaux de raccordement et pose du compteur par l'équipe technique SONEDE"
+    ],
+    proTips: [
+      "Préparez à l'avance la niche du compteur aux normes exigées par la SONEDE (coffret maçonné en bordure de propriété) pour éviter le report de la pose par les techniciens."
+    ]
   }
 ];
 
