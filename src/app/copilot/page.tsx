@@ -265,7 +265,7 @@ export default function CopilotPage() {
         currentSessionId={currentSessionId}
         editingSessionId={editingSessionId}
         editingTitle={editingTitle}
-        onClose={closeSidebarOnMobile}
+        onClose={() => setSidebarOpen(false)}
         onNewChat={() => {
           handleNewChat();
           closeSidebarOnMobile();
@@ -286,13 +286,15 @@ export default function CopilotPage() {
         {/* Minimalist Top Header */}
         <header className="shrink-0 h-13 px-3 sm:px-6 flex items-center justify-between border-b border-white/[0.06] bg-[#090a0d]/90 backdrop-blur-md z-20">
           <div className="flex items-center gap-2 sm:gap-2.5">
-            <button
-              onClick={() => setSidebarOpen((p) => !p)}
-              className="p-1.5 rounded-lg hover:bg-white/10 text-zinc-400 hover:text-white transition-colors cursor-pointer border-0 outline-none flex items-center justify-center"
-              title={locale === 'ar' ? 'القائمة' : locale === 'derja' ? 'El Menu' : locale === 'en' ? 'Menu' : 'Menu'}
-            >
-              <PanelLeft className="w-4 h-4" />
-            </button>
+            {!sidebarOpen && (
+              <button
+                onClick={() => setSidebarOpen(true)}
+                className="p-1.5 rounded-lg hover:bg-white/10 text-zinc-400 hover:text-white transition-colors cursor-pointer border-0 outline-none flex items-center justify-center"
+                title={locale === 'ar' ? 'فتح القائمة' : locale === 'derja' ? '7el el menu' : locale === 'en' ? 'Open sidebar' : 'Ouvrir le menu'}
+              >
+                <PanelLeft className="w-4 h-4" />
+              </button>
+            )}
 
             <div className="flex items-center gap-2 text-xs font-semibold text-zinc-300">
               <div className="w-2 h-2 rounded-full bg-emerald-400 shadow-sm shadow-emerald-400" />
