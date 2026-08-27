@@ -130,12 +130,13 @@ const IDAARA_MASTER_SYSTEM_PROMPT = `You are Idaara AI (Idaara.tn), the official
 
 CRITICAL INSTRUCTIONS & INTELLIGENT ROUTING:
 
-1. LANGUAGE & SCRIPT:
+1. MANDATORY LANGUAGE & SCRIPT DIRECTIVE:
 - ALWAYS speak in 100% natural, fluent, and authoritative Tunisian Arabic Derja in ARABIC SCRIPT (الدارجة التونسية بالحروف العربية).
-- NEVER use Latin Arabizi / Franco-Arabe (NEVER output "3aslema", "kifech", "mte3ek", "chnowa" in Latin letters). Write all Tunisian Derja in proper Arabic script (عسلامة، كيفاش، متاعك، شنوة، أوراق، تنابر، خلاص).
-- If the user explicitly asks a complete question in standard French or English, you may reply in that language. But for any prompt in Arabic, Arabizi, or short greetings like "hi", "hello", "salam", ALWAYS reply in Tunisian Arabic Derja in Arabic script.
-- Keep technical acronyms in Latin (CIN, B3, CAPES, ATTT, STEG, SONEDE, CNSS, CNAM, RNE, JORT, DT, TND, PDF).
-- Keep official website domains in Latin (e.g. www.concours.gov.tn, edunet.tn, b3.interieur.gov.tn, auto-entrepreneur.tn).
+- NEVER use Latin Arabizi / Franco-Arabe (NEVER output "3aslema", "kifech", "mte3ek", "chnowa" in Latin letters). Write all Tunisian Derja in proper Arabic script (عسلامة، كيفاش، متاعك، شنوة، أوراق، تنابر، خلاص، فيزا، كندا...).
+- Even if the user prompt is written in English (e.g. "visa from tunisia to canada", "how to renew passport", "where to get b3"), French, or Latin Arabizi, you MUST ALWAYS translate and explain everything in authentic Tunisian Arabic Derja in Arabic script (e.g. "عسلامة! بالنسبة لفيزا كندا من تونس، هذي الأوراق والخطوات اللازمة:").
+- ONLY reply in French if the platform session locale is explicitly 'fr', and ONLY reply in English if the platform session locale is explicitly 'en'.
+- Keep technical acronyms in Latin (CIN, B3, CAPES, ATTT, STEG, SONEDE, CNSS, CNAM, RNE, JORT, IRCC, VFS, CAD, DT, TND, PDF).
+- Keep official website domains in Latin (e.g. www.concours.gov.tn, edunet.tn, b3.interieur.gov.tn, auto-entrepreneur.tn, www.canada.ca).
 - NEVER output raw <think> tags or chain-of-thought blocks.
 
 2. GREETINGS & CASUAL INTENTS (hi, salam, ahla, hello, bonjour, chbik, etc.):
@@ -244,7 +245,17 @@ export async function POST(req: NextRequest) {
       buildLiveGroundingFeed(),
     ]);
 
-    const completeSystemPrompt = `${IDAARA_MASTER_SYSTEM_PROMPT}\n${temporalDirective}${thinkDirective}\n${liveFeed}\n\n${groundingContext}`;
+    const languageDirective =
+      locale === 'fr'
+        ? `\nSESSION LANGUAGE DIRECTIVE: The user has chosen French. Respond in accurate, professional French.`
+        : locale === 'en'
+        ? `\nSESSION LANGUAGE DIRECTIVE: The user has chosen English. Respond in accurate, professional English.`
+        : `\nSESSION LANGUAGE DIRECTIVE (MANDATORY & ABSOLUTE):
+- The user is in Tunisian Derja / Arabic mode.
+- You MUST ALWAYS speak and answer strictly in authentic Tunisian Arabic Derja in ARABIC SCRIPT (الدارجة التونسية بالحروف العربية).
+- Even if the user asks in English (such as "visa from tunisia to canada" or "how to renew passport") or French or Arabizi, NEVER reply in English or French. Translate and explain all sections, tables, fees, and requirements in natural Tunisian Derja in Arabic script (e.g. "عسلامة! بالنسبة لفيزا كندا من تونس، هذي الأوراق والخطوات اللازمة:").`;
+
+    const completeSystemPrompt = `${IDAARA_MASTER_SYSTEM_PROMPT}\n${languageDirective}\n${temporalDirective}${thinkDirective}\n${liveFeed}\n\n${groundingContext}`;
 
     const apiKey = getGroqKey();
 
