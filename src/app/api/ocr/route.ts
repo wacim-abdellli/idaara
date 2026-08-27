@@ -222,7 +222,7 @@ ${DOCUMENT_ANALYSIS_SCHEMA_PROMPT}`;
             Authorization: `Bearer ${groqKey}`,
           },
           body: JSON.stringify({
-            model: 'llama-3.3-70b-versatile',
+            model: 'openai/gpt-oss-120b',
             messages: [{ role: 'user', content: prompt }],
             temperature: 0.1,
             max_tokens: 1200,

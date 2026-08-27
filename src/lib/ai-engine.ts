@@ -456,6 +456,48 @@ export function parseAndReason(prompt: string, locale: SupportedLanguage | strin
     };
   }
 
+  // ── 12b. GENERAL DOCUMENTS / REQUIRED PAPERS QUERY ────────────────────────
+  if (
+    query.includes('lwara9') ||
+    query.includes('awra9') ||
+    query.includes('lazma') ||
+    query.includes('أوراق') ||
+    query.includes('الوثائق') ||
+    query.includes('pieces') ||
+    query.includes('pièces')
+  ) {
+    return {
+      content:
+        lang === 'fr'
+          ? "Les pièces requises dépendent de la démarche exacte que vous souhaitez accomplir. Voici les démarches les plus demandées en Tunisie :\n\n1. **Passeport Tunisien (80 DT)** : CIN + copie, 4 photos fond blanc, extrait de naissance récent, ancien passeport.\n2. **Carte d'Identité CIN (3 DT)** : Extrait de naissance, 3 photos fond blanc, justificatif de domicile.\n3. **Mutation Carte Grise (~145 DT)** : Contrat de vente légalisé, ancienne carte grise, visite technique ATTT, non-gage.\n4. **Extrait B3 (7.5 DT)** : Demande en ligne b3.interieur.gov.tn avec timbre fiscal.\n\nQuelle démarche exacte souhaitez-vous effectuer ?"
+          : lang === 'en'
+          ? "The required documents depend on the exact procedure. Here are the most common procedures in Tunisia:\n\n1. **Tunisian Passport (80 DT)**: National ID (CIN), 4 photos, recent birth certificate, old passport.\n2. **National ID CIN (3 DT)**: Birth certificate, 3 photos, proof of address.\n3. **Vehicle Transfer (~145 DT)**: Notarized sales contract, old registration card, ATTT technical inspection, non-encumbrance certificate.\n4. **B3 Criminal Record (7.5 DT)**: Online request via b3.interieur.gov.tn.\n\nWhich specific procedure do you need help with?"
+          : "الأوراق المطلوبة تختلف حسب الإجراء اللي تحب تقوم بيه بالضبط. هذي قائمة بأهم الإجراءات والوثائق اللازمة ليها في تونس:\n\n1. **جواز السفر (80 د.ت / 25 د.ت للطلبة)**: بطاقة التعريف الوطنية (CIN) + نسخة، 4 صور شمسية خلفية بيضاء، مضمون ولادة أصلي، الجواز القديم.\n2. **بطاقة التعريف الوطنية CIN (3 د.ت)**: مضمون ولادة أقل من 3 أشهر، 3 صور شمسية، شهادة إقامة أو فاتورة STEG/SONEDE.\n3. **البطاقة الرمادية للسيارة (~145 د.ت)**: عقد بيع معرف بالإمضاء ومسجل، البطاقة الرمادية القديمة، شهادة الفحص الفني ATTT، شهادة عدم إثقال.\n4. **بطاقة السوابق العدلية B3 (7.5 د.ت)**: طلب إلكتروني عبر b3.interieur.gov.tn مع وصل الدفع.\n\nشنوة الإجراء اللي تحب تقضي فيه باش نعطيك الأوراق بالتفصيل؟",
+      actions: [
+        {
+          label: { derja: '🛂 جواز السفر', fr: 'Passeport', ar: 'جواز السفر', en: 'Passport' },
+          type: 'procedure_link',
+          payload: '/procedures/passeport-renouvellement',
+        },
+        {
+          label: { derja: '🪪 بطاقة التعريف (CIN)', fr: 'Carte CIN', ar: 'بطاقة التعريف', en: 'CIN Card' },
+          type: 'procedure_link',
+          payload: '/procedures/carte-identite-nationale-cin',
+        },
+        {
+          label: { derja: '🚗 البطاقة الرمادية (ATTT)', fr: 'Carte Grise', ar: 'البطاقة الرمادية', en: 'Vehicle Registration' },
+          type: 'procedure_link',
+          payload: '/procedures/carte-grise-mutation',
+        },
+        {
+          label: { derja: '📋 بطاقة عدد 3 (B3)', fr: 'Bulletin N°3', ar: 'بطاقة عدد 3', en: 'B3 Certificate' },
+          type: 'procedure_link',
+          payload: '/procedures/bulletin-numero-3-b3',
+        },
+      ],
+    };
+  }
+
   // ── 13. FALLBACK CONTEXTUAL RESPONSE ───────────────────────────────────────
   return {
     content:

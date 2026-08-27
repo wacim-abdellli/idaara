@@ -260,9 +260,12 @@ export async function POST(req: NextRequest) {
     // ─── PRIMARY ENGINE: Multi-Model Groq Cascade ───
     if (apiKey) {
       const groqModels = [
-        'llama-3.3-70b-versatile',
-        'llama-3.1-8b-instant',
-        'mixtral-8x7b-32768',
+        'openai/gpt-oss-120b',
+        'openai/gpt-oss-20b',
+        'groq/compound-mini',
+        'qwen/qwen3.8-27b',
+        'qwen/qwen3.6-27b',
+        'allam-2-7b',
       ];
       for (const model of groqModels) {
         try {
