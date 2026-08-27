@@ -498,6 +498,44 @@ export function parseAndReason(prompt: string, locale: SupportedLanguage | strin
     };
   }
 
+  // ── 12c. VISA & IMMIGRATION / TRAVEL PROCEDURES ───────────────────────────
+  if (
+    query.includes('visa') ||
+    query.includes('فيزا') ||
+    query.includes('تاشيرة') ||
+    query.includes('تأشيرة') ||
+    query.includes('canada') ||
+    query.includes('france') ||
+    query.includes('voyage') ||
+    query.includes('safari')
+  ) {
+    return {
+      content:
+        lang === 'fr'
+          ? "Pour toute demande de **Visa depuis la Tunisie** (Canada, France/Schengen, etc.), les documents de base obligatoires sont :\n\n1. **Passeport valide** (validité > 6 mois avec au moins 2 pages vierges).\n2. **Extrait de naissance (مضمون ولادة)** en français (< 3 mois).\n3. **Justificatifs professionnels & financiers** :\n   - *Salariés* : Attestation de travail, 3 dernières fiches de paie, historique CNSS.\n   - *Commerçants / Freelances* : Copie RNE/Patente, déclaration fiscale.\n   - *Relevés bancaires* des 3 à 6 derniers mois avec cachet de la banque.\n4. **Justificatif de séjour** : Réservation d'hôtel confirmée ou Certificat d'hébergement (شهادة إيواء).\n5. **Assurance voyage internationale** couvrant les frais médicaux et rapatriement.\n\nPour le **Canada**, la demande se fait 100% en ligne via le portail officiel **IRCC (Canada.ca)** avec prise de données biométriques (VFS Global Tunis - Berges du Lac)."
+          : lang === 'en'
+          ? "For a **Visa from Tunisia** (Canada, France/Schengen, etc.), the standard required dossier includes:\n\n1. **Valid Tunisian Passport** (validity > 6 months with 2+ blank pages).\n2. **Recent Birth Certificate** in French (< 3 months).\n3. **Professional & Financial Proof**:\n   - *Employees*: Work certificate, last 3 payslips, CNSS statement.\n   - *Self-Employed / Freelance*: RNE registration certificate, tax return.\n   - *Bank statements*: Last 3 to 6 months stamped by the bank.\n4. **Accommodation**: Hotel booking or Certified Accommodation Certificate (شهادة إيواء).\n5. **Travel Health Insurance**.\n\nFor **Canada**, applications are submitted 100% online via the official **IRCC portal (Canada.ca)** with biometrics appointment at VFS Global Tunis."
+          : "باش تقدم على **فيزا من تونس** (كندا، فرنسا / شنغن، أو غيرها)، هذي الأوراق والوثائق الأساسية المطلوبة في الملف:\n\n1. **جواز سفر صالح** (صلاحية أكثر من 6 أشهر وفيه صفحتين فارغتين على الأقل).\n2. **مضمون ولادة باللغة الفرنسية** (أقل من 3 أشهر من البلدية).\n3. **إثبات الوضعية المهنية والمالية**:\n   - *موظف/أجير*: شهادة عمل (Attestation de travail)، كشوفات الراتب لآخر 3 أشهر (Fiches de paie)، وكشف انخراط CNSS.\n   - *مبادر ذاتي / تاجر*: شهادة تسجيل بالسجل التجاري RNE أو باتيندة.\n   - *كشف الحساب البنكي (Relevé bancaire)* لآخر 3 إلى 6 أشهر مختوم من البنك.\n4. **إثبات الإقامة**: حجز فندقي مؤكد أو شهادة إيواء (Certificat d'hébergement) معرفة بالإمضاء.\n5. **تأمين سفر دولي (Assurance voyage)** يغطي مصاريف العلاج.\n\nبالنسبة لـ **فيزا كندا**:\n- التقديم يتم 100% عبر الإنترنت في موقع الهجرة الكندي الرسمي **IRCC (Canada.ca)**.\n- بعد تقديم الطلب، يتم تحديد موعد للبصمات البيومترية في مركز **VFS Global تونس (ضفاف البحيرة)**.",
+      actions: [
+        {
+          label: { derja: '🛂 جواز السفر', fr: 'Passeport Tunisien', ar: 'جواز السفر', en: 'Passport' },
+          type: 'procedure_link',
+          payload: '/procedures/passeport-renouvellement',
+        },
+        {
+          label: { derja: '📄 شهادة إيواء PDF', fr: "Certificat d'Hébergement", ar: 'شهادة إيواء PDF', en: 'Accommodation Certificate' },
+          type: 'pdf_form',
+          payload: '/documents/certificat-hebergement',
+        },
+        {
+          label: { derja: '📋 بطاقة عدد 3 (B3)', fr: 'Bulletin N°3', ar: 'بطاقة عدد 3', en: 'B3 Record' },
+          type: 'procedure_link',
+          payload: '/procedures/bulletin-numero-3-b3',
+        },
+      ],
+    };
+  }
+
   // ── 13. FALLBACK CONTEXTUAL RESPONSE ───────────────────────────────────────
   return {
     content:
