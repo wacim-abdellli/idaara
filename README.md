@@ -2,12 +2,13 @@
 
 # 🏛️ Idaara.tn · إدارة.تونس
 
-**Tunisia's First AI Bureaucracy Copilot, Scanner & Smart Document Studio**  
-*Fasserli, 3abbi w a3tini l'awra9 — Conquer administrative red tape in seconds.*
+**Tunisia's First AI Civic Copilot, Legal Scanner & Administrative Intelligence Platform**  
+*Awra9ek w 9adhyeitek fi D9i9a — Conquer administrative red tape in seconds.*
 
 <br/>
 
-[![Next.js](https://img.shields.io/badge/Next.js-16-black?style=for-the-badge&logo=next.js&logoColor=white)](https://nextjs.org/)
+[![Next.js](https://img.shields.io/badge/Next.js-16.3-black?style=for-the-badge&logo=next.js&logoColor=white)](https://nextjs.org/)
+[![React](https://img.shields.io/badge/React-19-61DAFB?style=for-the-badge&logo=react&logoColor=black)](https://react.dev/)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.7-3178C6?style=for-the-badge&logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
 [![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-4.0-38B2AC?style=for-the-badge&logo=tailwind-css&logoColor=white)](https://tailwindcss.com/)
 [![Groq AI](https://img.shields.io/badge/AI-Groq_GPT--OSS--120B-F55036?style=for-the-badge&logo=openai&logoColor=white)](https://groq.com/)
@@ -20,16 +21,20 @@
 
 ## 📖 Table of Contents
 
-- [The Vision & Problem Statement](#-the-vision--problem-statement)
+- [The Problem: The "Arja3 Ghodwa" Dilemma](#-the-problem-the-arja3-ghodwa-dilemma)
+- [The Solution](#-the-solution)
 - [Core Features & Modules](#-core-features--modules)
-  - [1. Derja-Native AI Copilot (`/copilot`)](#1-derja-native-ai-copilot-copilot)
-  - [2. "Fasserli Hal War9a" Scanner & Legal Decoder (`/fasserli`)](#2-fasserli-hal-war9a-scanner--legal-decoder-fasserli)
-  - [3. Public Concours & Recruitment Hub (`/concours`)](#3-public-concours--recruitment-hub-concours)
-  - [4. Auto-Filled Official PDF Form Generator (`/documents`)](#4-auto-filled-official-pdf-form-generator-documents)
-  - [5. "Timbre & Awra9" Budget & Checklist Calculator (`/calculator`)](#5-timbre--awra9-budget--checklist-calculator-calculator)
-  - [6. Interactive Municipal & Public Office Locator (`/locator`)](#6-interactive-municipal--public-office-locator-locator)
-  - [7. Freelancer & Entrepreneur Launchpad (`/launchpad`)](#7-freelancer--entrepreneur-launchpad-launchpad)
-  - [8. Complete Civic Procedures Directory (`/procedures`)](#8-complete-civic-procedures-directory-procedures)
+  - [1. Universal Derja AI Copilot (`/copilot`)](#1-universal-derja-ai-copilot-copilot)
+  - [2. "Fasserli Hal War9a" Scanner & OCR Decoder (`/fasserli`)](#2-fasserli-hal-war9a-scanner--ocr-decoder-fasserli)
+  - [3. National Concours & Public Recruitment Hub (`/concours`)](#3-national-concours--public-recruitment-hub-concours)
+  - [4. Auto-Filled Official PDF Studio (`/documents`)](#4-auto-filled-official-pdf-studio-documents)
+  - [5. "Timbre & Awra9" Statutory Cost Calculator (`/calculator`)](#5-timbre--awra9-statutory-cost-calculator-calculator)
+  - [6. Atlas of 350+ Municipalities & Public Offices (`/locator`)](#6-atlas-of-350-municipalities--public-offices-locator)
+  - [7. E-Government Portals Directory (`/portails`)](#7-e-government-portals-directory-portails)
+  - [8. Emergency Contacts & National Directory (`/contacts`)](#8-emergency-contacts--national-directory-contacts)
+  - [9. Freelancer & Entrepreneur Launchpad (`/launchpad`)](#9-freelancer--entrepreneur-launchpad-launchpad)
+  - [10. Complete Civic Procedures Directory (`/procedures`)](#10-complete-civic-procedures-directory-procedures)
+- [Deep Tunisian Infrastructure Grounding (38 Domains)](#-deep-tunisian-infrastructure-grounding-38-domains)
 - [Tech Stack & Architecture](#-tech-stack--architecture)
 - [Getting Started](#-getting-started)
   - [Prerequisites](#prerequisites)
@@ -39,79 +44,110 @@
 
 ---
 
-## 🎯 The Vision & Problem Statement
+## 🎯 The Problem: The "Arja3 Ghodwa" Dilemma
 
-Dealing with public administration in Tunisia (*l'Idara*, *Baladiya*, *Recette des Finances*, *CNSS*, *Douane*, *Ministères*) is universally recognized as one of the most time-consuming and fragmented experiences for citizens, students, entrepreneurs, and diaspora expats:
+Navigating public administration in Tunisia (*l'Idara*, *Baladiya*, *Recette des Finances*, *CNSS*, *Douane*, *Ministères*) has long been plagued by:
 
-- **Missing Paperwork & Turnarounds**: Citizens wait hours in line only to be turned away because they lacked a *5 DT timbre fiscal*, a *copie conforme*, or a specific civil document.
-- **Dense Statutory Jargon**: Tax adjustment notices, court summons, and administrative decrees are written in complex legal phrasing that is difficult to parse.
-- **Fragmented Information**: Requirements differ between municipalities, opening hours shift during summer and Ramadan, and official portals are scattered.
+- **The Missing Paperwork Trap**: Citizens wait in queue for hours only to be sent home (*"أرجع غدوة"*) over a missing 3 DT fiscal stamp, an expired birth certificate, or an uncertified copy.
+- **Complex Statutory Jargon**: Tax notices, court summons, and JORT decrees are written in dense legal terminology that is difficult for citizens to interpret.
+- **Scattered Information**: Requirements differ by municipality, opening hours change during summer (*Séance Unique*) and Ramadan, and official government portals are fragmented.
 
-### 💡 The Idaara.tn Solution
-**Idaara.tn** unifies Tunisian administrative procedures, laws (*JORT*), and municipal knowledge into a modern, voice-first intelligent assistant. Speak naturally in **Tunisian Derja**, snap a photo of any official notice for instant plain-language decoding, estimate exact costs, and generate certified, ready-to-print legal PDF documents.
+### 💡 The Solution
+**Idaara.tn** consolidates Tunisian administrative procedures, laws (*JORT*), and municipal knowledge into a unified, AI-powered civic copilot. Citizens can speak naturally in **Tunisian Derja**, upload letters for instant plain-language decoding, calculate exact statutory stamp costs, and generate certified, ready-to-print legal documents.
 
 ---
 
 ## ✨ Core Features & Modules
 
-### 1. Derja-Native AI Copilot (`/copilot`)
-- **Dialect Understanding**: Understands conversational Tunisian Derja (Arabizi and Arabic script), French, and standard Arabic.
-- **Deep Think Mode (`[ 🧠 Think ]`)**: Toggle deep legal reasoning mode for complex statutory questions cross-checked against official Tunisian legal codes.
-- **Document Attachment (`[ 📷 OCR ]`)**: Upload and attach notices or letters directly within the conversation.
-- **Whisper Speech-to-Text**: High-accuracy voice transcription powered by `whisper-large-v3-turbo`.
-- **Actionable Formatting**: Interactive checklist pills, bold step badges, external government portal links, and copy-to-clipboard support.
+### 1. Universal Derja AI Copilot (`/copilot`)
+- **100% Tunisian Derja in Arabic Script**: Formulates all responses strictly in warm, natural Tunisian Arabic Derja (الدارجة التونسية بالحروف العربية), regardless of whether the user types in English, French, Latin Arabizi, or Arabic.
+- **Sub-Second Groq Inference**: Powered by `openai/gpt-oss-120b` running on Groq LPU hardware with progressive token streaming (~500ms latency).
+- **Deep Think Mode (`[ 🧠 Think ]`)**: Exhaustive statutory breakdown cross-referenced with exact JORT decrees and official tariffs.
+- **Document OCR Attachment (`[ 📷 OCR ]`)**: Upload and decipher official administrative letters directly within the conversation.
+- **Whisper Speech-to-Text**: Voice input powered by `whisper-large-v3-turbo`.
+- **Hover Timestamps & Minimal UI**: Timestamps (e.g. `7:22`) and copy buttons appear smoothly on hover, keeping the chat clean and distraction-free.
+- **Civic Domain Guardrails**: In-character handling of off-topic requests, guiding citizens back to civic procedures.
 
-### 2. "Fasserli Hal War9a" Scanner & Legal Decoder (`/fasserli`)
-- **Instant Document Decoding**: Upload or snap a photo of any official administrative letter (Tax notice, CNSS demand, Police summons, Court order, CIN, STEG/SONEDE).
+### 2. "Fasserli Hal War9a" Scanner & OCR Decoder (`/fasserli`)
+- **Instant Document Decoding**: Upload or snap a photo of any official administrative letter (Tax adjustment, CNSS demand, Police summons, Court order, Utility bill).
 - **3-Point Plain Language Summary**: Breaks down the document in Tunisian Derja, French, and Arabic.
-- **Statutory Deadlines & Penalty Radar**: Identifies strict appeal windows, due dates, and late payment penalties.
-- **Action Checklist & Guichet**: Identifies the exact municipal or tax desk to visit with the required supporting papers.
-- **1-Click Copilot Deep Consultation**: Seamlessly transition from a decoded document into an AI conversation.
+- **Statutory Deadlines & Penalty Radar**: Identifies strict appeal windows, payment deadlines, and late penalty rates.
+- **Action Checklist & Desk Locator**: Identifies the exact municipal, court, or tax desk to visit with required papers.
+- **Zero-Storage Privacy**: Files are processed ephemerally in RAM and immediately purged.
 
-### 3. Public Concours & Recruitment Hub (`/concours`)
-- **Live Recruitment Notices**: Verified openings across Tunisian ministries, state companies, municipalities, and agencies (*Concours Nationaux*).
+### 3. National Concours & Public Recruitment Hub (`/concours`)
+- **Live Recruitment Feed**: Openings across Tunisian ministries, public enterprises (STEG, SONEDE), and agencies (*Concours Nationaux*).
 - **Multi-Filter Discovery**: Filter by educational level (Bac, Licence, Master, Ingénieur), sector, closing date, and required papers.
-- **Statutory Directives**: Instant checklist of application documents (B3, Extrait de naissance, Copies certifiées).
+- **Statutory Checklists**: Pre-submission dossier checklists (B3 < 3 months, medical certificates, certified diplomas).
 
-### 4. Auto-Filled Official PDF Form Generator (`/documents`)
-- **Ready-to-Print Legal Templates**: Generates vector-sharp PDF documents ready for municipal legalization (*Signature Légalisée* at the *Baladiya*):
-  - 📝 **Standardized Rental Agreements** (*Contrat de Location certifié*)
-  - 📝 **Official Power of Attorney** (*Tawkîl / Procuration*)
-  - 📝 **Sworn Statements** (*Déclaration sur l'honneur / Tasrîh bi charaf*)
-  - 📝 **Car Sales Contract** (*Contrat de Vente Véhicule*)
-- **Cryptographic QR Verification**: Includes QR verification codes, fiscal stamp margin guidelines, and bilingual formatting.
+### 4. Auto-Filled Official PDF Studio (`/documents`)
+- **Ready-to-Print Legal Templates**: Generates vector-sharp PDF documents formatted for municipal signature legalization (*التعريف بالإمضاء في البلدية*):
+  - 📝 **Standardized Rental Agreements** (*Contrat de Location certifié / عقد كراء*)
+  - 📝 **Official Power of Attorney** (*Tawkîl / Procuration / توكيل رسمي*)
+  - 📝 **Sworn Statements** (*Déclaration sur l'honneur / تصريح بالشرف*)
+  - 📝 **Vehicle Sales Contract** (*Contrat de Vente Véhicule / عقد بيع سيارة*)
+- **Cryptographic QR Verification**: Embeds verification hashes and fiscal stamp margins.
 
-### 5. "Timbre & Awra9" Budget & Checklist Calculator (`/calculator`)
-- **Real-Time Cost Estimator**: Calculates exact total expenses for administrative procedures:
-  - Exact fiscal stamp requirements (*Timbres fiscaux: 5 DT, 15 DT, 25 DT, 80 DT, 100 DT*).
-  - Standardized ID photo counts (*format officiel*).
-  - Number of certified copies (*Copies conformes*).
-- **Persistent Local Checklist**: Track items as you prepare them before visiting the counter.
+### 5. "Timbre & Awra9" Statutory Cost Calculator (`/calculator`)
+- **Real-Time Cost Breakdown**: Calculates exact expenses for administrative procedures:
+  - Statutory fiscal stamps (*Timbres fiscaux: 3 DT, 10 DT, 25 DT, 80 DT, 150 DT*).
+  - Standardized ID photo counts (*format officiel fond blanc*).
+  - Certified copy fees (*Copies conformes à la Baladiya*).
+- **Persistent Local Checklist**: Check off requirements as you prepare your dossier.
 
-### 6. Interactive Municipal & Public Office Locator (`/locator`)
-- **350+ Public Offices**: Comprehensive directory covering Municipalities (*Baladiyas*), Post Offices, Tax Receipts (*Recettes des Finances*), and CNSS centers across all 24 governorates.
-- **Dynamic Schedules**: Opening hours adjusted for **Ramadan** and summer single-shift schedules (*Séance Unique*).
-- **One-Tap GPS Directions**: Integrated Google Maps and Waze routing.
+### 6. Atlas of 350+ Municipalities & Public Offices (`/locator`)
+- **All 24 Governorates**: Directory covering Municipalities (*Baladiyas*), Post Offices, Tax Receipts (*Recettes des Finances*), ATTT, and CNSS centers.
+- **Seasonal Working Hours**: Live schedules adjusted for **Ramadan** and summer single-shift (*Séance Unique*).
+- **GPS Integration**: One-tap navigation via Google Maps and Waze.
 
-### 7. Freelancer & Entrepreneur Launchpad (`/launchpad`)
-- **Auto-Entrepreneur Status**: Step-by-step roadmap for tax exemptions (0.5% - 1%), CNSS registration, and status declarations.
-- **Patente & RNE**: Registry filing guide, corporate tax structure, and legal compliance.
-- **Export & Freelance Contracts**: Legally compliant bilingual contracts in EUR/USD with Central Bank of Tunisia (BCT) clauses.
+### 7. E-Government Portals Directory (`/portails`)
+- **Direct Access to 15+ Portals**: Verified official government platforms:
+  - 🪪 **Mobile-ID / e-Houwiya** (`mobile-id.tn`)
+  - 📋 **Bulletin N°3 en ligne** (`b3.interieur.gov.tn`)
+  - 💼 **Auto-Entrepreneur** (`autoentrepreneur.tn`)
+  - 🏢 **Registre National des Entreprises (RNE)** (`rne.tn`)
+  - 📜 **Conservation de la Propriété Foncière (CPF)** (`cpf.gov.tn`)
+  - 🏆 **Concours Fonction Publique** (`concours.gov.tn`)
 
-### 8. Complete Civic Procedures Directory (`/procedures`)
-- **Detailed Step-by-Step Guides**: Passports, CIN issuance/renewal, Driver's Licenses, Carte Grise transfers, B3 criminal records, marriage certificates, and customs declarations.
+### 8. Emergency Contacts & National Directory (`/contacts`)
+- **Emergency Hotlines**: Police (197), SAMU (190), Protection Civile (198), Garde Nationale (71 327 200), SOS Violence (1899).
+- **Ministry Directory**: Direct contact numbers, addresses, and official web portals for all state ministries.
+
+### 9. Freelancer & Entrepreneur Launchpad (`/launchpad`)
+- **Auto-Entrepreneur Status**: 1% flat tax rate (services) / 0.5% (commerce), 0% TVA (Art. 13 Code TVA), and CNSS Regime 14.
+- **FX & BCT Invoicing**: Compliance guidelines for foreign currency bank accounts under Central Bank of Tunisia (BCT) Circular 2017-06.
+- **SUARL / SARL Incorporation**: Step-by-step registration with the RNE and Recette des Finances.
+
+### 10. Complete Civic Procedures Directory (`/procedures`)
+- **38 Detailed Step-by-Step Guides**: Passports, CIN, Driver's Licenses, Carte Grise transfers, B3 criminal records, marriage contracts, and customs clearances.
+
+---
+
+## 🏛️ Deep Tunisian Infrastructure Grounding (38 Domains)
+
+Idaara AI is grounded with verified legislation, decrees, and administrative protocols across 38 domains:
+
+| Infrastructure Pillar | Procedures & Legal Frameworks Covered |
+| :--- | :--- |
+| **⚖️ Courts & Family Law** | • **Divorce & Alimony**: All 3 forms under Art. 31 CSP (Consent, Caprice, Fault), 3 mandatory conciliation sessions, CNSS Alimony Guarantee Fund (*صندوق ضمان النفقة*).<br>• **Powers of Attorney (التوكيل)**: Bank, real estate, and vehicle sale mandates.<br>• **Hojjet Wafet & Estate Distribution**: Notary acts (*عدول إشهاد*), cantonal judge validation, and land registry inscription. |
+| **💼 Labor & Public Retirement** | • **Labor Law & Unfair Dismissal**: Notice periods, severance indemnities, abusive dismissal compensation (1–2 months salary per year, capped at 36 months), and Labour Inspection (*تفقدية الشغل*) filings.<br>• **CNRPS Public Sector Retirement**: Law 2019-37 retirement age (62/65), 15-year threshold, and pension formula. |
+| **🏢 Real Estate & Land Title (CPF)** | • **Daftat Khana (دفتر خانة)**: Official Title Deed extraction on `cpf.gov.tn` (20 DT), non-hypothecation certs, and 1% CPF purchase inscriptions. |
+| **🏥 Healthcare & CNAM** | • **APET 100% Coverage**: Unlimited coverage with 0 DT copay for the 25 official Long-Term Affections (Diabetes, Cancer, Hypertension, Renal failure). |
+| **🛃 Customs & Expatriates** | • **FCR & TRE Privileges**: 2-year foreign residency, 120-day annual stay limit, 5-year vehicle age, and regularization from `RS / ن.ت` to `TU` under Finance Laws 2024/2025.<br>• **Foreign Resident Permits**: Student, work, and investment dossiers with the Foreigners Police Bureau. |
+| **⚡ Public Utilities** | • **STEG**: Connection dossiers, Baladiya conformity certificates, and certified electrician compliance.<br>• **SONEDE**: Property titles, municipal excavation permits (*ترخيص حفر الطرقات*), and standard meter housing. |
+| **🚀 Business Incorporation** | • **SARL / SUARL via RNE & APII**: Articles of association, 150 DT fixed tax registration, and automated electronic JORT publication. |
 
 ---
 
 ## 💻 Tech Stack & Architecture
 
 ```
-Frontend:          Next.js 16 (App Router, Server Components, Turbopack), React 19, TypeScript
+Frontend:          Next.js 16.3 (App Router, Turbopack), React 19, TypeScript
 Styling & UI:      Tailwind CSS 4, Framer Motion, Lucide Icons, Custom Bento Grid System
-AI Intelligence:   Groq API (openai/gpt-oss-120b, qwen/qwen3.6-27b, openai/gpt-oss-20b, allam-2-7b)
-Speech Engine:     Whisper Large v3 Turbo (Derja & Arabic phonetic STT)
-Document Engine:   jsPDF, html2canvas-pro (High-DPI Vector Legal PDF Generator)
-Data Architecture: Structured Civic Graph (25+ Procedures, 350+ Offices across 24 Governorates)
+AI Engine:         Groq API (openai/gpt-oss-120b, qwen/qwen3.6-27b, allam-2-7b)
+Speech Engine:     Whisper Large v3 Turbo (Phonetic Derja & Arabic Speech-to-Text)
+Document Engine:   jsPDF, html2canvas-pro (High-DPI Vector Legal PDF Studio)
+Grounding Engine:  Structured Civic Knowledge Graph (38 Core Domains, 350+ Offices across 24 Governorates)
 ```
 
 ---
@@ -141,7 +177,7 @@ Data Architecture: Structured Civic Graph (25+ Procedures, 350+ Offices across 2
    # Idaara.tn Environment Configuration
    NEXT_PUBLIC_APP_URL="http://localhost:3000"
 
-   # Groq Cloud API Key (Free high-speed AI & Whisper STT)
+   # Groq Cloud API Key (High-speed 120B AI & Whisper STT)
    # Get key: https://console.groq.com/keys
    GROQ_API_KEY="your_groq_api_key_here"
 
@@ -155,7 +191,12 @@ Data Architecture: Structured Civic Graph (25+ Procedures, 350+ Offices across 2
    ```
    Open **[http://localhost:3000](http://localhost:3000)** in your browser.
 
-5. **Build for production**:
+5. **Run test suite**:
+   ```bash
+   npm test
+   ```
+
+6. **Build for production**:
    ```bash
    npm run build
    npm run start
@@ -165,9 +206,10 @@ Data Architecture: Structured Civic Graph (25+ Procedures, 350+ Offices across 2
 
 ## 🔒 Security, Privacy & Compliance
 
-- **Zero-Storage Privacy Protocol**: Uploaded identity cards and personal notices are processed ephemerally in RAM and are never stored on persistent disks or shared with third parties.
+- **Zero-Storage Privacy Protocol**: Uploaded identity cards and personal notices are processed ephemerally in RAM and are never stored on persistent storage or shared with third parties.
 - **Client-Side Redaction**: Sensitive personal identifiers (CIN numbers, bank RIBs) can be masked before document processing.
-- **Statutory Alignment**: Information and procedures are continuously updated in accordance with the *Journal Officiel de la République Tunisienne* (JORT) and relevant ministerial decrees.
+- **Rate-Limiting Protection**: Sliding-window rate limiting on all API routes to protect platform availability.
+- **Statutory Alignment**: Procedures and statutory amounts are verified against the *Journal Officiel de la République Tunisienne* (JORT) and relevant ministerial decrees.
 
 ---
 
