@@ -7,18 +7,36 @@ export async function generatePDFFromElement(elementId: string, filename: string
   const { default: html2canvas } = await import('html2canvas-pro');
   const { default: jsPDF } = await import('jspdf');
 
-  // Capture element to canvas with high resolution
+  // Capture element to canvas with high resolution and isolated body staging
   const canvas = await html2canvas(element, {
     scale: 2, // 2x resolution for crisp text & borders
     useCORS: true,
     logging: false,
     backgroundColor: '#ffffff',
     windowWidth: 1200,
-    onclone: (_clonedDoc, clonedElement) => {
-      // Ensure cloned element is fully visible during render
+    onclone: (clonedDoc, clonedElement) => {
+      // 1. Clear cloned document body and mount clonedElement directly
+      clonedDoc.body.innerHTML = '';
+      clonedDoc.body.style.margin = '0';
+      clonedDoc.body.style.padding = '0';
+      clonedDoc.body.style.background = '#ffffff';
+      clonedDoc.body.style.display = 'block';
+      clonedDoc.body.appendChild(clonedElement);
+
+      // 2. Normalize styles on clonedElement so standard A4 layout calculates with 100% precision
+      clonedElement.style.position = 'relative';
+      clonedElement.style.left = '0';
+      clonedElement.style.top = '0';
       clonedElement.style.visibility = 'visible';
       clonedElement.style.opacity = '1';
       clonedElement.style.display = 'block';
+      clonedElement.style.width = '794px'; // 210mm at 96 DPI
+      clonedElement.style.minWidth = '794px';
+      clonedElement.style.maxWidth = '794px';
+      clonedElement.style.margin = '0 auto';
+      clonedElement.style.backgroundColor = '#ffffff';
+      clonedElement.style.color = '#111827';
+      clonedElement.style.boxSizing = 'border-box';
     },
   });
 
