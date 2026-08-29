@@ -563,29 +563,14 @@ export default function HomePage() {
   return (
     <div className="space-y-12 sm:space-y-16 pb-16 relative overflow-hidden bg-[#07080a] text-[#F5F4F0]">
 
-      {/* ── 1. MONUMENTAL SOVEREIGN COMMAND CENTER HERO ── */}
-      <section className="relative pt-6 sm:pt-10 px-4 sm:px-6 lg:px-8 max-w-6xl mx-auto text-center space-y-6">
+      {/* ── 1. MONUMENTAL COMMAND CENTER HERO ── */}
+      <section className="relative pt-8 sm:pt-14 px-4 sm:px-6 lg:px-8 max-w-6xl mx-auto text-center space-y-6">
         
         {/* Subtle Ambient Radial Lighting */}
         <AmbientOrbs variant="emerald" />
 
-        {/* Regal Sovereign Civic Badge */}
-        <motion.div
-          initial={{ opacity: 0, y: -10 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5 }}
-          className="inline-flex items-center gap-2.5 px-4 py-1.5 rounded-full bg-zinc-900/90 border border-white/[0.12] shadow-xl backdrop-blur-md text-xs font-semibold text-zinc-200"
-        >
-          <span className="text-emerald-400 font-bold">🇹🇳</span>
-          <span>{t('heroBadge')}</span>
-          <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
-          <span className="text-[10px] font-mono text-emerald-400 font-bold bg-emerald-950/80 px-2 py-0.5 rounded-full border border-emerald-800/40">
-            JORT 2026
-          </span>
-        </motion.div>
-
-        {/* Monumental Sovereign Display Headline */}
-        <div className="space-y-2 max-w-4xl mx-auto">
+        {/* Monumental Display Headline */}
+        <div className="space-y-3 max-w-4xl mx-auto">
           <h1 className="text-3xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight text-white leading-[1.12]">
             <span>{t('heroHeadline')}</span>{' '}
             <span className="text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 via-teal-300 to-amber-300">

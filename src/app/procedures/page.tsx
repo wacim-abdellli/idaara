@@ -301,18 +301,6 @@ export default function ProceduresPage() {
       {/* ── 1. CLEAN CIVIC HEADER ── */}
       <div className="space-y-3 pt-2 relative z-10">
         
-        {/* Republic Status Ribbon */}
-        <div className="flex flex-wrap items-center gap-2 text-xs font-semibold text-zinc-400">
-          <span className="text-emerald-400 font-bold">🇹🇳</span>
-          <span>{locale === 'ar' ? 'الجمهورية التونسية' : 'République Tunisienne'}</span>
-          <span className="text-zinc-600">/</span>
-          <span className="text-zinc-300">{locale === 'ar' ? 'الدليل الوطني للإجراءات' : 'Répertoire National des Démarches'}</span>
-          <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse ml-1" />
-          <span className="text-[10px] font-mono font-bold text-emerald-400 bg-emerald-950/80 px-2 py-0.5 rounded-md border border-emerald-800/40">
-            JORT 2026
-          </span>
-        </div>
-
         <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-4 pb-2">
           <div className="space-y-1.5 max-w-3xl">
             <h1 className="text-3xl sm:text-4xl font-extrabold text-white tracking-tight leading-tight">
