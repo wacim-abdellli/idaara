@@ -33,6 +33,9 @@ import {
   X,
   Bot,
   BadgeCheck,
+  Fingerprint,
+  FilePenLine,
+  Briefcase,
 } from 'lucide-react';
 import { formatTND } from '../lib/utils';
 import { getLocalized } from '../lib/locale-utils';
@@ -100,11 +103,13 @@ export default function HomePage() {
       }).slice(0, 5)
     : [];
 
-  // Top 6 Statutory Procedures with Authority
+  // Top 6 Statutory Procedures with Authority (Zero Emojis - 100% Vector SVGs)
   const statutoryIndex = [
     {
       id: 'passeport-renouvellement',
-      icon: '🪪',
+      icon: Fingerprint,
+      iconColor: 'text-emerald-400',
+      iconBg: 'bg-emerald-500/10 border-emerald-500/30',
       name: locale === 'ar' ? 'جواز السفر' : locale === 'derja' ? 'Passeport' : locale === 'en' ? 'Passport Renewal' : 'Passeport Tunisien',
       cost: '86.000 DT',
       authority: locale === 'ar' ? 'مركز الشرطة / الحرس' : 'Police / Garde',
@@ -113,7 +118,9 @@ export default function HomePage() {
     },
     {
       id: 'bulletin-numero-3',
-      icon: '📋',
+      icon: FileCheck2,
+      iconColor: 'text-cyan-400',
+      iconBg: 'bg-cyan-500/10 border-cyan-500/30',
       name: locale === 'ar' ? 'بطاقة السوابق (B3)' : locale === 'derja' ? 'Bulletin N°3' : locale === 'en' ? 'Police Record (B3)' : 'Extrait B3 (Casier)',
       cost: '7.500 DT',
       authority: locale === 'ar' ? 'عبر الإنترنت / البريد' : 'En ligne / Rapide Poste',
@@ -122,7 +129,9 @@ export default function HomePage() {
     },
     {
       id: 'contrat-location',
-      icon: '✍️',
+      icon: FilePenLine,
+      iconColor: 'text-amber-400',
+      iconBg: 'bg-amber-500/10 border-amber-500/30',
       name: locale === 'ar' ? 'عقد الكراء السكني' : locale === 'derja' ? '3a9d Kré' : locale === 'en' ? 'Residential Lease' : 'Contrat de Location',
       cost: '35.000 DT',
       authority: locale === 'ar' ? 'البلدية والقباضة' : 'Baladiya & Recette',
@@ -131,7 +140,9 @@ export default function HomePage() {
     },
     {
       id: 'mutation-carte-grise',
-      icon: '🚗',
+      icon: Car,
+      iconColor: 'text-blue-400',
+      iconBg: 'bg-blue-500/10 border-blue-500/30',
       name: locale === 'ar' ? 'البطاقة الرمادية' : locale === 'derja' ? 'Carte Grise' : locale === 'en' ? 'Vehicle Title Transfer' : 'Carte Grise (ATTT)',
       cost: '145.000 DT',
       authority: 'ATTT / Mines',
@@ -140,7 +151,9 @@ export default function HomePage() {
     },
     {
       id: 'auto-entrepreneur',
-      icon: '💼',
+      icon: Briefcase,
+      iconColor: 'text-violet-400',
+      iconBg: 'bg-violet-500/10 border-violet-500/30',
       name: locale === 'ar' ? 'المبادر الذاتي' : locale === 'derja' ? 'Auto-Entrepreneur' : locale === 'en' ? 'Self-Entrepreneur' : 'Auto-Entrepreneur',
       cost: locale === 'ar' ? 'ضريبة 1%' : '1% Impôt',
       authority: 'RNE / BCT',
@@ -149,7 +162,9 @@ export default function HomePage() {
     },
     {
       id: 'cin-premiere-demande',
-      icon: '🛡️',
+      icon: ShieldCheck,
+      iconColor: 'text-emerald-400',
+      iconBg: 'bg-emerald-500/10 border-emerald-500/30',
       name: locale === 'ar' ? 'بطاقة التعريف (CIN)' : locale === 'derja' ? 'Bita9at Ta3rif' : locale === 'en' ? 'National ID (CIN)' : 'Carte CIN',
       cost: '3.000 DT',
       authority: locale === 'ar' ? 'مركز الشرطة' : 'Poste de Police',
@@ -689,36 +704,41 @@ export default function HomePage() {
           </div>
 
           <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-2.5">
-            {statutoryIndex.map((item) => (
-              <motion.div key={item.id} whileHover={{ y: -2 }} whileTap={{ scale: 0.98 }}>
-                <Link
-                  href={item.href}
-                  className="p-3 rounded-2xl bg-zinc-900/90 hover:bg-zinc-800 border border-white/[0.08] hover:border-emerald-500/40 flex flex-col justify-between space-y-2 text-left rtl:text-right transition-all group h-full shadow-sm"
-                >
-                  <div className="flex items-center justify-between">
-                    <span className="text-base">{item.icon}</span>
-                    <span className="text-[9px] font-mono font-bold text-zinc-400 bg-zinc-950 px-1.5 py-0.5 rounded border border-white/[0.06]">
-                      {item.time}
-                    </span>
-                  </div>
+            {statutoryIndex.map((item) => {
+              const Icon = item.icon;
+              return (
+                <motion.div key={item.id} whileHover={{ y: -2 }} whileTap={{ scale: 0.98 }}>
+                  <Link
+                    href={item.href}
+                    className="p-3.5 rounded-2xl bg-zinc-900/90 hover:bg-zinc-800 border border-white/[0.08] hover:border-emerald-500/40 flex flex-col justify-between space-y-2.5 text-left rtl:text-right transition-all group h-full shadow-sm"
+                  >
+                    <div className="flex items-center justify-between">
+                      <div className={`w-8 h-8 rounded-xl border ${item.iconBg} flex items-center justify-center ${item.iconColor} group-hover:scale-105 transition-transform`}>
+                        <Icon className="w-4 h-4" />
+                      </div>
+                      <span className="text-[9px] font-mono font-bold text-zinc-400 bg-zinc-950 px-1.5 py-0.5 rounded border border-white/[0.06]">
+                        {item.time}
+                      </span>
+                    </div>
 
-                  <div>
-                    <h4 className="text-xs font-bold text-white group-hover:text-emerald-300 transition-colors line-clamp-1">
-                      {item.name}
-                    </h4>
-                    <p className="text-[10px] text-zinc-400 truncate mt-0.5">
-                      {item.authority}
-                    </p>
-                  </div>
+                    <div>
+                      <h4 className="text-xs font-bold text-white group-hover:text-emerald-300 transition-colors line-clamp-1">
+                        {item.name}
+                      </h4>
+                      <p className="text-[10px] text-zinc-400 truncate mt-0.5">
+                        {item.authority}
+                      </p>
+                    </div>
 
-                  <div className="pt-1.5 border-t border-white/[0.06]">
-                    <span className="text-xs font-mono font-extrabold text-amber-400">
-                      {item.cost}
-                    </span>
-                  </div>
-                </Link>
-              </motion.div>
-            ))}
+                    <div className="pt-1.5 border-t border-white/[0.06]">
+                      <span className="text-xs font-mono font-black text-amber-300">
+                        {item.cost}
+                      </span>
+                    </div>
+                  </Link>
+                </motion.div>
+              );
+            })}
           </div>
         </div>
 

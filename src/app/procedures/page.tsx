@@ -38,6 +38,15 @@ import {
   Info,
   Check,
   Zap,
+  Fingerprint,
+  FilePenLine,
+  Droplets,
+  Hammer,
+  Wrench,
+  Shield,
+  Layers,
+  Award,
+  ScrollText,
 } from 'lucide-react';
 
 export default function ProceduresPage() {
@@ -64,7 +73,7 @@ export default function ProceduresPage() {
           : locale === 'en'
           ? 'All Procedures'
           : 'Toutes les Démarches',
-      icon: FileCheck2,
+      icon: Layers,
       badgeColor: 'text-emerald-400',
     },
     {
@@ -77,7 +86,7 @@ export default function ProceduresPage() {
           : locale === 'en'
           ? 'Identity'
           : 'Identité & Citoyenneté',
-      icon: CreditCard,
+      icon: Fingerprint,
       badgeColor: 'text-emerald-400',
     },
     {
@@ -173,37 +182,37 @@ export default function ProceduresPage() {
     },
   ];
 
-  // Procedure Emoji Avatar Resolver
-  const getProcedureEmoji = (slug: string, vertical: string) => {
+  // Procedure Vector Icon Resolver (Zero Emojis - 100% Crisp Vector SVGs)
+  const getProcedureIcon = (slug: string, vertical: string): React.ElementType => {
     const s = slug.toLowerCase();
-    if (s.includes('passeport')) return '🪪';
-    if (s.includes('cin')) return '🛡️';
-    if (s.includes('bulletin') || s.includes('b3') || s.includes('casier')) return '📋';
-    if (s.includes('carte-grise') || s.includes('vehicule') || s.includes('immatriculation')) return '🚗';
-    if (s.includes('permis-de-conduire') || s.includes('permis-conduire')) return '🪪';
-    if (s.includes('contrat') || s.includes('location') || s.includes('bail')) return '✍️';
-    if (s.includes('auto-entrepreneur') || s.includes('freelance')) return '💼';
-    if (s.includes('societe') || s.includes('sarl') || s.includes('suarl') || s.includes('rne')) return '🏢';
-    if (s.includes('cnss') || s.includes('retraite') || s.includes('pension')) return '🛡️';
-    if (s.includes('cnam') || s.includes('soins') || s.includes('carnet')) return '🏥';
-    if (s.includes('steg') || s.includes('electricite') || s.includes('gaz')) return '⚡';
-    if (s.includes('sonede') || s.includes('eau')) return '💧';
-    if (s.includes('mariage') || s.includes('divorce') || s.includes('heritage') || s.includes('hojjet')) return '⚖️';
-    if (s.includes('douane') || s.includes('fcr') || s.includes('importation')) return '🛃';
-    if (s.includes('bourse') || s.includes('universite') || s.includes('etudiant') || s.includes('bac')) return '🎓';
-    if (s.includes('permis-de-batir') || s.includes('batir') || s.includes('construction')) return '🏗️';
-    if (s.includes('visite-technique')) return '🔧';
+    if (s.includes('passeport')) return Fingerprint;
+    if (s.includes('cin')) return ShieldCheck;
+    if (s.includes('bulletin') || s.includes('b3') || s.includes('casier')) return FileCheck2;
+    if (s.includes('carte-grise') || s.includes('vehicule') || s.includes('immatriculation')) return Car;
+    if (s.includes('permis-de-conduire') || s.includes('permis-conduire')) return CreditCard;
+    if (s.includes('contrat') || s.includes('location') || s.includes('bail')) return FilePenLine;
+    if (s.includes('auto-entrepreneur') || s.includes('freelance')) return Briefcase;
+    if (s.includes('societe') || s.includes('sarl') || s.includes('suarl') || s.includes('rne')) return Building2;
+    if (s.includes('cnss') || s.includes('retraite') || s.includes('pension')) return Shield;
+    if (s.includes('cnam') || s.includes('soins') || s.includes('carnet')) return HeartPulse;
+    if (s.includes('steg') || s.includes('electricite') || s.includes('gaz')) return Zap;
+    if (s.includes('sonede') || s.includes('eau')) return Droplets;
+    if (s.includes('mariage') || s.includes('divorce') || s.includes('heritage') || s.includes('hojjet')) return Scale;
+    if (s.includes('douane') || s.includes('fcr') || s.includes('importation')) return Plane;
+    if (s.includes('bourse') || s.includes('universite') || s.includes('etudiant') || s.includes('bac')) return GraduationCap;
+    if (s.includes('permis-de-batir') || s.includes('batir') || s.includes('construction')) return Hammer;
+    if (s.includes('visite-technique')) return Wrench;
     
     switch(vertical) {
-      case 'identity': return '🪪';
-      case 'transport': return '🚗';
-      case 'business': return '💼';
-      case 'housing': return '🏠';
-      case 'healthcare': return '🏥';
-      case 'justice': return '⚖️';
-      case 'customs': return '🛃';
-      case 'education': return '🎓';
-      default: return '📄';
+      case 'identity': return Fingerprint;
+      case 'transport': return Car;
+      case 'business': return Briefcase;
+      case 'housing': return Home;
+      case 'healthcare': return HeartPulse;
+      case 'justice': return Scale;
+      case 'customs': return Plane;
+      case 'education': return GraduationCap;
+      default: return FileText;
     }
   };
 
@@ -213,55 +222,55 @@ export default function ProceduresPage() {
       case 'identity':
         return {
           badge: 'text-emerald-300 bg-emerald-950/80 border-emerald-700/50',
-          avatar: 'bg-emerald-500/10 border-emerald-500/30 text-emerald-400',
+          avatar: 'bg-emerald-500/10 border-emerald-500/30 text-emerald-400 group-hover:bg-emerald-500/20 group-hover:border-emerald-500/50',
           hoverBorder: 'group-hover:border-emerald-500/40',
         };
       case 'transport':
         return {
           badge: 'text-cyan-300 bg-cyan-950/80 border-cyan-700/50',
-          avatar: 'bg-cyan-500/10 border-cyan-500/30 text-cyan-400',
+          avatar: 'bg-cyan-500/10 border-cyan-500/30 text-cyan-400 group-hover:bg-cyan-500/20 group-hover:border-cyan-500/50',
           hoverBorder: 'group-hover:border-cyan-500/40',
         };
       case 'business':
         return {
           badge: 'text-amber-300 bg-amber-950/80 border-amber-700/50',
-          avatar: 'bg-amber-500/10 border-amber-500/30 text-amber-400',
+          avatar: 'bg-amber-500/10 border-amber-500/30 text-amber-400 group-hover:bg-amber-500/20 group-hover:border-amber-500/50',
           hoverBorder: 'group-hover:border-amber-500/40',
         };
       case 'housing':
         return {
           badge: 'text-orange-300 bg-orange-950/80 border-orange-700/50',
-          avatar: 'bg-orange-500/10 border-orange-500/30 text-orange-400',
+          avatar: 'bg-orange-500/10 border-orange-500/30 text-orange-400 group-hover:bg-orange-500/20 group-hover:border-orange-500/50',
           hoverBorder: 'group-hover:border-orange-500/40',
         };
       case 'healthcare':
         return {
           badge: 'text-rose-300 bg-rose-950/80 border-rose-700/50',
-          avatar: 'bg-rose-500/10 border-rose-500/30 text-rose-400',
+          avatar: 'bg-rose-500/10 border-rose-500/30 text-rose-400 group-hover:bg-rose-500/20 group-hover:border-rose-500/50',
           hoverBorder: 'group-hover:border-rose-500/40',
         };
       case 'justice':
         return {
           badge: 'text-purple-300 bg-purple-950/80 border-purple-700/50',
-          avatar: 'bg-purple-500/10 border-purple-500/30 text-purple-400',
+          avatar: 'bg-purple-500/10 border-purple-500/30 text-purple-400 group-hover:bg-purple-500/20 group-hover:border-purple-500/50',
           hoverBorder: 'group-hover:border-purple-500/40',
         };
       case 'customs':
         return {
           badge: 'text-teal-300 bg-teal-950/80 border-teal-700/50',
-          avatar: 'bg-teal-500/10 border-teal-500/30 text-teal-400',
+          avatar: 'bg-teal-500/10 border-teal-500/30 text-teal-400 group-hover:bg-teal-500/20 group-hover:border-teal-500/50',
           hoverBorder: 'group-hover:border-teal-500/40',
         };
       case 'education':
         return {
           badge: 'text-blue-300 bg-blue-950/80 border-blue-700/50',
-          avatar: 'bg-blue-500/10 border-blue-500/30 text-blue-400',
+          avatar: 'bg-blue-500/10 border-blue-500/30 text-blue-400 group-hover:bg-blue-500/20 group-hover:border-blue-500/50',
           hoverBorder: 'group-hover:border-blue-500/40',
         };
       default:
         return {
           badge: 'text-zinc-300 bg-zinc-900 border-white/[0.1]',
-          avatar: 'bg-zinc-800 border-zinc-700 text-zinc-300',
+          avatar: 'bg-zinc-800 border-zinc-700 text-zinc-300 group-hover:bg-zinc-700',
           hoverBorder: 'group-hover:border-white/[0.2]',
         };
     }
@@ -535,26 +544,26 @@ export default function ProceduresPage() {
           </button>
         </div>
       ) : viewMode === 'grid' ? (
-        /* ── CIVIC LUXURY CARDS GRID (2 OR 3 COLUMNS WITH AVATARS & GLOW) ── */
+        /* ── CIVIC LUXURY CARDS GRID (WITH VECTOR ICONS & LUXURY ACCENTS) ── */
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
           {filteredProcedures.map((proc) => {
             const title = getLocalized(proc.title, locale);
             const shortDesc = getLocalized(proc.shortDescription, locale);
             const style = getSectorStyle(proc.vertical);
             const officeName = getOfficeBadge(proc.relatedOfficeTypes);
-            const emojiAvatar = getProcedureEmoji(proc.slug, proc.vertical);
+            const IconComponent = getProcedureIcon(proc.slug, proc.vertical);
 
             return (
               <Link key={proc.id} href={`/procedures/${proc.slug}`} className="block group">
                 <SpotlightCard className={`p-5 border-white/[0.08] bg-gradient-to-b from-[#0e1015] to-[#0a0b0e] ${style.hoverBorder} shadow-xl transition-all h-full flex flex-col justify-between space-y-4 rounded-2xl relative overflow-hidden`}>
                   
-                  {/* Top Bar: Icon Avatar + Sector Badge + Statutory Fee */}
+                  {/* Top Bar: Vector Icon + Sector Badge + Statutory Fee */}
                   <div className="flex items-start justify-between gap-3 pb-3 border-b border-white/[0.06]">
                     
-                    <div className="flex items-center gap-2.5 min-w-0">
-                      {/* Avatar Square */}
-                      <div className={`w-10 h-10 rounded-xl border ${style.avatar} flex items-center justify-center text-lg shrink-0 shadow-md group-hover:scale-105 transition-transform`}>
-                        <span>{emojiAvatar}</span>
+                    <div className="flex items-center gap-3 min-w-0">
+                      {/* Vector Icon Container */}
+                      <div className={`w-10 h-10 rounded-xl border ${style.avatar} flex items-center justify-center shrink-0 shadow-md group-hover:scale-105 transition-all`}>
+                        <IconComponent className="w-5 h-5 stroke-[1.75]" />
                       </div>
 
                       {/* Sector & Duration */}
@@ -632,7 +641,7 @@ export default function ProceduresPage() {
               const title = getLocalized(proc.title, locale);
               const style = getSectorStyle(proc.vertical);
               const officeName = getOfficeBadge(proc.relatedOfficeTypes);
-              const emojiAvatar = getProcedureEmoji(proc.slug, proc.vertical);
+              const IconComponent = getProcedureIcon(proc.slug, proc.vertical);
 
               return (
                 <Link
@@ -640,10 +649,10 @@ export default function ProceduresPage() {
                   href={`/procedures/${proc.slug}`}
                   className="grid grid-cols-12 gap-3 p-3.5 sm:p-4 hover:bg-zinc-900/90 transition-colors items-center group"
                 >
-                  {/* Col 1: Icon + Title + Sector */}
+                  {/* Col 1: Vector Icon + Title + Sector */}
                   <div className="col-span-6 sm:col-span-5 flex items-center gap-3 min-w-0">
-                    <div className={`w-8 h-8 rounded-xl border ${style.avatar} flex items-center justify-center text-sm shrink-0 font-bold`}>
-                      <span>{emojiAvatar}</span>
+                    <div className={`w-8 h-8 rounded-xl border ${style.avatar} flex items-center justify-center shrink-0`}>
+                      <IconComponent className="w-4 h-4 stroke-[1.75]" />
                     </div>
                     <div className="min-w-0">
                       <h3 className="text-xs sm:text-sm font-bold text-white group-hover:text-emerald-300 transition-colors truncate">
