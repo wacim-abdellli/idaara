@@ -9,7 +9,6 @@ import { getLocalized } from '../../lib/locale-utils';
 import { getVerticalLabel } from '../../lib/vertical-labels';
 import { formatTND } from '../../lib/utils';
 import { SpotlightCard } from '../../components/motion/SpotlightCard';
-import { FadeIn, FadeInStagger, FadeInItem } from '../../components/motion/FadeInStagger';
 import { AmbientOrbs } from '../../components/motion/AmbientOrbs';
 import {
   Search,
@@ -22,8 +21,6 @@ import {
   HeartPulse,
   Plane,
   FileCheck2,
-  Sparkles,
-  ChevronRight,
   ShieldCheck,
   Building2,
   Layers,
@@ -31,10 +28,12 @@ import {
   FileText,
   Stamp,
   CheckCircle2,
-  Mic,
-  Zap,
   GraduationCap,
   Scale,
+  LayoutGrid,
+  List,
+  X,
+  ChevronRight,
 } from 'lucide-react';
 
 export default function ProceduresPage() {
@@ -42,6 +41,7 @@ export default function ProceduresPage() {
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedVertical, setSelectedVertical] = useState<string>('all');
   const [sortBy, setSortBy] = useState<'default' | 'cost_asc' | 'cost_desc' | 'steps'>('default');
+  const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
 
   const verticals: Array<{ id: string; label: string; icon: React.ElementType }> = [
     {
@@ -50,10 +50,10 @@ export default function ProceduresPage() {
         locale === 'ar'
           ? 'جميع الإجراءات'
           : locale === 'derja'
-          ? 'El Procédures el Kol'
+          ? 'El Kol'
           : locale === 'en'
-          ? 'All Procedures'
-          : 'Toutes les Démarches',
+          ? 'All'
+          : 'Toutes',
       icon: FileCheck2,
     },
     {
@@ -62,10 +62,10 @@ export default function ProceduresPage() {
         locale === 'ar'
           ? 'الهوية والمواطنة'
           : locale === 'derja'
-          ? 'Awra9 el Houwiya (CIN & Passeport)'
+          ? 'Houwiya & CIN'
           : locale === 'en'
-          ? 'Identity & Citizenship'
-          : 'Identité & Citoyenneté',
+          ? 'Identity'
+          : 'Identité & CIN',
       icon: CreditCard,
     },
     {
@@ -74,9 +74,9 @@ export default function ProceduresPage() {
         locale === 'ar'
           ? 'النقل والسيارات'
           : locale === 'derja'
-          ? 'Krahba w Permis (ATTT)'
+          ? 'Krahba w Permis'
           : locale === 'en'
-          ? 'Transport & Vehicles'
+          ? 'Transport'
           : 'Transport & Véhicules',
       icon: Car,
     },
@@ -88,7 +88,7 @@ export default function ProceduresPage() {
           : locale === 'derja'
           ? 'Machari3 w Freelance'
           : locale === 'en'
-          ? 'Business & Freelance'
+          ? 'Business'
           : 'Entreprise & Freelance',
       icon: Briefcase,
     },
@@ -98,9 +98,9 @@ export default function ProceduresPage() {
         locale === 'ar'
           ? 'السكن والطاقة'
           : locale === 'derja'
-          ? 'Kré, Dar, w STEG'
+          ? 'Kré, Dar, STEG'
           : locale === 'en'
-          ? 'Housing & Energy'
+          ? 'Housing'
           : 'Logement & Énergie',
       icon: Home,
     },
@@ -108,710 +108,378 @@ export default function ProceduresPage() {
       id: 'healthcare',
       label:
         locale === 'ar'
-          ? 'الصحة والضمان الاجتماعي'
+          ? 'الصحة والضمان'
           : locale === 'derja'
           ? 'CNAM w CNSS'
           : locale === 'en'
-          ? 'Health & CNAM / CNSS'
-          : 'Santé & Sécurité Sociale',
+          ? 'Health'
+          : 'Santé & Sécurité',
       icon: HeartPulse,
-    },
-    {
-      id: 'customs',
-      label:
-        locale === 'ar'
-          ? 'الديوانة والتونسيين بالخارج'
-          : locale === 'derja'
-          ? 'Diwana & FCR'
-          : locale === 'en'
-          ? 'Customs & Diaspora (FCR)'
-          : 'Douane & Diaspora (FCR)',
-      icon: Plane,
     },
     {
       id: 'justice',
       label:
         locale === 'ar'
-          ? 'العدل والأحوال الشخصية'
+          ? 'العدل والأحوال'
           : locale === 'derja'
-          ? '3adl w 7ala Madaniya'
+          ? '3adl w Baladiya'
           : locale === 'en'
-          ? 'Justice & Civil Status'
-          : 'Justice & État Civil',
+          ? 'Justice'
+          : 'Justice & Actes',
       icon: Scale,
+    },
+    {
+      id: 'customs',
+      label:
+        locale === 'ar'
+          ? 'الديوانة والمهجر'
+          : locale === 'derja'
+          ? 'Diwana & FCR'
+          : locale === 'en'
+          ? 'Customs (FCR)'
+          : 'Douane & FCR',
+      icon: Plane,
     },
     {
       id: 'education',
       label:
         locale === 'ar'
-          ? 'التعليم والمنح الجامعية'
+          ? 'التعليم والمنح'
           : locale === 'derja'
-          ? 'Ta3lim w Bourse Jam3iya'
+          ? 'Ta3lim w Bourse'
           : locale === 'en'
-          ? 'Higher Ed & Scholarships'
+          ? 'Education'
           : 'Enseignement & Bourses',
       icon: GraduationCap,
     },
   ];
 
-  const lifeScenarios = [
-    {
-      id: 'passeport-renouvellement',
-      label:
-        locale === 'ar'
-          ? 'تجديد جواز السفر'
-          : locale === 'derja'
-          ? 'Baddel el Passeport'
-          : locale === 'en'
-          ? 'Passport Renewal'
-          : 'Renouvellement Passeport',
-      tag: '80 DT',
-    },
-    {
-      id: 'mutation-carte-grise',
-      label:
-        locale === 'ar'
-          ? 'شراء سيارة (بطاقة رمادية)'
-          : locale === 'derja'
-          ? 'Chrayen Krahba (Carte Grise)'
-          : locale === 'en'
-          ? 'Car Purchase (Carte Grise)'
-          : 'Achat Voiture (Carte Grise)',
-      tag: '145 DT',
-    },
-    {
-      id: 'bulletin-numero-3',
-      label:
-        locale === 'ar'
-          ? 'بطاقة السوابق العدلية (B3)'
-          : locale === 'derja'
-          ? 'Bita9a B3 (Casier)'
-          : locale === 'en'
-          ? 'B3 Police Record'
-          : 'Extrait B3 (Casier)',
-      tag: '7.5 DT',
-    },
-    {
-      id: 'permis-de-batir',
-      label:
-        locale === 'ar'
-          ? 'رخصة البناء بالبلدية'
-          : locale === 'derja'
-          ? 'Rokhset Bné Baladiya'
-          : locale === 'en'
-          ? 'Municipal Building Permit'
-          : 'Permis de Bâtir',
-      tag: '120 DT',
-    },
-    {
-      id: 'cnss-retraite-pension',
-      label:
-        locale === 'ar'
-          ? 'ملف جراية التقاعد (CNSS)'
-          : locale === 'derja'
-          ? 'Dossier Retraite CNSS'
-          : locale === 'en'
-          ? 'CNSS Retirement Pension'
-          : 'Pension Retraite CNSS',
-      tag: '0 DT',
-    },
-    {
-      id: 'hojjet-wafet-heritage',
-      label:
-        locale === 'ar'
-          ? 'حجة وفاة وحصر الإرث'
-          : locale === 'derja'
-          ? 'Hojjet Wafet w Terka'
-          : locale === 'en'
-          ? 'Certificate of Inheritance'
-          : 'Hojjet Wafet & Héritage',
-      tag: '45 DT',
-    },
-    {
-      id: 'auto-entrepreneur-creation',
-      label:
-        locale === 'ar'
-          ? 'نظام المبادر الذاتي 1%'
-          : locale === 'derja'
-          ? 'Statut Auto-Entrepreneur'
-          : locale === 'en'
-          ? 'Auto-Entrepreneur 1%'
-          : 'Statut Auto-Entrepreneur',
-      tag: '0 DT',
-    },
-    {
-      id: 'contrat-location-habitation',
-      label:
-        locale === 'ar'
-          ? 'عقد كراء سكني مصادق'
-          : locale === 'derja'
-          ? 'Contrat de Bail Baladiya'
-          : locale === 'en'
-          ? 'Residential Lease Contract'
-          : 'Contrat de Bail Baladiya',
-      tag: '35 DT',
-    },
-    {
-      id: 'equivalence-diplome-etranger',
-      label:
-        locale === 'ar'
-          ? 'معادلة شهادة جامعية'
-          : locale === 'derja'
-          ? 'Mo3adalet Diplôme MESRS'
-          : locale === 'en'
-          ? 'Foreign Degree Equivalence'
-          : 'Équivalence Diplôme MESRS',
-      tag: '40 DT',
-    },
-    {
-      id: 'regime-fcr-douane',
-      label:
-        locale === 'ar'
-          ? 'امتياز الديوانة (ن.ت.د / FCR)'
-          : locale === 'derja'
-          ? 'Imtiyaz FCR Diwana'
-          : locale === 'en'
-          ? 'FCR Customs Privilege'
-          : 'Régime Douanier FCR',
-      tag: '50 DT',
-    },
-  ];
-
+  // Filter and sort logic
   const filteredProcedures = useMemo(() => {
-    let procs = proceduresData.filter((proc) => {
-      const title = getLocalized(proc.title, locale).toLowerCase();
-      const shortDesc = getLocalized(proc.shortDescription, locale).toLowerCase();
-      const q = searchQuery.toLowerCase().trim();
+    let list = proceduresData.filter((proc) => {
+      const matchesVertical = selectedVertical === 'all' || proc.vertical === selectedVertical;
+      if (!matchesVertical) return false;
 
-      const matchesVertical =
-        selectedVertical === 'all' || proc.vertical === selectedVertical;
-      const matchesSearch =
-        title.includes(q) ||
-        shortDesc.includes(q) ||
-        proc.tags.some((tag) => tag.toLowerCase().includes(q));
+      if (!searchQuery.trim()) return true;
 
-      return matchesVertical && matchesSearch;
+      const q = searchQuery.toLowerCase();
+      const titleMatch =
+        proc.title.fr.toLowerCase().includes(q) ||
+        proc.title.ar.includes(q) ||
+        proc.title.derja.toLowerCase().includes(q) ||
+        (proc.title.en ? proc.title.en.toLowerCase().includes(q) : false);
+
+      const descMatch =
+        proc.shortDescription.fr.toLowerCase().includes(q) ||
+        proc.shortDescription.ar.includes(q) ||
+        proc.shortDescription.derja.toLowerCase().includes(q);
+
+      const tagMatch = proc.tags.some((t) => t.toLowerCase().includes(q));
+
+      return titleMatch || descMatch || tagMatch;
     });
 
     if (sortBy === 'cost_asc') {
-      procs = [...procs].sort((a, b) => a.estimatedTotalCostTND - b.estimatedTotalCostTND);
+      list = [...list].sort((a, b) => a.estimatedTotalCostTND - b.estimatedTotalCostTND);
     } else if (sortBy === 'cost_desc') {
-      procs = [...procs].sort((a, b) => b.estimatedTotalCostTND - a.estimatedTotalCostTND);
+      list = [...list].sort((a, b) => b.estimatedTotalCostTND - a.estimatedTotalCostTND);
     } else if (sortBy === 'steps') {
-      procs = [...procs].sort((a, b) => a.steps.length - b.steps.length);
+      list = [...list].sort((a, b) => a.steps.length - b.steps.length);
     }
 
-    return procs;
-  }, [searchQuery, selectedVertical, sortBy, locale]);
-
-  const featuredProcedures = proceduresData.slice(0, 4);
-
-  const headlineMain =
-    locale === 'ar'
-      ? 'دليل الإجراءات الإدارية'
-      : locale === 'derja'
-      ? 'Dalil el Démarches wel Awra9'
-      : locale === 'en'
-      ? 'Official Procedures'
-      : 'Répertoire Officiel des Démarches';
-
-  const headlineAccent =
-    locale === 'ar'
-      ? 'خطوة بخطوة.'
-      : locale === 'derja'
-      ? 'Khatwa b’Khatwa.'
-      : locale === 'en'
-      ? 'Dossier Registry.'
-      : 'Administratives.';
-
-  const subtitle =
-    locale === 'ar'
-      ? 'تعرف على الوثائق المطلوبة، مصاريف التنابر الجبائية، الآجال والمكاتب المعنية لكل إجراء إداري دون مفاجآت.'
-      : locale === 'derja'
-      ? 'A3ref el awra9 el matlouba, masrouf el timbres, el wa9t wel blasa win temchi l’ay démarche men ghir t3ab.'
-      : locale === 'en'
-      ? 'Comprehensive citizen guide with exact fiscal stamp calculations, document checklists, and target public desks across Tunisia.'
-      : 'Liste exhaustive des pièces requises, calcul des timbres fiscaux au millime près, délais légaux et guichets compétents.';
-
-  const civicStats = [
-    {
-      label:
-        locale === 'ar'
-          ? 'إجراءات موثقة'
-          : locale === 'derja'
-          ? 'Démarches vérifiés'
-          : locale === 'en'
-          ? 'Verified Dossiers'
-          : 'Démarches Certifiées',
-      val:
-        locale === 'ar'
-          ? '11 إجراءات'
-          : locale === 'derja'
-          ? '11 Procédures'
-          : locale === 'en'
-          ? '11 Procedures'
-          : '11 Procédures',
-      desc:
-        locale === 'ar'
-          ? 'ج.ر.ر و مراسيم'
-          : locale === 'derja'
-          ? 'JORT & Décrets'
-          : locale === 'en'
-          ? 'JORT & Decrees'
-          : 'JORT & Décrets',
-    },
-    {
-      label:
-        locale === 'ar'
-          ? 'دقة التنابر'
-          : locale === 'derja'
-          ? 'Di9et el Timbres'
-          : locale === 'en'
-          ? 'Fiscal Stamp Accuracy'
-          : 'Précision Timbres',
-      val:
-        locale === 'ar'
-          ? 'دقة 100%'
-          : locale === 'derja'
-          ? '100% Exact'
-          : locale === 'en'
-          ? '100% Accurate'
-          : '100% Exact',
-      desc:
-        locale === 'ar'
-          ? 'الجدول الرسمي'
-          : locale === 'derja'
-          ? 'Barème Officiel'
-          : locale === 'en'
-          ? 'Official Scale'
-          : 'Barème Officiel',
-    },
-    {
-      label:
-        locale === 'ar'
-          ? 'معدل المراحل'
-          : locale === 'derja'
-          ? 'Khatwet'
-          : locale === 'en'
-          ? 'Average Step Count'
-          : 'Étapes Moyennes',
-      val:
-        locale === 'ar'
-          ? '3 - 4 خطوات'
-          : locale === 'derja'
-          ? '3 - 4 Étapes'
-          : locale === 'en'
-          ? '3 - 4 Steps'
-          : '3 - 4 Étapes',
-      desc:
-        locale === 'ar'
-          ? 'مسار محسّن'
-          : locale === 'derja'
-          ? 'Circuit optimisé'
-          : locale === 'en'
-          ? 'Optimized circuit'
-          : 'Circuit optimisé',
-    },
-    {
-      label:
-        locale === 'ar'
-          ? 'المصالح المعنية'
-          : locale === 'derja'
-          ? 'Baladiyas w Guichets'
-          : locale === 'en'
-          ? 'Competent Desks'
-          : 'Guichets & Baladiyas',
-      val: '24 Wilayas',
-      desc:
-        locale === 'ar'
-          ? 'تغطية وطنية'
-          : locale === 'derja'
-          ? 'Couverture nationale'
-          : locale === 'en'
-          ? 'National coverage'
-          : 'Couverture nationale',
-    },
-  ];
+    return list;
+  }, [searchQuery, selectedVertical, sortBy]);
 
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-10 space-y-10 relative overflow-hidden">
+    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8 space-y-6 relative overflow-hidden bg-[#07080a] text-[#F5F4F0]">
+      
+      {/* Subtle Ambient Lighting */}
+      <AmbientOrbs variant="emerald" />
 
-      {/* Cinematic Ambient Orbs */}
-      <AmbientOrbs variant="mixed" />
-
-      {/* ── 2-Column Hero Header (Balanced Layout with Glow) ── */}
-      <FadeIn direction="up" className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center pb-4 border-b border-zinc-800/80 relative">
-        {/* Left: Titles & Context */}
-        <div className="lg:col-span-7 space-y-3 relative z-10">
-          <div className="flex items-center gap-2 text-xs font-mono text-zinc-500 uppercase tracking-widest">
-            <span className="text-emerald-400 font-bold">/</span>
-            <span>JORT & Code Administratif Tunisien</span>
+      {/* ── 1. COMPACT CIVIC HEADER ── */}
+      <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 pb-4 border-b border-white/[0.08] relative z-10">
+        <div className="space-y-1.5">
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-zinc-900 border border-white/[0.1] text-xs font-semibold text-zinc-300">
+            <span className="text-emerald-400 font-bold">🇹🇳</span>
+            <span>
+              {locale === 'ar'
+                ? 'الرائد الرسمي ومجلة الأداءات والرسوم 2026'
+                : locale === 'derja'
+                ? 'JORT & Code Administratif Tunisien 2026'
+                : locale === 'en'
+                ? 'Official JORT & Tunisian Administrative Code 2026'
+                : 'JORT & Code Administratif Tunisien 2026'}
+            </span>
           </div>
 
-          <h1 className="leading-tight">
-            <span className="display-heading block text-3xl sm:text-5xl text-[#F5F4F0]">
-              {headlineMain}
-            </span>
-            <motion.span
-              initial={{ opacity: 0, scale: 0.95 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ duration: 0.5, delay: 0.2 }}
-              className="display-heading block text-3xl sm:text-5xl italic"
-              style={{ color: 'var(--stamp-green)' }}
-            >
-              {headlineAccent}
-            </motion.span>
+          <h1 className="text-2xl sm:text-4xl font-extrabold text-white tracking-tight">
+            {locale === 'ar'
+              ? 'دليل الإجراءات الإدارية والتنابر'
+              : locale === 'derja'
+              ? 'Dalil el Démarchet wel Timbres'
+              : locale === 'en'
+              ? 'Tunisian Administrative Procedures Directory'
+              : 'Répertoire Officiel des Démarches & Timbres'}
           </h1>
-
-          <p className="text-xs sm:text-sm text-zinc-400 leading-relaxed max-w-xl pt-1">
-            {subtitle}
+          <p className="text-xs sm:text-sm text-zinc-400 max-w-2xl">
+            {locale === 'ar'
+              ? '38 إجراء مدني معتمد مع التكلفة الدقيقة بالدينار التونسي، الوثائق المطلوبة، والشبابيك المعنية.'
+              : locale === 'derja'
+              ? '38 procédure s7i7a b\'el masrouf bel mlim, el awra9 el lezmin, wel 9badhat el marje3.'
+              : locale === 'en'
+              ? '38 official procedures with millime-accurate fees in TND, required document checklists, and competent public desks.'
+              : '38 démarches officielles homologuées avec budget exact au millime, pièces requises et guichets compétents.'}
           </p>
         </div>
 
-        {/* Right: Civic Standards Hub Widget */}
-        <div className="lg:col-span-5 relative z-10">
-          <SpotlightCard className="p-4 sm:p-5 border-zinc-800/90 shadow-xl space-y-3">
-            <div className="flex items-center justify-between text-xs pb-2.5 border-b border-zinc-800">
-              <span className="font-bold uppercase tracking-wider text-[10px] text-zinc-400 flex items-center gap-1.5">
-                <Building2 className="w-3.5 h-3.5 text-emerald-400" />
-                <span>{locale === 'ar' ? 'ضمانات مدنية' : locale === 'derja' ? 'Garanties Civiques' : locale === 'en' ? 'Public Service Framework' : 'Garanties Civiques'}</span>
-              </span>
-              <span className="text-[10px] font-mono text-emerald-400 bg-emerald-950/60 border border-emerald-800/50 px-2 py-0.5 rounded-full flex items-center gap-1">
-                <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-ping" />
-                <span>JORT 2026</span>
-              </span>
-            </div>
-
-            <div className="grid grid-cols-2 gap-2">
-              {civicStats.map((stat, idx) => (
-                <motion.div
-                  key={idx}
-                  whileHover={{ y: -2 }}
-                  className="p-2.5 rounded-xl bg-zinc-950/60 border border-zinc-800/80 flex flex-col justify-between hover:border-emerald-500/30 transition-colors"
-                >
-                  <div className="flex items-center justify-between mb-1">
-                    <span className="font-mono font-bold text-xs text-white">
-                      {stat.val}
-                    </span>
-                    <span className="text-[9px] text-zinc-500">
-                      {stat.desc}
-                    </span>
-                  </div>
-                  <span className="text-[10px] text-zinc-400 font-medium line-clamp-1">
-                    {stat.label}
-                  </span>
-                </motion.div>
-              ))}
-            </div>
-          </SpotlightCard>
-        </div>
-      </FadeIn>
-
-      {/* ── Life-Event Quick Scenario Pills ── */}
-      <FadeIn direction="up" delay={0.1} className="space-y-2">
-        <div className="flex items-center justify-between text-xs">
-          <span className="text-[11px] font-bold uppercase tracking-wider text-zinc-500 flex items-center gap-1.5">
-            <Sparkles className="w-3.5 h-3.5 text-amber-400" />
-            <span>
-              {locale === 'ar'
-                ? 'أكثر الإجراءات طلباً'
-                : locale === 'derja'
-                ? 'El Démarches el Maftou7a Barcha'
-                : locale === 'en'
-                ? 'Fast-Track Citizen Demands'
-                : 'Démarches Populaires'}
+        {/* Global Summary Metric Chip */}
+        <div className="flex items-center gap-3 shrink-0">
+          <div className="px-3.5 py-2 rounded-2xl bg-zinc-900/90 border border-white/[0.1] text-center">
+            <span className="text-[10px] text-zinc-400 uppercase font-bold block">
+              {locale === 'ar' ? 'المجموع' : 'Total'}
             </span>
-          </span>
-          <span className="text-[11px] text-zinc-500 font-mono">
-            {proceduresData.length}{' '}
-            {locale === 'ar'
-              ? 'إجراء متاح'
-              : locale === 'derja'
-              ? 'démarche mawjouda'
-              : locale === 'en'
-              ? 'homologated dossiers'
-              : 'dossiers homologués'}
-          </span>
+            <span className="text-lg font-mono font-extrabold text-emerald-400">
+              {proceduresData.length}
+            </span>
+          </div>
         </div>
+      </div>
 
-        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-2.5">
-          {lifeScenarios.map((scenario) => (
-            <motion.div key={scenario.id} whileHover={{ y: -3, scale: 1.02 }} whileTap={{ scale: 0.98 }}>
-              <Link
-                href={`/procedures/${scenario.id}`}
-                className="p-3 rounded-2xl bg-zinc-900/80 border border-zinc-800 hover:border-emerald-500/40 hover:bg-zinc-900 transition-all duration-200 group flex flex-col justify-between h-full shadow-sm"
+      {/* ── 2. STICKY HORIZONTAL SECTOR FILTER BAR ── */}
+      <div className="sticky top-16 z-30 py-2.5 bg-[#07080a]/95 backdrop-blur-md border-y border-white/[0.08] -mx-4 px-4 sm:-mx-6 sm:px-6 lg:-mx-8 lg:px-8">
+        <div className="flex items-center gap-1.5 overflow-x-auto pb-1 scrollbar-none">
+          {verticals.map((v) => {
+            const Icon = v.icon;
+            const isSelected = selectedVertical === v.id;
+            const count =
+              v.id === 'all'
+                ? proceduresData.length
+                : proceduresData.filter((p) => p.vertical === v.id).length;
+
+            return (
+              <button
+                key={v.id}
+                onClick={() => setSelectedVertical(v.id)}
+                className={`px-3.5 py-2 rounded-xl text-xs font-bold transition-all cursor-pointer shrink-0 flex items-center gap-2 border ${
+                  isSelected
+                    ? 'bg-emerald-500 text-zinc-950 border-emerald-400 shadow-md shadow-emerald-500/25 font-extrabold'
+                    : 'bg-zinc-900/90 text-zinc-400 hover:text-white border-white/[0.08] hover:border-white/[0.15]'
+                }`}
               >
-                <span className="text-xs font-bold text-zinc-200 group-hover:text-emerald-300 transition-colors leading-snug line-clamp-2">
-                  {scenario.label}
+                <Icon className={`w-3.5 h-3.5 ${isSelected ? 'text-zinc-950' : 'text-zinc-400'}`} />
+                <span>{v.label}</span>
+                <span
+                  className={`font-mono text-[10px] px-1.5 py-0.2 rounded-md ${
+                    isSelected ? 'bg-zinc-950/20 text-zinc-950 font-black' : 'bg-zinc-800 text-zinc-400'
+                  }`}
+                >
+                  {count}
                 </span>
-                <div className="pt-2 mt-2 border-t border-zinc-800/80 flex items-center justify-between">
-                  <span className="text-[10px] font-mono font-bold text-amber-400">
-                    {scenario.tag}
-                  </span>
-                  <ChevronRight className="w-3 h-3 text-zinc-600 group-hover:text-emerald-400 group-hover:translate-x-0.5 transition-all rtl:rotate-180" />
-                </div>
-              </Link>
-            </motion.div>
-          ))}
+              </button>
+            );
+          })}
         </div>
-      </FadeIn>
+      </div>
 
-      {/* ── Filter & Search Control Bar ── */}
-      <FadeIn direction="up" delay={0.15} className="p-3 sm:p-4 rounded-2xl glass-panel border border-zinc-800 flex flex-col md:flex-row items-center justify-between gap-3 shadow-lg">
-        {/* Search */}
-        <div className="relative w-full md:w-96">
-          <Search className="w-4 h-4 text-zinc-500 absolute left-3.5 top-1/2 -translate-y-1/2 rtl:left-auto rtl:right-3.5" />
+      {/* ── 3. SEARCH & VIEW CONTROLS TOOLBAR ── */}
+      <div className="flex flex-col sm:flex-row items-center justify-between gap-3 p-3 rounded-2xl bg-zinc-900/80 border border-white/[0.08]">
+        
+        {/* Search Input */}
+        <div className="relative w-full sm:w-80 md:w-96">
+          <Search className="w-4 h-4 text-zinc-400 absolute left-3 top-1/2 -translate-y-1/2 rtl:left-auto rtl:right-3" />
           <input
             type="text"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             placeholder={
               locale === 'ar'
-                ? 'ابحث عن إجراء (جواز سفر، بطاقة تعريف، كراء...)'
+                ? 'ابحث عن إجراء (جواز سفر، بطاقة رمادية، كراء...)'
                 : locale === 'derja'
-                ? 'Lawwej 3la démarche (Passeport, CIN, Krè...)'
+                ? 'Lawwej 3la procédure (Passeport, CIN, Krè...)'
                 : locale === 'en'
-                ? 'Search procedures (e.g. Passport, CIN, Lease...)'
-                : 'Rechercher une démarche (Passeport, CIN, Bail...)'
+                ? 'Filter procedures (e.g. Passport, Lease, B3...)'
+                : 'Filtrer les démarches (Passeport, Bail, Carte Grise...)'
             }
-            className="w-full bg-zinc-900 border border-zinc-800 focus:border-emerald-500 rounded-xl pl-10 pr-4 rtl:pr-10 rtl:pl-4 py-2 text-xs text-zinc-100 placeholder-zinc-500 focus:outline-none transition-all"
+            className="w-full bg-[#0c0d12] border border-white/[0.1] focus:border-emerald-400 rounded-xl pl-9 pr-8 rtl:pr-9 rtl:pl-8 py-2 text-xs text-white placeholder-zinc-400 focus:outline-none transition-all"
           />
+          {searchQuery && (
+            <button
+              onClick={() => setSearchQuery('')}
+              className="absolute right-2.5 top-1/2 -translate-y-1/2 rtl:right-auto rtl:left-2.5 text-zinc-400 hover:text-white p-0.5 cursor-pointer"
+            >
+              <X className="w-3.5 h-3.5" />
+            </button>
+          )}
         </div>
 
-        {/* Sort & Quick Filter */}
-        <div className="flex items-center gap-2 w-full md:w-auto justify-between md:justify-end">
-          <div className="flex items-center gap-1.5 text-xs text-zinc-400">
-            <ArrowUpDown className="w-3.5 h-3.5 text-zinc-500 shrink-0" />
-            <span className="text-[11px] uppercase font-bold text-zinc-500">{locale === 'ar' ? 'ترتيب :' : locale === 'derja' ? 'Trier :' : locale === 'en' ? 'Sort:' : 'Trier :'}</span>
+        {/* Results Counter, Sort & View Mode Toggle */}
+        <div className="flex items-center justify-between sm:justify-end gap-3 w-full sm:w-auto">
+          
+          <span className="text-xs font-mono text-zinc-400 shrink-0">
+            <span className="text-emerald-400 font-bold">{filteredProcedures.length}</span> / {proceduresData.length}{' '}
+            {locale === 'ar' ? 'إجراء' : 'démarches'}
+          </span>
+
+          {/* Sort Selector */}
+          <div className="flex items-center gap-1.5">
+            <ArrowUpDown className="w-3.5 h-3.5 text-zinc-400 shrink-0 hidden sm:inline-block" />
+            <select
+              value={sortBy}
+              onChange={(e) => setSortBy(e.target.value as 'default' | 'cost_asc' | 'cost_desc' | 'steps')}
+              className="bg-[#0c0d12] border border-white/[0.1] focus:border-emerald-400 rounded-xl px-2.5 py-1.5 text-xs text-zinc-200 focus:outline-none transition-colors cursor-pointer"
+            >
+              <option value="default">{locale === 'ar' ? 'ترتيب افتراضي' : 'Par Défaut'}</option>
+              <option value="cost_asc">{locale === 'ar' ? 'الأقل تكلفة أولاً' : 'Budget (Croissant)'}</option>
+              <option value="cost_desc">{locale === 'ar' ? 'الأعلى تكلفة أولاً' : 'Budget (Décroissant)'}</option>
+              <option value="steps">{locale === 'ar' ? 'أقل خطوات' : 'Moins d’étapes'}</option>
+            </select>
           </div>
 
-          <select
-            value={sortBy}
-            onChange={(e) => setSortBy(e.target.value as 'default' | 'cost_asc' | 'cost_desc' | 'steps')}
-            className="bg-zinc-900 border border-zinc-800 focus:border-emerald-500/50 rounded-xl px-3 py-2 text-xs text-zinc-200 focus:outline-none transition-colors cursor-pointer"
-          >
-            <option value="default">{locale === 'ar' ? 'افتراضي' : locale === 'derja' ? 'Par Défaut' : locale === 'en' ? 'Recommended' : 'Par Défaut'}</option>
-            <option value="cost_asc">{locale === 'ar' ? 'الأقل تكلفة أولاً' : locale === 'derja' ? 'Budget (Moins cher d’abord)' : locale === 'en' ? 'Budget (Lowest first)' : 'Budget (Moins cher d’abord)'}</option>
-            <option value="cost_desc">{locale === 'ar' ? 'الأعلى تكلفة أولاً' : locale === 'derja' ? 'Budget (Plus élevé d’abord)' : locale === 'en' ? 'Budget (Highest first)' : 'Budget (Plus élevé d’abord)'}</option>
-            <option value="steps">{locale === 'ar' ? 'أقل خطوات' : locale === 'derja' ? 'Moins d’étapes' : locale === 'en' ? 'Fewest Steps' : 'Moins d’étapes'}</option>
-          </select>
+          {/* Grid vs List View Toggle */}
+          <div className="flex items-center p-0.5 rounded-xl bg-[#0c0d12] border border-white/[0.1]">
+            <button
+              onClick={() => setViewMode('grid')}
+              title="Grid View"
+              className={`p-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer ${
+                viewMode === 'grid'
+                  ? 'bg-emerald-500 text-zinc-950 shadow-sm'
+                  : 'text-zinc-400 hover:text-white'
+              }`}
+            >
+              <LayoutGrid className="w-3.5 h-3.5" />
+            </button>
+            <button
+              onClick={() => setViewMode('list')}
+              title="Dense Table View"
+              className={`p-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer ${
+                viewMode === 'list'
+                  ? 'bg-emerald-500 text-zinc-950 shadow-sm'
+                  : 'text-zinc-400 hover:text-white'
+              }`}
+            >
+              <List className="w-3.5 h-3.5" />
+            </button>
+          </div>
+
         </div>
-      </FadeIn>
 
-      {/* ── Main Layout: Sidebar Categories + Procedure Dossiers Grid ── */}
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
-        
-        {/* Left Column: Category Filter Menu */}
-        <FadeIn direction="right" delay={0.2} className="lg:col-span-4 space-y-4 lg:sticky lg:top-20">
-          <div className="glass-panel rounded-3xl p-3 border border-zinc-800/80 space-y-1 shadow-lg">
-            <div className="px-3 py-2 text-[10px] font-bold uppercase tracking-wider text-zinc-500">
-              {locale === 'ar' ? 'قطاع الإدارة' : locale === 'derja' ? 'Secteurs :' : locale === 'en' ? 'Filter by Sector' : 'Domaines d’administration'}
-            </div>
-
-            {verticals.map((v) => {
-              const Icon = v.icon;
-              const isSelected = selectedVertical === v.id;
-              const count =
-                v.id === 'all'
-                  ? proceduresData.length
-                  : proceduresData.filter((p) => p.vertical === v.id).length;
-
-              return (
-                <motion.button
-                  key={v.id}
-                  onClick={() => setSelectedVertical(v.id)}
-                  whileHover={{ scale: 1.01, x: 2 }}
-                  whileTap={{ scale: 0.98 }}
-                  className={`w-full flex items-center justify-between px-3.5 py-2.5 rounded-2xl text-xs font-semibold transition-all cursor-pointer ${
-                    isSelected
-                      ? 'bg-emerald-500 text-zinc-950 shadow-md shadow-emerald-500/20 font-bold'
-                      : 'text-zinc-400 hover:text-zinc-200 hover:bg-zinc-800/60'
-                  }`}
-                >
-                  <div className="flex items-center gap-2.5 min-w-0">
-                    <Icon className={`w-4 h-4 shrink-0 ${isSelected ? 'text-zinc-950' : 'text-zinc-500'}`} />
-                    <span className="truncate">{v.label}</span>
-                  </div>
-                  <span
-                    className={`font-mono text-[10px] px-2 py-0.5 rounded-full ${
-                      isSelected
-                        ? 'bg-zinc-950/20 text-zinc-950 font-bold'
-                        : 'bg-zinc-800 text-zinc-500'
-                    }`}
-                  >
-                    {count}
-                  </span>
-                </motion.button>
-              );
-            })}
-          </div>
-
-          {/* Quick Voice Assistant Banner */}
-          <SpotlightCard className="p-4 border-emerald-500/20 bg-gradient-to-br from-emerald-950/30 to-zinc-900 space-y-2.5 shadow-xl">
-            <div className="flex items-center gap-2 text-emerald-400 text-xs font-bold">
-              <Mic className="w-4 h-4" />
-              <span>{locale === 'ar' ? 'سؤال صوتي ؟' : locale === 'derja' ? 'Question vocale ?' : locale === 'en' ? 'Voice Question?' : 'Question vocale ?'}</span>
-            </div>
-            <p className="text-[11px] text-zinc-400 leading-relaxed">
-              {locale === 'ar'
-                ? 'تحدث بالدارجة أو الفرنسية وسيحدد المساعد الذكي الوثائق المطلوبة ومصاريف التنابر بدقة.'
-                : locale === 'derja'
-                ? 'Ahkel bel derja walla français w Idaara AI t3awnek fel awra9 wel timbres.'
-                : locale === 'en'
-                ? 'Speak in Derja or French and Idaara AI will identify the exact documents and stamp fees.'
-                : 'Posez votre question en Derja ou Français à l’IA Vocale pour obtenir les étapes en direct.'}
-            </p>
-            <motion.div whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.97 }}>
-              <Link
-                href="/copilot"
-                className="inline-flex items-center gap-1.5 text-xs font-bold text-emerald-300 hover:text-emerald-200 hover:underline pt-1"
-              >
-                <span>{locale === 'ar' ? 'استشارة المساعد الذكي' : locale === 'derja' ? 'Es2el Idaara AI' : locale === 'en' ? 'Ask Idaara AI' : 'Consulter Idaara AI'}</span>
-                <ArrowRight className="w-3.5 h-3.5 rtl:rotate-180" />
-              </Link>
-            </motion.div>
-          </SpotlightCard>
-        </FadeIn>
-
-        {/* Right Column: Procedure Dossier Cards with Stagger and Spotlight */}
-        <div className="lg:col-span-8 space-y-4">
-          <div className="flex items-center justify-between text-xs text-zinc-500 px-1">
-            <span className="font-semibold text-zinc-400">
-              {filteredProcedures.length}{' '}
-              {locale === 'ar'
-                ? 'إجراء معتمد'
-                : locale === 'derja'
-                ? 'démarche homologuée'
-                : locale === 'en'
-                ? 'verified procedures'
-                : 'procédures homologuées'}
-            </span>
-          </div>
-
-          <FadeInStagger faster className="space-y-4">
-            {filteredProcedures.map((proc) => {
-              const title = getLocalized(proc.title, locale);
-              const shortDesc = getLocalized(proc.shortDescription, locale);
-
-              return (
-                <FadeInItem key={proc.id}>
-                  <Link href={`/procedures/${proc.id}`} className="block group">
-                    <SpotlightCard className="p-5 sm:p-6 border-zinc-800/80 hover:border-zinc-700 shadow-xl relative overflow-hidden">
-                      {/* Top Hover Gradient */}
-                      <div className="absolute top-0 left-0 right-0 h-0.5 bg-gradient-to-r from-transparent via-emerald-500/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
-
-                      {/* Header Row */}
-                      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3.5 border-b border-zinc-800/80">
-                        <div className="space-y-1">
-                          <div className="flex items-center gap-2">
-                            <span className="text-[9px] font-extrabold uppercase tracking-wider px-2.5 py-0.5 rounded-lg bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
-                              {getVerticalLabel(proc.vertical, locale)}
-                            </span>
-                            <span className="text-zinc-600 text-xs">·</span>
-                            <span className="font-mono text-[11px] text-zinc-400 flex items-center gap-1">
-                              <Clock className="w-3 h-3 text-zinc-500" />
-                              <span>{getLocalized(proc.estimatedProcessingTime, locale)}</span>
-                            </span>
-                          </div>
-                          <h3 className="text-sm sm:text-base font-bold text-white group-hover:text-emerald-300 transition-colors leading-snug">
-                            {title}
-                          </h3>
-                        </div>
-
-                        <div className="flex items-center gap-3 shrink-0 self-start sm:self-center">
-                          <div className="text-right rtl:text-left">
-                            <span className="text-[9px] text-zinc-500 uppercase font-bold block">
-                              {locale === 'ar'
-                                ? 'المصاريف'
-                                : locale === 'derja'
-                                ? 'El Masrouf'
-                                : locale === 'en'
-                                ? 'Est. Budget'
-                                : 'Budget'}
-                            </span>
-                            <span className="font-mono font-bold text-sm text-amber-400">
-                              {formatTND(proc.estimatedTotalCostTND, locale)}
-                            </span>
-                          </div>
-                          <div className="w-8 h-8 rounded-xl bg-zinc-800/80 border border-zinc-700 flex items-center justify-center text-zinc-300 group-hover:bg-emerald-500 group-hover:text-zinc-950 group-hover:border-emerald-400 transition-all shadow-md">
-                            <ArrowRight className="w-4 h-4 rtl:rotate-180" />
-                          </div>
-                        </div>
-                      </div>
-
-                      {/* Description & Step Breadcrumbs */}
-                      <div className="pt-3.5 space-y-3">
-                        <p className="text-xs text-zinc-400 leading-relaxed line-clamp-2">
-                          {shortDesc}
-                        </p>
-
-                        {/* Step Timeline Breadcrumbs */}
-                        <div className="flex flex-wrap items-center gap-1.5 pt-1">
-                          {proc.steps.map((step, sIdx) => {
-                            const stepTitle = getLocalized(step.title, locale);
-                            return (
-                              <div key={sIdx} className="flex items-center gap-1 text-[10px] text-zinc-400">
-                                <span className="px-2 py-0.5 rounded-md bg-zinc-900 border border-zinc-800 flex items-center gap-1 text-zinc-300">
-                                  <span className="w-3.5 h-3.5 rounded-full bg-emerald-500/20 text-emerald-400 font-mono text-[9px] flex items-center justify-center font-bold">
-                                    {sIdx + 1}
-                                  </span>
-                                  <span className="truncate max-w-[120px]">{stepTitle}</span>
-                                </span>
-                                {sIdx < proc.steps.length - 1 && (
-                                  <ChevronRight className="w-3 h-3 text-zinc-600 shrink-0 rtl:rotate-180" />
-                                )}
-                              </div>
-                            );
-                          })}
-                        </div>
-
-                        {/* Bottom Metadata Badges */}
-                        <div className="flex items-center justify-between pt-2 border-t border-zinc-800/60 text-[11px] text-zinc-500 font-mono">
-                          <div className="flex items-center gap-2">
-                            <span className="px-2 py-0.5 rounded bg-zinc-900 border border-zinc-800 text-zinc-400">
-                              {proc.requiredDocuments.length}{' '}
-                              {locale === 'ar'
-                                ? 'وثائق مطلوبة'
-                                : locale === 'derja'
-                                ? 'awra9'
-                                : locale === 'en'
-                                ? 'docs required'
-                                : 'pièces'}
-                            </span>
-                            <span className="px-2 py-0.5 rounded bg-zinc-900 border border-zinc-800 text-zinc-400">
-                              {proc.costsBreakdown.length}{' '}
-                              {locale === 'ar'
-                                ? 'معاليم/تنابر'
-                                : locale === 'derja'
-                                ? 'timbres/frais'
-                                : locale === 'en'
-                                ? 'fees/stamps'
-                                : 'frais'}
-                            </span>
-                          </div>
-
-                          <span className="text-emerald-400 font-bold group-hover:translate-x-1 rtl:group-hover:-translate-x-1 transition-transform flex items-center gap-1 text-xs">
-                            <span>
-                              {locale === 'ar'
-                                ? 'فتح الملف'
-                                : locale === 'derja'
-                                ? '7el el dossier'
-                                : locale === 'en'
-                                ? 'Open Dossier'
-                                : 'Consulter le dossier'}
-                            </span>
-                            <ArrowRight className="w-3.5 h-3.5 rtl:rotate-180" />
-                          </span>
-                        </div>
-                      </div>
-                    </SpotlightCard>
-                  </Link>
-                </FadeInItem>
-              );
-            })}
-          </FadeInStagger>
-        </div>
       </div>
+
+      {/* ── 4. PROCEDURES DISPLAY (COMPACT GRID OR DENSE LIST) ── */}
+      {filteredProcedures.length === 0 ? (
+        <div className="py-16 text-center space-y-3 rounded-3xl bg-zinc-950/80 border border-white/[0.08]">
+          <FileText className="w-10 h-10 text-zinc-600 mx-auto" />
+          <h3 className="text-base font-bold text-white">
+            {locale === 'ar' ? 'لم يتم العثور على أي إجراء' : 'Aucune démarche trouvée'}
+          </h3>
+          <p className="text-xs text-zinc-400">
+            {locale === 'ar' ? 'جرب البحث بكلمات أخرى أو اختر قطاعاً مختلفاً' : 'Essayez d’autres termes de recherche ou réinitialisez les filtres.'}
+          </p>
+          <button
+            onClick={() => { setSearchQuery(''); setSelectedVertical('all'); }}
+            className="px-4 py-2 rounded-xl bg-zinc-900 border border-white/[0.1] text-xs font-bold text-emerald-400 hover:text-emerald-300 cursor-pointer"
+          >
+            {locale === 'ar' ? 'إعادة ضبط البحث' : 'Réinitialiser les filtres'}
+          </button>
+        </div>
+      ) : viewMode === 'grid' ? (
+        /* ── COMPACT 2/3 COLUMN GRID VIEW (FAST, ELEGANT, SHORT) ── */
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+          {filteredProcedures.map((proc) => {
+            const title = getLocalized(proc.title, locale);
+            const shortDesc = getLocalized(proc.shortDescription, locale);
+
+            return (
+              <Link key={proc.id} href={`/procedures/${proc.slug}`} className="block group">
+                <SpotlightCard className="p-4 sm:p-5 border-white/[0.08] bg-[#0c0d12] hover:border-emerald-500/40 shadow-xl transition-all h-full flex flex-col justify-between space-y-3 rounded-2xl relative overflow-hidden">
+                  
+                  {/* Card Top Row: Sector Badge + Duration + Budget */}
+                  <div className="flex items-center justify-between gap-2">
+                    <span className="text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-md bg-zinc-900 border border-white/[0.1] text-zinc-300">
+                      {getVerticalLabel(proc.vertical, locale)}
+                    </span>
+
+                    <span className="font-mono font-extrabold text-xs sm:text-sm text-amber-400 bg-amber-950/60 border border-amber-800/40 px-2 py-0.5 rounded-md shrink-0">
+                      {formatTND(proc.estimatedTotalCostTND, locale)}
+                    </span>
+                  </div>
+
+                  {/* Title & Short Summary */}
+                  <div className="space-y-1">
+                    <h3 className="text-sm font-bold text-white group-hover:text-emerald-300 transition-colors leading-snug line-clamp-2">
+                      {title}
+                    </h3>
+                    <p className="text-[11px] text-zinc-400 line-clamp-2 leading-relaxed">
+                      {shortDesc}
+                    </p>
+                  </div>
+
+                  {/* Card Footer: Metadata Chips + Arrow */}
+                  <div className="pt-2.5 border-t border-white/[0.06] flex items-center justify-between text-[11px] text-zinc-400 font-mono">
+                    <div className="flex items-center gap-2">
+                      <span className="flex items-center gap-1">
+                        <Clock className="w-3 h-3 text-zinc-500" />
+                        <span>{getLocalized(proc.estimatedProcessingTime, locale)}</span>
+                      </span>
+                      <span>·</span>
+                      <span>{proc.requiredDocuments.length} {locale === 'ar' ? 'وثائق' : 'pièces'}</span>
+                    </div>
+
+                    <div className="w-6 h-6 rounded-lg bg-zinc-900 border border-white/[0.08] flex items-center justify-center text-zinc-400 group-hover:bg-emerald-500 group-hover:text-zinc-950 group-hover:border-emerald-400 transition-all">
+                      <ArrowRight className="w-3.5 h-3.5 rtl:rotate-180" />
+                    </div>
+                  </div>
+
+                </SpotlightCard>
+              </Link>
+            );
+          })}
+        </div>
+      ) : (
+        /* ── DENSE 1-LINE TABLE / LIST VIEW (SUPER FAST 1-SCREEN SCAN) ── */
+        <div className="rounded-2xl border border-white/[0.08] bg-[#0c0d12] shadow-xl overflow-hidden divide-y divide-white/[0.06]">
+          {filteredProcedures.map((proc) => {
+            const title = getLocalized(proc.title, locale);
+
+            return (
+              <Link
+                key={proc.id}
+                href={`/procedures/${proc.slug}`}
+                className="p-3 sm:p-3.5 hover:bg-zinc-900/80 transition-colors flex items-center justify-between gap-3 group"
+              >
+                <div className="flex items-center gap-3 min-w-0 flex-1">
+                  <div className="w-8 h-8 rounded-xl bg-zinc-900 border border-white/[0.08] flex items-center justify-center text-emerald-400 shrink-0 font-bold text-xs">
+                    <FileCheck2 className="w-4 h-4" />
+                  </div>
+
+                  <div className="min-w-0">
+                    <h3 className="text-xs sm:text-sm font-bold text-white group-hover:text-emerald-300 transition-colors truncate">
+                      {title}
+                    </h3>
+                    <div className="flex items-center gap-2 text-[10px] text-zinc-400 font-mono mt-0.5">
+                      <span>{getVerticalLabel(proc.vertical, locale)}</span>
+                      <span>·</span>
+                      <span>{getLocalized(proc.estimatedProcessingTime, locale)}</span>
+                      <span>·</span>
+                      <span>{proc.requiredDocuments.length} {locale === 'ar' ? 'وثائق' : 'pièces'}</span>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="flex items-center gap-3 shrink-0">
+                  <span className="font-mono font-extrabold text-xs sm:text-sm text-amber-400 bg-amber-950/60 border border-amber-800/40 px-2.5 py-1 rounded-lg">
+                    {formatTND(proc.estimatedTotalCostTND, locale)}
+                  </span>
+                  <div className="w-7 h-7 rounded-lg bg-zinc-900 border border-white/[0.08] flex items-center justify-center text-zinc-400 group-hover:bg-emerald-500 group-hover:text-zinc-950 group-hover:border-emerald-400 transition-all">
+                    <ArrowRight className="w-3.5 h-3.5 rtl:rotate-180" />
+                  </div>
+                </div>
+              </Link>
+            );
+          })}
+        </div>
+      )}
+
     </div>
   );
 }

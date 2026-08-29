@@ -32,6 +32,7 @@ import {
   Zap,
   X,
   Bot,
+  BadgeCheck,
 } from 'lucide-react';
 import { formatTND } from '../lib/utils';
 import { getLocalized } from '../lib/locale-utils';
@@ -79,9 +80,9 @@ export default function HomePage() {
   const handleSearchSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (searchVal.trim()) {
-      router.push(`/copilot?q=${encodeURIComponent(searchVal)}`);
+      router.push(`/procedures?q=${encodeURIComponent(searchVal)}`);
     } else {
-      router.push('/copilot');
+      router.push('/procedures');
     }
   };
 
@@ -99,38 +100,42 @@ export default function HomePage() {
       }).slice(0, 5)
     : [];
 
-  // Top 6 Quick Procedures
-  const quickChips = [
+  // Top 6 Statutory Procedures with Authority
+  const statutoryIndex = [
     {
       id: 'passeport-renouvellement',
       icon: '🪪',
-      name: locale === 'ar' ? 'جواز السفر' : locale === 'derja' ? 'Passeport' : locale === 'en' ? 'Passport' : 'Passeport',
+      name: locale === 'ar' ? 'جواز السفر' : locale === 'derja' ? 'Passeport' : locale === 'en' ? 'Passport Renewal' : 'Passeport Tunisien',
       cost: '86.000 DT',
-      badge: locale === 'ar' ? 'شرطة / حرس' : 'Police',
+      authority: locale === 'ar' ? 'مركز الشرطة / الحرس' : 'Police / Garde',
+      time: locale === 'ar' ? '7-15 يوم' : '7-15 jours',
       href: '/procedures/passeport-renouvellement',
     },
     {
       id: 'bulletin-numero-3',
       icon: '📋',
-      name: locale === 'ar' ? 'بطاقة السوابق (B3)' : locale === 'derja' ? 'Bulletin N°3' : locale === 'en' ? 'Criminal Record (B3)' : 'Bulletin N°3',
+      name: locale === 'ar' ? 'بطاقة السوابق (B3)' : locale === 'derja' ? 'Bulletin N°3' : locale === 'en' ? 'Police Record (B3)' : 'Extrait B3 (Casier)',
       cost: '7.500 DT',
-      badge: locale === 'ar' ? 'عبر الإنترنت' : 'En ligne',
+      authority: locale === 'ar' ? 'عبر الإنترنت / البريد' : 'En ligne / Rapide Poste',
+      time: locale === 'ar' ? '2-5 أيام' : '2-5 jours',
       href: '/procedures/bulletin-numero-3',
     },
     {
       id: 'contrat-location',
       icon: '✍️',
-      name: locale === 'ar' ? 'عقد الكراء السكني' : locale === 'derja' ? '3a9d Kré' : locale === 'en' ? 'Lease Agreement' : 'Contrat de Location',
+      name: locale === 'ar' ? 'عقد الكراء السكني' : locale === 'derja' ? '3a9d Kré' : locale === 'en' ? 'Residential Lease' : 'Contrat de Location',
       cost: '35.000 DT',
-      badge: locale === 'ar' ? 'بلدية' : 'Baladiya',
+      authority: locale === 'ar' ? 'البلدية والقباضة' : 'Baladiya & Recette',
+      time: locale === 'ar' ? 'فوري' : 'Immédiat',
       href: '/documents/contrat-location',
     },
     {
       id: 'mutation-carte-grise',
       icon: '🚗',
-      name: locale === 'ar' ? 'البطاقة الرمادية' : locale === 'derja' ? 'Carte Grise' : locale === 'en' ? 'Vehicle Title' : 'Carte Grise (ATTT)',
+      name: locale === 'ar' ? 'البطاقة الرمادية' : locale === 'derja' ? 'Carte Grise' : locale === 'en' ? 'Vehicle Title Transfer' : 'Carte Grise (ATTT)',
       cost: '145.000 DT',
-      badge: 'ATTT',
+      authority: 'ATTT / Mines',
+      time: locale === 'ar' ? '3-7 أيام' : '3-7 jours',
       href: '/procedures/mutation-carte-grise',
     },
     {
@@ -138,7 +143,8 @@ export default function HomePage() {
       icon: '💼',
       name: locale === 'ar' ? 'المبادر الذاتي' : locale === 'derja' ? 'Auto-Entrepreneur' : locale === 'en' ? 'Self-Entrepreneur' : 'Auto-Entrepreneur',
       cost: locale === 'ar' ? 'ضريبة 1%' : '1% Impôt',
-      badge: 'BCT / RNE',
+      authority: 'RNE / BCT',
+      time: locale === 'ar' ? 'فوري عبر المنصة' : 'En ligne',
       href: '/launchpad',
     },
     {
@@ -146,7 +152,8 @@ export default function HomePage() {
       icon: '🛡️',
       name: locale === 'ar' ? 'بطاقة التعريف (CIN)' : locale === 'derja' ? 'Bita9at Ta3rif' : locale === 'en' ? 'National ID (CIN)' : 'Carte CIN',
       cost: '3.000 DT',
-      badge: locale === 'ar' ? 'مركز الشرطة' : 'Poste Police',
+      authority: locale === 'ar' ? 'مركز الشرطة' : 'Poste de Police',
+      time: locale === 'ar' ? '15-21 يوم' : '15-21 jours',
       href: '/procedures/cin-premiere-demande',
     },
   ];
@@ -542,7 +549,7 @@ export default function HomePage() {
     <div className="space-y-12 sm:space-y-16 pb-16 relative overflow-hidden bg-[#07080a] text-[#F5F4F0]">
 
       {/* ── 1. MONUMENTAL SOVEREIGN COMMAND CENTER HERO ── */}
-      <section className="relative pt-6 sm:pt-10 px-4 sm:px-6 lg:px-8 max-w-6xl mx-auto text-center space-y-7">
+      <section className="relative pt-6 sm:pt-10 px-4 sm:px-6 lg:px-8 max-w-6xl mx-auto text-center space-y-6">
         
         {/* Subtle Ambient Radial Lighting */}
         <AmbientOrbs variant="emerald" />
@@ -555,15 +562,7 @@ export default function HomePage() {
           className="inline-flex items-center gap-2.5 px-4 py-1.5 rounded-full bg-zinc-900/90 border border-white/[0.12] shadow-xl backdrop-blur-md text-xs font-semibold text-zinc-200"
         >
           <span className="text-emerald-400 font-bold">🇹🇳</span>
-          <span>
-            {locale === 'ar'
-              ? 'الجمهورية التونسية · البوابة المدنية والجبائية الذكية'
-              : locale === 'derja'
-              ? 'El Joumhouriya el Tounsiya · L\'Idara el Thakiya'
-              : locale === 'en'
-              ? 'Republic of Tunisia · Smart Civic Portal'
-              : 'République Tunisienne · Portail Civique & Fiscal'}
-          </span>
+          <span>{t('heroBadge')}</span>
           <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
           <span className="text-[10px] font-mono text-emerald-400 font-bold bg-emerald-950/80 px-2 py-0.5 rounded-full border border-emerald-800/40">
             JORT 2026
@@ -598,15 +597,7 @@ export default function HomePage() {
               onFocus={() => setIsSearchFocused(true)}
               onBlur={() => setTimeout(() => setIsSearchFocused(false), 200)}
               onChange={(e) => setSearchVal(e.target.value)}
-              placeholder={
-                locale === 'ar'
-                  ? 'ابحث عن أي إجراء... (مثال: جواز السفر، بطاقة التعريف، عقد الكراء)'
-                  : locale === 'derja'
-                  ? 'Chnowa t7eb ta3mel el youm? (Passeport, B3, 3a9d Kré...)'
-                  : locale === 'en'
-                  ? 'What procedure do you need today? (Passport, B3, Lease...)'
-                  : 'Quelle démarche souhaitez-vous accomplir ? (Passeport, B3...)'
-              }
+              placeholder={t('voiceSearchBarPlaceholder')}
               className="flex-1 bg-transparent text-xs sm:text-sm text-white placeholder-zinc-400 focus:outline-none py-2 px-1 min-w-0"
             />
 
@@ -625,13 +616,13 @@ export default function HomePage() {
               <span>⌘K</span>
             </div>
 
-            {/* Submit / Copilot Action Button */}
+            {/* Search Action Button */}
             <button
               type="submit"
               className="flex items-center gap-1.5 px-4 sm:px-5 py-2.5 rounded-xl sm:rounded-2xl font-extrabold text-xs bg-emerald-500 hover:bg-emerald-400 text-zinc-950 shadow-md shadow-emerald-500/25 transition-all hover:scale-105 cursor-pointer shrink-0"
             >
-              <Sparkles className="w-3.5 h-3.5 fill-current" />
-              <span>{locale === 'ar' ? 'بحث ذكي' : 'Idaara AI'}</span>
+              <span>{locale === 'ar' ? 'بحث' : 'Rechercher'}</span>
+              <ArrowRight className="w-3.5 h-3.5 rtl:rotate-180" />
             </button>
           </form>
 
@@ -672,30 +663,59 @@ export default function HomePage() {
           </AnimatePresence>
         </div>
 
-        {/* ── TOP 6 CIVIC QUICK CHIPS ── */}
-        <div className="space-y-2 pt-1 max-w-4xl mx-auto">
-          <span className="text-[11px] font-bold text-zinc-400 uppercase tracking-wider block">
-            {locale === 'ar'
-              ? 'الإجراءات الأكثر طلباً في تونس (معاليم رسمية ومباشرة) :'
-              : locale === 'derja'
-              ? 'El Démarchet el Akther Talab fi Tounes :'
-              : locale === 'en'
-              ? 'Most Requested Procedures in Tunisia:'
-              : 'Démarches les Plus Fréquentes en Tunisie :'}
-          </span>
+        {/* ── 2. OFFICIAL STATUTORY FISCAL STAMP REFERENCE INDEX ── */}
+        <div className="pt-2 max-w-5xl mx-auto space-y-3">
+          <div className="flex items-center justify-between text-xs text-zinc-400 px-1 border-b border-white/[0.06] pb-2">
+            <span className="font-bold text-zinc-300 uppercase tracking-wider text-[11px] flex items-center gap-1.5">
+              <Stamp className="w-3.5 h-3.5 text-amber-400" />
+              <span>
+                {locale === 'ar'
+                  ? 'جدول المعاليم والتنابر الجبائية الرسمية الأكثر طلباً :'
+                  : locale === 'derja'
+                  ? 'Tableau el Timbres wel Masrouf el Rasmi :'
+                  : locale === 'en'
+                  ? 'Official Statutory Stamp & Tariff Scale (Key Procedures):'
+                  : 'Barème Officiel des Timbres & Droits Fiscaux :'}
+              </span>
+            </span>
 
-          <div className="flex flex-wrap items-center justify-center gap-2 pt-1">
-            {quickChips.map((chip) => (
-              <motion.div key={chip.id} whileHover={{ y: -2, scale: 1.03 }} whileTap={{ scale: 0.97 }}>
+            <Link
+              href="/procedures"
+              className="text-emerald-400 hover:text-emerald-300 font-bold text-xs flex items-center gap-1"
+            >
+              <span>{locale === 'ar' ? 'دليل الـ 38 إجراء كـاملاً' : 'Voir les 38 Démarches'}</span>
+              <ArrowRight className="w-3 h-3 rtl:rotate-180" />
+            </Link>
+          </div>
+
+          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-2.5">
+            {statutoryIndex.map((item) => (
+              <motion.div key={item.id} whileHover={{ y: -2 }} whileTap={{ scale: 0.98 }}>
                 <Link
-                  href={chip.href}
-                  className="inline-flex items-center gap-2 px-3 py-1.5 rounded-xl bg-zinc-900/90 hover:bg-zinc-800 border border-white/[0.08] hover:border-emerald-500/50 text-xs font-semibold text-zinc-200 transition-all shadow-sm group"
+                  href={item.href}
+                  className="p-3 rounded-2xl bg-zinc-900/90 hover:bg-zinc-800 border border-white/[0.08] hover:border-emerald-500/40 flex flex-col justify-between space-y-2 text-left rtl:text-right transition-all group h-full shadow-sm"
                 >
-                  <span>{chip.icon}</span>
-                  <span className="group-hover:text-emerald-300 transition-colors">{chip.name}</span>
-                  <span className="text-[10px] font-mono font-extrabold text-amber-400 bg-amber-950/60 px-1.5 py-0.5 rounded border border-amber-800/30">
-                    {chip.cost}
-                  </span>
+                  <div className="flex items-center justify-between">
+                    <span className="text-base">{item.icon}</span>
+                    <span className="text-[9px] font-mono font-bold text-zinc-400 bg-zinc-950 px-1.5 py-0.5 rounded border border-white/[0.06]">
+                      {item.time}
+                    </span>
+                  </div>
+
+                  <div>
+                    <h4 className="text-xs font-bold text-white group-hover:text-emerald-300 transition-colors line-clamp-1">
+                      {item.name}
+                    </h4>
+                    <p className="text-[10px] text-zinc-400 truncate mt-0.5">
+                      {item.authority}
+                    </p>
+                  </div>
+
+                  <div className="pt-1.5 border-t border-white/[0.06]">
+                    <span className="text-xs font-mono font-extrabold text-amber-400">
+                      {item.cost}
+                    </span>
+                  </div>
                 </Link>
               </motion.div>
             ))}
@@ -704,12 +724,12 @@ export default function HomePage() {
 
       </section>
 
-      {/* ── 2. THE 3 GATEWAY POWER PILLARS (ZERO CONFUSION NAVIGATION) ── */}
-      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-4">
+      {/* ── 3. THE 3 GATEWAY POWER PILLARS ── */}
+      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-2">
         
-        <div className="text-center space-y-2 max-w-2xl mx-auto pb-6">
+        <div className="text-center space-y-1.5 max-w-2xl mx-auto pb-6">
           <span className="text-[10px] font-extrabold text-emerald-400 uppercase tracking-widest px-3 py-1 rounded-full bg-emerald-950/80 border border-emerald-800/40">
-            {locale === 'ar' ? 'الخدمات الأساسية' : 'Piliers Principaux'}
+            {locale === 'ar' ? 'الخدمات الأساسية للمواطن' : 'Services Essentiels'}
           </span>
           <h2 className="text-2xl sm:text-3xl font-extrabold text-white tracking-tight">
             {locale === 'ar'
@@ -717,7 +737,7 @@ export default function HomePage() {
               : locale === 'derja'
               ? 'Kol chay t7eb ta3mlou fi 3 bibén wad7in'
               : locale === 'en'
-              ? 'Everything You Need in 3 Crystal-Clear Gateways'
+              ? 'Everything You Need in 3 Clear Gateways'
               : 'Tout ce dont vous avez besoin en 3 portes claires'}
           </h2>
         </div>
@@ -760,7 +780,7 @@ export default function HomePage() {
                 href="/procedures"
                 className="text-xs font-bold text-emerald-400 hover:text-emerald-300 flex items-center gap-1.5 transition-colors"
               >
-                <span>{locale === 'ar' ? 'تصفح الإجراءات' : 'Voir les Démarches'}</span>
+                <span>{locale === 'ar' ? 'تصفح الإجراءات (38)' : 'Voir les 38 Démarches'}</span>
                 <ArrowRight className="w-3.5 h-3.5 rtl:rotate-180" />
               </Link>
               <Link
@@ -865,7 +885,7 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* ── 3. INTERACTIVE CIVIC DOSSIER SIMULATOR (LIVE CHECKLIST PREVIEW) ── */}
+      {/* ── 4. INTERACTIVE CIVIC DOSSIER SIMULATOR (LIVE CHECKLIST PREVIEW) ── */}
       <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         
         <SpotlightCard className="p-6 sm:p-9 border-white/[0.1] bg-[#0c0d12] shadow-2xl space-y-6 rounded-3xl">
@@ -1014,7 +1034,7 @@ export default function HomePage() {
 
       </section>
 
-      {/* ── 4. AUTO-ENTREPRENEUR 1% TAX & REVENUE STUDIO ── */}
+      {/* ── 5. AUTO-ENTREPRENEUR 1% TAX & REVENUE STUDIO ── */}
       <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <SpotlightCard className="p-6 sm:p-9 border-white/[0.1] bg-[#0c0d12] shadow-2xl space-y-7 rounded-3xl">
           
@@ -1110,7 +1130,7 @@ export default function HomePage() {
         </SpotlightCard>
       </section>
 
-      {/* ── 5. TERRITORIAL RADAR: 24 WILAYAS PUBLIC DESKS ── */}
+      {/* ── 6. TERRITORIAL RADAR: 24 WILAYAS PUBLIC DESKS ── */}
       <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-6">
         
         <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-4 pb-4 border-b border-white/[0.08]">
@@ -1242,7 +1262,7 @@ export default function HomePage() {
 
       </section>
 
-      {/* ── 6. ZERO-STORAGE PRIVACY PROTOCOL ── */}
+      {/* ── 7. ZERO-STORAGE PRIVACY PROTOCOL ── */}
       <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <SpotlightCard className="p-6 sm:p-9 border-emerald-500/30 bg-gradient-to-br from-[#0c1410] via-[#090b0d] to-[#07080a] shadow-2xl space-y-6 rounded-3xl">
           
