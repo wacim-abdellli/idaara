@@ -311,17 +311,14 @@ export async function POST(req: NextRequest) {
     // ─── PRIMARY ENGINE: Multi-Model Groq Cascade ───
     if (apiKey) {
       const groqModels = [
-        'openai/gpt-oss-120b',
-        'openai/gpt-oss-20b',
-        'groq/compound-mini',
-        'qwen/qwen3.8-27b',
-        'qwen/qwen3.6-27b',
-        'allam-2-7b',
+        'llama-3.3-70b-versatile',
+        'llama-3.1-8b-instant',
+        'mixtral-8x7b-32768',
       ];
       for (const model of groqModels) {
         try {
           const llmController = new AbortController();
-          const llmTimeout = setTimeout(() => llmController.abort(), 8500);
+          const llmTimeout = setTimeout(() => llmController.abort(), 12000);
 
           const groqRes = await fetch('https://api.groq.com/openai/v1/chat/completions', {
             method: 'POST',
@@ -375,9 +372,10 @@ export async function POST(req: NextRequest) {
       },
     });
 
-  } catch (error) {
+  } catch (error: unknown) {
+    const errorMsg = error instanceof Error ? error.message : 'Unknown error';
     return NextResponse.json(
-      { error: 'Failed to process request', details: String(error) },
+      { error: 'Failed to process request', details: errorMsg },
       { status: 500 }
     );
   }

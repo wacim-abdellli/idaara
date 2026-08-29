@@ -8,6 +8,7 @@ import { CommandPalette } from '../components/common/CommandPalette';
 import { MobileBottomNav } from '../components/layout/MobileBottomNav';
 import { ScrollToTop } from '../components/common/ScrollToTop';
 import { DynamicTitle } from '../components/layout/DynamicTitle';
+import { ErrorBoundary } from '../components/common/ErrorBoundary';
 
 const BASE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://idaara-flame.vercel.app';
 
@@ -98,7 +99,9 @@ export default function RootLayout({
             <ScrollToTop />
             <Navbar />
             <CommandPalette />
-            <main className="flex-1 w-full relative">{children}</main>
+            <ErrorBoundary>
+              <main className="flex-1 w-full relative">{children}</main>
+            </ErrorBoundary>
             <MobileBottomNav />
             <Footer />
           </ChecklistProvider>
