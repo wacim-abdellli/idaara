@@ -11,7 +11,8 @@
 [![React](https://img.shields.io/badge/React-19-61DAFB?style=for-the-badge&logo=react&logoColor=black)](https://react.dev/)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.7-3178C6?style=for-the-badge&logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
 [![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-4.0-38B2AC?style=for-the-badge&logo=tailwind-css&logoColor=white)](https://tailwindcss.com/)
-[![Groq AI](https://img.shields.io/badge/AI-Groq_GPT--OSS--120B-F55036?style=for-the-badge&logo=openai&logoColor=white)](https://groq.com/)
+[![Groq AI](https://img.shields.io/badge/AI-Groq_Llama_3.3_70B-F55036?style=for-the-badge&logo=groq&logoColor=white)](https://groq.com/)
+[![Gemini Vision](https://img.shields.io/badge/Vision-Gemini_2.5_Flash-4285F4?style=for-the-badge&logo=google&logoColor=white)](https://ai.google.dev/)
 [![Whisper Audio](https://img.shields.io/badge/Audio-Whisper_Large_v3_Turbo-10B981?style=for-the-badge&logo=openai&logoColor=white)](https://openai.com/research/whisper)
 [![Locales](https://img.shields.io/badge/Languages-Derja_%7C_FR_%7C_AR_(RTL)_%7C_EN-EA580C?style=for-the-badge&logo=translate&logoColor=white)](#-multilingual-support)
 
@@ -34,7 +35,7 @@
   - [8. Emergency Contacts & National Directory (`/contacts`)](#8-emergency-contacts--national-directory-contacts)
   - [9. Freelancer & Entrepreneur Launchpad (`/launchpad`)](#9-freelancer--entrepreneur-launchpad-launchpad)
   - [10. Complete Civic Procedures Directory (`/procedures`)](#10-complete-civic-procedures-directory-procedures)
-- [Deep Tunisian Infrastructure Grounding (38 Domains)](#-deep-tunisian-infrastructure-grounding-38-domains)
+- [Deep Tunisian Infrastructure Grounding](#-deep-tunisian-infrastructure-grounding)
 - [Tech Stack & Architecture](#-tech-stack--architecture)
 - [Getting Started](#-getting-started)
   - [Prerequisites](#prerequisites)
@@ -61,7 +62,7 @@ Navigating public administration in Tunisia (*l'Idara*, *Baladiya*, *Recette des
 
 ### 1. Universal Derja AI Copilot (`/copilot`)
 - **100% Tunisian Derja in Arabic Script**: Formulates all responses strictly in warm, natural Tunisian Arabic Derja (الدارجة التونسية بالحروف العربية), regardless of whether the user types in English, French, Latin Arabizi, or Arabic.
-- **Sub-Second Groq Inference**: Powered by `openai/gpt-oss-120b` running on Groq LPU hardware with progressive token streaming (~500ms latency).
+- **Sub-Second Groq Inference**: Powered by `llama-3.3-70b-versatile` running on Groq LPU hardware with progressive token streaming (~500ms latency).
 - **Deep Think Mode (`[ 🧠 Think ]`)**: Exhaustive statutory breakdown cross-referenced with exact JORT decrees and official tariffs.
 - **Document OCR Attachment (`[ 📷 OCR ]`)**: Upload and decipher official administrative letters directly within the conversation.
 - **Whisper Speech-to-Text**: Voice input powered by `whisper-large-v3-turbo`.
@@ -69,11 +70,11 @@ Navigating public administration in Tunisia (*l'Idara*, *Baladiya*, *Recette des
 - **Civic Domain Guardrails**: In-character handling of off-topic requests, guiding citizens back to civic procedures.
 
 ### 2. "Fasserli Hal War9a" Scanner & OCR Decoder (`/fasserli`)
-- **Instant Document Decoding**: Upload or snap a photo of any official administrative letter (Tax adjustment, CNSS demand, Police summons, Court order, Utility bill).
+- **Instant Document Decoding**: Upload or snap a photo of any official administrative letter (Tax adjustment, CNSS demand, Police summons, Court order, Utility bill) powered by Google Gemini 2.5 Flash Vision & Groq OCR.
 - **3-Point Plain Language Summary**: Breaks down the document in Tunisian Derja, French, and Arabic.
 - **Statutory Deadlines & Penalty Radar**: Identifies strict appeal windows, payment deadlines, and late penalty rates.
 - **Action Checklist & Desk Locator**: Identifies the exact municipal, court, or tax desk to visit with required papers.
-- **Zero-Storage Privacy**: Files are processed ephemerally in RAM and immediately purged.
+- **Ephemeral In-Memory Processing**: Documents are processed in volatile memory and never stored in a persistent database.
 
 ### 3. National Concours & Public Recruitment Hub (`/concours`)
 - **Live Recruitment Feed**: Openings across Tunisian ministries, public enterprises (STEG, SONEDE), and agencies (*Concours Nationaux*).

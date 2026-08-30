@@ -9,6 +9,7 @@ import { DossierKitExport } from '../../components/calculator/DossierKitExport';
 import { useLocale } from '../../context/LocaleContext';
 import { getLocalized } from '../../lib/locale-utils';
 import { getVerticalLabel } from '../../lib/vertical-labels';
+import { formatTND } from '../../lib/utils';
 import { SpotlightCard } from '../../components/motion/SpotlightCard';
 import { FadeIn, FadeInStagger, FadeInItem } from '../../components/motion/FadeInStagger';
 import { AmbientOrbs } from '../../components/motion/AmbientOrbs';
@@ -252,7 +253,7 @@ export default function CalculatorPage() {
                   </h4>
                 </div>
                 <div className="pt-2 mt-2 border-t border-zinc-800/60 text-[10px] font-mono font-bold text-amber-400">
-                  ~ {(p.estimatedTotalCostTND ?? 0).toFixed(3)} DT
+                  {formatTND(p.estimatedTotalCostTND ?? 0, locale)}
                 </div>
               </motion.button>
             );

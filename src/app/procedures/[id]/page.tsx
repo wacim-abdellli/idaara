@@ -19,9 +19,6 @@ import {
   FileText,
   CheckCircle2,
   Lightbulb,
-  Sparkles,
-  ArrowRight,
-  ShieldCheck,
 } from 'lucide-react';
 import { formatTND } from '../../../lib/utils';
 

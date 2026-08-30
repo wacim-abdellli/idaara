@@ -6,6 +6,7 @@ import { usePathname } from 'next/navigation';
 import { useLocale } from '../../context/LocaleContext';
 import { BrandLogo } from './BrandLogo';
 import { ShieldCheck, ExternalLink } from 'lucide-react';
+import { OFFICIAL_JORT_URL } from '../../data/portails';
 
 export const Footer: React.FC = () => {
   const { t, locale } = useLocale();
@@ -219,7 +220,7 @@ export const Footer: React.FC = () => {
               ))}
               <li>
                 <a
-                  href="http://www.iort.gov.tn"
+                  href={OFFICIAL_JORT_URL}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="inline-flex items-center space-x-1 rtl:space-x-reverse text-zinc-400 hover:text-emerald-400 transition-colors text-xs"

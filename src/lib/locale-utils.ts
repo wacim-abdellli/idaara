@@ -1,5 +1,3 @@
-import { SupportedLanguage } from '../data/translations';
-
 export interface LocalizedString {
   derja: string;
   fr: string;

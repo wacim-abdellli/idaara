@@ -7,6 +7,12 @@ export function cn(...inputs: ClassValue[]) {
 }
 
 export function formatTND(amount: number, locale: SupportedLanguage | string = 'fr'): string {
+  if (amount <= 0) {
+    if (locale === 'ar') return 'مجاني';
+    if (locale === 'derja') return 'Bel Mèjjen';
+    if (locale === 'en') return 'Free';
+    return 'Gratuit';
+  }
   const formatted = amount.toFixed(3);
   if (locale === 'ar') {
     return `${formatted} د.ت`;

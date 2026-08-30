@@ -4,15 +4,11 @@ import React, { useState, useRef, useEffect } from 'react';
 import {
   UploadCloud,
   Camera,
-  Lock,
   ShieldCheck,
   Loader2,
   FileText,
-  X,
   Sparkles,
   RefreshCw,
-  Eye,
-  Check,
 } from 'lucide-react';
 import { useLocale } from '../../context/LocaleContext';
 

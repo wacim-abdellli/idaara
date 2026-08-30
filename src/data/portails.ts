@@ -12,6 +12,8 @@ export interface EGovPortal {
   tags: string[];
 }
 
+export const OFFICIAL_JORT_URL = 'https://legislation.tn';
+
 export const portailsData: EGovPortal[] = [
   {
     id: 'e-houwiya',
@@ -279,9 +281,9 @@ export const portailsData: EGovPortal[] = [
   },
   {
     id: 'iort-jort',
-    name: 'IORT.gov.tn (الرائد الرسمي للجمهورية)',
-    url: 'http://www.iort.gov.tn',
-    domain: 'iort.gov.tn',
+    name: 'Legislation.tn / JORT (الرائد الرسمي للجمهورية)',
+    url: OFFICIAL_JORT_URL,
+    domain: 'legislation.tn',
     icon: '📜',
     category: 'legal',
     description: {

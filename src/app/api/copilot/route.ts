@@ -313,7 +313,6 @@ export async function POST(req: NextRequest) {
       const groqModels = [
         'llama-3.3-70b-versatile',
         'llama-3.1-8b-instant',
-        'mixtral-8x7b-32768',
       ];
       for (const model of groqModels) {
         try {
@@ -373,9 +372,9 @@ export async function POST(req: NextRequest) {
     });
 
   } catch (error: unknown) {
-    const errorMsg = error instanceof Error ? error.message : 'Unknown error';
+    console.error('[Copilot Route] Internal error:', error);
     return NextResponse.json(
-      { error: 'Failed to process request', details: errorMsg },
+      { error: 'Failed to process request. Please try again.' },
       { status: 500 }
     );
   }

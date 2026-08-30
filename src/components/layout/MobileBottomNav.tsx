@@ -7,7 +7,7 @@ import { useLocale } from '../../context/LocaleContext';
 import { Sparkles, FileSearch, FileText, Calculator, MapPin } from 'lucide-react';
 
 export const MobileBottomNav: React.FC = () => {
-  const { t, locale } = useLocale();
+  const { locale } = useLocale();
   const pathname = usePathname();
 
   const items = [

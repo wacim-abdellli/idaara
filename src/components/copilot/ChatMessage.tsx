@@ -12,7 +12,6 @@ import {
   MapPin,
   CheckCircle2,
   Stamp,
-  Sparkles,
 } from 'lucide-react';
 import { ChatMessage as ChatMessageType } from '../../types/chat';
 import { useLocale } from '../../context/LocaleContext';

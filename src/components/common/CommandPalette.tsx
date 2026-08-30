@@ -7,12 +7,12 @@ import { proceduresData } from '../../data/procedures';
 import { documentTemplatesData } from '../../data/documentTemplates';
 import { publicOfficesData } from '../../data/offices';
 import { getLocalized } from '../../lib/locale-utils';
+import { formatTND } from '../../lib/utils';
 import {
   Search,
   BookOpen,
   FileText,
   Building2,
-  Mic,
   Calculator,
   ArrowRight,
   Sparkles,
@@ -184,7 +184,7 @@ export const CommandPalette: React.FC = () => {
         id: `proc-${p.id}`,
         category: 'procedure',
         title: getLocalized(p.title, locale),
-        subtitle: `${getLocalized(p.estimatedProcessingTime, locale)} · ${p.estimatedTotalCostTND.toFixed(3)} DT`,
+        subtitle: `${getLocalized(p.estimatedProcessingTime, locale)} · ${formatTND(p.estimatedTotalCostTND, locale)}`,
         url: `/procedures/${p.id}`,
         badge: locale === 'ar' ? 'دليل' : locale === 'derja' ? 'Dalil' : locale === 'en' ? 'Guide' : 'Guide',
         icon: BookOpen,
@@ -201,7 +201,7 @@ export const CommandPalette: React.FC = () => {
         id: `doc-${d.id}`,
         category: 'document',
         title: getLocalized(d.title, locale),
-        subtitle: `${d.category} · ${d.requiredTimbreTND} DT`,
+        subtitle: `${d.category} · ${formatTND(d.requiredTimbreTND, locale)}`,
         url: `/documents/${d.slug}`,
         badge: 'PDF',
         icon: FileText,

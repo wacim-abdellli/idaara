@@ -683,7 +683,11 @@ export default function HomePage() {
               href="/procedures"
               className="text-emerald-400 hover:text-emerald-300 font-bold text-xs flex items-center gap-1"
             >
-              <span>{locale === 'ar' ? 'دليل الـ 38 إجراء كـاملاً' : 'Voir les 38 Démarches'}</span>
+              <span>
+                {locale === 'ar'
+                  ? `دليل الـ ${proceduresData.length} إجراء كـاملاً`
+                  : `Voir les ${proceduresData.length} Démarches`}
+              </span>
               <ArrowRight className="w-3 h-3 rtl:rotate-180" />
             </Link>
           </div>
@@ -770,12 +774,12 @@ export default function HomePage() {
                 </h3>
                 <p className="text-xs text-zinc-300 leading-relaxed pt-1">
                   {locale === 'ar'
-                    ? 'قائمة الأوراق المطلوبة لـ 38 إجراء مدني، حساب الميزانية بالمليم، واستخراج ورقة الملف (Dossier Kit A4) للطباعة.'
+                    ? `قائمة الأوراق المطلوبة لـ ${proceduresData.length} إجراء مدني، حساب الميزانية بالمليم، واستخراج ورقة الملف (Dossier Kit A4) للطباعة.`
                     : locale === 'derja'
-                    ? 'Koll war9a lezmetek l’38 procédure, 7asbet el masrouf bel mlim, w telechargi el fiche A4 l’officielle.'
+                    ? `Koll war9a lezmetek l’${proceduresData.length} procédure, 7asbet el masrouf bel mlim, w telechargi el fiche A4 l’officielle.`
                     : locale === 'en'
-                    ? 'Required document checklists for 38 civic procedures, millime-accurate fee calculators, and printable A4 official sheets.'
-                    : 'Checklists des pièces pour 38 démarches, calcul au millime près des timbres fiscaux et export de la fiche A4 officielle.'}
+                    ? `Required document checklists for ${proceduresData.length} civic procedures, millime-accurate fee calculators, and printable A4 official sheets.`
+                    : `Checklists des pièces pour ${proceduresData.length} démarches, calcul au millime près des timbres fiscaux et export de la fiche A4 officielle.`}
                 </p>
               </div>
             </div>
@@ -785,7 +789,11 @@ export default function HomePage() {
                 href="/procedures"
                 className="text-xs font-bold text-emerald-400 hover:text-emerald-300 flex items-center gap-1.5 transition-colors"
               >
-                <span>{locale === 'ar' ? 'تصفح الإجراءات (38)' : 'Voir les 38 Démarches'}</span>
+                <span>
+                  {locale === 'ar'
+                    ? `تصفح الإجراءات (${proceduresData.length})`
+                    : `Voir les ${proceduresData.length} Démarches`}
+                </span>
                 <ArrowRight className="w-3.5 h-3.5 rtl:rotate-180" />
               </Link>
               <Link

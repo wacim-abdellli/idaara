@@ -1,4 +1,4 @@
-import { PublicOffice, Governorate, OfficeCategory } from '../types/office';
+import { PublicOffice, Governorate } from '../types/office';
 
 export const publicOfficesData: PublicOffice[] = [
   // ================= TUNIS =================

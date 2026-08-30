@@ -2015,6 +2015,10 @@ export function getProcedureById(id: string): Procedure | undefined {
   return proceduresData.find((p) => p.id === id || p.slug === id);
 }
 
+export function getProcedureBySlug(slug: string): Procedure | undefined {
+  return proceduresData.find((p) => p.slug === slug || p.id === slug);
+}
+
 export function getProceduresByVertical(vertical: string): Procedure[] {
   return proceduresData.filter((p) => p.vertical === vertical);
 }

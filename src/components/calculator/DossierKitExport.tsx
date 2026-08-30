@@ -302,14 +302,14 @@ export const DossierKitExport: React.FC<DossierKitExportProps> = ({
                             <tr key={idx}>
                               <td className="p-2 text-zinc-800">{getLocalized(item.label, locale)}</td>
                               <td className={`p-2 ${isRtl ? 'text-left' : 'text-right'} font-mono font-bold text-zinc-950`}>
-                                {item.amountTND.toFixed(3)} {locale === 'ar' ? 'د.ت' : 'DT'}
+                                {formatTND(item.amountTND, locale)}
                               </td>
                             </tr>
                           ))}
                           <tr className="bg-zinc-100 font-bold">
                             <td className="p-2 text-zinc-900">{locale === 'ar' ? 'المجموع الجملي' : 'Total / المجموع'}</td>
                             <td className={`p-2 ${isRtl ? 'text-left' : 'text-right'} font-mono text-emerald-800`}>
-                              {total.toFixed(3)} {locale === 'ar' ? 'د.ت' : 'DT'}
+                              {formatTND(total, locale)}
                             </td>
                           </tr>
                         </tbody>
@@ -481,14 +481,14 @@ export const DossierKitExport: React.FC<DossierKitExportProps> = ({
                     <tr key={idx}>
                       <td className="p-2 text-zinc-800">{getLocalized(item.label, locale)}</td>
                       <td className={`p-2 ${isRtl ? 'text-left' : 'text-right'} font-mono font-bold text-zinc-950`}>
-                        {item.amountTND.toFixed(3)} {locale === 'ar' ? 'د.ت' : 'DT'}
+                        {formatTND(item.amountTND, locale)}
                       </td>
                     </tr>
                   ))}
                   <tr className="bg-zinc-100 font-bold">
                     <td className="p-2 text-zinc-900">{locale === 'ar' ? 'المجموع الجملي' : 'Total / المجموع'}</td>
                     <td className={`p-2 ${isRtl ? 'text-left' : 'text-right'} font-mono text-emerald-800`}>
-                      {total.toFixed(3)} {locale === 'ar' ? 'د.ت' : 'DT'}
+                      {formatTND(total, locale)}
                     </td>
                   </tr>
                 </tbody>

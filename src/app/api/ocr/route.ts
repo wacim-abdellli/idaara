@@ -198,17 +198,28 @@ ${DOCUMENT_ANALYSIS_SCHEMA_PROMPT}`;
       }
     }
 
+// ─── Real PII Sanitizer: Redact CIN, RIB, and Phone Numbers ────────────────
+function redactPII(text: string): string {
+  if (!text) return text;
+  return text
+    .replace(/\b[01]\d{7}\b/g, '[CIN_MASQUÉE]')
+    .replace(/\b\d{2}\s*\d{3}\s*\d{13}\s*\d{2}\b/g, '[RIB_BANCAIRE_MASQUÉ]')
+    .replace(/\bTN\d{2}\s*\d{20}\b/gi, '[IBAN_MASQUÉ]')
+    .replace(/\b(?:[234579]\d{7}|(?:\+216|00216)\s*[234579]\d{7})\b/g, '[TÉLÉPHONE_MASQUÉ]');
+}
+
     if (groqKey && extractedText.length > 10) {
       try {
+        const sanitizedText = redactPII(extractedText);
         const controller = new AbortController();
         const timeoutId = setTimeout(() => controller.abort(), 8000);
 
         const prompt = `You are the Official Tunisian Administrative & Legal Document Decoder (Idaara AI Fasserli).
 A citizen has uploaded an image file titled "${documentName}".
-Our OCR engine extracted the following real text from the image:
+Our OCR engine extracted the following real text from the image (with sensitive CIN and RIB identifiers pre-redacted for privacy):
 
 === EXTRACTED OCR TEXT FROM USER IMAGE ===
-${extractedText || '(No clear text detected in image)'}
+${sanitizedText || '(No clear text detected in image)'}
 ==========================================
 
 Analyze the REAL document content extracted above with 100% honesty and accuracy.

@@ -40,6 +40,7 @@ export function useCopilotSessions(onAutoQuery?: (query: string) => void) {
               loadedSessions.push(s);
             }
           }
+          // eslint-disable-next-line react-hooks/set-state-in-effect
           setSessions(loadedSessions);
           localStorage.setItem(STORAGE_SESSIONS_KEY, JSON.stringify(loadedSessions));
         }
@@ -49,13 +50,16 @@ export function useCopilotSessions(onAutoQuery?: (query: string) => void) {
       if (savedActiveId && loadedSessions.length > 0) {
         const activeSession = loadedSessions.find((s) => s.id === savedActiveId);
         if (activeSession) {
+          // eslint-disable-next-line react-hooks/set-state-in-effect
           setCurrentSessionId(activeSession.id);
+          // eslint-disable-next-line react-hooks/set-state-in-effect
           setMessages(activeSession.messages || []);
         }
       }
     } catch (err) {
       console.warn('Failed to load chat history:', err);
     }
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setIsInitialized(true);
 
     const urlParams = new URLSearchParams(window.location.search);
@@ -79,6 +83,7 @@ export function useCopilotSessions(onAutoQuery?: (query: string) => void) {
         const firstUserMsg = messages.find((m) => m.sender === 'user')?.content || 'Discussion';
         const defaultTitle = firstUserMsg.slice(0, 32) + (firstUserMsg.length > 32 ? '...' : '');
 
+        // eslint-disable-next-line react-hooks/set-state-in-effect
         setSessions((prev) => {
           const exists = prev.find((s) => s.id === currentSessionId);
           let updated: ChatSession[];

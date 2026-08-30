@@ -13,8 +13,6 @@ interface BaladiyaStampGuideProps {
 
 export const BaladiyaStampGuide: React.FC<BaladiyaStampGuideProps> = ({
   requiredTimbreTND,
-  requiresLegalisation,
-  documentTitle,
 }) => {
   const { locale } = useLocale();
   const [isExpanded, setIsExpanded] = useState(false);

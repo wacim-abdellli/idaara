@@ -2,7 +2,6 @@
 
 import React, { useState, useMemo } from 'react';
 import Link from 'next/link';
-import { motion, AnimatePresence } from 'framer-motion';
 import { proceduresData } from '../../data/procedures';
 import { useLocale } from '../../context/LocaleContext';
 import { getLocalized } from '../../lib/locale-utils';
@@ -12,7 +11,6 @@ import { AmbientOrbs } from '../../components/motion/AmbientOrbs';
 import {
   Search,
   ArrowRight,
-  Clock,
   CreditCard,
   Car,
   Briefcase,
@@ -24,18 +22,11 @@ import {
   Building2,
   ArrowUpDown,
   FileText,
-  Stamp,
-  CheckCircle2,
   GraduationCap,
   Scale,
   LayoutGrid,
   List,
   X,
-  ChevronRight,
-  Sparkles,
-  ExternalLink,
-  Info,
-  Check,
   Zap,
   Fingerprint,
   FilePenLine,
@@ -314,12 +305,12 @@ export default function ProceduresPage() {
             </h1>
             <p className="text-xs sm:text-sm text-zinc-400 leading-relaxed max-w-2xl">
               {locale === 'ar'
-                ? '38 إجراء مدني معتمد مع التكلفة الدقيقة بالدينار، قوائم الوثائق الإلزامية، والشبابيك المعنية لتفادي المفاجآت.'
+                ? `${proceduresData.length} إجراء مدني معتمد مع التكلفة الدقيقة بالدينار، قوائم الوثائق الإلزامية، والشبابيك المعنية لتفادي المفاجآت.`
                 : locale === 'derja'
-                ? '38 procédure s7i7a b\'el masrouf bel mlim, el awra9 el lezmin, wel 9badhat el marje3.'
+                ? `${proceduresData.length} procédure s7i7a b'el masrouf bel mlim, el awra9 el lezmin, wel 9badhat el marje3.`
                 : locale === 'en'
-                ? '38 verified civic procedures with exact statutory fees in TND, required document checklists, and competent public desks.'
-                : '38 démarches administratives homologuées avec pièces obligatoires, calcul exact des timbres fiscaux et guichets compétents.'}
+                ? `${proceduresData.length} verified civic procedures with exact statutory fees in TND, required document checklists, and competent public desks.`
+                : `${proceduresData.length} démarches administratives homologuées avec pièces obligatoires, calcul exact des timbres fiscaux et guichets compétents.`}
             </p>
           </div>
 
