@@ -333,40 +333,38 @@ export default function ProceduresPage() {
           </div>
         </div>
 
-        {/* ── 2. SECTOR FILTER PILLS ── */}
-        <div className="w-full overflow-hidden pb-1">
-          <div className="flex items-center gap-2 overflow-x-auto pb-2 scrollbar-none">
-            {verticals.map((v) => {
-              const Icon = v.icon;
-              const isSelected = selectedVertical === v.id;
-              const count =
-                v.id === 'all'
-                  ? proceduresData.length
-                  : proceduresData.filter((p) => p.vertical === v.id).length;
+        {/* ── 2. REFINED MINIMALIST SECTOR TABS ── */}
+        <div className="flex flex-wrap items-center gap-1.5 sm:gap-2">
+          {verticals.map((v) => {
+            const Icon = v.icon;
+            const isSelected = selectedVertical === v.id;
+            const count =
+              v.id === 'all'
+                ? proceduresData.length
+                : proceduresData.filter((p) => p.vertical === v.id).length;
 
-              return (
-                <button
-                  key={v.id}
-                  onClick={() => setSelectedVertical(v.id)}
-                  className={`px-4 py-2 rounded-2xl text-xs font-semibold transition-all cursor-pointer shrink-0 flex items-center gap-2 border ${
-                    isSelected
-                      ? 'bg-emerald-500/15 text-emerald-300 border-emerald-500/40 shadow-sm shadow-emerald-500/10 font-bold'
-                      : 'bg-zinc-900/60 text-zinc-400 hover:text-white hover:bg-zinc-900 border-zinc-800/80 hover:border-zinc-700'
+            return (
+              <button
+                key={v.id}
+                onClick={() => setSelectedVertical(v.id)}
+                className={`px-3.5 py-2 rounded-xl text-xs transition-all cursor-pointer flex items-center gap-2 ${
+                  isSelected
+                    ? 'bg-zinc-800 text-white font-bold border border-white/15 shadow-sm'
+                    : 'bg-zinc-900/40 hover:bg-zinc-800/60 text-zinc-400 hover:text-zinc-200 border border-zinc-800/50 hover:border-zinc-700/60 font-medium'
+                }`}
+              >
+                <Icon className={`w-3.5 h-3.5 ${isSelected ? 'text-emerald-400' : 'text-zinc-400'}`} />
+                <span>{v.label}</span>
+                <span
+                  className={`text-[11px] font-mono ${
+                    isSelected ? 'text-emerald-400 font-bold' : 'text-zinc-500'
                   }`}
                 >
-                  <Icon className={`w-3.5 h-3.5 ${isSelected ? 'text-emerald-400' : v.color}`} />
-                  <span>{v.label}</span>
-                  <span
-                    className={`font-mono text-[10px] px-2 py-0.5 rounded-full ${
-                      isSelected ? 'bg-emerald-500/30 text-emerald-200 font-bold' : 'bg-zinc-800 text-zinc-400'
-                    }`}
-                  >
-                    {count}
-                  </span>
-                </button>
-              );
-            })}
-          </div>
+                  {count}
+                </span>
+              </button>
+            );
+          })}
         </div>
 
         {/* ── 3. SEARCH & CONTROLS TOOLBAR ── */}
