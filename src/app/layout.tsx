@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from 'next';
 import './globals.css';
 import { LocaleProvider } from '../context/LocaleContext';
+import { AuthProvider } from '../context/AuthContext';
 import { ChecklistProvider } from '../context/ChecklistContext';
 import { Navbar } from '../components/layout/Navbar';
 import { Footer } from '../components/layout/Footer';
@@ -93,19 +94,21 @@ export default function RootLayout({
   return (
     <html lang="fr" dir="ltr" className="dark scroll-smooth" suppressHydrationWarning>
       <body className="antialiased min-h-screen flex flex-col selection:bg-emerald-500/30 selection:text-emerald-200 pb-[calc(4rem+env(safe-area-inset-bottom,0px))] lg:pb-0" suppressHydrationWarning>
-        <LocaleProvider>
-          <DynamicTitle />
-          <ChecklistProvider>
-            <ScrollToTop />
-            <Navbar />
-            <CommandPalette />
-            <ErrorBoundary>
-              <main className="flex-1 w-full relative">{children}</main>
-            </ErrorBoundary>
-            <MobileBottomNav />
-            <Footer />
-          </ChecklistProvider>
-        </LocaleProvider>
+        <AuthProvider>
+          <LocaleProvider>
+            <DynamicTitle />
+            <ChecklistProvider>
+              <ScrollToTop />
+              <Navbar />
+              <CommandPalette />
+              <ErrorBoundary>
+                <main className="flex-1 w-full relative">{children}</main>
+              </ErrorBoundary>
+              <MobileBottomNav />
+              <Footer />
+            </ChecklistProvider>
+          </LocaleProvider>
+        </AuthProvider>
       </body>
     </html>
   );

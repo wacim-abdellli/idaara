@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Calculator } from 'lucide-react';
 import { formatTND } from '../../lib/utils';
 import { useLocale } from '../../context/LocaleContext';
@@ -10,14 +10,37 @@ export const TaxCalculator: React.FC = () => {
   const { locale } = useLocale();
   const [revenue, setRevenue] = useState<number>(35000);
   const [activityType, setActivityType] = useState<'services' | 'commerce'>('services');
+  const [rates, setRates] = useState(AUTO_ENTREPRENEUR_RATES);
+  const [fiscalLabel, setFiscalLabel] = useState(FISCAL_YEAR_LABEL);
+
+  useEffect(() => {
+    fetch('/api/fiscal-rates')
+      .then((res) => res.json())
+      .then((data) => {
+        if (data && data.rates) {
+          setRates((prev) => ({
+            ...prev,
+            servicesTaxRate: data.rates.servicesTaxRate ?? prev.servicesTaxRate,
+            commerceTaxRate: data.rates.commerceTaxRate ?? prev.commerceTaxRate,
+            annualCnssContributionTND: data.rates.annualCnssContributionTND ?? prev.annualCnssContributionTND,
+          }));
+          if (data.rates.fiscalYearLabel) {
+            setFiscalLabel(data.rates.fiscalYearLabel);
+          }
+        }
+      })
+      .catch((err) => {
+        console.warn('Failed to load dynamic fiscal rates, using fallback:', err);
+      });
+  }, []);
 
   // Auto-entrepreneur statutory calculation
   const taxRate =
     activityType === 'services'
-      ? AUTO_ENTREPRENEUR_RATES.servicesTaxRate
-      : AUTO_ENTREPRENEUR_RATES.commerceTaxRate;
+      ? rates.servicesTaxRate
+      : rates.commerceTaxRate;
   const annualTax = revenue * taxRate;
-  const annualCnss = AUTO_ENTREPRENEUR_RATES.annualCnssContributionTND;
+  const annualCnss = rates.annualCnssContributionTND;
   const totalDeductions = annualTax + annualCnss;
   const netIncome = revenue - totalDeductions;
   const effectiveRate = ((totalDeductions / revenue) * 100).toFixed(2);
@@ -92,7 +115,7 @@ export const TaxCalculator: React.FC = () => {
         </div>
         <div className="flex items-center gap-2">
           <span className="text-[10px] font-mono px-2.5 py-1 rounded-full bg-zinc-800 text-zinc-300 border border-zinc-700">
-            {FISCAL_YEAR_LABEL}
+            {fiscalLabel}
           </span>
           <span className="text-[11px] px-3 py-1 rounded-full bg-emerald-500/20 text-emerald-300 font-semibold border border-emerald-500/30">
             {locale === 'ar' ? 'النظام الجزافي' : locale === 'derja' ? 'Régime simplifié' : locale === 'en' ? 'Flat Regime' : 'Régime Simplifié'}

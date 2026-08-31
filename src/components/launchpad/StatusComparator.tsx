@@ -1,24 +1,50 @@
 'use client';
 
-import React from 'react';
-import { Check, X, Sparkles, Shield, Rocket, CheckCircle2 } from 'lucide-react';
+import React, { useState, useEffect } from 'react';
+import { Sparkles } from 'lucide-react';
 import { useLocale } from '../../context/LocaleContext';
 import { AUTO_ENTREPRENEUR_RATES, SUARL_RATES } from '../../data/fiscal-rates';
 
 export const StatusComparator: React.FC = () => {
   const { locale } = useLocale();
+  const [aeRates, setAeRates] = useState(AUTO_ENTREPRENEUR_RATES);
+  const [suarlRates, setSuarlRates] = useState(SUARL_RATES);
+
+  useEffect(() => {
+    fetch('/api/fiscal-rates')
+      .then((res) => res.json())
+      .then((data) => {
+        if (data && data.rates) {
+          setAeRates((prev) => ({
+            ...prev,
+            servicesTaxRate: data.rates.servicesTaxRate ?? prev.servicesTaxRate,
+            commerceTaxRate: data.rates.commerceTaxRate ?? prev.commerceTaxRate,
+            annualRevenueCeilingTND: data.rates.annualRevenueCeilingTND ?? prev.annualRevenueCeilingTND,
+            quarterlyCnssContributionTND: data.rates.quarterlyCnssContributionTND ?? prev.quarterlyCnssContributionTND,
+          }));
+          setSuarlRates((prev) => ({
+            ...prev,
+            corporateTaxRate: data.rates.suarlCorporateTaxRate ?? prev.corporateTaxRate,
+            minimumBankCapitalTND: data.rates.suarlMinimumCapitalTND ?? prev.minimumBankCapitalTND,
+          }));
+        }
+      })
+      .catch((err) => {
+        console.warn('Failed to load dynamic fiscal rates in comparator:', err);
+      });
+  }, []);
 
   const statuses = [
     {
       id: 'auto-entrepreneur',
       name: locale === 'ar' ? 'المبادر الذاتي' : locale === 'derja' ? "Statut Auto-Entrepreneur" : locale === 'en' ? 'Auto-Entrepreneur Status' : "Statut Auto-Entrepreneur",
       badge: locale === 'ar' ? 'موصى به للمستقلين والمبرمجين' : locale === 'derja' ? "Recommandé Freelances & Devs" : locale === 'en' ? 'Recommended for Freelancers & Tech' : "Recommandé Freelances & Devs",
-      taxRate: `${AUTO_ENTREPRENEUR_RATES.servicesTaxRate * 100}% (Services) / ${AUTO_ENTREPRENEUR_RATES.commerceTaxRate * 100}% (Commerce)`,
-      cnss: locale === 'ar' ? `مبلغ رمزي جزافي (~${AUTO_ENTREPRENEUR_RATES.quarterlyCnssContributionTND} د.ت / 3 أشهر)` : locale === 'derja' ? `Forfaitaire symbolique (~${AUTO_ENTREPRENEUR_RATES.quarterlyCnssContributionTND} DT / trimestre)` : locale === 'en' ? `Symbolic flat fee (~${AUTO_ENTREPRENEUR_RATES.quarterlyCnssContributionTND} DT / quarter)` : `Forfaitaire symbolique (~${AUTO_ENTREPRENEUR_RATES.quarterlyCnssContributionTND} DT / trimestre)`,
+      taxRate: `${aeRates.servicesTaxRate * 100}% (Services) / ${aeRates.commerceTaxRate * 100}% (Commerce)`,
+      cnss: locale === 'ar' ? `مبلغ رمزي جزافي (~${aeRates.quarterlyCnssContributionTND} د.ت / 3 أشهر)` : locale === 'derja' ? `Forfaitaire symbolique (~${aeRates.quarterlyCnssContributionTND} DT / trimestre)` : locale === 'en' ? `Symbolic flat fee (~${aeRates.quarterlyCnssContributionTND} DT / quarter)` : `Forfaitaire symbolique (~${aeRates.quarterlyCnssContributionTND} DT / trimestre)`,
       comptable: locale === 'ar' ? 'غير مطلوب (منصة رقمية)' : locale === 'derja' ? "Non requis (Plateforme en ligne)" : locale === 'en' ? 'Not required (100% digital portal)' : "Non requis (Plateforme en ligne)",
       capital: "0 DT",
       facturation: locale === 'ar' ? 'فواتير بمعرف وطني QR' : locale === 'derja' ? "Factures avec Matricule National QR" : locale === 'en' ? 'QR Code Invoicing with National ID' : "Factures avec Matricule National QR",
-      maxChiffreAffaire: locale === 'ar' ? `حتى ${AUTO_ENTREPRENEUR_RATES.annualRevenueCeilingTND.toLocaleString()} د.ت / سنة` : locale === 'derja' ? `Jusqu'à ${AUTO_ENTREPRENEUR_RATES.annualRevenueCeilingTND.toLocaleString()} DT / an` : locale === 'en' ? `Up to ${AUTO_ENTREPRENEUR_RATES.annualRevenueCeilingTND.toLocaleString()} TND / year` : `Jusqu'à ${AUTO_ENTREPRENEUR_RATES.annualRevenueCeilingTND.toLocaleString()} DT / an`,
+      maxChiffreAffaire: locale === 'ar' ? `حتى ${aeRates.annualRevenueCeilingTND.toLocaleString()} د.ت / سنة` : locale === 'derja' ? `Jusqu'à ${aeRates.annualRevenueCeilingTND.toLocaleString()} DT / an` : locale === 'en' ? `Up to ${aeRates.annualRevenueCeilingTND.toLocaleString()} TND / year` : `Jusqu'à ${aeRates.annualRevenueCeilingTND.toLocaleString()} DT / an`,
       color: "border-emerald-500 bg-emerald-950/20",
     },
     {
@@ -37,10 +63,10 @@ export const StatusComparator: React.FC = () => {
       id: 'suarl',
       name: locale === 'ar' ? 'شركة الشخص الواحد (SUARL)' : locale === 'derja' ? "Société SUARL (Personne Morale)" : locale === 'en' ? 'Single-Member LLC (SUARL)' : "Société SUARL (Personne Morale)",
       badge: locale === 'ar' ? 'الشركات الناشئة والتصدير' : locale === 'derja' ? "Startups & Sociétés d'Export" : locale === 'en' ? 'Startups & Export Companies' : "Startups & Sociétés d'Export",
-      taxRate: `${SUARL_RATES.corporateTaxRate * 100}% IS (Impôt sur les Sociétés)`,
+      taxRate: `${suarlRates.corporateTaxRate * 100}% IS (Impôt sur les Sociétés)`,
       cnss: locale === 'ar' ? 'وكيل مسير غير أجير' : locale === 'derja' ? "Gérant majoritaire non salarié" : locale === 'en' ? 'Non-salaried majority manager' : "Gérant majoritaire non salarié",
       comptable: locale === 'ar' ? 'إجباري (خبير محاسب)' : locale === 'derja' ? "Obligatoire (Comptable agréé)" : locale === 'en' ? 'Mandatory (Certified Accountant)' : "Obligatoire (Comptable agréé)",
-      capital: `${SUARL_RATES.minimumBankCapitalTND.toLocaleString()} DT (Bloqué en banque)`,
+      capital: `${suarlRates.minimumBankCapitalTND.toLocaleString()} DT (Bloqué en banque)`,
       facturation: locale === 'ar' ? 'شركة تجارية بالسجل الوطني RNE' : locale === 'derja' ? "Société commerciale RNE" : locale === 'en' ? 'Commercial entity registered at RNE' : "Société commerciale RNE",
       maxChiffreAffaire: locale === 'ar' ? 'غير محدود' : locale === 'derja' ? "Illimité" : locale === 'en' ? 'Unlimited' : "Illimité",
       color: "border-zinc-800 bg-zinc-900/60",

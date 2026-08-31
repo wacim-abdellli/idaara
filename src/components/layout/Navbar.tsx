@@ -5,8 +5,10 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useLocale } from '../../context/LocaleContext';
+import { useAuth } from '../../context/AuthContext';
 import { LanguageSwitcher } from './LanguageSwitcher';
 import { BrandLogo } from './BrandLogo';
+import { AuthModal } from '../auth/AuthModal';
 import {
   Sparkles,
   FileSearch,
@@ -22,6 +24,7 @@ import {
   Globe,
   Phone,
   ChevronDown,
+  User as UserIcon,
 } from 'lucide-react';
 
 // ── Core Flagship Links (Always visible on desktop lg+) ────────────────────
@@ -47,9 +50,11 @@ const ALL_MOBILE_LINKS = [...PRIMARY_LINKS, ...MORE_LINKS];
 
 export const Navbar: React.FC = () => {
   const { t, locale, isRtl } = useLocale();
+  const { user } = useAuth();
   const pathname = usePathname();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [moreOpen, setMoreOpen] = useState(false);
+  const [authModalOpen, setAuthModalOpen] = useState(false);
   const moreRef = useRef<HTMLDivElement>(null);
 
   // Close "More" dropdown on outside click
@@ -243,6 +248,24 @@ export const Navbar: React.FC = () => {
             {/* Language Switcher Dropdown */}
             <LanguageSwitcher />
 
+            {/* Account / Cloud Sync Button */}
+            <motion.button
+              whileHover={{ scale: 1.04 }}
+              whileTap={{ scale: 0.96 }}
+              onClick={() => setAuthModalOpen(true)}
+              className={`flex items-center gap-1.5 h-8 px-2.5 sm:px-3 rounded-full text-xs font-semibold border transition-all cursor-pointer ${
+                user
+                  ? 'bg-emerald-500/15 text-emerald-300 border-emerald-500/30 hover:bg-emerald-500/25'
+                  : 'bg-zinc-900 text-zinc-300 border-zinc-800 hover:text-white hover:bg-zinc-850'
+              }`}
+              title={user ? user.email || 'Mon Compte' : 'Connexion Citoyenne'}
+            >
+              <UserIcon className={`w-3.5 h-3.5 ${user ? 'text-emerald-400' : 'text-zinc-400'}`} />
+              <span className="hidden sm:inline text-[11px] font-medium max-w-[100px] truncate">
+                {user ? user.email?.split('@')[0] : locale === 'ar' ? 'دخول' : 'Connexion'}
+              </span>
+            </motion.button>
+
             {/* AI Copilot CTA Button */}
             <motion.div whileHover={{ scale: 1.04 }} whileTap={{ scale: 0.96 }}>
               <Link
@@ -329,6 +352,8 @@ export const Navbar: React.FC = () => {
           </motion.div>
         )}
       </AnimatePresence>
+
+      <AuthModal isOpen={authModalOpen} onClose={() => setAuthModalOpen(false)} />
     </header>
   );
 };
