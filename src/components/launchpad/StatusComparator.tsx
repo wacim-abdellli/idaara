@@ -3,6 +3,7 @@
 import React from 'react';
 import { Check, X, Sparkles, Shield, Rocket, CheckCircle2 } from 'lucide-react';
 import { useLocale } from '../../context/LocaleContext';
+import { AUTO_ENTREPRENEUR_RATES, SUARL_RATES } from '../../data/fiscal-rates';
 
 export const StatusComparator: React.FC = () => {
   const { locale } = useLocale();
@@ -12,12 +13,12 @@ export const StatusComparator: React.FC = () => {
       id: 'auto-entrepreneur',
       name: locale === 'ar' ? 'المبادر الذاتي' : locale === 'derja' ? "Statut Auto-Entrepreneur" : locale === 'en' ? 'Auto-Entrepreneur Status' : "Statut Auto-Entrepreneur",
       badge: locale === 'ar' ? 'موصى به للمستقلين والمبرمجين' : locale === 'derja' ? "Recommandé Freelances & Devs" : locale === 'en' ? 'Recommended for Freelancers & Tech' : "Recommandé Freelances & Devs",
-      taxRate: "1% (Services) / 0.5% (Commerce)",
-      cnss: locale === 'ar' ? 'مبلغ رمزي جزافي (~50 د.ت / 3 أشهر)' : locale === 'derja' ? "Forfaitaire symbolique (~50 DT / trimestre)" : locale === 'en' ? 'Symbolic flat fee (~50 DT / quarter)' : "Forfaitaire symbolique (~50 DT / trimestre)",
+      taxRate: `${AUTO_ENTREPRENEUR_RATES.servicesTaxRate * 100}% (Services) / ${AUTO_ENTREPRENEUR_RATES.commerceTaxRate * 100}% (Commerce)`,
+      cnss: locale === 'ar' ? `مبلغ رمزي جزافي (~${AUTO_ENTREPRENEUR_RATES.quarterlyCnssContributionTND} د.ت / 3 أشهر)` : locale === 'derja' ? `Forfaitaire symbolique (~${AUTO_ENTREPRENEUR_RATES.quarterlyCnssContributionTND} DT / trimestre)` : locale === 'en' ? `Symbolic flat fee (~${AUTO_ENTREPRENEUR_RATES.quarterlyCnssContributionTND} DT / quarter)` : `Forfaitaire symbolique (~${AUTO_ENTREPRENEUR_RATES.quarterlyCnssContributionTND} DT / trimestre)`,
       comptable: locale === 'ar' ? 'غير مطلوب (منصة رقمية)' : locale === 'derja' ? "Non requis (Plateforme en ligne)" : locale === 'en' ? 'Not required (100% digital portal)' : "Non requis (Plateforme en ligne)",
       capital: "0 DT",
       facturation: locale === 'ar' ? 'فواتير بمعرف وطني QR' : locale === 'derja' ? "Factures avec Matricule National QR" : locale === 'en' ? 'QR Code Invoicing with National ID' : "Factures avec Matricule National QR",
-      maxChiffreAffaire: locale === 'ar' ? 'حتى 75,000 د.ت / سنة' : locale === 'derja' ? "Jusqu'à 75 000 DT / an" : locale === 'en' ? 'Up to 75,000 TND / year' : "Jusqu'à 75 000 DT / an",
+      maxChiffreAffaire: locale === 'ar' ? `حتى ${AUTO_ENTREPRENEUR_RATES.annualRevenueCeilingTND.toLocaleString()} د.ت / سنة` : locale === 'derja' ? `Jusqu'à ${AUTO_ENTREPRENEUR_RATES.annualRevenueCeilingTND.toLocaleString()} DT / an` : locale === 'en' ? `Up to ${AUTO_ENTREPRENEUR_RATES.annualRevenueCeilingTND.toLocaleString()} TND / year` : `Jusqu'à ${AUTO_ENTREPRENEUR_RATES.annualRevenueCeilingTND.toLocaleString()} DT / an`,
       color: "border-emerald-500 bg-emerald-950/20",
     },
     {
@@ -36,10 +37,10 @@ export const StatusComparator: React.FC = () => {
       id: 'suarl',
       name: locale === 'ar' ? 'شركة الشخص الواحد (SUARL)' : locale === 'derja' ? "Société SUARL (Personne Morale)" : locale === 'en' ? 'Single-Member LLC (SUARL)' : "Société SUARL (Personne Morale)",
       badge: locale === 'ar' ? 'الشركات الناشئة والتصدير' : locale === 'derja' ? "Startups & Sociétés d'Export" : locale === 'en' ? 'Startups & Export Companies' : "Startups & Sociétés d'Export",
-      taxRate: "15% IS (Impôt sur les Sociétés)",
+      taxRate: `${SUARL_RATES.corporateTaxRate * 100}% IS (Impôt sur les Sociétés)`,
       cnss: locale === 'ar' ? 'وكيل مسير غير أجير' : locale === 'derja' ? "Gérant majoritaire non salarié" : locale === 'en' ? 'Non-salaried majority manager' : "Gérant majoritaire non salarié",
       comptable: locale === 'ar' ? 'إجباري (خبير محاسب)' : locale === 'derja' ? "Obligatoire (Comptable agréé)" : locale === 'en' ? 'Mandatory (Certified Accountant)' : "Obligatoire (Comptable agréé)",
-      capital: "1 000 DT (Bloqué en banque)",
+      capital: `${SUARL_RATES.minimumBankCapitalTND.toLocaleString()} DT (Bloqué en banque)`,
       facturation: locale === 'ar' ? 'شركة تجارية بالسجل الوطني RNE' : locale === 'derja' ? "Société commerciale RNE" : locale === 'en' ? 'Commercial entity registered at RNE' : "Société commerciale RNE",
       maxChiffreAffaire: locale === 'ar' ? 'غير محدود' : locale === 'derja' ? "Illimité" : locale === 'en' ? 'Unlimited' : "Illimité",
       color: "border-zinc-800 bg-zinc-900/60",

@@ -24,6 +24,30 @@ export default function CopilotPage() {
 
   const messagesContainerRef = useRef<HTMLDivElement | null>(null);
   const textareaRef = useRef<HTMLTextAreaElement | null>(null);
+  const autoQueryRef = useRef<((q: string) => void) | null>(null);
+
+  const {
+    messages,
+    setMessages,
+    sessions,
+    currentSessionId,
+    sessionToDelete,
+    setSessionToDelete,
+    editingSessionId,
+    editingTitle,
+    setEditingTitle,
+    handleNewChat,
+    loadSession,
+    promptDeleteSession,
+    confirmDeleteSession,
+    startRenaming,
+    saveRenamedTitle,
+    cancelRenaming,
+  } = useCopilotSessions((query) => {
+    if (autoQueryRef.current) {
+      autoQueryRef.current(query);
+    }
+  });
 
   const handleSendMessage = useCallback(async (textToSend?: string) => {
     const rawQuery = (textToSend ?? inputVal).trim();
@@ -136,26 +160,11 @@ export default function CopilotPage() {
       setIsProcessing(false);
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [inputVal, isProcessing, locale, thinkMode]);
+  }, [inputVal, isProcessing, locale, thinkMode, messages]);
 
-  const {
-    messages,
-    setMessages,
-    sessions,
-    currentSessionId,
-    sessionToDelete,
-    setSessionToDelete,
-    editingSessionId,
-    editingTitle,
-    setEditingTitle,
-    handleNewChat,
-    loadSession,
-    promptDeleteSession,
-    confirmDeleteSession,
-    startRenaming,
-    saveRenamedTitle,
-    cancelRenaming,
-  } = useCopilotSessions(handleSendMessage);
+  useEffect(() => {
+    autoQueryRef.current = handleSendMessage;
+  }, [handleSendMessage]);
 
   const onTranscribed = useCallback((text: string) => {
     setInputVal(text);

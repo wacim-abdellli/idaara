@@ -1,19 +1,23 @@
 'use client';
 
 import React, { useState } from 'react';
-import { Calculator, Sparkles, TrendingUp, ShieldCheck } from 'lucide-react';
+import { Calculator } from 'lucide-react';
 import { formatTND } from '../../lib/utils';
 import { useLocale } from '../../context/LocaleContext';
+import { AUTO_ENTREPRENEUR_RATES, FISCAL_YEAR_LABEL } from '../../data/fiscal-rates';
 
 export const TaxCalculator: React.FC = () => {
   const { locale } = useLocale();
   const [revenue, setRevenue] = useState<number>(35000);
   const [activityType, setActivityType] = useState<'services' | 'commerce'>('services');
 
-  // Auto-entrepreneur calculation
-  const taxRate = activityType === 'services' ? 0.01 : 0.005;
+  // Auto-entrepreneur statutory calculation
+  const taxRate =
+    activityType === 'services'
+      ? AUTO_ENTREPRENEUR_RATES.servicesTaxRate
+      : AUTO_ENTREPRENEUR_RATES.commerceTaxRate;
   const annualTax = revenue * taxRate;
-  const annualCnss = 200; // ~50 DT per quarter
+  const annualCnss = AUTO_ENTREPRENEUR_RATES.annualCnssContributionTND;
   const totalDeductions = annualTax + annualCnss;
   const netIncome = revenue - totalDeductions;
   const effectiveRate = ((totalDeductions / revenue) * 100).toFixed(2);
@@ -86,9 +90,14 @@ export const TaxCalculator: React.FC = () => {
             {title}
           </h3>
         </div>
-        <span className="text-[11px] px-3 py-1 rounded-full bg-emerald-500/20 text-emerald-300 font-semibold border border-emerald-500/30">
-          {locale === 'ar' ? 'النظام الجزافي' : locale === 'derja' ? 'Régime simplifié' : locale === 'en' ? 'Flat Regime' : 'Régime Simplifié'}
-        </span>
+        <div className="flex items-center gap-2">
+          <span className="text-[10px] font-mono px-2.5 py-1 rounded-full bg-zinc-800 text-zinc-300 border border-zinc-700">
+            {FISCAL_YEAR_LABEL}
+          </span>
+          <span className="text-[11px] px-3 py-1 rounded-full bg-emerald-500/20 text-emerald-300 font-semibold border border-emerald-500/30">
+            {locale === 'ar' ? 'النظام الجزافي' : locale === 'derja' ? 'Régime simplifié' : locale === 'en' ? 'Flat Regime' : 'Régime Simplifié'}
+          </span>
+        </div>
       </div>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">

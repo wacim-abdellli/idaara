@@ -4,6 +4,8 @@ import { sampleDocumentsList } from '../../../data/sampleDocuments';
 import { OCRAnalysisResult } from '../../../types/chat';
 import { checkRateLimit, getClientIp } from '../../../lib/rate-limit';
 
+export const runtime = 'nodejs';
+
 function getGeminiKey(): string {
   return (process.env.GEMINI_API_KEY || '').trim();
 }
@@ -179,14 +181,15 @@ ${DOCUMENT_ANALYSIS_SCHEMA_PROMPT}`;
 
     // ─── METHOD 2: Tesseract OCR + Groq 120B Cascade ───
     let extractedText = '';
-    if (buffer) {
+    // Skip Tesseract worker threads if buffer > 4MB to prevent RAM exhaustion on serverless
+    if (buffer && buffer.length <= 4 * 1024 * 1024) {
       try {
         const { default: Tesseract } = await import('tesseract.js');
         const ocrPromise = Tesseract.recognize(buffer, 'ara+fra+eng', {
           logger: () => {},
         });
 
-        // 25s timeout for large 5MB images
+        // 25s timeout for large 4MB images
         const timeoutPromise = new Promise<{ data: { text: string } }>((resolve) =>
           setTimeout(() => resolve({ data: { text: '' } }), 25000)
         );
@@ -286,8 +289,28 @@ ${DOCUMENT_ANALYSIS_SCHEMA_PROMPT}`;
       }
     }
 
-    // ─── METHOD 3: Fallback response ───
+    // ─── METHOD 3: Honest failure or text-only fallback ───
+    if (!geminiKey && !groqKey) {
+      return NextResponse.json(
+        {
+          success: false,
+          error: 'Le service de décryptage IA est temporairement indisponible. Veuillez réessayer ultérieurement.',
+        },
+        { status: 503 }
+      );
+    }
+
     const hasText = extractedText.length > 15;
+    if (!hasText) {
+      return NextResponse.json(
+        {
+          success: false,
+          error: 'Impossible d’extraire le texte du document. Veuillez vérifier la netteté et l’éclairage de l’image.',
+        },
+        { status: 422 }
+      );
+    }
+
     const fallbackAnalysis: OCRAnalysisResult = {
       id: `ocr-${Date.now()}`,
       documentType: {

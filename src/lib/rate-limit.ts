@@ -3,21 +3,40 @@ import { Redis } from '@upstash/redis';
 
 // In-memory sliding window rate limiter fallback
 const ipRequests = new Map<string, number[]>();
+let lastCleanupTime = Date.now();
+const CLEANUP_INTERVAL_MS = 60_000; // Prune stale keys at most once per minute
 
-// Cleanup stale IPs every 5 minutes to prevent memory leak
-if (typeof setInterval !== 'undefined') {
-  setInterval(() => {
-    const now = Date.now();
-    const windowMs = 60_000;
-    for (const [ip, timestamps] of ipRequests.entries()) {
+/**
+ * Serverless-safe in-memory sliding window rate limiter.
+ * Avoids background `setInterval` timers that freeze in serverless lambdas.
+ */
+export function checkRateLimitInMemory(ip: string, maxPerMinute = 30): boolean {
+  const now = Date.now();
+  const windowMs = 60_000;
+
+  // Lazy GC: prune stale IPs periodically on active requests
+  if (now - lastCleanupTime > CLEANUP_INTERVAL_MS) {
+    lastCleanupTime = now;
+    for (const [key, timestamps] of ipRequests.entries()) {
       const active = timestamps.filter((t) => now - t < windowMs);
       if (active.length === 0) {
-        ipRequests.delete(ip);
+        ipRequests.delete(key);
       } else {
-        ipRequests.set(ip, active);
+        ipRequests.set(key, active);
       }
     }
-  }, 5 * 60_000);
+  }
+
+  const timestamps = ipRequests.get(ip) || [];
+  const recent = timestamps.filter((t) => now - t < windowMs);
+
+  if (recent.length >= maxPerMinute) {
+    return false;
+  }
+
+  recent.push(now);
+  ipRequests.set(ip, recent);
+  return true;
 }
 
 // Lazy initialization of Upstash Redis rate limiter
@@ -44,21 +63,6 @@ function getUpstashLimiter(maxPerMinute: number): Ratelimit | null {
     }
   }
   return upstashRatelimit;
-}
-
-export function checkRateLimitInMemory(ip: string, maxPerMinute = 30): boolean {
-  const now = Date.now();
-  const windowMs = 60_000;
-  const timestamps = ipRequests.get(ip) || [];
-  const recent = timestamps.filter((t) => now - t < windowMs);
-
-  if (recent.length >= maxPerMinute) {
-    return false;
-  }
-
-  recent.push(now);
-  ipRequests.set(ip, recent);
-  return true;
 }
 
 export async function checkRateLimit(ip: string, maxPerMinute = 30): Promise<boolean> {
