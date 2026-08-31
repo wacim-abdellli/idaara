@@ -282,22 +282,22 @@ export default function LocatorPage() {
       id: 'regular' as const,
       icon: <Clock className="w-3.5 h-3.5" />,
       label: t('regularHours'),
-      active: 'bg-emerald-500 text-zinc-950 font-bold shadow-md shadow-emerald-500/20',
-      idle: 'text-zinc-400 hover:text-zinc-200 hover:bg-zinc-900',
+      active: 'bg-emerald-500/20 text-emerald-300 font-bold border border-emerald-500/40 shadow-xs',
+      idle: 'text-zinc-400 hover:text-zinc-200 hover:bg-zinc-900/60 border border-transparent',
     },
     {
       id: 'ramadan' as const,
       icon: <Moon className="w-3.5 h-3.5" />,
       label: t('ramadanHours'),
-      active: 'bg-amber-500 text-zinc-950 font-bold shadow-md shadow-amber-500/20',
-      idle: 'text-zinc-400 hover:text-zinc-200 hover:bg-zinc-900',
+      active: 'bg-amber-500/20 text-amber-300 font-bold border border-amber-500/40 shadow-xs',
+      idle: 'text-zinc-400 hover:text-zinc-200 hover:bg-zinc-900/60 border border-transparent',
     },
     {
       id: 'summer' as const,
       icon: <Sun className="w-3.5 h-3.5" />,
       label: t('summerHours'),
-      active: 'bg-orange-500 text-zinc-950 font-bold shadow-md shadow-orange-500/20',
-      idle: 'text-zinc-400 hover:text-zinc-200 hover:bg-zinc-900',
+      active: 'bg-orange-500/20 text-orange-300 font-bold border border-orange-500/40 shadow-xs',
+      idle: 'text-zinc-400 hover:text-zinc-200 hover:bg-zinc-900/60 border border-transparent',
     },
   ];
 
@@ -485,26 +485,57 @@ export default function LocatorPage() {
         </div>
       </FadeIn>
 
-      {/* ── Quick Regions Bar ── */}
-      <FadeIn direction="up" delay={0.15} className="flex items-center gap-2 overflow-x-auto pb-1 scrollbar-none">
-        {regions.map((r) => {
-          const isSelected = (r.id === 'all' && selectedGovernorate === 'all') || selectedGovernorate === r.id;
-          return (
-            <motion.button
-              key={r.id}
-              onClick={() => setSelectedGovernorate(r.id)}
-              whileHover={{ y: -1 }}
-              whileTap={{ scale: 0.95 }}
-              className={`px-3.5 py-1.5 rounded-xl text-xs font-semibold whitespace-nowrap transition-all border shrink-0 cursor-pointer ${
-                isSelected
-                  ? 'bg-emerald-500 text-zinc-950 border-emerald-400 font-bold shadow-sm'
-                  : 'bg-zinc-900/80 text-zinc-400 hover:text-zinc-200 border-zinc-800 hover:border-zinc-700'
-              }`}
-            >
-              {r.label}
-            </motion.button>
-          );
-        })}
+      {/* ── 2. REFINED MINIMALIST REGIONS BAR (Flex-wrapped, No scroll clipping) ── */}
+      <FadeIn direction="up" delay={0.15} className="space-y-2.5">
+        <div className="flex items-center justify-between text-xs pb-1 border-b border-zinc-850/60">
+          <span className="text-[11px] font-bold text-zinc-400 flex items-center gap-1.5 uppercase tracking-wider">
+            <MapPin className="w-3.5 h-3.5 text-emerald-400" />
+            <span>
+              {locale === 'ar'
+                ? 'تصفية حسب الولاية والمنطقة'
+                : locale === 'derja'
+                ? 'Khtar el Wilaya'
+                : locale === 'en'
+                ? 'Filter by Governorate / Region'
+                : 'Filtrer par Gouvernorat & Région'}
+            </span>
+          </span>
+          <span className="text-xs font-mono text-zinc-400">
+            <strong className="text-emerald-400 font-bold">{filteredOffices.length}</strong> / {publicOfficesData.length}{' '}
+            {locale === 'ar' ? 'مرفق' : 'guichets'}
+          </span>
+        </div>
+
+        <div className="flex flex-wrap items-center gap-1.5 sm:gap-2">
+          {regions.map((r) => {
+            const isSelected = (r.id === 'all' && selectedGovernorate === 'all') || selectedGovernorate === r.id;
+            const count =
+              r.id === 'all'
+                ? publicOfficesData.length
+                : publicOfficesData.filter((o) => o.governorate === r.id).length;
+
+            return (
+              <button
+                key={r.id}
+                onClick={() => setSelectedGovernorate(r.id)}
+                className={`px-3 py-1.5 rounded-xl text-xs transition-all cursor-pointer flex items-center gap-1.5 ${
+                  isSelected
+                    ? 'bg-zinc-800 text-white font-bold border border-white/15 shadow-sm'
+                    : 'bg-zinc-900/40 hover:bg-zinc-800/60 text-zinc-400 hover:text-zinc-200 border border-zinc-800/50 hover:border-zinc-700/60 font-medium'
+                }`}
+              >
+                <span>{r.label}</span>
+                <span
+                  className={`text-[10px] font-mono ${
+                    isSelected ? 'text-emerald-400 font-bold' : 'text-zinc-500'
+                  }`}
+                >
+                  {count}
+                </span>
+              </button>
+            );
+          })}
+        </div>
       </FadeIn>
 
       {/* ── Filter Dropdowns & Search ── */}
