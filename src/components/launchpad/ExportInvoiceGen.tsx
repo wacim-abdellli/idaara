@@ -3,7 +3,7 @@
 import React, { useState } from 'react';
 import { FileText, Download, Sparkles, ShieldCheck, Loader2 } from 'lucide-react';
 import { generatePDFFromElement, printElement } from '../../lib/pdf-generator';
-import { triggerConfetti } from '../../lib/utils';
+import { triggerConfetti, formatNumber } from '../../lib/utils';
 import { useLocale } from '../../context/LocaleContext';
 
 export const ExportInvoiceGen: React.FC = () => {
@@ -188,7 +188,7 @@ export const ExportInvoiceGen: React.FC = () => {
                   <td className="py-3 font-medium text-zinc-800">{description}</td>
                   <td className="py-3 text-right rtl:text-left text-zinc-500">0% (Export)</td>
                   <td className="py-3 text-right rtl:text-left font-bold text-zinc-900 font-mono">
-                    {amountEUR.toLocaleString()} €
+                    {formatNumber(amountEUR)} €
                   </td>
                 </tr>
               </tbody>
@@ -204,7 +204,7 @@ export const ExportInvoiceGen: React.FC = () => {
                   ? 'TOTAL AMOUNT DUE (NET À PAYER) :'
                   : 'NET À PAYER :'}
               </span>
-              <span className="text-base text-emerald-700 font-mono">{amountEUR.toLocaleString()} € EUR</span>
+              <span className="text-base text-emerald-700 font-mono">{formatNumber(amountEUR)} € EUR</span>
             </div>
 
             <div className="text-[9px] text-zinc-500 leading-relaxed bg-zinc-100 p-2.5 rounded border border-zinc-200">

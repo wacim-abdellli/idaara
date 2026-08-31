@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { Calculator } from 'lucide-react';
-import { formatTND } from '../../lib/utils';
+import { formatTND, formatNumber } from '../../lib/utils';
 import { useLocale } from '../../context/LocaleContext';
 import { AUTO_ENTREPRENEUR_RATES, FISCAL_YEAR_LABEL } from '../../data/fiscal-rates';
 
@@ -141,7 +141,7 @@ export const TaxCalculator: React.FC = () => {
                 className="w-full accent-emerald-500 cursor-pointer"
               />
               <span className="font-mono text-sm font-bold text-emerald-400 min-w-[90px] text-right">
-                {revenue.toLocaleString()} DT
+                {formatNumber(revenue)} DT
               </span>
             </div>
           </div>

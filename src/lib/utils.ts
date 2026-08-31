@@ -6,6 +6,10 @@ export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
 
+export function formatNumber(amount: number): string {
+  return amount.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ' ');
+}
+
 export function formatTND(amount: number, locale: SupportedLanguage | string = 'fr'): string {
   if (amount <= 0) {
     if (locale === 'ar') return 'مجاني';
