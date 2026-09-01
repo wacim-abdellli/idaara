@@ -11,9 +11,11 @@
 [![React](https://img.shields.io/badge/React-19-61DAFB?style=for-the-badge&logo=react&logoColor=black)](https://react.dev/)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.7-3178C6?style=for-the-badge&logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
 [![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-4.0-38B2AC?style=for-the-badge&logo=tailwind-css&logoColor=white)](https://tailwindcss.com/)
+[![Supabase](https://img.shields.io/badge/Supabase-Auth_%26_PostgreSQL-3ECF8E?style=for-the-badge&logo=supabase&logoColor=white)](https://supabase.com/)
 [![Groq AI](https://img.shields.io/badge/AI-Groq_Llama_3.3_70B-F55036?style=for-the-badge&logo=groq&logoColor=white)](https://groq.com/)
 [![Gemini Vision](https://img.shields.io/badge/Vision-Gemini_2.5_Flash-4285F4?style=for-the-badge&logo=google&logoColor=white)](https://ai.google.dev/)
 [![Whisper Audio](https://img.shields.io/badge/Audio-Whisper_Large_v3_Turbo-10B981?style=for-the-badge&logo=openai&logoColor=white)](https://openai.com/research/whisper)
+[![Vitest](https://img.shields.io/badge/Vitest-40_Tests_Passing-6E9F18?style=for-the-badge&logo=vitest&logoColor=white)](https://vitest.dev/)
 [![Locales](https://img.shields.io/badge/Languages-Derja_%7C_FR_%7C_AR_(RTL)_%7C_EN-EA580C?style=for-the-badge&logo=translate&logoColor=white)](#-multilingual-support)
 
 </div>
@@ -26,16 +28,16 @@
 - [The Solution](#-the-solution)
 - [Core Features & Modules](#-core-features--modules)
   - [1. Universal Derja AI Copilot (`/copilot`)](#1-universal-derja-ai-copilot-copilot)
-  - [2. "Fasserli Hal War9a" Scanner & OCR Decoder (`/fasserli`)](#2-fasserli-hal-war9a-scanner--ocr-decoder-fasserli)
+  - [2. "Fasserli Hal War9a" Document Scanner & OCR Decoder (`/fasserli`)](#2-fasserli-hal-war9a-document-scanner--ocr-decoder-fasserli)
   - [3. National Concours & Public Recruitment Hub (`/concours`)](#3-national-concours--public-recruitment-hub-concours)
   - [4. Auto-Filled Official PDF Studio (`/documents`)](#4-auto-filled-official-pdf-studio-documents)
   - [5. "Timbre & Awra9" Statutory Cost Calculator (`/calculator`)](#5-timbre--awra9-statutory-cost-calculator-calculator)
-  - [6. Atlas of 350+ Municipalities & Public Offices (`/locator`)](#6-atlas-of-350-municipalities--public-offices-locator)
+  - [6. Territorial Atlas of Public Offices (`/locator`)](#6-territorial-atlas-of-public-offices-locator)
   - [7. E-Government Portals Directory (`/portails`)](#7-e-government-portals-directory-portails)
   - [8. Emergency Contacts & National Directory (`/contacts`)](#8-emergency-contacts--national-directory-contacts)
   - [9. Freelancer & Entrepreneur Launchpad (`/launchpad`)](#9-freelancer--entrepreneur-launchpad-launchpad)
   - [10. Complete Civic Procedures Directory (`/procedures`)](#10-complete-civic-procedures-directory-procedures)
-- [Deep Tunisian Infrastructure Grounding](#-deep-tunisian-infrastructure-grounding)
+- [Deep Tunisian Infrastructure Grounding (38 Legal Frameworks)](#-deep-tunisian-infrastructure-grounding-38-legal-frameworks)
 - [Tech Stack & Architecture](#-tech-stack--architecture)
 - [Getting Started](#-getting-started)
   - [Prerequisites](#prerequisites)
@@ -62,19 +64,18 @@ Navigating public administration in Tunisia (*l'Idara*, *Baladiya*, *Recette des
 
 ### 1. Universal Derja AI Copilot (`/copilot`)
 - **100% Tunisian Derja in Arabic Script**: Formulates all responses strictly in warm, natural Tunisian Arabic Derja (الدارجة التونسية بالحروف العربية), regardless of whether the user types in English, French, Latin Arabizi, or Arabic.
-- **Sub-Second Groq Inference**: Powered by `llama-3.3-70b-versatile` running on Groq LPU hardware with progressive token streaming (~500ms latency).
+- **Dual-Model Cascade Inference**: Powered by `llama-3.3-70b-versatile` running on Groq LPU hardware with automatic fallback to `llama-3.1-8b-instant` and local heuristic reasoning.
+- **Cloud Session Sync & Auth**: Save, rename, and synchronize full conversation histories across devices using Supabase SSR Auth with seamless offline fallback to `localStorage`.
 - **Deep Think Mode (`[ 🧠 Think ]`)**: Exhaustive statutory breakdown cross-referenced with exact JORT decrees and official tariffs.
-- **Document OCR Attachment (`[ 📷 OCR ]`)**: Upload and decipher official administrative letters directly within the conversation.
-- **Whisper Speech-to-Text**: Voice input powered by `whisper-large-v3-turbo`.
-- **Hover Timestamps & Minimal UI**: Timestamps (e.g. `7:22`) and copy buttons appear smoothly on hover, keeping the chat clean and distraction-free.
-- **Civic Domain Guardrails**: In-character handling of off-topic requests, guiding citizens back to civic procedures.
+- **Whisper Speech-to-Text**: High-precision voice input powered by `whisper-large-v3-turbo`.
+- **Real-Time Dynamic Browser Tab Text**: Tab titles dynamically adapt to the active language (`AR`, `FR`, `EN`, `TN`) in real-time.
 
-### 2. "Fasserli Hal War9a" Scanner & OCR Decoder (`/fasserli`)
-- **Instant Document Decoding**: Upload or snap a photo of any official administrative letter (Tax adjustment, CNSS demand, Police summons, Court order, Utility bill) powered by Google Gemini 2.5 Flash Vision & Groq OCR.
+### 2. "Fasserli Hal War9a" Document Scanner & OCR Decoder (`/fasserli`)
+- **Multimodal Document Decoding**: Upload or snap a photo of any official administrative letter (Tax adjustment, CNSS demand, Police summons, Court order, Utility bill) powered by Google Gemini 2.5 Flash Vision & Groq OCR.
+- **Automatic PII Redaction**: Sensitive Tunisian identifiers (CIN, RIB, phone numbers) are masked using regex before being processed by any LLM.
 - **3-Point Plain Language Summary**: Breaks down the document in Tunisian Derja, French, and Arabic.
 - **Statutory Deadlines & Penalty Radar**: Identifies strict appeal windows, payment deadlines, and late penalty rates.
-- **Action Checklist & Desk Locator**: Identifies the exact municipal, court, or tax desk to visit with required papers.
-- **Ephemeral In-Memory Processing**: Documents are processed in volatile memory and never stored in a persistent database.
+- **Magic-Byte MIME Validation**: Inspects binary headers (`ffd8ff` for JPEG, `89504e47` for PNG, `25504446` for PDF) to reject spoofed executable payloads.
 
 ### 3. National Concours & Public Recruitment Hub (`/concours`)
 - **Live Recruitment Feed**: Openings across Tunisian ministries, public enterprises (STEG, SONEDE), and agencies (*Concours Nationaux*).
@@ -87,7 +88,7 @@ Navigating public administration in Tunisia (*l'Idara*, *Baladiya*, *Recette des
   - 📝 **Official Power of Attorney** (*Tawkîl / Procuration / توكيل رسمي*)
   - 📝 **Sworn Statements** (*Déclaration sur l'honneur / تصريح بالشرف*)
   - 📝 **Vehicle Sales Contract** (*Contrat de Vente Véhicule / عقد بيع سيارة*)
-- **Cryptographic QR Verification**: Embeds verification hashes and fiscal stamp margins.
+- **Cryptographic QR Verification**: Embeds verification hashes and municipal fiscal stamp guidelines.
 
 ### 5. "Timbre & Awra9" Statutory Cost Calculator (`/calculator`)
 - **Real-Time Cost Breakdown**: Calculates exact expenses for administrative procedures:
@@ -96,35 +97,37 @@ Navigating public administration in Tunisia (*l'Idara*, *Baladiya*, *Recette des
   - Certified copy fees (*Copies conformes à la Baladiya*).
 - **Persistent Local Checklist**: Check off requirements as you prepare your dossier.
 
-### 6. Atlas of 350+ Municipalities & Public Offices (`/locator`)
-- **All 24 Governorates**: Directory covering Municipalities (*Baladiyas*), Post Offices, Tax Receipts (*Recettes des Finances*), ATTT, and CNSS centers.
+### 6. Territorial Atlas of Public Offices (`/locator`)
+- **All 24 Governorates**: Directory covering 130+ Municipalities (*Baladiyas*), Post Offices, Tax Receipts (*Recettes des Finances*), ATTT, and CNSS centers.
+- **Sleek Minimalist Segment Filter**: Responsive flex-wrapped region selectors with live office counters.
 - **Seasonal Working Hours**: Live schedules adjusted for **Ramadan** and summer single-shift (*Séance Unique*).
-- **GPS Integration**: One-tap navigation via Google Maps and Waze.
+- **GPS Integration**: One-tap direct navigation via Google Maps and Waze.
 
 ### 7. E-Government Portals Directory (`/portails`)
 - **Direct Access to 15+ Portals**: Verified official government platforms:
-  - 🪪 **Mobile-ID / e-Houwiya** (`mobile-id.tn`)
+  - 🪪 **Mobile-ID / e-Houwiya** (`e-houwiya.tn`)
   - 📋 **Bulletin N°3 en ligne** (`b3.interieur.gov.tn`)
-  - 💼 **Auto-Entrepreneur** (`autoentrepreneur.tn`)
+  - 💼 **Auto-Entrepreneur** (`auto-entrepreneur.tn`)
   - 🏢 **Registre National des Entreprises (RNE)** (`rne.tn`)
-  - 📜 **Conservation de la Propriété Foncière (CPF)** (`cpf.gov.tn`)
+  - 📜 **Législation Tunisienne (JORT)** (`legislation.tn`)
   - 🏆 **Concours Fonction Publique** (`concours.gov.tn`)
 
 ### 8. Emergency Contacts & National Directory (`/contacts`)
-- **Emergency Hotlines**: Police (197), SAMU (190), Protection Civile (198), Garde Nationale (71 327 200), SOS Violence (1899).
+- **Emergency Hotlines**: Police (197), SAMU (190), Protection Civile (198), Garde Nationale, SOS Violence (1899).
 - **Ministry Directory**: Direct contact numbers, addresses, and official web portals for all state ministries.
 
 ### 9. Freelancer & Entrepreneur Launchpad (`/launchpad`)
 - **Auto-Entrepreneur Status**: 1% flat tax rate (services) / 0.5% (commerce), 0% TVA (Art. 13 Code TVA), and CNSS Regime 14.
-- **FX & BCT Invoicing**: Compliance guidelines for foreign currency bank accounts under Central Bank of Tunisia (BCT) Circular 2017-06.
-- **SUARL / SARL Incorporation**: Step-by-step registration with the RNE and Recette des Finances.
+- **Dynamic Fiscal Rates Endpoint (`/api/fiscal-rates`)**: Cached statutory rate API route connected to PostgreSQL with automatic statutory fallback.
+- **FX & BCT Invoicing**: Export invoice generator compliant with Central Bank of Tunisia (BCT) Circular 2017-06.
+- **Legal Status Comparator**: Instant comparison between Auto-Entrepreneur, Patente Personne Physique, and SUARL.
 
 ### 10. Complete Civic Procedures Directory (`/procedures`)
 - **38 Detailed Step-by-Step Guides**: Passports, CIN, Driver's Licenses, Carte Grise transfers, B3 criminal records, marriage contracts, and customs clearances.
 
 ---
 
-## 🏛️ Deep Tunisian Infrastructure Grounding (38 Domains)
+## 🏛️ Deep Tunisian Infrastructure Grounding (38 Legal Frameworks)
 
 Idaara AI is grounded with verified legislation, decrees, and administrative protocols across 38 domains:
 
@@ -134,7 +137,7 @@ Idaara AI is grounded with verified legislation, decrees, and administrative pro
 | **💼 Labor & Public Retirement** | • **Labor Law & Unfair Dismissal**: Notice periods, severance indemnities, abusive dismissal compensation (1–2 months salary per year, capped at 36 months), and Labour Inspection (*تفقدية الشغل*) filings.<br>• **CNRPS Public Sector Retirement**: Law 2019-37 retirement age (62/65), 15-year threshold, and pension formula. |
 | **🏢 Real Estate & Land Title (CPF)** | • **Daftat Khana (دفتر خانة)**: Official Title Deed extraction on `cpf.gov.tn` (20 DT), non-hypothecation certs, and 1% CPF purchase inscriptions. |
 | **🏥 Healthcare & CNAM** | • **APET 100% Coverage**: Unlimited coverage with 0 DT copay for the 25 official Long-Term Affections (Diabetes, Cancer, Hypertension, Renal failure). |
-| **🛃 Customs & Expatriates** | • **FCR & TRE Privileges**: 2-year foreign residency, 120-day annual stay limit, 5-year vehicle age, and regularization from `RS / ن.ت` to `TU` under Finance Laws 2024/2025.<br>• **Foreign Resident Permits**: Student, work, and investment dossiers with the Foreigners Police Bureau. |
+| **🛃 Customs & Expatriates** | • **FCR & TRE Privileges**: 2-year foreign residency, 120-day annual stay limit, 5-year vehicle age, and regularization from `RS / ن.ت` to `TU` under Finance Laws 2024/2026.<br>• **Foreign Resident Permits**: Student, work, and investment dossiers with the Foreigners Police Bureau. |
 | **⚡ Public Utilities** | • **STEG**: Connection dossiers, Baladiya conformity certificates, and certified electrician compliance.<br>• **SONEDE**: Property titles, municipal excavation permits (*ترخيص حفر الطرقات*), and standard meter housing. |
 | **🚀 Business Incorporation** | • **SARL / SUARL via RNE & APII**: Articles of association, 150 DT fixed tax registration, and automated electronic JORT publication. |
 
@@ -143,12 +146,15 @@ Idaara AI is grounded with verified legislation, decrees, and administrative pro
 ## 💻 Tech Stack & Architecture
 
 ```
-Frontend:          Next.js 16.3 (App Router, Turbopack), React 19, TypeScript
-Styling & UI:      Tailwind CSS 4, Framer Motion, Lucide Icons, Custom Bento Grid System
-AI Engine:         Groq API (openai/gpt-oss-120b, qwen/qwen3.6-27b, allam-2-7b)
+Frontend:          Next.js 16.3 (App Router, Turbopack), React 19, TypeScript 5.7
+Styling & UI:      Tailwind CSS 4.0, Framer Motion, Lucide Icons, Glassmorphism Design
+AI Engine:         Groq API (Llama 3.3 70B Versatile, Llama 3.1 8B Instant)
+Vision Engine:     Google Gemini 2.5 Flash Vision + Tesseract.js (Node.js runtime guarded)
 Speech Engine:     Whisper Large v3 Turbo (Phonetic Derja & Arabic Speech-to-Text)
+Auth & Database:   Supabase SSR Auth (Google OAuth + Magic Link) & PostgreSQL Sessions Table
+Caching & Rate:    Upstash Redis + Serverless-Safe Lazy In-Memory Sliding Window
 Document Engine:   jsPDF, html2canvas-pro (High-DPI Vector Legal PDF Studio)
-Grounding Engine:  Structured Civic Knowledge Graph (38 Core Domains, 350+ Offices across 24 Governorates)
+Testing:           Vitest 4.1 (40 automated tests across 9 suites)
 ```
 
 ---
@@ -178,12 +184,19 @@ Grounding Engine:  Structured Civic Knowledge Graph (38 Core Domains, 350+ Offic
    # Idaara.tn Environment Configuration
    NEXT_PUBLIC_APP_URL="http://localhost:3000"
 
-   # Groq Cloud API Key (High-speed 120B AI & Whisper STT)
+   # 1. Google Gemini API Key (Vision & Multimodal OCR)
+   # Get key: https://aistudio.google.com/app/apikey
+   GEMINI_API_KEY="your_gemini_api_key_here"
+
+   # 2. Groq Cloud API Key (Llama 3.3 70B & Whisper STT)
    # Get key: https://console.groq.com/keys
    GROQ_API_KEY="your_groq_api_key_here"
 
-   # Google Gemini API Key (Optional fallback)
-   GEMINI_API_KEY=""
+   # 3. Supabase Cloud Auth & Database (Optional - falls back to local mode)
+   # Get keys: https://supabase.com/dashboard/project/_/settings/api
+   NEXT_PUBLIC_SUPABASE_URL="https://your_project.supabase.co"
+   NEXT_PUBLIC_SUPABASE_ANON_KEY="your_anon_key_here"
+   SUPABASE_SERVICE_ROLE_KEY="your_service_role_key_here"
    ```
 
 4. **Run development server**:
@@ -192,7 +205,7 @@ Grounding Engine:  Structured Civic Knowledge Graph (38 Core Domains, 350+ Offic
    ```
    Open **[http://localhost:3000](http://localhost:3000)** in your browser.
 
-5. **Run test suite**:
+5. **Run automated test suite**:
    ```bash
    npm test
    ```
@@ -207,10 +220,12 @@ Grounding Engine:  Structured Civic Knowledge Graph (38 Core Domains, 350+ Offic
 
 ## 🔒 Security, Privacy & Compliance
 
-- **Zero-Storage Privacy Protocol**: Uploaded identity cards and personal notices are processed ephemerally in RAM and are never stored on persistent storage or shared with third parties.
-- **Client-Side Redaction**: Sensitive personal identifiers (CIN numbers, bank RIBs) can be masked before document processing.
-- **Rate-Limiting Protection**: Sliding-window rate limiting on all API routes to protect platform availability.
-- **Statutory Alignment**: Procedures and statutory amounts are verified against the *Journal Officiel de la République Tunisienne* (JORT) and relevant ministerial decrees.
+- **Zero-Storage Privacy Protocol**: Uploaded documents and personal identity scans are processed ephemerally in RAM and are never persisted or shared.
+- **Automated PII Sanitization**: Regex masking intercepts CIN, RIB, and phone numbers before any third-party AI processing.
+- **Magic-Byte Binary Verification**: Inspects file headers to prevent MIME spoofing attacks on `/api/ocr`.
+- **Serverless-Safe Rate Limiting**: In-memory sliding window rate limiter with lazy GC fallback prevents abuse across serverless lambda instances.
+- **Hardened HTTP Headers**: Strict `Content-Security-Policy`, `X-Frame-Options: DENY`, and `X-Content-Type-Options: nosniff` configured in `next.config.ts`.
+- **Statutory Alignment**: All fiscal stamps and procedures cross-referenced with the 2026 Tunisian Finance Law and official JORT decrees.
 
 ---
 
