@@ -2,7 +2,8 @@
 
 import React, { createContext, useContext, useEffect, useState, useMemo } from 'react';
 import type { User, Session } from '@supabase/supabase-js';
-import { createClient, isSupabaseConfigured } from '../lib/supabase/client';
+import { isSupabaseConfigured } from '../lib/supabase/client';
+import { createBrowserClient } from '@supabase/ssr';
 
 interface AuthContextValue {
   user: User | null;
@@ -16,6 +17,12 @@ interface AuthContextValue {
 
 const AuthContext = createContext<AuthContextValue | null>(null);
 
+function getSupabaseClient() {
+  const url = process.env.NEXT_PUBLIC_SUPABASE_URL!;
+  const key = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!;
+  return createBrowserClient(url, key);
+}
+
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [user, setUser] = useState<User | null>(null);
   const [session, setSession] = useState<Session | null>(null);
@@ -28,102 +35,65 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       return;
     }
 
-    try {
-      const supabase = createClient();
+    const supabase = getSupabaseClient();
 
-      // Check if returning from OAuth provider with auth code in URL
-      const searchParams = typeof window !== 'undefined' ? new URLSearchParams(window.location.search) : null;
-      const code = searchParams?.get('code');
-
-      if (code) {
-        setLoading(true);
-        supabase.auth.exchangeCodeForSession(code)
-          .then(({ data, error }) => {
-            if (!error && data?.session) {
-              setSession(data.session);
-              setUser(data.session.user ?? null);
-            } else if (error) {
-              console.warn('OAuth code exchange warning:', error.message);
-            }
-            // Clean up the ?code= query parameter from address bar
-            if (typeof window !== 'undefined') {
-              const cleanUrl = window.location.pathname;
-              window.history.replaceState({}, document.title, cleanUrl);
-            }
-            setLoading(false);
-          })
-          .catch((err) => {
-            console.error('OAuth code exchange exception:', err);
-            setLoading(false);
-          });
-      } else {
-        // Initial session restoration from cookies/storage
-        supabase.auth.getSession().then(({ data: { session } }) => {
-          setSession(session);
-          setUser(session?.user ?? null);
-          setLoading(false);
-        }).catch((err) => {
-          console.warn('Auth getSession error:', err);
-          setLoading(false);
-        });
-      }
-
-      // Listen for all auth events (SIGNED_IN, SIGNED_OUT, TOKEN_REFRESHED)
-      const {
-        data: { subscription },
-      } = supabase.auth.onAuthStateChange((event, newSession) => {
-        setSession(newSession);
-        setUser(newSession?.user ?? null);
-        setLoading(false);
-
-        if (event === 'SIGNED_IN' && typeof window !== 'undefined' && window.location.search.includes('code=')) {
-          const cleanUrl = window.location.pathname;
-          window.history.replaceState({}, document.title, cleanUrl);
-        }
-      });
-
-      return () => subscription.unsubscribe();
-    } catch (err) {
-      console.warn('Supabase auth initialization skipped:', err);
+    // onAuthStateChange fires immediately with the current session (or null),
+    // AND it fires again after PKCE code exchange (which @supabase/ssr handles
+    // automatically via detectSessionInUrl: true).
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((event, newSession) => {
+      setSession(newSession);
+      setUser(newSession?.user ?? null);
       setLoading(false);
-    }
+
+      // Clean the ?code= param from the address bar after successful sign-in
+      if (event === 'SIGNED_IN' && typeof window !== 'undefined' && window.location.search.includes('code=')) {
+        window.history.replaceState({}, document.title, window.location.pathname);
+      }
+    });
+
+    return () => subscription.unsubscribe();
   }, [configured]);
 
   const signInWithGoogle = async (): Promise<{ error: string | null }> => {
     if (!configured) {
-      return { error: 'Supabase is not configured. Please set NEXT_PUBLIC_SUPABASE_URL and NEXT_PUBLIC_SUPABASE_ANON_KEY.' };
+      return { error: 'Supabase non configuré. Vérifiez vos variables d\'environnement.' };
     }
     try {
-      const supabase = createClient();
-      const redirectUrl = typeof window !== 'undefined' ? window.location.origin : 'https://idaara-flame.vercel.app';
+      const supabase = getSupabaseClient();
+      const origin = typeof window !== 'undefined' ? window.location.origin : process.env.NEXT_PUBLIC_APP_URL ?? 'https://idaara-flame.vercel.app';
       const { error } = await supabase.auth.signInWithOAuth({
         provider: 'google',
         options: {
-          redirectTo: redirectUrl,
+          // Redirect back to the root — @supabase/ssr will detect ?code= and exchange automatically
+          redirectTo: origin,
+          queryParams: {
+            access_type: 'offline',
+            prompt: 'select_account',
+          },
         },
       });
       return { error: error ? error.message : null };
     } catch (err) {
-      return { error: err instanceof Error ? err.message : 'Unknown auth error' };
+      return { error: err instanceof Error ? err.message : 'Erreur inconnue' };
     }
   };
 
   const signInWithEmail = async (email: string): Promise<{ error: string | null }> => {
     if (!configured) {
-      return { error: 'Supabase is not configured. Please set NEXT_PUBLIC_SUPABASE_URL and NEXT_PUBLIC_SUPABASE_ANON_KEY.' };
+      return { error: 'Supabase non configuré.' };
     }
     try {
-      const supabase = createClient();
-      const redirectUrl = typeof window !== 'undefined' ? window.location.origin : 'https://idaara-flame.vercel.app';
+      const supabase = getSupabaseClient();
+      const origin = typeof window !== 'undefined' ? window.location.origin : process.env.NEXT_PUBLIC_APP_URL ?? 'https://idaara-flame.vercel.app';
       const { error } = await supabase.auth.signInWithOtp({
         email,
         options: {
-          emailRedirectTo: redirectUrl,
+          emailRedirectTo: origin,
         },
       });
       return { error: error ? error.message : null };
     } catch (err) {
-      return { error: err instanceof Error ? err.message : 'Unknown auth error' };
+      return { error: err instanceof Error ? err.message : 'Erreur inconnue' };
     }
   };
 
@@ -134,12 +104,13 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       return;
     }
     try {
-      const supabase = createClient();
+      const supabase = getSupabaseClient();
       await supabase.auth.signOut();
-      setUser(null);
-      setSession(null);
     } catch (err) {
       console.warn('Sign out error:', err);
+    } finally {
+      setUser(null);
+      setSession(null);
     }
   };
 
