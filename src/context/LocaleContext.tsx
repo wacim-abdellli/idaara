@@ -13,46 +13,67 @@ interface LocaleContextType {
 const LocaleContext = createContext<LocaleContextType | undefined>(undefined);
 
 const VALID_LOCALES: SupportedLanguage[] = ['derja', 'fr', 'ar', 'en'];
+const COOKIE_NAME = 'idaara_locale';
+const COOKIE_MAX_AGE = 365 * 24 * 60 * 60; // 1 year
 
-function getInitialLocale(): SupportedLanguage {
-  if (typeof window === 'undefined') return 'fr'; // SSR default
+function readLocaleCookie(): SupportedLanguage | null {
+  if (typeof document === 'undefined') return null;
   try {
-    const saved = localStorage.getItem('idaara_locale') as SupportedLanguage;
-    if (saved && VALID_LOCALES.includes(saved)) return saved;
+    const match = document.cookie
+      .split('; ')
+      .find((row) => row.startsWith(`${COOKIE_NAME}=`));
+    if (!match) return null;
+    const val = match.split('=')[1] as SupportedLanguage;
+    return VALID_LOCALES.includes(val) ? val : null;
   } catch {
-    // localStorage not available
+    return null;
   }
-  return 'fr'; // sensible default for new users
 }
 
-export function LocaleProvider({ children }: { children: React.ReactNode }) {
-  const [locale, setLocaleState] = useState<SupportedLanguage>(getInitialLocale);
+function writeLocaleCookie(locale: SupportedLanguage) {
+  if (typeof document === 'undefined') return;
+  try {
+    document.cookie = `${COOKIE_NAME}=${locale}; path=/; max-age=${COOKIE_MAX_AGE}; SameSite=Lax`;
+    // Also persist in localStorage as secondary backup
+    localStorage.setItem(COOKIE_NAME, locale);
+  } catch {
+    // noop
+  }
+}
 
-  const applyDomLocale = (l: SupportedLanguage) => {
-    const isRtlLocale = l === 'ar';
-    document.documentElement.setAttribute('dir', isRtlLocale ? 'rtl' : 'ltr');
-    const langMap: Record<SupportedLanguage, string> = {
-      ar: 'ar',
-      derja: 'fr-TN',
-      fr: 'fr',
-      en: 'en',
-    };
-    document.documentElement.setAttribute('lang', langMap[l] || 'fr');
+function applyDomLocale(l: SupportedLanguage) {
+  document.documentElement.setAttribute('dir', l === 'ar' ? 'rtl' : 'ltr');
+  const langMap: Record<SupportedLanguage, string> = {
+    ar: 'ar', derja: 'fr-TN', fr: 'fr', en: 'en',
   };
+  document.documentElement.setAttribute('lang', langMap[l] || 'fr');
+}
 
-  // Apply DOM attributes once on mount (locale is already correct, just sync the DOM)
+interface LocaleProviderProps {
+  children: React.ReactNode;
+  /** Server-read initial locale from cookie (passed from layout.tsx) */
+  initialLocale?: SupportedLanguage;
+}
+
+export function LocaleProvider({ children, initialLocale = 'fr' }: LocaleProviderProps) {
+  // Use server-provided initialLocale — no mismatch, no flash
+  const [locale, setLocaleState] = useState<SupportedLanguage>(initialLocale);
+
+  // On mount, confirm with cookie (handles edge case where cookie changed in another tab)
   useEffect(() => {
-    applyDomLocale(locale);
+    const cookieLocale = readLocaleCookie();
+    if (cookieLocale && cookieLocale !== locale) {
+      setLocaleState(cookieLocale);
+      applyDomLocale(cookieLocale);
+    } else {
+      applyDomLocale(locale);
+    }
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const setLocale = (newLocale: SupportedLanguage) => {
     setLocaleState(newLocale);
-    try {
-      localStorage.setItem('idaara_locale', newLocale);
-    } catch {
-      // noop
-    }
+    writeLocaleCookie(newLocale);
     applyDomLocale(newLocale);
   };
 

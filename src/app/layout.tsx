@@ -1,5 +1,6 @@
 import type { Metadata, Viewport } from 'next';
 import './globals.css';
+import { cookies } from 'next/headers';
 import { LocaleProvider } from '../context/LocaleContext';
 import { AuthProvider } from '../context/AuthContext';
 import { ChecklistProvider } from '../context/ChecklistContext';
@@ -10,6 +11,9 @@ import { MobileBottomNav } from '../components/layout/MobileBottomNav';
 import { ScrollToTop } from '../components/common/ScrollToTop';
 import { DynamicTitle } from '../components/layout/DynamicTitle';
 import { ErrorBoundary } from '../components/common/ErrorBoundary';
+
+const VALID_LOCALES = ['derja', 'fr', 'ar', 'en'] as const;
+type SupportedLanguage = (typeof VALID_LOCALES)[number];
 
 const BASE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://idaara-flame.vercel.app';
 
@@ -86,16 +90,25 @@ export const viewport: Viewport = {
   initialScale: 1,
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  // Read the locale cookie server-side so first SSR paint matches user's saved locale → zero flash
+  const cookieStore = await cookies();
+  const savedLocale = cookieStore.get('idaara_locale')?.value as SupportedLanguage | undefined;
+  const initialLocale: SupportedLanguage =
+    savedLocale && VALID_LOCALES.includes(savedLocale) ? savedLocale : 'fr';
+
+  const langAttr = initialLocale === 'ar' ? 'ar' : initialLocale === 'en' ? 'en' : 'fr';
+  const dirAttr = initialLocale === 'ar' ? 'rtl' : 'ltr';
+
   return (
-    <html lang="fr" dir="ltr" className="dark scroll-smooth" suppressHydrationWarning>
+    <html lang={langAttr} dir={dirAttr} className="dark scroll-smooth" suppressHydrationWarning>
       <body className="antialiased min-h-screen flex flex-col selection:bg-emerald-500/30 selection:text-emerald-200 pb-[calc(4rem+env(safe-area-inset-bottom,0px))] lg:pb-0" suppressHydrationWarning>
         <AuthProvider>
-          <LocaleProvider>
+          <LocaleProvider initialLocale={initialLocale}>
             <DynamicTitle />
             <ChecklistProvider>
               <ScrollToTop />
