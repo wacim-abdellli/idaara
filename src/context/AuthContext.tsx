@@ -30,20 +30,42 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
     try {
       const supabase = createClient();
-      supabase.auth.getSession().then(({ data: { session } }) => {
-        setSession(session);
-        setUser(session?.user ?? null);
-        setLoading(false);
-      }).catch((err) => {
-        console.warn('Auth getSession error:', err);
-        setLoading(false);
-      });
+
+      const params = typeof window !== 'undefined' ? new URLSearchParams(window.location.search) : null;
+      const code = params?.get('code');
+
+      if (code) {
+        supabase.auth.exchangeCodeForSession(code).then(({ data, error }) => {
+          if (!error && data?.session) {
+            setSession(data.session);
+            setUser(data.session.user ?? null);
+            const cleanUrl = window.location.pathname;
+            window.history.replaceState({}, document.title, cleanUrl);
+          } else {
+            console.warn('Auth code exchange notice:', error);
+          }
+          setLoading(false);
+        }).catch((err) => {
+          console.warn('Auth code exchange exception:', err);
+          setLoading(false);
+        });
+      } else {
+        supabase.auth.getSession().then(({ data: { session } }) => {
+          setSession(session);
+          setUser(session?.user ?? null);
+          setLoading(false);
+        }).catch((err) => {
+          console.warn('Auth getSession error:', err);
+          setLoading(false);
+        });
+      }
 
       const {
         data: { subscription },
       } = supabase.auth.onAuthStateChange((_event, session) => {
         setSession(session);
         setUser(session?.user ?? null);
+        setLoading(false);
       });
 
       return () => subscription.unsubscribe();
