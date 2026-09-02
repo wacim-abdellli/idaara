@@ -15,7 +15,8 @@
 [![Groq AI](https://img.shields.io/badge/AI-Groq_Llama_3.3_70B-F55036?style=for-the-badge&logo=groq&logoColor=white)](https://groq.com/)
 [![Gemini Vision](https://img.shields.io/badge/Vision-Gemini_2.5_Flash-4285F4?style=for-the-badge&logo=google&logoColor=white)](https://ai.google.dev/)
 [![Whisper Audio](https://img.shields.io/badge/Audio-Whisper_Large_v3_Turbo-10B981?style=for-the-badge&logo=openai&logoColor=white)](https://openai.com/research/whisper)
-[![Vitest](https://img.shields.io/badge/Vitest-48_Tests_Passing-6E9F18?style=for-the-badge&logo=vitest&logoColor=white)](https://vitest.dev/)
+[![Vitest](https://img.shields.io/badge/Vitest-52_Tests_Passing-6E9F18?style=for-the-badge&logo=vitest&logoColor=white)](https://vitest.dev/)
+[![Security](https://img.shields.io/badge/Security-Strict_CSP_%26_INPDP_Compliant-00C07F?style=for-the-badge&logo=shield&logoColor=white)](#-security-privacy--compliance)
 [![Locales](https://img.shields.io/badge/Languages-Derja_%7C_FR_%7C_AR_(RTL)_%7C_EN-EA580C?style=for-the-badge&logo=translate&logoColor=white)](#-multilingual-support)
 
 </div>
