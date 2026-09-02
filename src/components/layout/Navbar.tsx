@@ -250,20 +250,46 @@ export const Navbar: React.FC = () => {
 
             {/* Account / Cloud Sync Button */}
             <motion.button
-              whileHover={{ scale: 1.04 }}
-              whileTap={{ scale: 0.96 }}
+              whileHover={{ scale: 1.02 }}
+              whileTap={{ scale: 0.98 }}
               onClick={() => setAuthModalOpen(true)}
-              className={`flex items-center gap-1.5 h-8 px-2.5 sm:px-3 rounded-full text-xs font-semibold border transition-all cursor-pointer ${
+              className={`flex items-center gap-2 h-8 px-2.5 sm:px-3 rounded-full text-xs font-semibold border transition-all cursor-pointer ${
                 user
-                  ? 'bg-emerald-500/15 text-emerald-300 border-emerald-500/30 hover:bg-emerald-500/25'
-                  : 'bg-zinc-900 text-zinc-300 border-zinc-800 hover:text-white hover:bg-zinc-850'
+                  ? 'bg-zinc-900/90 hover:bg-zinc-850 text-zinc-200 hover:text-white border-zinc-750 hover:border-emerald-500/50 shadow-xs'
+                  : 'bg-zinc-900/90 text-zinc-300 border-zinc-800 hover:text-white hover:bg-zinc-850 hover:border-zinc-700'
               }`}
               title={user ? user.email || 'Mon Compte' : 'Connexion Citoyenne'}
             >
-              <UserIcon className={`w-3.5 h-3.5 ${user ? 'text-emerald-400' : 'text-zinc-400'}`} />
-              <span className="hidden sm:inline text-[11px] font-medium max-w-[100px] truncate">
-                {user ? user.email?.split('@')[0] : locale === 'ar' ? 'دخول' : 'Connexion'}
-              </span>
+              {user ? (
+                <>
+                  <div className="relative flex items-center justify-center">
+                    {user.user_metadata?.avatar_url || user.user_metadata?.picture ? (
+                      // eslint-disable-next-line @next/next/no-img-element
+                      <img
+                        src={user.user_metadata.avatar_url || user.user_metadata.picture}
+                        alt="Avatar"
+                        className="w-5 h-5 rounded-full object-cover ring-1 ring-emerald-500/50"
+                      />
+                    ) : (
+                      <div className="w-5 h-5 rounded-full bg-emerald-500/20 text-emerald-300 font-bold text-[10px] flex items-center justify-center ring-1 ring-emerald-500/40">
+                        {user.email ? user.email.charAt(0).toUpperCase() : 'U'}
+                      </div>
+                    )}
+                    <span className="absolute -bottom-0.5 -right-0.5 w-1.5 h-1.5 rounded-full bg-emerald-400 ring-1 ring-zinc-950" />
+                  </div>
+                  <span className="hidden sm:inline text-xs font-medium max-w-[110px] truncate text-zinc-200">
+                    {user.user_metadata?.full_name?.split(' ')[0] || user.user_metadata?.name?.split(' ')[0] || user.email?.split('@')[0]}
+                  </span>
+                  <ChevronDown className="w-3 h-3 text-zinc-500 hidden sm:inline shrink-0" />
+                </>
+              ) : (
+                <>
+                  <UserIcon className="w-3.5 h-3.5 text-zinc-400" />
+                  <span className="hidden sm:inline text-xs font-medium">
+                    {locale === 'ar' ? 'دخول' : 'Connexion'}
+                  </span>
+                </>
+              )}
             </motion.button>
 
             {/* AI Copilot CTA Button */}
