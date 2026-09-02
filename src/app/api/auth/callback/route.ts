@@ -1,6 +1,5 @@
 import { createServerClient } from '@supabase/ssr';
 import { NextRequest, NextResponse } from 'next/server';
-import { cookies } from 'next/headers';
 
 export const runtime = 'nodejs';
 
@@ -18,24 +17,28 @@ export async function GET(request: NextRequest) {
   const anonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
 
   if (code && url && anonKey) {
+    // 1. Create redirect response first so cookies can be written directly to HTTP headers
+    const response = NextResponse.redirect(`${siteUrl}${next}`);
+
     try {
-      const cookieStore = await cookies();
       const supabase = createServerClient(url, anonKey, {
         cookies: {
           getAll() {
-            return cookieStore.getAll();
+            return request.cookies.getAll();
           },
           setAll(cookiesToSet) {
-            cookiesToSet.forEach(({ name, value, options }) =>
-              cookieStore.set(name, value, options)
-            );
+            cookiesToSet.forEach(({ name, value, options }) => {
+              // Write session cookies directly into the redirect response Set-Cookie headers
+              response.cookies.set(name, value, options);
+            });
           },
         },
       });
 
       const { error } = await supabase.auth.exchangeCodeForSession(code);
       if (!error) {
-        return NextResponse.redirect(`${siteUrl}${next}`);
+        // Return response containing the Set-Cookie headers
+        return response;
       }
       console.warn('Supabase auth exchange error:', error);
     } catch (err) {
