@@ -35,20 +35,10 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       const code = params?.get('code');
 
       if (code) {
-        supabase.auth.exchangeCodeForSession(code).then(({ data, error }) => {
-          if (!error && data?.session) {
-            setSession(data.session);
-            setUser(data.session.user ?? null);
-            const cleanUrl = window.location.pathname;
-            window.history.replaceState({}, document.title, cleanUrl);
-          } else {
-            console.warn('Auth code exchange notice:', error);
-          }
-          setLoading(false);
-        }).catch((err) => {
-          console.warn('Auth code exchange exception:', err);
-          setLoading(false);
-        });
+        if (!window.location.pathname.startsWith('/api/auth/callback')) {
+          window.location.href = `/api/auth/callback?code=${encodeURIComponent(code)}&next=${encodeURIComponent(window.location.pathname)}`;
+          return;
+        }
       } else {
         supabase.auth.getSession().then(({ data: { session } }) => {
           setSession(session);
