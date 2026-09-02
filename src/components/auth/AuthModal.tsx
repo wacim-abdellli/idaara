@@ -55,6 +55,13 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose }) => {
     };
   }, [isOpen, onClose]);
 
+  useEffect(() => {
+    if (!isOpen || user) {
+      setLoading(false);
+      setErrorMsg(null);
+    }
+  }, [isOpen, user]);
+
   if (!isOpen || !mounted) return null;
 
   const handleGoogleSignIn = async () => {

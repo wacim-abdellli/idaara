@@ -31,15 +31,33 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     try {
       const supabase = createClient();
 
-      const params = typeof window !== 'undefined' ? new URLSearchParams(window.location.search) : null;
-      const code = params?.get('code');
+      // Check if returning from OAuth provider with auth code in URL
+      const searchParams = typeof window !== 'undefined' ? new URLSearchParams(window.location.search) : null;
+      const code = searchParams?.get('code');
 
       if (code) {
-        if (!window.location.pathname.startsWith('/api/auth/callback')) {
-          window.location.href = `/api/auth/callback?code=${encodeURIComponent(code)}&next=${encodeURIComponent(window.location.pathname)}`;
-          return;
-        }
+        setLoading(true);
+        supabase.auth.exchangeCodeForSession(code)
+          .then(({ data, error }) => {
+            if (!error && data?.session) {
+              setSession(data.session);
+              setUser(data.session.user ?? null);
+            } else if (error) {
+              console.warn('OAuth code exchange warning:', error.message);
+            }
+            // Clean up the ?code= query parameter from address bar
+            if (typeof window !== 'undefined') {
+              const cleanUrl = window.location.pathname;
+              window.history.replaceState({}, document.title, cleanUrl);
+            }
+            setLoading(false);
+          })
+          .catch((err) => {
+            console.error('OAuth code exchange exception:', err);
+            setLoading(false);
+          });
       } else {
+        // Initial session restoration from cookies/storage
         supabase.auth.getSession().then(({ data: { session } }) => {
           setSession(session);
           setUser(session?.user ?? null);
@@ -50,12 +68,18 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         });
       }
 
+      // Listen for all auth events (SIGNED_IN, SIGNED_OUT, TOKEN_REFRESHED)
       const {
         data: { subscription },
-      } = supabase.auth.onAuthStateChange((_event, session) => {
-        setSession(session);
-        setUser(session?.user ?? null);
+      } = supabase.auth.onAuthStateChange((event, newSession) => {
+        setSession(newSession);
+        setUser(newSession?.user ?? null);
         setLoading(false);
+
+        if (event === 'SIGNED_IN' && typeof window !== 'undefined' && window.location.search.includes('code=')) {
+          const cleanUrl = window.location.pathname;
+          window.history.replaceState({}, document.title, cleanUrl);
+        }
       });
 
       return () => subscription.unsubscribe();
@@ -71,10 +95,11 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     }
     try {
       const supabase = createClient();
+      const redirectUrl = typeof window !== 'undefined' ? window.location.origin : 'https://idaara-flame.vercel.app';
       const { error } = await supabase.auth.signInWithOAuth({
         provider: 'google',
         options: {
-          redirectTo: `${window.location.origin}/api/auth/callback?next=${encodeURIComponent(window.location.pathname)}`,
+          redirectTo: redirectUrl,
         },
       });
       return { error: error ? error.message : null };
@@ -89,10 +114,11 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     }
     try {
       const supabase = createClient();
+      const redirectUrl = typeof window !== 'undefined' ? window.location.origin : 'https://idaara-flame.vercel.app';
       const { error } = await supabase.auth.signInWithOtp({
         email,
         options: {
-          emailRedirectTo: `${window.location.origin}/api/auth/callback`,
+          emailRedirectTo: redirectUrl,
         },
       });
       return { error: error ? error.message : null };
