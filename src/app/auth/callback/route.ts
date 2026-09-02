@@ -51,9 +51,9 @@ export async function GET(request: NextRequest) {
           return response;
         }
 
-        console.warn('[Idaara API Auth Callback] Exchange error:', error?.message);
+        console.warn('[Idaara Auth Callback] Exchange error:', error?.message);
       } catch (err) {
-        console.error('[Idaara API Auth Callback] Exception during code exchange:', err);
+        console.error('[Idaara Auth Callback] Exception during code exchange:', err);
       }
     }
   }

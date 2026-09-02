@@ -1,4 +1,5 @@
-import { createClient as supabaseCreateClient, SupabaseClient } from '@supabase/supabase-js';
+import { createBrowserClient } from '@supabase/ssr';
+import type { SupabaseClient } from '@supabase/supabase-js';
 
 export const isSupabaseConfigured = () => {
   return Boolean(
@@ -9,31 +10,13 @@ export const isSupabaseConfigured = () => {
   );
 };
 
-// Module-level singleton — reuse across renders
-let supabaseInstance: SupabaseClient | null = null;
-
 export const createClient = (): SupabaseClient => {
-  if (!isSupabaseConfigured()) {
+  const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
+  const anonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+
+  if (!url || !anonKey) {
     throw new Error('Supabase URL and anon key are required');
   }
-  if (supabaseInstance) return supabaseInstance;
 
-  supabaseInstance = supabaseCreateClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
-    {
-      auth: {
-        // Use localStorage — reliable, no cookie chain issues
-        storage: typeof window !== 'undefined' ? window.localStorage : undefined,
-        autoRefreshToken: true,
-        persistSession: true,
-        // Let supabase-js handle URL fragment/query detection natively
-        detectSessionInUrl: true,
-        // Implicit flow: works without PKCE code_verifier cookies
-        flowType: 'implicit',
-      },
-    }
-  );
-
-  return supabaseInstance;
+  return createBrowserClient(url, anonKey);
 };
