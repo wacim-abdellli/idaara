@@ -14,8 +14,19 @@ const LocaleContext = createContext<LocaleContextType | undefined>(undefined);
 
 const VALID_LOCALES: SupportedLanguage[] = ['derja', 'fr', 'ar', 'en'];
 
+function getInitialLocale(): SupportedLanguage {
+  if (typeof window === 'undefined') return 'fr'; // SSR default
+  try {
+    const saved = localStorage.getItem('idaara_locale') as SupportedLanguage;
+    if (saved && VALID_LOCALES.includes(saved)) return saved;
+  } catch {
+    // localStorage not available
+  }
+  return 'fr'; // sensible default for new users
+}
+
 export function LocaleProvider({ children }: { children: React.ReactNode }) {
-  const [locale, setLocaleState] = useState<SupportedLanguage>('derja');
+  const [locale, setLocaleState] = useState<SupportedLanguage>(getInitialLocale);
 
   const applyDomLocale = (l: SupportedLanguage) => {
     const isRtlLocale = l === 'ar';
@@ -29,17 +40,10 @@ export function LocaleProvider({ children }: { children: React.ReactNode }) {
     document.documentElement.setAttribute('lang', langMap[l] || 'fr');
   };
 
+  // Apply DOM attributes once on mount (locale is already correct, just sync the DOM)
   useEffect(() => {
-    try {
-      const saved = localStorage.getItem('idaara_locale') as SupportedLanguage;
-      if (saved && VALID_LOCALES.includes(saved)) {
-        // eslint-disable-next-line react-hooks/set-state-in-effect -- hydration-safe localStorage sync
-        setLocaleState(saved);
-        applyDomLocale(saved);
-      }
-    } catch {
-      // localStorage not available (private mode / restricted browser)
-    }
+    applyDomLocale(locale);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const setLocale = (newLocale: SupportedLanguage) => {
