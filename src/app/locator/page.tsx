@@ -8,7 +8,7 @@ import { useLocale } from '../../context/LocaleContext';
 import { SpotlightCard } from '../../components/motion/SpotlightCard';
 import { FadeIn, FadeInStagger, FadeInItem } from '../../components/motion/FadeInStagger';
 import { AmbientOrbs } from '../../components/motion/AmbientOrbs';
-import { MapPin, Search, Moon, Sun, Clock, Building2, Navigation2, PhoneCall } from 'lucide-react';
+import { MapPin, Search, Moon, Sun, Clock, Building2, Navigation2 } from 'lucide-react';
 
 export default function LocatorPage() {
   const { t, locale } = useLocale();

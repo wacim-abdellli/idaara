@@ -11,9 +11,9 @@ import { getLocalized } from '../../lib/locale-utils';
 import { getVerticalLabel } from '../../lib/vertical-labels';
 import { formatTND } from '../../lib/utils';
 import { SpotlightCard } from '../../components/motion/SpotlightCard';
-import { FadeIn, FadeInStagger, FadeInItem } from '../../components/motion/FadeInStagger';
+import { FadeIn } from '../../components/motion/FadeInStagger';
 import { AmbientOrbs } from '../../components/motion/AmbientOrbs';
-import { Stamp, ArrowRight, ShieldCheck, Receipt } from 'lucide-react';
+import { ArrowRight, Receipt } from 'lucide-react';
 import Link from 'next/link';
 
 export default function CalculatorPage() {

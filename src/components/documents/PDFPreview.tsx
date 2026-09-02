@@ -3,7 +3,7 @@
 import React, { useState } from 'react';
 import { DocumentTemplate } from '../../types/document';
 import { generatePDFFromElement, printElement } from '../../lib/pdf-generator';
-import { Download, Printer, ShieldCheck, QrCode, Globe2 } from 'lucide-react';
+import { Download, Printer, QrCode } from 'lucide-react';
 import { triggerConfetti } from '../../lib/utils';
 import { useLocale } from '../../context/LocaleContext';
 
@@ -40,15 +40,6 @@ export const PDFPreview: React.FC<PDFPreviewProps> = ({ template, formData }) =>
   const handlePrint = () => {
     printElement('official-doc-render');
   };
-
-  const previewBannerText =
-    docLang === 'ar'
-      ? 'معاينة وثيقة رسمية متجهة عالية الدقة (جاهزة للطباعة والتعريف بالإمضاء)'
-      : docLang === 'derja'
-      ? 'Aperçu HD Vectoriel (7adhra lel Imprimer w Ta3rif bel Imdha2)'
-      : docLang === 'en'
-      ? 'High-Definition Vector Preview (Ready to Print & Legalize)'
-      : "Aperçu Vectoriel Haute Définition (Prêt à l'impression & légalisation)";
 
   const printBtnText =
     docLang === 'ar' ? 'طباعة' : docLang === 'derja' ? 'Imprimer' : docLang === 'en' ? 'Print' : 'Imprimer';

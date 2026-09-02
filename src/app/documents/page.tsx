@@ -9,7 +9,7 @@ import { getLocalized } from '../../lib/locale-utils';
 import { SpotlightCard } from '../../components/motion/SpotlightCard';
 import { FadeIn, FadeInStagger, FadeInItem } from '../../components/motion/FadeInStagger';
 import { AmbientOrbs } from '../../components/motion/AmbientOrbs';
-import { FileText, Search, ShieldCheck, CheckCircle2, Download, Stamp, Sparkles } from 'lucide-react';
+import { Search, CheckCircle2, Stamp } from 'lucide-react';
 
 export default function DocumentsPage() {
   const { locale } = useLocale();

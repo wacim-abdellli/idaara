@@ -7,9 +7,9 @@ import { TaxCalculator } from '../../components/launchpad/TaxCalculator';
 import { ExportInvoiceGen } from '../../components/launchpad/ExportInvoiceGen';
 import { useLocale } from '../../context/LocaleContext';
 import { SpotlightCard } from '../../components/motion/SpotlightCard';
-import { FadeIn, FadeInStagger, FadeInItem } from '../../components/motion/FadeInStagger';
+import { FadeIn } from '../../components/motion/FadeInStagger';
 import { AmbientOrbs } from '../../components/motion/AmbientOrbs';
-import { ExternalLink, Sparkles, Scale, Calculator, FileSpreadsheet, BadgePercent, ShieldCheck } from 'lucide-react';
+import { ExternalLink, Scale, Calculator, FileSpreadsheet, BadgePercent } from 'lucide-react';
 
 export default function LaunchpadPage() {
   const { locale } = useLocale();

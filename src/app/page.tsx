@@ -32,7 +32,6 @@ import {
   Zap,
   X,
   Bot,
-  BadgeCheck,
   Fingerprint,
   FilePenLine,
   Briefcase,

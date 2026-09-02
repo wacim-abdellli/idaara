@@ -7,15 +7,13 @@ import { useLocale } from '../../context/LocaleContext';
 import { concoursData } from '../../data/concours';
 import { filterConcours } from '../../lib/concours-knowledge';
 import { getLocalized } from '../../lib/locale-utils';
-import { ConcoursCategory, EducationLevel, ConcoursItem } from '../../types/concours';
+import { ConcoursCategory, EducationLevel } from '../../types/concours';
 import { SpotlightCard } from '../../components/motion/SpotlightCard';
 import { FadeIn, FadeInStagger, FadeInItem } from '../../components/motion/FadeInStagger';
 import {
   Briefcase,
   Search,
   Building2,
-  Calendar,
-  Users,
   GraduationCap,
   ExternalLink,
   ChevronDown,
@@ -23,8 +21,6 @@ import {
   FileCheck2,
   AlertCircle,
   Clock,
-  Sparkles,
-  ShieldCheck,
   CheckCircle2,
   ArrowRight,
   Filter,

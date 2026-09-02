@@ -8,10 +8,10 @@ import { DocumentAnalysisResult } from '../../components/fasserli/DocumentAnalys
 import { OCRAnalysisResult } from '../../types/chat';
 import { FadeIn } from '../../components/motion/FadeInStagger';
 import { AmbientOrbs } from '../../components/motion/AmbientOrbs';
-import { Sparkles, FileText, Lock, CheckCircle2, FileSearch } from 'lucide-react';
+import { Sparkles, Lock, CheckCircle2, FileSearch } from 'lucide-react';
 
 export default function FasserliPage() {
-  const { t, locale } = useLocale();
+  const { locale } = useLocale();
   const [isAnalyzing, setIsAnalyzing] = useState(false);
   const [analysisResult, setAnalysisResult] = useState<OCRAnalysisResult | null>(null);
   const reportRef = useRef<HTMLDivElement | null>(null);
