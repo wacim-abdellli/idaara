@@ -19,14 +19,11 @@ const AuthContext = createContext<AuthContextValue | null>(null);
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [user, setUser] = useState<User | null>(null);
   const [session, setSession] = useState<Session | null>(null);
-  const [loading, setLoading] = useState(true);
   const configured = useMemo(() => isSupabaseConfigured(), []);
+  const [loading, setLoading] = useState(configured);
 
   useEffect(() => {
-    if (!configured) {
-      setLoading(false);
-      return;
-    }
+    if (!configured) return;
 
     let isMounted = true;
     const supabase = createClient();
@@ -54,7 +51,6 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     const code = urlParams?.get('code');
 
     if (code) {
-      setLoading(true);
       supabase.auth.exchangeCodeForSession(code)
         .then(({ data, error }) => {
           if (!isMounted) return;

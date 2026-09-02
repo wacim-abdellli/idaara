@@ -130,7 +130,7 @@ export function parseAndReason(prompt: string, locale: SupportedLanguage | strin
     query.includes('patente') ||
     query.includes('مبادر')
   ) {
-    const p = getProcedureById('auto-entrepreneur-creation') || proceduresData[0];
+    const p = getProcedureById('statut-auto-entrepreneur') || proceduresData[0];
     return {
       content:
         lang === 'fr'
@@ -163,7 +163,7 @@ export function parseAndReason(prompt: string, locale: SupportedLanguage | strin
     query.includes('كراء') ||
     query.includes('عقد')
   ) {
-    const p = getProcedureById('contrat-location-residentiel') || proceduresData[0];
+    const p = getProcedureById('contrat-location-habitation') || proceduresData[0];
     return {
       content:
         lang === 'fr'
@@ -537,17 +537,17 @@ export function parseAndReason(prompt: string, locale: SupportedLanguage | strin
         {
           label: { derja: '🪪 بطاقة التعريف (CIN)', fr: 'Carte CIN', ar: 'بطاقة التعريف', en: 'CIN Card' },
           type: 'procedure_link',
-          payload: '/procedures/carte-identite-nationale-cin',
+          payload: '/procedures/cin-carte-identite',
         },
         {
           label: { derja: '🚗 البطاقة الرمادية (ATTT)', fr: 'Carte Grise', ar: 'البطاقة الرمادية', en: 'Vehicle Registration' },
           type: 'procedure_link',
-          payload: '/procedures/carte-grise-mutation',
+          payload: '/procedures/mutation-carte-grise',
         },
         {
           label: { derja: '📋 بطاقة عدد 3 (B3)', fr: 'Bulletin N°3', ar: 'بطاقة عدد 3', en: 'B3 Certificate' },
           type: 'procedure_link',
-          payload: '/procedures/bulletin-numero-3-b3',
+          payload: '/procedures/bulletin-3-b3',
         },
       ],
     };
@@ -580,12 +580,12 @@ export function parseAndReason(prompt: string, locale: SupportedLanguage | strin
         {
           label: { derja: '📄 شهادة إيواء PDF', fr: "Certificat d'Hébergement", ar: 'شهادة إيواء PDF', en: 'Accommodation Certificate' },
           type: 'pdf_form',
-          payload: '/documents/certificat-hebergement',
+          payload: '/documents/attestation-hebergement',
         },
         {
           label: { derja: '📋 بطاقة عدد 3 (B3)', fr: 'Bulletin N°3', ar: 'بطاقة عدد 3', en: 'B3 Record' },
           type: 'procedure_link',
-          payload: '/procedures/bulletin-numero-3-b3',
+          payload: '/procedures/bulletin-3-b3',
         },
       ],
     };

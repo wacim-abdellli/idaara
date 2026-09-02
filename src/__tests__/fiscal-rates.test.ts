@@ -4,6 +4,7 @@ import {
   FISCAL_YEAR_LABEL,
   AUTO_ENTREPRENEUR_RATES,
   SUARL_RATES,
+  CIVIC_STAMP_RATES,
 } from '../data/fiscal-rates';
 
 describe('fiscal-rates — Tunisian Statutory Constants', () => {
@@ -23,5 +24,16 @@ describe('fiscal-rates — Tunisian Statutory Constants', () => {
   it('defines SUARL statutory parameters', () => {
     expect(SUARL_RATES.corporateTaxRate).toBe(0.15); // 15% IS
     expect(SUARL_RATES.minimumBankCapitalTND).toBe(1000); // 1,000 DT
+  });
+
+  it('defines statutory civic stamp rates matching Tunisian Finance Laws', () => {
+    expect(CIVIC_STAMP_RATES.cinStandardTND).toBe(3.0);
+    expect(CIVIC_STAMP_RATES.cinLostReplacementTND).toBe(25.0);
+    expect(CIVIC_STAMP_RATES.passportAdultTND).toBe(80.0);
+    expect(CIVIC_STAMP_RATES.passportStudentMinorTND).toBe(25.0);
+    expect(CIVIC_STAMP_RATES.bulletin3TotalTND).toBe(7.5);
+    expect(CIVIC_STAMP_RATES.generalInvoiceStampTND).toBe(1.0);
+    expect(CIVIC_STAMP_RATES.baladiyaSignatureLegalizationTND).toBe(3.0);
+    expect(CIVIC_STAMP_RATES.birthCertificateTND).toBe(0.5);
   });
 });

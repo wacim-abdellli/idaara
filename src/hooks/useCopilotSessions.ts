@@ -126,6 +126,7 @@ export function useCopilotSessions(onAutoQuery?: (query: string) => void) {
 
         let targetTitle = defaultTitle;
 
+        // eslint-disable-next-line react-hooks/set-state-in-effect -- update session title and message cache when active messages change
         setSessions((prev) => {
           const exists = prev.find((s) => s.id === currentSessionId);
           let updated: ChatSession[];

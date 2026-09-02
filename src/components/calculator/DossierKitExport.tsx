@@ -93,7 +93,7 @@ export const DossierKitExport: React.FC<DossierKitExportProps> = ({
             <button
               onClick={() => setShowModal(true)}
               className="flex items-center justify-center gap-1.5 px-3 py-2 rounded-xl bg-zinc-900 hover:bg-zinc-800 text-zinc-300 font-bold text-xs transition-all cursor-pointer border border-zinc-800"
-              title="Aperçu A4"
+              title={locale === 'ar' ? 'معاينة A4' : locale === 'en' ? 'A4 Preview' : 'Aperçu A4'}
             >
               <Eye className="w-3.5 h-3.5 text-emerald-400" />
               <span>{locale === 'ar' ? 'معاينة' : 'Aperçu'}</span>

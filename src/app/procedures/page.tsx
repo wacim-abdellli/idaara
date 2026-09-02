@@ -425,7 +425,7 @@ export default function ProceduresPage() {
             <div className="flex items-center p-0.5 rounded-xl bg-zinc-950 border border-zinc-800">
               <button
                 onClick={() => setViewMode('grid')}
-                title="Grid View"
+                title={locale === 'ar' ? 'عرض شبكي' : locale === 'en' ? 'Grid view' : 'Affichage en grille'}
                 className={`p-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer ${
                   viewMode === 'grid'
                     ? 'bg-emerald-500 text-zinc-950 shadow-sm'
@@ -436,7 +436,7 @@ export default function ProceduresPage() {
               </button>
               <button
                 onClick={() => setViewMode('list')}
-                title="Dense Table View"
+                title={locale === 'ar' ? 'عرض جدولي' : locale === 'en' ? 'Table view' : 'Affichage en liste'}
                 className={`p-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer ${
                   viewMode === 'list'
                     ? 'bg-emerald-500 text-zinc-950 shadow-sm'

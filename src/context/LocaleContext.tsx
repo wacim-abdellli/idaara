@@ -63,6 +63,7 @@ export function LocaleProvider({ children, initialLocale = 'fr' }: LocaleProvide
   useEffect(() => {
     const cookieLocale = readLocaleCookie();
     if (cookieLocale && cookieLocale !== locale) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect -- sync cookie locale if changed externally
       setLocaleState(cookieLocale);
       applyDomLocale(cookieLocale);
     } else {

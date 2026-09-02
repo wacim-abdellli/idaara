@@ -20,6 +20,20 @@ export interface SuarlRates {
   minimumBankCapitalTND: number; // 1,000 DT
 }
 
+export interface CivicStampRates {
+  cinStandardTND: number; // 3.000 DT
+  cinLostReplacementTND: number; // 25.000 DT
+  passportAdultTND: number; // 80.000 DT
+  passportStudentMinorTND: number; // 25.000 DT
+  bulletin3TotalTND: number; // 7.500 DT
+  bulletin3FiscalStampTND: number; // 3.000 DT
+  bulletin3PostageTND: number; // 4.500 DT
+  generalInvoiceStampTND: number; // 1.000 DT (Loi de Finances Art. 40)
+  baladiyaSignatureLegalizationTND: number; // 3.000 DT
+  baladiyaCertifiedCopyTND: number; // 3.000 DT
+  birthCertificateTND: number; // 0.500 DT
+}
+
 export const AUTO_ENTREPRENEUR_RATES: AutoEntrepreneurRates = {
   servicesTaxRate: 0.01,
   commerceTaxRate: 0.005,
@@ -32,4 +46,18 @@ export const AUTO_ENTREPRENEUR_RATES: AutoEntrepreneurRates = {
 export const SUARL_RATES: SuarlRates = {
   corporateTaxRate: 0.15,
   minimumBankCapitalTND: 1_000,
+};
+
+export const CIVIC_STAMP_RATES: CivicStampRates = {
+  cinStandardTND: 3.0,
+  cinLostReplacementTND: 25.0,
+  passportAdultTND: 80.0,
+  passportStudentMinorTND: 25.0,
+  bulletin3TotalTND: 7.5,
+  bulletin3FiscalStampTND: 3.0,
+  bulletin3PostageTND: 4.5,
+  generalInvoiceStampTND: 1.0,
+  baladiyaSignatureLegalizationTND: 3.0,
+  baladiyaCertifiedCopyTND: 3.0,
+  birthCertificateTND: 0.5,
 };

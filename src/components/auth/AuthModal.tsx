@@ -2,11 +2,10 @@
 
 import React, { useState, useEffect } from 'react';
 import { createPortal } from 'react-dom';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion } from 'framer-motion';
 import {
   X,
   Mail,
-  Sparkles,
   CheckCircle2,
   AlertCircle,
   Loader2,
@@ -15,7 +14,6 @@ import {
   LogOut,
   Copy,
   Check,
-  ExternalLink,
   Shield,
   Cloud,
 } from 'lucide-react';
@@ -36,18 +34,27 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose }) => {
   const [copied, setCopied] = useState(false);
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
   const [magicLinkSent, setMagicLinkSent] = useState(false);
-  const [mounted, setMounted] = useState(false);
+  // React 19 safe hydration mount guard without cascading renders
+  const mounted = React.useSyncExternalStore(
+    () => () => {},
+    () => true,
+    () => false
+  );
 
-  useEffect(() => {
-    setMounted(true);
-  }, []);
+  const handleClose = () => {
+    setLoading(false);
+    setSigningOut(false);
+    setErrorMsg(null);
+    setCopied(false);
+    onClose();
+  };
 
   // Lock scroll & handle Escape key
   useEffect(() => {
     if (!isOpen) return;
 
     const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') onClose();
+      if (e.key === 'Escape') handleClose();
     };
 
     document.addEventListener('keydown', handleKeyDown);
@@ -58,15 +65,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose }) => {
       document.removeEventListener('keydown', handleKeyDown);
       document.body.style.overflow = originalOverflow;
     };
-  }, [isOpen, onClose]);
-
-  useEffect(() => {
-    if (!isOpen) {
-      setLoading(false);
-      setSigningOut(false);
-      setErrorMsg(null);
-      setCopied(false);
-    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isOpen]);
 
   if (!isOpen || !mounted) return null;
@@ -107,7 +106,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose }) => {
     setSigningOut(true);
     try {
       await signOut();
-      onClose();
+      handleClose();
     } catch {
       setSigningOut(false);
     }
@@ -125,7 +124,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose }) => {
   const modalContent = (
     <div
       className="fixed inset-0 z-[9999] flex items-center justify-center p-4 sm:p-6 overflow-y-auto bg-black/75 backdrop-blur-md transition-all duration-200"
-      onClick={onClose}
+      onClick={handleClose}
       aria-modal="true"
       role="dialog"
     >
@@ -145,7 +144,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose }) => {
 
         {/* Close Button */}
         <button
-          onClick={onClose}
+          onClick={handleClose}
           className={`absolute top-4 ${
             isRtl ? 'left-4' : 'right-4'
           } p-1.5 text-zinc-400 hover:text-white rounded-lg hover:bg-zinc-900 border border-transparent hover:border-zinc-800 transition-colors cursor-pointer`}
@@ -174,7 +173,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose }) => {
                 )}
                 <span
                   className="absolute bottom-0 right-0 w-4 h-4 rounded-full bg-emerald-500 border-2 border-zinc-950 flex items-center justify-center text-zinc-950"
-                  title="Session active"
+                  title={locale === 'ar' ? 'جلسة نشطة' : locale === 'en' ? 'Active session' : 'Session active'}
                 >
                   <Check className="w-2.5 h-2.5 stroke-[3]" />
                 </span>
@@ -425,7 +424,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose }) => {
                     <input
                       type="email"
                       required
-                      placeholder="nom@exemple.tn"
+                      placeholder={locale === 'ar' ? 'name@example.tn' : 'nom@exemple.tn'}
                       value={email}
                       onChange={(e) => setEmail(e.target.value)}
                       className={`w-full ${

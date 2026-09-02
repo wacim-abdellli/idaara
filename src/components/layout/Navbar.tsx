@@ -267,7 +267,7 @@ export const Navbar: React.FC = () => {
                       // eslint-disable-next-line @next/next/no-img-element
                       <img
                         src={user.user_metadata.avatar_url || user.user_metadata.picture}
-                        alt="Avatar"
+                        alt={user.email || 'Avatar'}
                         className="w-5 h-5 rounded-full object-cover ring-1 ring-emerald-500/50"
                       />
                     ) : (
