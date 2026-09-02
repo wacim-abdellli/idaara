@@ -1,5 +1,15 @@
 import { describe, it, expect } from 'vitest';
-import { formatTND, isRTL, slugify } from '../lib/utils';
+import { formatTND, formatNumber, isRTL, slugify } from '../lib/utils';
+
+describe('formatNumber — space-separated thousands formatting', () => {
+  it('formats large numbers with spaces for deterministic SSR and hydration stability', () => {
+    expect(formatNumber(75000)).toBe('75 000');
+    expect(formatNumber(1000)).toBe('1 000');
+    expect(formatNumber(1250000)).toBe('1 250 000');
+    expect(formatNumber(500)).toBe('500');
+    expect(formatNumber(0)).toBe('0');
+  });
+});
 
 describe('formatTND — fee formatting and free cost handling', () => {
   it('formats zero or negative amounts as localized Free strings', () => {
