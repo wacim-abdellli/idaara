@@ -4,6 +4,29 @@ import { checkRateLimit, getClientIp } from '../../../lib/rate-limit';
 // Maximum audio file size: 25 MB
 const MAX_AUDIO_BYTES = 25 * 1024 * 1024;
 
+/**
+ * Validate audio binary header for accepted formats:
+ * WebM/MKV (1a45dfa3), Ogg (4f676753), MP3 (494433 / fffb / fffa), WAV (RIFF: 52494646), M4A/MP4 (ftyp: 66747970), FLAC (664c6143)
+ */
+export function isValidAudioMagicBytes(headerBytes: Uint8Array): boolean {
+  if (headerBytes.length < 4) return false;
+  const hex = Array.from(headerBytes.slice(0, 16))
+    .map((b) => b.toString(16).padStart(2, '0'))
+    .join('')
+    .toLowerCase();
+
+  return (
+    hex.startsWith('1a45dfa3') || // WebM / MKV
+    hex.startsWith('4f676753') || // OggS
+    hex.startsWith('494433') ||   // MP3 ID3
+    hex.startsWith('fffb') ||     // MP3 frame sync
+    hex.startsWith('fffa') ||     // MP3 frame sync
+    hex.startsWith('52494646') || // RIFF (WAV)
+    hex.startsWith('664c6143') || // FLAC ('fLaC')
+    hex.includes('66747970')      // MP4 / M4A (ftyp)
+  );
+}
+
 export async function POST(req: NextRequest) {
   try {
     // Rate limit check (max 30 transcription requests per minute per IP)
@@ -26,6 +49,15 @@ export async function POST(req: NextRequest) {
       return NextResponse.json(
         { error: 'Audio file too large. Maximum size is 25 MB.' },
         { status: 413 }
+      );
+    }
+
+    // ── Audio Magic Bytes Validation ──────────────────────────────────────────
+    const sliceBuf = await audioFile.slice(0, 16).arrayBuffer();
+    if (!isValidAudioMagicBytes(new Uint8Array(sliceBuf))) {
+      return NextResponse.json(
+        { error: 'Invalid audio format. Supported formats: WebM, OGG, MP3, WAV, M4A, FLAC.' },
+        { status: 415 }
       );
     }
 
@@ -58,17 +90,19 @@ export async function POST(req: NextRequest) {
 
     if (!groqRes.ok) {
       console.error('[Transcribe] Groq error:', groqRes.status);
-      return NextResponse.json({ error: 'Transcription failed. Please try again.' }, { status: groqRes.status });
+      return NextResponse.json(
+        { error: 'Audio transcription failed at upstream service.' },
+        { status: groqRes.status >= 500 ? 502 : groqRes.status }
+      );
     }
 
     const data = await groqRes.json();
-    return NextResponse.json({ success: true, text: data.text || '' });
+    return NextResponse.json({ text: data.text || '' });
   } catch (error: unknown) {
-    const isAbort = error instanceof Error && error.name === 'AbortError';
-    console.error('[Transcribe] Fatal:', error);
-    return NextResponse.json(
-      { error: isAbort ? 'Transcription timed out. Try a shorter recording.' : 'Internal transcription error.' },
-      { status: 500 }
-    );
+    if (error instanceof Error && error.name === 'AbortError') {
+      return NextResponse.json({ error: 'Audio processing timed out.' }, { status: 504 });
+    }
+    console.error('[Transcribe API] Error:', error);
+    return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
   }
 }
