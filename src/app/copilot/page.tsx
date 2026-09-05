@@ -104,41 +104,39 @@ export default function CopilotPage() {
       ]);
       setIsProcessing(false);
 
-      // Rapid progressive streaming (ChatGPT-like pacing)
-      const lines = fullText.split('\n');
+      // Silky Smooth Natural Typewriter (Claude-Grade Cadence)
+      const tokens = fullText.split(/(\s+)/);
       let currentText = '';
+      const baseDelay = tokens.length > 300 ? 10 : tokens.length > 150 ? 14 : 18;
 
-      for (let i = 0; i < lines.length; i++) {
-        const line = lines[i];
-        if (i > 0) currentText += '\n';
+      for (let i = 0; i < tokens.length; i++) {
+        const token = tokens[i];
+        currentText += token;
 
-        if (!line.trim()) {
+        if (token.trim().length > 0 || token.includes('\n')) {
           const snapshot = currentText;
           setMessages((prev) =>
             prev.map((m) => (m.id === aiMsgId ? { ...m, content: snapshot, isStreaming: true } : m))
           );
-          await new Promise((r) => setTimeout(r, 6));
-          continue;
-        }
 
-        const words = line.split(' ');
-        for (let j = 0; j < words.length; j += 2) {
-          const chunk = words.slice(j, j + 2).join(' ');
-          currentText += (j === 0 ? '' : ' ') + chunk;
-          const snapshot = currentText;
-          setMessages((prev) =>
-            prev.map((m) => (m.id === aiMsgId ? { ...m, content: snapshot, isStreaming: true } : m))
-          );
-          await new Promise((r) => setTimeout(r, 6));
-        }
+          if (messagesContainerRef.current) {
+            messagesContainerRef.current.scrollTop = messagesContainerRef.current.scrollHeight;
+          }
 
-        await new Promise((r) => setTimeout(r, 10));
+          const isPunctuation = /[.!?:;\n،؟]/.test(token);
+          const delay = isPunctuation ? baseDelay + 14 : baseDelay;
+          await new Promise((r) => setTimeout(r, delay));
+        }
       }
 
-      // Complete streaming
+      // Complete streaming cleanly
       setMessages((prev) =>
-        prev.map((m) => (m.id === aiMsgId ? { ...m, isStreaming: false } : m))
+        prev.map((m) => (m.id === aiMsgId ? { ...m, content: fullText, isStreaming: false } : m))
       );
+
+      if (messagesContainerRef.current) {
+        messagesContainerRef.current.scrollTop = messagesContainerRef.current.scrollHeight;
+      }
     } catch {
       setMessages((prev) => [
         ...prev,
@@ -203,13 +201,18 @@ export default function CopilotPage() {
     };
   }, []);
 
-  // Smooth scroll to bottom on new messages
+  // Adaptive scroll to bottom (direct stick-to-bottom during streaming, smooth on new turns)
   useEffect(() => {
     if (messagesContainerRef.current) {
-      messagesContainerRef.current.scrollTo({
-        top: messagesContainerRef.current.scrollHeight,
-        behavior: 'smooth',
-      });
+      const isStreaming = messages.some((m) => m.isStreaming);
+      if (isStreaming) {
+        messagesContainerRef.current.scrollTop = messagesContainerRef.current.scrollHeight;
+      } else {
+        messagesContainerRef.current.scrollTo({
+          top: messagesContainerRef.current.scrollHeight,
+          behavior: 'smooth',
+        });
+      }
     }
   }, [messages, isProcessing]);
 
@@ -390,44 +393,66 @@ export default function CopilotPage() {
                   <ChatMessage key={msg.id} message={msg} onSelectPrompt={(p) => handleSendMessage(p)} />
                 ))}
 
-                {/* Modern Ultra-Sleek AI Processing Indicator */}
+                {/* Claude-Grade Minimalist Thinking State */}
                 {isProcessing && (
-                  <div className="w-full py-3 space-y-2.5 animate-fade-in">
-                    <div className="flex items-center gap-2.5">
-                      <div className="relative flex items-center justify-center w-4 h-4 shrink-0">
-                        <span className="absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-40 animate-ping" />
-                        <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-400 shadow-[0_0_10px_rgba(52,211,153,0.9)]" />
+                  <div className="w-full py-3 space-y-3 animate-fade-in" dir={isRtl ? 'rtl' : 'ltr'}>
+                    {/* Assistant Identity Header */}
+                    <div className="flex items-center gap-2 select-none">
+                      <div className="w-5 h-5 rounded-md bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center text-emerald-400 shrink-0">
+                        <Sparkles className="w-3 h-3 animate-pulse" />
                       </div>
+                      <div className="flex items-center gap-1.5 text-xs">
+                        <span className="font-semibold text-zinc-200">Idaara AI</span>
+                        <span className="text-[10px] text-zinc-500 font-mono">· JORT {new Date().getFullYear()}</span>
+                      </div>
+                    </div>
 
-                      <span className="text-xs text-zinc-400 font-medium tracking-wide">
-                        {thinkMode
-                          ? locale === 'ar'
-                            ? 'جارِ التفكير والتحليل القانوني المعمق...'
+                    {/* Thinking status card */}
+                    {thinkMode ? (
+                      <div className="p-3 rounded-2xl bg-white/[0.02] border border-emerald-500/20 max-w-lg space-y-2">
+                        <div className="flex items-center justify-between text-xs text-emerald-300/90 font-medium">
+                          <div className="flex items-center gap-2">
+                            <span className="relative flex h-2 w-2">
+                              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75" />
+                              <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500" />
+                            </span>
+                            <span>
+                              {locale === 'ar'
+                                ? 'تحليل قانوني معمق في النصوص الرسمية...'
+                                : locale === 'derja'
+                                ? 'Ta7lil 9anouni mezyen fel JORT...'
+                                : locale === 'fr'
+                                ? 'Raisonnement juridique approfondi...'
+                                : 'Deep statutory reasoning...'}
+                            </span>
+                          </div>
+                          <span className="font-mono text-[10px] text-zinc-500">JORT & Codes</span>
+                        </div>
+
+                        <div className="space-y-1.5 pt-1">
+                          <div className="h-1.5 rounded-full bg-gradient-to-r from-emerald-500/30 via-emerald-400/50 to-emerald-500/20 w-3/4 animate-pulse" />
+                          <div className="h-1.5 rounded-full bg-white/[0.06] w-1/2 animate-pulse" style={{ animationDelay: '200ms' }} />
+                        </div>
+                      </div>
+                    ) : (
+                      <div className="flex items-center gap-3 py-1 text-zinc-400 text-xs sm:text-sm font-medium">
+                        <div className="flex items-center gap-1">
+                          <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-bounce" style={{ animationDelay: '0ms', animationDuration: '0.9s' }} />
+                          <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-bounce" style={{ animationDelay: '180ms', animationDuration: '0.9s' }} />
+                          <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-bounce" style={{ animationDelay: '360ms', animationDuration: '0.9s' }} />
+                        </div>
+
+                        <span className="bg-gradient-to-r from-zinc-300 via-zinc-100 to-zinc-400 bg-clip-text text-transparent font-medium animate-pulse">
+                          {locale === 'ar'
+                            ? 'جارِ إعداد الإجابة والتحقق من التنابر...'
                             : locale === 'derja'
-                            ? 'N5ammem w n7allel fel 9anoun...'
-                            : locale === 'en'
-                            ? 'Deep legal analysis...'
-                            : 'Analyse juridique approfondie...'
-                          : locale === 'ar'
-                          ? 'جارِ البحث والتحضير من المصادر الرسمية...'
-                          : locale === 'derja'
-                          ? 'Nlawwej w n7adher fel ijaba...'
-                          : locale === 'en'
-                          ? 'Official search & processing...'
-                          : 'Recherche et traitement officiel...'}
-                      </span>
-
-                      <div className="flex items-center gap-1">
-                        <span className="w-1.5 h-1.5 rounded-full bg-emerald-400/80 animate-pulse" style={{ animationDelay: '0ms' }} />
-                        <span className="w-1.5 h-1.5 rounded-full bg-emerald-400/80 animate-pulse" style={{ animationDelay: '200ms' }} />
-                        <span className="w-1.5 h-1.5 rounded-full bg-emerald-400/80 animate-pulse" style={{ animationDelay: '400ms' }} />
+                            ? 'N7adherlek fel ijaba w nthabbet...'
+                            : locale === 'fr'
+                            ? 'Recherche et préparation de la réponse...'
+                            : 'Formulating official response...'}
+                        </span>
                       </div>
-                    </div>
-
-                    <div className="space-y-1.5 pl-6 rtl:pl-0 rtl:pr-6 opacity-60">
-                      <div className="h-2 rounded-full bg-gradient-to-r from-white/[0.08] via-emerald-500/20 to-white/[0.04] w-3/5 animate-pulse" />
-                      <div className="h-2 rounded-full bg-gradient-to-r from-white/[0.06] via-white/[0.03] to-transparent w-2/5 animate-pulse" style={{ animationDelay: '150ms' }} />
-                    </div>
+                    )}
                   </div>
                 )}
               </div>

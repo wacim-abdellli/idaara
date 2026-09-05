@@ -12,6 +12,7 @@ import {
   MapPin,
   CheckCircle2,
   Stamp,
+  Sparkles,
 } from 'lucide-react';
 import { ChatMessage as ChatMessageType } from '../../types/chat';
 import { useLocale } from '../../context/LocaleContext';
@@ -206,7 +207,11 @@ function renderFormattedContent(text: string, locale: string = 'derja', isRTLOve
 
     // 2. Summary Card: 📌 **الخلاصة**...
     if (/^(?:###|##|#)?\s*📌/.test(line)) {
-      const summaryHeader = line.replace(/^(?:###|##|#)?\s*📌\s*:?\s*/, '').replace(/\*{2}/g, '').trim();
+      const summaryHeader = line
+        .replace(/^(?:###|##|#)?\s*📌\s*:?\s*/, '')
+        .replace(/^\*{1,2}[^*:]*(?:الخلاصة|Résumé|Summary)[^*:]*\*{1,2}\s*:?\s*/i, '')
+        .replace(/\*{2}/g, '')
+        .trim();
       i++;
       
       const summaryItems: string[] = [];
@@ -232,22 +237,22 @@ function renderFormattedContent(text: string, locale: string = 'derja', isRTLOve
       }
 
       const summaryLabel = isMessageRTL
-        ? 'الخلاصة الإدارية السريعة'
-        : (locale === 'fr' ? 'Résumé administratif rapide' : 'Quick Administrative Summary');
+        ? 'الخلاصة الإدارية'
+        : (locale === 'fr' ? 'Résumé administratif' : 'Administrative Summary');
 
       blocks.push(
         <div
           key={`summary-${i}`}
           dir={lineDir}
-          className={`my-3.5 p-4 rounded-2xl bg-gradient-to-br from-[#0e1613] to-[#0a0f0d] border border-emerald-500/30 shadow-md max-w-2xl ${lineAlign}`}
+          className={`my-3 p-3.5 sm:p-4 rounded-2xl bg-[#141619] border border-white/[0.08] shadow-sm max-w-2xl ${lineAlign}`}
         >
-          <div className="flex items-center gap-2 pb-2.5 mb-3 border-b border-emerald-500/20 text-xs font-bold text-emerald-400">
-            <span className="text-base">📌</span>
+          <div className="flex items-center gap-2 pb-2.5 mb-3 border-b border-white/[0.06] text-xs font-semibold text-emerald-400">
+            <span className="text-sm">📌</span>
             <span>{summaryLabel}</span>
           </div>
 
           {summaryItems.length > 0 ? (
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-2.5">
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-2">
               {summaryItems.map((item, sIdx) => {
                 const kvMatch = item.match(/^(\*{0,2}[^*:]+\*{0,2})\s*:\s*(.+)$/);
                 if (kvMatch) {
@@ -256,19 +261,19 @@ function renderFormattedContent(text: string, locale: string = 'derja', isRTLOve
                   return (
                     <div
                       key={sIdx}
-                      className="p-3 rounded-xl bg-white/[0.03] border border-white/[0.06] flex flex-col justify-between gap-1 hover:border-emerald-500/30 transition-colors"
+                      className="p-2.5 sm:p-3 rounded-xl bg-white/[0.02] border border-white/[0.05] hover:border-white/[0.1] transition-colors flex flex-col justify-between gap-1"
                     >
-                      <span className="text-[11px] font-semibold text-emerald-400/90 tracking-wide">{label}</span>
-                      <span className="text-xs sm:text-[13.5px] font-bold text-white leading-snug">{renderInlineStyles(val)}</span>
+                      <span className="text-[11px] font-medium text-zinc-400">{label}</span>
+                      <span className="text-xs sm:text-[13px] font-semibold text-zinc-100 leading-snug">{renderInlineStyles(val)}</span>
                     </div>
                   );
                 }
                 return (
                   <div
                     key={sIdx}
-                    className="p-3 rounded-xl bg-white/[0.03] border border-white/[0.06] flex flex-col gap-1"
+                    className="p-2.5 sm:p-3 rounded-xl bg-white/[0.02] border border-white/[0.05] flex flex-col gap-1"
                   >
-                    <div className="text-xs sm:text-[13px] text-zinc-200 leading-relaxed font-medium">
+                    <div className="text-xs sm:text-[13px] text-zinc-200 leading-relaxed">
                       {renderInlineStyles(item)}
                     </div>
                   </div>
@@ -289,8 +294,9 @@ function renderFormattedContent(text: string, locale: string = 'derja', isRTLOve
     if (/^(?:>|###|##|#)?\s*💡/.test(line) || /^>+\s*\*{0,2}💡/.test(line) || line.startsWith('💡')) {
       let tipBody = line
         .replace(/^(?:>|###|##|#)?\s*💡\s*:?\s*/, '')
-        .replace(/^\*{1,2}(?:نصيحة|ملاحظة|إرشاد|Conseil|Astuce|Tip)(?:\s*إدارة\.تونس|\s*Idaara(?:\.tn)?)?\*{1,2}\s*:?\s*/i, '')
-        .replace(/^(?:نصيحة|ملاحظة|إرشاد|Conseil|Astuce|Tip)(?:\s*إدارة\.تونس|\s*Idaara(?:\.tn)?)?\s*:?\s*/i, '')
+        .replace(/^>+\s*/, '')
+        .replace(/^\*{0,2}(?:نصيحة|ملاحظة|إرشاد|تنبيه|معلومة|Conseil|Astuce|Remarque|Tip|Note|Pro-?Tip)(?:\s+[^*:]+)?\*{0,2}\s*:?\s*/i, '')
+        .replace(/^(?:نصيحة|ملاحظة|إرشاد|تنبيه|Conseil|Astuce|Tip|Note)\s*[^:]*:\s*/i, '')
         .trim();
 
       i++;
@@ -299,11 +305,8 @@ function renderFormattedContent(text: string, locale: string = 'derja', isRTLOve
       while (i < rawLines.length) {
         const nextLine = rawLines[i].trim();
         if (!nextLine) {
-          if (!tipBody) {
-            i++;
-            continue;
-          }
-          break;
+          i++;
+          continue;
         }
         // Stop if next line is a new section or header
         if (
@@ -314,25 +317,32 @@ function renderFormattedContent(text: string, locale: string = 'derja', isRTLOve
         ) {
           break;
         }
-        tipBody += (tipBody ? ' ' : '') + nextLine.replace(/^>\s*/, '').trim();
+        const cleaned = nextLine
+          .replace(/^>\s*/, '')
+          .replace(/^\*{0,2}(?:نصيحة|ملاحظة|إرشاد|تنبيه|معلومة|Conseil|Astuce|Remarque|Tip|Note|Pro-?Tip)(?:\s+[^*:]+)?\*{0,2}\s*:?\s*/i, '')
+          .trim();
+        tipBody += (tipBody ? ' ' : '') + cleaned;
         i++;
       }
+
+      // Strip dangling ** markers from tipBody
+      tipBody = tipBody.replace(/^\*{1,2}/, '').replace(/\*{1,2}$/, '').trim();
 
       if (tipBody) {
         blocks.push(
           <div
             key={`tip-${i}`}
             dir={lineDir}
-            className={`my-3.5 p-4 rounded-2xl bg-amber-500/[0.08] border border-amber-500/25 border-s-4 border-s-amber-400 flex items-start gap-3 max-w-2xl shadow-sm ${lineAlign}`}
+            className={`my-3 p-3.5 sm:p-4 rounded-xl bg-white/[0.03] border border-amber-500/20 flex items-start gap-3 max-w-2xl ${lineAlign}`}
           >
-            <div className="w-8 h-8 rounded-xl bg-amber-500/20 flex items-center justify-center shrink-0 mt-0.5">
-              <Lightbulb className="w-4 h-4 text-amber-400" />
+            <div className="w-6 h-6 rounded-lg bg-amber-500/10 flex items-center justify-center shrink-0 mt-0.5 text-amber-400">
+              <Lightbulb className="w-3.5 h-3.5" />
             </div>
             <div className="flex-1 space-y-1">
-              <div className="text-xs font-bold text-amber-300">
+              <div className="text-xs font-semibold text-amber-300/90">
                 {isMessageRTL ? 'نصيحة عملية' : (locale === 'fr' ? 'Conseil pratique' : 'Pro Tip')}
               </div>
-              <div className="text-xs sm:text-[14px] leading-relaxed text-amber-100/90 font-normal">
+              <div className="text-xs sm:text-[14px] leading-relaxed text-zinc-300">
                 {renderInlineStyles(tipBody)}
               </div>
             </div>
@@ -443,10 +453,10 @@ export const ChatMessage: React.FC<ChatMessageProps> = ({ message }) => {
   };
 
   const copyTitleLabels: Record<string, string> = {
-    ar: 'نسخ الرسالة',
-    derja: 'Kopi el message',
-    fr: 'Copier le message',
-    en: 'Copy message',
+    ar: 'نسخ',
+    derja: 'Kopi',
+    fr: 'Copier',
+    en: 'Copy',
   };
 
   const isAssistant = message.sender === 'assistant';
@@ -466,13 +476,13 @@ export const ChatMessage: React.FC<ChatMessageProps> = ({ message }) => {
     }
   };
 
-  // ── USER MESSAGE BUBBLE ──
+  // ── USER MESSAGE BUBBLE (Claude Grade) ──
   if (!isAssistant) {
     return (
       <div className="w-full py-2 flex flex-col items-end group">
         <div
           dir={isArabicScript ? 'rtl' : 'ltr'}
-          className={`max-w-[85%] sm:max-w-[75%] px-4 py-2.5 rounded-3xl bg-[#26282e] hover:bg-[#2c2f36] border border-white/[0.04] text-white text-sm sm:text-[15px] leading-relaxed shadow-sm transition-colors ${
+          className={`max-w-[85%] sm:max-w-[75%] px-4 py-3 rounded-2xl bg-[#222429] hover:bg-[#272930] border border-white/[0.06] text-zinc-100 text-sm sm:text-[15px] leading-relaxed shadow-xs transition-colors ${
             isArabicScript ? 'text-right font-["Cairo",sans-serif]' : 'text-left'
           }`}
         >
@@ -500,25 +510,36 @@ export const ChatMessage: React.FC<ChatMessageProps> = ({ message }) => {
     );
   }
 
-  // ── ASSISTANT MESSAGE ──
+  // ── ASSISTANT MESSAGE (Claude Grade) ──
   return (
     <div
       dir={isArabicScript ? 'rtl' : 'ltr'}
-      className={`w-full py-3 space-y-3 group ${isArabicScript ? 'text-right' : 'text-left'}`}
+      className={`w-full py-3 space-y-2.5 group ${isArabicScript ? 'text-right' : 'text-left'}`}
     >
+      {/* Claude-style Minimalist Identity Header */}
+      <div className="flex items-center gap-2 pb-0.5 select-none">
+        <div className="w-5 h-5 rounded-md bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center text-emerald-400 shrink-0">
+          <Sparkles className="w-3 h-3" />
+        </div>
+        <div className="flex items-center gap-1.5 text-xs">
+          <span className="font-semibold text-zinc-200">Idaara AI</span>
+          <span className="text-[10px] text-zinc-500 font-mono">· JORT {new Date().getFullYear()}</span>
+        </div>
+      </div>
+
       <div
         style={{ unicodeBidi: 'plaintext' }}
-        className={`prose-chat text-zinc-100 ${isArabicScript ? 'font-["Cairo",sans-serif]' : ''}`}
+        className={`prose-chat text-zinc-200 ${isArabicScript ? 'font-["Cairo",sans-serif]' : ''}`}
       >
         {renderFormattedContent(message.content, locale, isArabicScript)}
         {message.isStreaming && (
-          <span className="inline-block w-1.5 h-4 bg-emerald-400/90 ms-1.5 rounded-xs animate-pulse align-middle" />
+          <span className="inline-block w-1.5 h-4 bg-emerald-400/90 ms-1 rounded-[1px] animate-pulse align-middle" />
         )}
       </div>
 
       {/* Timbre Breakdown Docket (if any) */}
       {!message.isStreaming && message.timbreBreakdown && (
-        <div className="mt-3 p-3.5 rounded-2xl bg-[#1a1a1d] border border-amber-500/25 space-y-2 max-w-lg shadow-lg animate-fade-in">
+        <div className="mt-3 p-3.5 rounded-2xl bg-[#141619] border border-amber-500/20 space-y-2 max-w-lg shadow-sm animate-fade-in">
           <div className="flex items-center justify-between font-bold text-amber-400 pb-1.5 border-b border-white/10 text-xs">
             <div className="flex items-center gap-1.5">
               <Stamp className="w-3.5 h-3.5 text-amber-400" />
@@ -559,7 +580,7 @@ export const ChatMessage: React.FC<ChatMessageProps> = ({ message }) => {
               <Link
                 key={idx}
                 href={action.payload}
-                className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-[#212121] hover:bg-white/10 border border-white/10 text-zinc-300 hover:text-emerald-300 text-xs font-semibold transition-all shadow-sm group"
+                className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-white/[0.04] hover:bg-white/[0.08] border border-white/[0.08] text-zinc-300 hover:text-emerald-300 text-xs font-semibold transition-all shadow-xs group"
               >
                 {action.type === 'pdf_form' && <FileText className="w-3.5 h-3.5 text-emerald-400" />}
                 {action.type === 'calculator_link' && <Calculator className="w-3.5 h-3.5 text-amber-400" />}
@@ -573,28 +594,31 @@ export const ChatMessage: React.FC<ChatMessageProps> = ({ message }) => {
         </div>
       )}
 
-      {/* ChatGPT-style Icon Toolbar (Timestamp + Copy) */}
+      {/* Claude-style Clean Action Toolbar */}
       {!message.isStreaming && message.content && (
-        <div className="flex items-center gap-2 pt-1 text-zinc-500 opacity-0 group-hover:opacity-100 transition-opacity animate-fade-in">
-          {message.timestamp && (
-            <span className="text-[11px] text-zinc-500 font-mono select-none">
-              {message.timestamp}
-            </span>
-          )}
+        <div className="flex items-center gap-1 pt-1.5 text-zinc-500 opacity-0 group-hover:opacity-100 transition-opacity animate-fade-in select-none">
           <button
             onClick={copyToClipboard}
-            className="p-1.5 rounded-lg hover:bg-white/10 text-zinc-500 hover:text-zinc-300 transition-colors cursor-pointer border-0 outline-none flex items-center gap-1 text-xs"
+            className="flex items-center gap-1 px-2 py-1 rounded-lg hover:bg-white/5 hover:text-zinc-300 text-zinc-500 text-xs transition-colors cursor-pointer border-0 outline-none"
             title={copyTitleLabels[locale] ?? 'Copy'}
           >
             {copied ? (
               <>
                 <Check className="w-3.5 h-3.5 text-emerald-400" />
-                <span className="text-emerald-400 text-[10px]">{copyLabels[locale] ?? 'Copied ✓'}</span>
+                <span className="text-emerald-400 text-[11px]">{copyLabels[locale] ?? 'Copied ✓'}</span>
               </>
             ) : (
-              <Copy className="w-3.5 h-3.5" />
+              <>
+                <Copy className="w-3.5 h-3.5" />
+                <span className="text-[11px]">{copyTitleLabels[locale] ?? 'Copy'}</span>
+              </>
             )}
           </button>
+          {message.timestamp && (
+            <span className="text-[10px] text-zinc-600 font-mono ms-2">
+              {message.timestamp}
+            </span>
+          )}
         </div>
       )}
     </div>

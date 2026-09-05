@@ -59,42 +59,9 @@ export function ChatInput({
 
   if (variant === 'dock') {
     return (
-      <footer className="p-3 sm:p-4 bg-[#090b0e]/95 backdrop-blur-xl border-t border-white/[0.08] shrink-0 z-20 pb-safe">
+      <footer className="p-3 sm:p-4 bg-gradient-to-t from-[#08090b] via-[#08090b]/95 to-transparent shrink-0 z-20 pb-safe">
         <div className="max-w-3xl mx-auto space-y-2">
-          <div className="flex items-center gap-2.5 bg-[#12141a] border border-white/[0.08] focus-within:border-emerald-500/50 rounded-2xl p-2 px-3 shadow-2xl transition-all">
-            {/* Plus Quick Topics */}
-            <div className="relative shrink-0 flex items-center gap-1">
-              <button
-                type="button"
-                onClick={onTogglePlusMenu}
-                className="p-2 rounded-xl hover:bg-white/10 text-zinc-400 hover:text-white transition-colors cursor-pointer border-0 outline-none"
-                title={getLocalized(tooltips.quickTopics, locale)}
-              >
-                <Plus className="w-4 h-4" />
-              </button>
-
-              {showPlusMenu && (
-                <div className="absolute bottom-full left-0 mb-3 w-72 rounded-2xl bg-[#161820] border border-white/10 shadow-2xl p-2 z-50 animate-fade-in space-y-1">
-                  <div className="px-3 py-1 text-[10px] uppercase font-bold tracking-wider text-zinc-400">
-                    {locale === 'ar' ? 'أسئلة شائعة' : locale === 'derja' ? 'As2ela ma3roufa' : locale === 'en' ? 'Popular Inquiries' : 'Questions populaires'}
-                  </div>
-                  {quickTopicsList.map((item, idx) => {
-                    const Icon = item.icon;
-                    return (
-                      <button
-                        key={idx}
-                        onClick={() => onSendMessage(item.q)}
-                        className="w-full flex items-center gap-2.5 px-3 py-2 rounded-xl text-left hover:bg-white/10 text-xs text-zinc-200 transition-colors cursor-pointer border-0 outline-none"
-                      >
-                        <Icon className="w-3.5 h-3.5 text-emerald-400 shrink-0" />
-                        <span className="truncate">{item.label}</span>
-                      </button>
-                    );
-                  })}
-                </div>
-              )}
-            </div>
-
+          <div className="rounded-3xl bg-[#141519] border border-white/[0.08] hover:border-white/[0.14] focus-within:border-white/[0.22] focus-within:ring-1 focus-within:ring-white/[0.08] shadow-2xl p-3 transition-all space-y-2">
             {/* Auto-growing Textarea */}
             <textarea
               ref={textareaRef}
@@ -104,47 +71,112 @@ export function ChatInput({
               onKeyDown={onKeyDown}
               placeholder={placeholder}
               disabled={isTranscribing}
-              className="flex-1 bg-transparent py-1 text-base text-zinc-100 placeholder-zinc-500 border-0 outline-none ring-0 focus:border-0 focus:outline-none focus:ring-0 focus-visible:border-0 focus-visible:outline-none focus-visible:ring-0 shadow-none resize-none max-h-36 leading-relaxed"
+              className="w-full bg-transparent px-1 py-1 text-base sm:text-[15px] text-zinc-100 placeholder-zinc-500 border-0 outline-none ring-0 resize-none max-h-36 leading-relaxed"
             />
 
-            {/* Mic & Send Buttons */}
-            <div className="flex items-center gap-1.5 pb-0.5 shrink-0">
-              <button
-                type="button"
-                onClick={onToggleVoice}
-                disabled={isTranscribing}
-                className={`p-2 rounded-xl transition-colors cursor-pointer border border-white/5 ${
-                  isRecording
-                    ? 'bg-red-600 text-white animate-pulse'
-                    : isTranscribing
-                    ? 'text-emerald-400 bg-emerald-950'
-                    : 'text-zinc-400 hover:text-white bg-white/[0.04] hover:bg-white/[0.08]'
-                }`}
-                title={getLocalized(tooltips.dictate, locale)}
-              >
-                {isTranscribing ? (
-                  <Loader2 className="w-4 h-4 animate-spin" />
-                ) : isRecording ? (
-                  <MicOff className="w-4 h-4" />
-                ) : (
-                  <Mic className="w-4 h-4 text-emerald-400" />
-                )}
-              </button>
+            {/* Bottom Actions Toolbar */}
+            <div className="flex items-center justify-between pt-1">
+              <div className="flex items-center gap-1.5">
+                {/* Plus Quick Topics */}
+                <div className="relative">
+                  <button
+                    type="button"
+                    onClick={onTogglePlusMenu}
+                    className="p-1.5 rounded-lg hover:bg-white/10 text-zinc-400 hover:text-zinc-200 transition-colors cursor-pointer border-0 outline-none"
+                    title={getLocalized(tooltips.quickTopics, locale)}
+                  >
+                    <Plus className="w-4 h-4" />
+                  </button>
 
-              <button
-                type="button"
-                onClick={() => onSendMessage()}
-                disabled={!inputVal.trim() || isProcessing || isTranscribing}
-                className="px-3.5 py-2 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-zinc-950 flex items-center justify-center transition-all disabled:opacity-20 disabled:cursor-not-allowed cursor-pointer shadow-md font-bold text-xs"
-                title={getLocalized(tooltips.send, locale)}
-              >
-                <ArrowUp className="w-4 h-4 stroke-[3]" />
-              </button>
+                  {showPlusMenu && (
+                    <div className="absolute bottom-full left-0 mb-3 w-72 rounded-2xl bg-[#18191f] border border-white/10 shadow-2xl p-2 z-50 animate-fade-in space-y-1">
+                      <div className="px-3 py-1 text-[10px] uppercase font-bold tracking-wider text-zinc-400">
+                        {locale === 'ar' ? 'أسئلة شائعة' : locale === 'derja' ? 'As2ela ma3roufa' : locale === 'en' ? 'Popular Inquiries' : 'Questions populaires'}
+                      </div>
+                      {quickTopicsList.map((item, idx) => {
+                        const Icon = item.icon;
+                        return (
+                          <button
+                            key={idx}
+                            onClick={() => onSendMessage(item.q)}
+                            className="w-full flex items-center gap-2.5 px-3 py-2 rounded-xl text-left hover:bg-white/10 text-xs text-zinc-200 transition-colors cursor-pointer border-0 outline-none"
+                          >
+                            <Icon className="w-3.5 h-3.5 text-emerald-400 shrink-0" />
+                            <span className="truncate">{item.label}</span>
+                          </button>
+                        );
+                      })}
+                    </div>
+                  )}
+                </div>
+
+                {/* Extended Thinking Mode Toggle Pill */}
+                <button
+                  type="button"
+                  onClick={onToggleThinkMode}
+                  className={`flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium transition-all cursor-pointer border ${
+                    thinkMode
+                      ? 'bg-emerald-500/15 text-emerald-300 border-emerald-500/30 shadow-xs'
+                      : 'text-zinc-400 hover:text-zinc-200 border-transparent hover:bg-white/5'
+                  }`}
+                  title={getLocalized(tooltips.thinkMode, locale)}
+                >
+                  <Brain className="w-3.5 h-3.5 text-emerald-400" />
+                  <span>
+                    {locale === 'ar'
+                      ? 'تحليل قانوني'
+                      : locale === 'derja'
+                      ? 'Ta7lil 9anouni'
+                      : locale === 'fr'
+                      ? 'Analyse poussée'
+                      : 'Think'}
+                  </span>
+                </button>
+              </div>
+
+              {/* Mic & Send Buttons */}
+              <div className="flex items-center gap-2">
+                <button
+                  type="button"
+                  onClick={onToggleVoice}
+                  disabled={isTranscribing}
+                  className={`p-2 rounded-full transition-colors cursor-pointer border border-transparent ${
+                    isRecording
+                      ? 'bg-red-600 text-white animate-pulse'
+                      : isTranscribing
+                      ? 'text-emerald-400 bg-emerald-950/80'
+                      : 'text-zinc-400 hover:text-zinc-200 hover:bg-white/5'
+                  }`}
+                  title={getLocalized(tooltips.dictate, locale)}
+                >
+                  {isTranscribing ? (
+                    <Loader2 className="w-4 h-4 animate-spin" />
+                  ) : isRecording ? (
+                    <MicOff className="w-4 h-4" />
+                  ) : (
+                    <Mic className="w-4 h-4" />
+                  )}
+                </button>
+
+                <button
+                  type="button"
+                  onClick={() => onSendMessage()}
+                  disabled={!inputVal.trim() || isProcessing || isTranscribing}
+                  className={`w-8 h-8 rounded-full flex items-center justify-center transition-all ${
+                    inputVal.trim() && !isProcessing && !isTranscribing
+                      ? 'bg-white hover:bg-zinc-200 text-zinc-950 cursor-pointer shadow-md'
+                      : 'bg-white/[0.08] text-zinc-500 cursor-not-allowed opacity-50'
+                  }`}
+                  title={getLocalized(tooltips.send, locale)}
+                >
+                  <ArrowUp className="w-4 h-4 stroke-[2.5]" />
+                </button>
+              </div>
             </div>
           </div>
 
           {/* Micro disclaimer */}
-          <p className="text-center text-[11px] text-zinc-600">
+          <p className="text-center text-[11px] text-zinc-500 pt-0.5">
             {locale === 'ar'
               ? 'Idaara AI يقدم معلومات إرشادية. يرجى التثبت من النصوص بالرائد الرسمي.'
               : locale === 'derja'
@@ -160,7 +192,7 @@ export function ChatInput({
 
   // Centered variant for empty canvas
   return (
-    <div className="w-full bg-[#12141a] border border-white/10 focus-within:border-emerald-500/50 rounded-2xl p-3 shadow-2xl transition-all space-y-3">
+    <div className="w-full rounded-3xl bg-[#141519] border border-white/[0.08] hover:border-white/[0.14] focus-within:border-white/[0.22] focus-within:ring-1 focus-within:ring-white/[0.08] p-3.5 shadow-2xl transition-all space-y-3">
       <textarea
         ref={textareaRef}
         rows={2}
@@ -169,7 +201,7 @@ export function ChatInput({
         onKeyDown={onKeyDown}
         placeholder={placeholder}
         disabled={isTranscribing}
-        className="w-full bg-transparent text-base text-zinc-100 placeholder-zinc-500 border-0 outline-none ring-0 focus:outline-none focus:ring-0 resize-none max-h-36 leading-relaxed"
+        className="w-full bg-transparent px-1 py-1 text-base sm:text-[15px] text-zinc-100 placeholder-zinc-500 border-0 outline-none ring-0 resize-none max-h-36 leading-relaxed"
       />
 
       <div className="flex items-center justify-between pt-1 border-t border-white/[0.05]">
@@ -177,19 +209,19 @@ export function ChatInput({
           <button
             type="button"
             onClick={onToggleThinkMode}
-            className={`flex items-center gap-1.5 px-3 py-2 rounded-xl text-xs font-medium transition-colors cursor-pointer border ${
+            className={`flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium transition-all cursor-pointer border ${
               thinkMode
-                ? 'bg-emerald-500/20 text-emerald-300 border-emerald-500/40 shadow-sm'
-                : 'text-zinc-400 hover:text-white border-transparent hover:bg-white/5'
+                ? 'bg-emerald-500/15 text-emerald-300 border-emerald-500/30 shadow-xs'
+                : 'text-zinc-400 hover:text-zinc-200 border-transparent hover:bg-white/5'
             }`}
             title={getLocalized(tooltips.thinkMode, locale)}
           >
             <Brain className="w-3.5 h-3.5 text-emerald-400" />
             <span>
               {locale === 'ar'
-                ? 'تفكير معمق'
+                ? 'تحليل قانوني'
                 : locale === 'derja'
-                ? 'Fakker mezyen'
+                ? 'Ta7lil 9anouni'
                 : locale === 'fr'
                 ? 'Analyse poussée'
                 : 'Think'}
@@ -197,17 +229,17 @@ export function ChatInput({
           </button>
         </div>
 
-        <div className="flex items-center gap-1.5">
+        <div className="flex items-center gap-2">
           <button
             type="button"
             onClick={onToggleVoice}
             disabled={isTranscribing}
-            className={`p-2 sm:p-2.5 rounded-xl transition-colors cursor-pointer ${
+            className={`p-2 rounded-full transition-colors cursor-pointer ${
               isRecording
                 ? 'bg-red-500 text-white animate-pulse'
                 : isTranscribing
                 ? 'text-emerald-400'
-                : 'text-zinc-400 hover:text-white hover:bg-white/10'
+                : 'text-zinc-400 hover:text-zinc-200 hover:bg-white/5'
             }`}
             title={getLocalized(tooltips.dictate, locale)}
           >
@@ -224,18 +256,13 @@ export function ChatInput({
             type="button"
             onClick={() => onSendMessage()}
             disabled={!inputVal.trim() || isProcessing || isTranscribing}
-            className="p-1.5 sm:px-3 sm:py-1.5 rounded-xl bg-white hover:bg-zinc-200 text-black text-xs font-semibold flex items-center gap-1 transition-all disabled:opacity-20 disabled:cursor-not-allowed cursor-pointer shadow-sm"
+            className={`w-8 h-8 rounded-full flex items-center justify-center transition-all ${
+              inputVal.trim() && !isProcessing && !isTranscribing
+                ? 'bg-white hover:bg-zinc-200 text-zinc-950 cursor-pointer shadow-md'
+                : 'bg-white/[0.08] text-zinc-500 cursor-not-allowed opacity-50'
+            }`}
           >
-            <span className="hidden sm:inline">
-              {locale === 'ar'
-                ? 'إرسال'
-                : locale === 'derja'
-                ? 'Eb3eth'
-                : locale === 'en'
-                ? 'Send'
-                : 'Envoyer'}
-            </span>
-            <ArrowUp className="w-3.5 h-3.5 stroke-[2.5]" />
+            <ArrowUp className="w-4 h-4 stroke-[2.5]" />
           </button>
         </div>
       </div>
