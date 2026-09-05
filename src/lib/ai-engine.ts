@@ -21,24 +21,30 @@ export interface ReasonerResponse {
 function resolveResponseLanguage(prompt: string, uiLocale: SupportedLanguage | string): 'ar' | 'derja' | 'fr' | 'en' {
   const q = prompt.toLowerCase().trim();
 
+  // If user explicitly asks for Derja or writes in Derja/Arabizi
+  if (
+    /(\b(derja|tounsi|tounsiya|darja|3arbi|kifech|kifeh|chnowa|chnia|bech|mte3|mta3|win|wa9tech|chkoune|lezem|7ab|a3tini|ahla|3aslema|salam|sahbi|khouya|flous|kar|karhba|chrit|chouf|aman|ntala3|tala3|y3aychek)\b)/i.test(q) ||
+    /speak (in )?derja|en derja|bel derja|بالدارجة/i.test(q)
+  ) {
+    return 'derja';
+  }
+
   // 1. Check for Arabic script
   if (/[\u0600-\u06FF]/.test(prompt)) {
-    return 'ar';
+    return 'derja';
   }
 
-  // 2. Check for explicit English queries
-  if (/^(how|what|where|can i|please|is it|how to|why|tell me)\b/i.test(q)) {
-    return 'en';
-  }
-
-  // 3. Check for explicit French queries
-  if (/^(comment|quels|quelles|combien|est-ce|bonjour|pourriez|je veux|faire|obtenir|renouveler)\b/i.test(q)) {
+  // 2. Check for explicit French queries (strictly French grammar and words)
+  if (/^(comment|quels|quelles|combien|est-ce|bonjour|pourriez|je veux|faire|obtenir|renouveler)\b/i.test(q) && uiLocale === 'fr') {
     return 'fr';
   }
 
-  // 4. Default to Tunisian Arabic Derja for all other prompts (including Arabizi, 'hi', 'salam', etc.)
-  if (uiLocale === 'en' && q.length > 8) return 'en';
-  if (uiLocale === 'fr' && q.length > 8 && !/(\b(kifech|chnowa|lezem|bech|mte3|3aslema|ahla|win)\b)/i.test(q)) return 'fr';
+  // 3. Check for explicit English queries (strictly English grammar and words)
+  if (/^(how|what|where|can i|please|is it|how to|why|tell me)\b/i.test(q) && uiLocale === 'en' && !/(\b(kifech|chnowa|mte3|bech|ntala3|kar)\b)/i.test(q)) {
+    return 'en';
+  }
+
+  // Universal Default: Authentic Tunisian Derja
   return 'derja';
 }
 
@@ -363,6 +369,62 @@ export function parseAndReason(prompt: string, locale: SupportedLanguage | strin
     };
   }
 
+  // ── 10b. BUS & PUBLIC TRANSPORT (اشتراك الكار والمترو / Transtu) ─────────────
+  if (
+    query.includes('transtu') ||
+    query.includes('sncft') ||
+    query.includes('metro') ||
+    query.includes('حافلة') ||
+    query.includes('مترو') ||
+    query.includes('تونسية للنقل') ||
+    /\b(car|bus|kar)\b/i.test(query) ||
+    (query.includes('abonnement') && (query.includes('car') || query.includes('bus') || query.includes('kar') || query.includes('na9l') || query.includes('transtu') || query.includes('transport') || query.includes('اشتراك')))
+  ) {
+    return {
+      content:
+        lang === 'fr'
+          ? "Pour faire un abonnement de bus/métro en Tunisie (Transtu ou Sociétés Régionales SRT) :\n\n1. **Abonnement Scolaire & Universitaire (Élèves & Étudiants)** :\n- Imprimer la fiche d'inscription depuis le site **www.transtu.tn** ou la retirer auprès de votre établissement scolaire/universitaire\n- Faire signer et tamponner la fiche par l'école ou la faculté\n- Fournir 2 photos d'identité récentes\n- Copie de la CIN (ou extrait de naissance pour les mineurs)\n- Payer le droit d'abonnement (tarif symbolique subventionné ~10 à 15 DT) via les bureaux de la Poste Tunisienne (La Poste)\n\n2. **Abonnement Ordinaire (Tout public)** :\n- Disponible dans les agences Transtu (Tunis Marine TGM, Place Barcelone, Bab Alioua, Passage)\n- Formules hebdomadaires, mensuelles ou annuelles selon les zones et lignes."
+          : lang === 'en'
+          ? "To get a bus or light rail (metro) subscription in Tunisia (Transtu or regional transport companies):\n\n1. **School & University Subscription (Students & Pupils)**:\n- Get and stamp the subscription application form from your school/university (or via **www.transtu.tn**)\n- 2 recent passport-size photos\n- Copy of National ID Card (CIN) or birth certificate for minors\n- Pay the subsidized student fee (~10 to 15 TND) at any Tunisian Post office\n\n2. **Regular Public Subscription**:\n- Available at central Transtu agency kiosks (Barcelona Square, Tunis Marine, Bab Alioua)\n- Options: Weekly, monthly, or annual across chosen zones and routes."
+          : "باش تطلع **اشتراك الكار (الحافلة) أو المترو** في تونس (شركة نقل تونس Transtu أو الشركات الجهوية للنقل SRT):\n\n### 🎓 1. الاشتراك المدرسي والجامعي (للتلاميذ والطلبة):\n- **المطبوعة الرسمية**: تسحب استمارة الاشتراك من معهدك/كليتك أو تطبعها من موقع **www.transtu.tn**\n- **التأشير**: يلزم تعمرها وتصححها إدارة المعهد أو الكلية مع طابع المؤسسة\n- **الوثائق اللازمة**:\n  1. **2 تصاور شمسية جدد**\n  2. **نسخة من بطاقة التعريف الوطنية (CIN)** (أو مضمون ولادة للتلاميذ)\n  3. **وصل خلاص معلوم الاشتراك** (معلوم مدعم رمزي بين 10 و 15 د.ت يتدفع في أقرب مكتب بريد Poste.tn)\n\n### 🚌 2. الاشتراك العادي (للعموم والموظفين):\n- تسحب وتجدد الاشتراك مباشرة من شبابيك وكالات Transtu (محطة ساحة برشلونة، تونس البحرية TGM، باب عليوة، سليمان كاهية، محطة الباساج)\n- متوفر بصيغة أسبوعية، شهرية أو سنوية حسب عدد الخطوط والمناطق.\n\n> 💡 **نصيحة**: تنجم تتبع وتدفع اشتراكك المدرسي والجامعي عن بُعد عبر الإنترنت وبطاقات الدفع الإلكتروني عبر بوابة Transtu والبريد التونسي لتفادي الصفوف والزحمة!",
+      actions: [
+        {
+          label: { derja: '🌐 موقع Transtu الرسمي', fr: 'Site Officiel Transtu', ar: 'موقع نقل تونس الرسمي', en: 'Transtu Official Portal' },
+          type: 'procedure_link',
+          payload: 'https://www.transtu.tn',
+        },
+        {
+          label: { derja: '📞 أرقام النجدة والإدارات', fr: 'Numéros d\'urgence', ar: 'أرقام الطوارئ', en: 'Emergency Hotlines' },
+          type: 'procedure_link',
+          payload: '/contacts',
+        },
+      ],
+    };
+  }
+
+  // ── 10c. USER ASKING FOR DERJA OR EXPRESSING ANGER / FRUSTRATION ──────────
+  if (
+    /speak (in )?derja|en derja|bel derja|احكي بالدارجة|تكلم دارجة|بالدارجة/i.test(query) ||
+    /^(wtf|fuck|shit|zab|3asba|ya weld|stfu|stupid|bhim)\b/i.test(query)
+  ) {
+    return {
+      content:
+        "عايشك ووسّع بالك! هاني معاك بالدارجة التونسية المريقلة 100% 🇹🇳.\n\nأنا **Idaara AI**، خبيرك في كل ما يخص الإدارة والأوراق والبيروقراطية التونسية:\n- 🪪 **بطاقة التعريف وباسبور** (الأوراق، التنابر 80 DT / 25 DT، الآجال)\n- 🚌 **اشتراك الكار والمترو (Transtu)** والنقل المدرسي والجامعي\n- 🚗 **البطاقة الرمادية وشهادة الفحص الفني (ATTT)**\n- 📋 **بطاقة السوابق العدلية B3** (عبر b3.interieur.gov.tn)\n- 💼 **المبادر الذاتي والباتيندة 1%** وفواتير التصدير\n- 🏠 **عقود الكراء والتوكيلات** وقوانين البلدية والقباضة\n\nشنوة الإجراء أو الورقة اللي تحب تسأل عليها وتوا نفسرهالك مريقلة خطوة بخطوة؟",
+      actions: [
+        {
+          label: { derja: '📋 جميع الإجراءات', fr: 'Toutes les démarches', ar: 'جميع الإجراءات', en: 'All Procedures' },
+          type: 'procedure_link',
+          payload: '/procedures',
+        },
+        {
+          label: { derja: '🧮 حاسبة التنابر', fr: 'Calculateur de Timbres', ar: 'حاسبة التنابر', en: 'Stamp Calculator' },
+          type: 'calculator_link',
+          payload: '/calculator',
+        },
+      ],
+    };
+  }
+
   // ── 11. GREETINGS (عسلامة / مرحبا / HI) ──────────────────────────────────
   if (
     query === 'hi' ||
@@ -464,15 +526,26 @@ export function parseAndReason(prompt: string, locale: SupportedLanguage | strin
     };
   }
 
-  // ── 12. DYNAMIC PROCEDURE MATCHING ─────────────────────────────────────────
-  const matchedProcedure = proceduresData.find((p) => {
+  // ── 12. DYNAMIC PROCEDURE MATCHING (Strict Non-Polluted Keyword Matching) ───
+  const STOP_WORDS = new Set([
+    'car', 'bus', 'kar', 'mte3', 'mta3', 'kifech', 'kifeh', 'bech', 'chnowa', 'chnia',
+    'win', 'wa9tech', 'chkoune', 'lezem', 'fi', 'men', 'ala', 'dossier', 'papier',
+    'awra9', 'war9a', 'timbres', 'timbre', 'abonnement', 'how', 'what', 'the', 'and',
+    'pour', 'avec', 'dans', 'sur', 'des', 'les', 'une', 'un', 'من', 'في', 'على', 'إلى', 'كيفاش', 'شنوة',
+    'speak', 'derja', 'arabic', 'english', 'french', 'tunisia', 'tounes'
+  ]);
+
+  const meaningfulWords = query
+    .split(/[\s,()]+/)
+    .map((w) => w.trim().toLowerCase())
+    .filter((w) => w.length >= 4 && !STOP_WORDS.has(w));
+
+  const matchedProcedure = meaningfulWords.length > 0 ? proceduresData.find((p) => {
     const title = getLocalized(p.title, 'fr').toLowerCase();
     const titleAr = getLocalized(p.title, 'ar').toLowerCase();
-    const tags = p.tags.map((t) => t.toLowerCase());
-    return (
-      query.split(' ').some((word) => word.length > 2 && (title.includes(word) || titleAr.includes(word) || tags.includes(word)))
-    );
-  });
+    const slug = p.slug.toLowerCase();
+    return meaningfulWords.some((w) => title.includes(w) || titleAr.includes(w) || slug.includes(w));
+  }) : undefined;
 
   if (matchedProcedure) {
     const isArabicOrDerja = lang === 'ar' || lang === 'derja';
@@ -595,10 +668,10 @@ export function parseAndReason(prompt: string, locale: SupportedLanguage | strin
   return {
     content:
       lang === 'fr'
-        ? "Merci pour votre question. Vous pouvez me poser toutes vos questions en Derja, Français ou Arabe sur les démarches administratives, concours publics ou timbres fiscaux (ex: renouvellement de passeport, carte grise, bulletin N°3, concours STEG, contrat de bail, ou statut auto-entrepreneur)."
+        ? "Merci pour votre question ! Je suis à votre disposition en Derja, Français ou Arabe pour toutes vos démarches administratives, concours publics et timbres fiscaux en Tunisie (passeport, carte grise, B3, concours STEG, contrats, etc.). Quelle démarche souhaitez-vous accomplir ?"
         : lang === 'en'
-        ? "Thank you for your question. You can ask me in Derja, Arabic, or English about any Tunisian administrative procedure, public exam, or fiscal stamp (e.g. Passport renewal, Vehicle registration, B3 record, STEG concours, Lease contracts, or 1% Auto-Entrepreneur tax)."
-        : "شكراً على سؤالك. تنجم تسألني بالدارجة التونسية على أي وثيقة إدارية، إجراء رسمي، أو مناظرة عمومية (مثل: تجديد جواز السفر، البطاقة الرمادية، بطاقة عدد 3، مناظرة STEG، عقود الكراء، المبادر الذاتي، أو حساب التنابر والمعاليم).",
+        ? "Thank you for reaching out! You can ask me in Derja, Arabic, or English about any Tunisian administrative procedure, contest, or fiscal stamp (e.g. Passport, Vehicle registration, B3, concours, lease contracts). What procedure can I help you with?"
+        : "عسلامة! مرحباً بك في **Idaara.tn** 🇹🇳.\n\nتنجم تسألني بالدارجة التونسية المريقلة على أي ورقة، إجراء إداري، أو مناظرة عمومية في تونس:\n- 🪪 **الأوراق والوثائق**: باسبور، بطاقة تعريف (CIN)، بطاقة عدد 3، اشتراك الكار والمترو (Transtu)\n- 🚗 **السيارات ورخص السياقة**: البطاقة الرمادية، الفحص الفني، البيرمي (ATTT)\n- 💼 **المبادر الذاتي والشركات**: خلاص الأداء 1%، فواتير التصدير، الضمان الاجتماعي (CNSS)\n- 🏛️ **البلدية والقباضة**: التنابر الجبائية، عقود الكراء، التعريف بالإمضاء\n- 🏆 **المناظرات العمومية**: الكاباس، STEG، SONEDE...\n\nشنوة الإجراء اللي تحب تعرف أوراقه وشروطه؟",
     actions: [
       {
         label: { derja: '💼 رادار المناظرات', fr: 'Radar des Concours', ar: 'رادار المناظرات', en: 'Concours Radar' },

@@ -73,4 +73,25 @@ describe('ai-engine — language detection & Arabic Derja enforcement', () => {
     const firstActionDerja = result.actions![0].label.derja;
     expect(/[\u0600-\u06FF]/.test(firstActionDerja), 'Action label for derja should be in Arabic script').toBe(true);
   });
+
+  it('correctly handles bus/transport queries and never hallucinates SONEDE water meter', () => {
+    const result = parseAndReason('kifech ntala3 abonnement mte3 car(bus)', 'en');
+    expect(result.content.toLowerCase()).not.toContain('sonede');
+    expect(result.content.toLowerCase()).not.toContain('water meter');
+    expect(result.content).toContain('اشتراك');
+    expect(/[\u0600-\u06FF]/.test(result.content)).toBe(true);
+    expect(result.content).toContain('Transtu');
+  });
+
+  it('responds in Arabic script Derja when user demands Derja ("wtf speak in derja") even with English UI', () => {
+    const result = parseAndReason('wtf speak in derja', 'en');
+    expect(/[\u0600-\u06FF]/.test(result.content)).toBe(true);
+    expect(result.content).toContain('بالدارجة التونسية');
+  });
+
+  it('politely handles user frustration and curses in pure Tunisian Derja', () => {
+    const result = parseAndReason('fuck u', 'en');
+    expect(/[\u0600-\u06FF]/.test(result.content)).toBe(true);
+    expect(result.content).toContain('وسّع بالك');
+  });
 });

@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { GoogleGenerativeAI } from '@google/generative-ai';
 import { parseAndReason } from '../../../lib/ai-engine';
 import { proceduresData } from '../../../data/procedures';
 import { queryCivicKnowledge } from '../../../lib/tunisian-civic-knowledge';
@@ -6,6 +7,10 @@ import { buildConcoursGroundingPrompt } from '../../../lib/concours-knowledge';
 import { buildLiveGroundingFeed } from '../../../lib/live-civic-fetcher';
 import { getLocalized } from '../../../lib/locale-utils';
 import { checkRateLimit, getClientIp } from '../../../lib/rate-limit';
+
+function getGeminiKey(): string {
+  return (process.env.GEMINI_API_KEY || '').trim();
+}
 
 function getGroqKey(): string {
   return (process.env.GROQ_API_KEY || '').trim();
@@ -112,6 +117,17 @@ const DEEP_CIVIC_KNOWLEDGE = `
 - Authority: Ministère de l'Enseignement Supérieur (MESRS)
 - Portal: www.mesrs.tn | Cost: 20 DT frais de dossier | Delay: 60 à 90 jours
 - Required: Diplôme original avec apostille/visa consulaire, relevés de notes complets de toutes les années, copie Bac, traduction assermentée.
+
+[TRANSTU & TRANSPORT — اشتراك الكار والمترو والنقل العمومي بتونس]
+- Authority: شركة نقل تونس (Transtu — transtu.tn) / مكاتب البريد التونسي / الشركات الجهوية للنقل (SRT)
+- 1. الاشتراك المدرسي والجامعي (Abonnement Scolaire / Universitaire):
+  * الفئة: لتلاميذ المدارس والمعاهد، طلبة الجامعات والمتربصين بمراكز التكوين المهني.
+  * التسجيل: مطبوعة تسحب من المعهد/الكلية أو يتم تعميرها عبر الموقع الرسمي www.transtu.tn ومصادقة المؤسسة التعليمية عليها بالختم الرسمي.
+  * الوثائق المطلوبة: استمارة الاشتراك ممضاة ومختومة من المعهد/الكلية، 2 صور شمسية حديثة بخلفية بيضاء، نسخة من بطاقة التعريف الوطنية CIN (أو مضمون ولادة للتلاميذ القصر)، وصل خلاص معلوم الاشتراك من البريد التونسي (أو الدفع الإلكتروني عبر البوابة).
+  * المعلوم: مدعم ورمزي يتراوح بين 10 و 15 د.ت للخط الحضري الواحد وشبكة المترو.
+- 2. الاشتراك العادي للعموم (Abonnement Ordinaire):
+  * يسحب مباشرة من شبابيك الوكالات التجارية لشركة نقل تونس (محطة تونس البحرية TGM، ساحة برشلونة، باب عليوة، محطة الباساج، محطة سليمان كاهية).
+  * الصيغ: أسبوعي، شهري أو سنوي لخطوط الحافلات وشبكة المترو الخفيف.
 `;
 
 function buildGroundingContext(query: string, locale: string): string {
@@ -297,6 +313,62 @@ export async function POST(req: NextRequest) {
 
     const completeSystemPrompt = `${IDAARA_MASTER_SYSTEM_PROMPT}\n${languageDirective}\n${temporalDirective}${thinkDirective}\n${liveFeed}\n\n${groundingContext}`;
 
+    // ─── TIER 1: Google Gemini 2.5 Flash (Master of Tunisian Derja & Civic Knowledge) ───
+    const geminiKey = getGeminiKey();
+    if (geminiKey) {
+      try {
+        const genAI = new GoogleGenerativeAI(geminiKey);
+        const model = genAI.getGenerativeModel({
+          model: 'gemini-2.5-flash',
+          systemInstruction: completeSystemPrompt,
+          generationConfig: {
+            temperature: think ? 0.1 : 0.25,
+            maxOutputTokens: think ? 1600 : 1200,
+            topP: 0.95,
+          },
+        });
+
+        // Format history for Gemini chat (alternating user/model)
+        const geminiHistory: Array<{ role: 'user' | 'model'; parts: Array<{ text: string }> }> = [];
+        for (const m of safeHistory) {
+          geminiHistory.push({
+            role: m.role === 'user' ? 'user' : 'model',
+            parts: [{ text: m.content }],
+          });
+        }
+
+        const chat = model.startChat({
+          history: geminiHistory,
+        });
+
+        const geminiPromise = chat.sendMessage(prompt);
+        const timeoutPromise = new Promise<never>((_, reject) =>
+          setTimeout(() => reject(new Error('Gemini request timed out')), 12000)
+        );
+
+        const geminiRes = await Promise.race([geminiPromise, timeoutPromise]);
+        let reply = geminiRes.response.text();
+
+        if (reply && reply.trim()) {
+          reply = reply.replace(/<think>[\s\S]*?(?:<\/think>|$)/gi, '').trim();
+          reply = reply.replace(/^(?:Here's a thinking process|Analyze User Input|Check Constraints)[\s\S]*?\n\n/i, '').trim();
+          if (reply.length > 5) {
+            return NextResponse.json({
+              success: true,
+              result: {
+                content: reply,
+                source: 'idaara-gemini-ai',
+                providerName: 'Idaara AI',
+              },
+            });
+          }
+        }
+      } catch (geminiErr) {
+        console.warn('[Copilot Route] Gemini call failed, falling back to Groq:', geminiErr);
+      }
+    }
+
+    // ─── TIER 2: Groq Multi-Model Cascade ───
     const apiKey = getGroqKey();
 
     const chatMessages = [
@@ -308,11 +380,11 @@ export async function POST(req: NextRequest) {
       { role: 'user', content: prompt },
     ];
 
-    // ─── PRIMARY ENGINE: Multi-Model Groq Cascade ───
     if (apiKey) {
       const groqModels = [
-        'llama-3.3-70b-versatile',
-        'llama-3.1-8b-instant',
+        'openai/gpt-oss-120b',
+        'qwen/qwen3.8-27b',
+        'groq/compound',
       ];
       for (const model of groqModels) {
         try {
