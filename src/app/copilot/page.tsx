@@ -6,17 +6,16 @@ import { useLocale } from '../../context/LocaleContext';
 import { useAuth } from '../../context/AuthContext';
 import { ChatMessage } from '../../components/copilot/ChatMessage';
 import { ChatMessage as ChatMessageType } from '../../types/chat';
-import { PanelLeft, RotateCcw, Sparkles, Search, User as UserIcon } from 'lucide-react';
+import { PanelLeft, RotateCcw, Share2, ChevronDown, User as UserIcon } from 'lucide-react';
 
 import { useCopilotSessions, ChatSession } from '../../hooks/useCopilotSessions';
 import { useCopilotVoice } from '../../hooks/useCopilotVoice';
 import { SessionSidebar } from '../../components/copilot/SessionSidebar';
-import { QuickTopics } from '../../components/copilot/QuickTopics';
 import { ChatInput } from '../../components/copilot/ChatInput';
 import { DeleteSessionModal } from '../../components/copilot/DeleteSessionModal';
-import { BrandIcon } from '../../components/layout/BrandLogo';
 import { LanguageSwitcher } from '../../components/layout/LanguageSwitcher';
 import { AuthModal } from '../../components/auth/AuthModal';
+import { ClaudeStarburst } from '../../components/copilot/ClaudeStarburst';
 
 export default function CopilotPage() {
   const { locale, isRtl } = useLocale();
@@ -28,6 +27,7 @@ export default function CopilotPage() {
   const [sidebarOpen, setSidebarOpen] = useState<boolean>(false);
   const [thinkMode, setThinkMode] = useState<boolean>(false);
   const [authModalOpen, setAuthModalOpen] = useState<boolean>(false);
+  const [shareCopied, setShareCopied] = useState<boolean>(false);
 
   const messagesContainerRef = useRef<HTMLDivElement | null>(null);
   const textareaRef = useRef<HTMLTextAreaElement | null>(null);
@@ -228,7 +228,7 @@ export default function CopilotPage() {
     return () => window.removeEventListener('keydown', handleGlobalKeyDown);
   }, [handleNewChat]);
 
-  // Adaptive scroll to bottom (direct stick-to-bottom during streaming, smooth on new turns)
+  // Adaptive scroll to bottom
   useEffect(() => {
     if (messagesContainerRef.current) {
       const isStreaming = messages.some((m) => m.isStreaming);
@@ -256,47 +256,46 @@ export default function CopilotPage() {
     }
   };
 
-  const centerHeadline =
-    locale === 'ar'
-      ? 'شنوة تحب تقضي ولا تستفسر اليوم في تونس؟'
-      : locale === 'derja'
-      ? 'Chnowa thabb ta3ref lyoum fi Tounes?'
-      : locale === 'fr'
-      ? 'Comment puis-je vous aider dans vos démarches ?'
-      : 'What Tunisian procedure do you need help with?';
+  const handleShare = async () => {
+    try {
+      if (typeof window !== 'undefined') {
+        await navigator.clipboard.writeText(window.location.href);
+        setShareCopied(true);
+        setTimeout(() => setShareCopied(false), 2000);
+      }
+    } catch {
+      // noop
+    }
+  };
 
-  const centerSubtitle =
-    locale === 'ar'
-      ? 'دليلك الرسمي للإجراءات، التنابر والمناظرات الوطنية في تونس.'
-      : locale === 'derja'
-      ? 'Dalilek el rasmi lel awra9, el timbres wel concourat fi Tounes.'
-      : locale === 'fr'
-      ? 'Votre guide officiel pour les démarches, timbres et concours en Tunisie.'
-      : 'Your official guide for procedures, fiscal stamps, and public exams in Tunisia.';
+  // User display name from metadata or email (e.g. "wacim" in Image 3)
+  const displayName = user?.user_metadata?.full_name || user?.email?.split('@')[0] || '';
 
-  const placeholder = isRecording
+  // Claude-style Warm Serif Greeting (Image 3)
+  const greetingHeadline = displayName
     ? locale === 'ar'
-      ? 'جارٍ الاستماع... تفضل بالتحدث'
+      ? `شنوة تحب تقضي اليوم، ${displayName}؟`
       : locale === 'derja'
-      ? '9a3ed nesma3 fik... Tkellem tawa'
-      : 'Listening... Speak now'
-    : isTranscribing
-    ? locale === 'ar'
-      ? 'جارٍ معالجة الصوت...'
-      : locale === 'derja'
-      ? '9a3ed ntarjem...'
-      : 'Transcribing voice...'
+      ? `Chnowa 7achtek lyoum, ${displayName}?`
+      : locale === 'fr'
+      ? `Que préparons-nous aujourd'hui, ${displayName} ?`
+      : `What's cooking, ${displayName}?`
     : locale === 'ar'
-    ? 'اسأل عن أي إجراء، وثيقة، أو معلوم جبائي...'
+    ? 'كيف يمكنني مساعدتك اليوم في تونس؟'
     : locale === 'derja'
-    ? 'Es\'el 3la ay war9a, procédure, walla timbre...'
+    ? 'Chnowa thabb ta3ref lyoum fi Tounes?'
     : locale === 'fr'
-    ? 'Posez votre question sur une démarche, un timbre...'
-    : 'Ask about any Tunisian procedure, document, or stamp fee...';
+    ? "Comment puis-je vous aider aujourd'hui ?"
+    : 'How can I help you today?';
+
+  const activeSession = sessions.find((s) => s.id === currentSessionId);
+  const activeChatTitle =
+    activeSession?.title ||
+    (messages[0]?.content ? messages[0].content.slice(0, 34) : 'Discussion');
 
   return (
-    <div className="fixed inset-0 z-30 flex bg-[#090a0d] text-zinc-100 overflow-hidden font-sans">
-      {/* ─── Modular Session Sidebar ─── */}
+    <div className="fixed inset-0 z-30 flex bg-[#1b1b1e] text-[#f4f4f5] overflow-hidden font-sans">
+      {/* ─── Modular Claude-Grade Sidebar ─── */}
       <SessionSidebar
         isOpen={sidebarOpen}
         locale={locale}
@@ -304,6 +303,7 @@ export default function CopilotPage() {
         currentSessionId={currentSessionId}
         editingSessionId={editingSessionId}
         editingTitle={editingTitle}
+        userName={displayName || (locale === 'ar' ? 'مواطن' : 'Citizen')}
         onClose={() => setSidebarOpen(false)}
         onNewChat={() => {
           handleNewChat();
@@ -318,122 +318,97 @@ export default function CopilotPage() {
         onCancelRenaming={cancelRenaming}
         onEditingTitleChange={setEditingTitle}
         onPromptDeleteSession={promptDeleteSession}
+        onOpenAuthModal={() => setAuthModalOpen(true)}
       />
 
-      {/* ─── Main Canvas Area ─── */}
-      <div className="flex-1 flex flex-col bg-[#090a0d] relative overflow-hidden w-full min-w-0">
-        {/* Integrated Claude-Grade Top Header */}
-        <header className="shrink-0 h-14 px-3 sm:px-5 flex items-center justify-between border-b border-white/[0.06] bg-[#090a0d]/95 backdrop-blur-md z-20">
-          <div className="flex items-center gap-2 sm:gap-3">
-            <button
-              onClick={() => setSidebarOpen((prev) => !prev)}
-              className="p-2 rounded-xl hover:bg-white/[0.06] text-zinc-400 hover:text-zinc-100 transition-colors cursor-pointer border-0 outline-none flex items-center justify-center"
-              title={
-                sidebarOpen
-                  ? locale === 'ar'
-                    ? 'إغلاق القائمة'
-                    : locale === 'derja'
-                    ? 'A9el el menu'
-                    : locale === 'en'
-                    ? 'Close sidebar'
-                    : 'Fermer le menu'
-                  : locale === 'ar'
-                  ? 'فتح القائمة'
-                  : locale === 'derja'
-                  ? '7el el menu'
-                  : locale === 'en'
-                  ? 'Open sidebar'
-                  : 'Ouvrir le menu'
-              }
-              aria-label="Toggle sidebar"
-            >
-              <PanelLeft className="w-4 h-4" />
-            </button>
+      {/* ─── Main Canvas Area (#1b1b1e) ─── */}
+      <div className="flex-1 flex flex-col bg-[#1b1b1e] relative overflow-hidden w-full min-w-0">
+        {/* Top Header (Matching Image 2 & 3) */}
+        <header className="shrink-0 h-12 px-4 flex items-center justify-between border-b border-[#26262a] bg-[#1b1b1e]/95 backdrop-blur-md z-20">
+          <div className="flex items-center gap-3 min-w-0">
+            {!sidebarOpen && (
+              <button
+                onClick={() => setSidebarOpen(true)}
+                className="p-1 rounded-md text-zinc-400 hover:text-white hover:bg-[#26262a] transition-colors cursor-pointer border-0 outline-none flex items-center justify-center shrink-0"
+                title={locale === 'ar' ? 'فتح القائمة' : 'Open sidebar'}
+                aria-label="Open sidebar"
+              >
+                <PanelLeft className="w-4 h-4" />
+              </button>
+            )}
 
-            <Link
-              href="/"
-              className="flex items-center gap-2.5 group cursor-pointer"
-              title={locale === 'ar' ? 'الرجوع إلى الرئيسية' : 'Return to Idaara.tn home'}
-            >
-              <BrandIcon size={26} className="group-hover:scale-105 transition-transform" />
-              <span className="font-bold text-sm sm:text-base text-zinc-100 group-hover:text-white tracking-tight transition-colors">
-                Idaara <span className="text-emerald-400 font-semibold">AI</span>
-              </span>
-            </Link>
-
-            <div className="hidden sm:flex items-center gap-1.5 px-2 py-0.5 rounded-full bg-white/[0.04] border border-white/[0.08] text-[11px] font-mono text-zinc-400">
-              <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
-              <span>JORT {new Date().getFullYear()}</span>
-            </div>
+            {/* Active chat title with chevron (Image 2) */}
+            {messages.length > 0 && (
+              <div
+                onClick={() => activeSession && startRenaming({} as any, activeSession)}
+                className="flex items-center gap-1.5 min-w-0 cursor-pointer group hover:bg-[#26262a]/50 px-2 py-1 rounded-lg transition-colors"
+                title={locale === 'ar' ? 'إعادة تسمية' : 'Rename chat'}
+              >
+                <span className="font-medium text-xs sm:text-sm text-[#f4f4f5] truncate">
+                  {activeChatTitle}
+                </span>
+                <ChevronDown className="w-3.5 h-3.5 text-zinc-400 group-hover:text-zinc-200 shrink-0" />
+              </div>
+            )}
           </div>
 
-          <div className="flex items-center gap-1.5 sm:gap-2">
-            <button
-              onClick={() => {
-                if (typeof window !== 'undefined') {
-                  window.dispatchEvent(new CustomEvent('open-command-palette'));
-                }
-              }}
-              className="hidden md:flex items-center gap-2 px-2.5 py-1.5 rounded-xl bg-white/[0.04] hover:bg-white/[0.08] border border-white/[0.08] text-xs text-zinc-400 hover:text-zinc-200 transition-all cursor-pointer"
-              title={locale === 'ar' ? 'البحث السريع (⌘K)' : 'Quick Search (⌘K)'}
-            >
-              <Search className="w-3.5 h-3.5" />
-              <span className="text-[11px] font-medium hidden lg:inline">
-                {locale === 'ar' ? 'بحث' : locale === 'fr' ? 'Rechercher' : locale === 'derja' ? 'Lawwej' : 'Search'}
-              </span>
-              <kbd className="text-[10px] font-mono px-1 py-0.2 rounded bg-white/10 text-zinc-400">⌘K</kbd>
-            </button>
+          {/* Right Top Header Actions */}
+          <div className="flex items-center gap-2">
+            {messages.length === 0 ? (
+              <div className="hidden sm:flex items-center gap-1.5 text-xs text-zinc-400 me-2">
+                <span>Free plan ·</span>
+                <Link
+                  href="/launchpad"
+                  className="text-zinc-300 hover:text-white underline transition-colors"
+                >
+                  Upgrade
+                </Link>
+              </div>
+            ) : (
+              <>
+                <button
+                  onClick={handleShare}
+                  className="flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-[#242428] hover:bg-[#2c2c32] text-zinc-300 hover:text-white text-xs font-medium border border-[#36363e] transition-colors cursor-pointer"
+                >
+                  <Share2 className="w-3.5 h-3.5" />
+                  <span className="hidden sm:inline">{shareCopied ? 'Copied ✓' : 'Share'}</span>
+                </button>
+
+                <button
+                  onClick={handleNewChat}
+                  className="flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-[#242428] hover:bg-[#2c2c32] text-zinc-300 hover:text-white text-xs font-medium border border-[#36363e] transition-colors cursor-pointer"
+                >
+                  <RotateCcw className="w-3.5 h-3.5 text-[#da7756]" />
+                  <span className="hidden sm:inline">{locale === 'ar' ? 'جديد' : 'New'}</span>
+                </button>
+              </>
+            )}
 
             <LanguageSwitcher />
 
             <button
               onClick={() => setAuthModalOpen(true)}
-              className="p-2 rounded-xl hover:bg-white/[0.06] text-zinc-400 hover:text-zinc-100 transition-colors cursor-pointer border-0 outline-none flex items-center justify-center"
-              title={user ? user.email || 'Citizen' : locale === 'ar' ? 'تسجيل الدخول' : 'Sign in'}
+              className="p-1 rounded-md text-zinc-400 hover:text-white hover:bg-[#26262a] transition-colors cursor-pointer border-0 outline-none flex items-center justify-center"
+              title={user ? user.email || 'Citizen' : 'Sign in'}
               aria-label="User Account"
             >
               <UserIcon className="w-4 h-4" />
             </button>
-
-            {messages.length > 0 && (
-              <button
-                onClick={handleNewChat}
-                className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-white/[0.06] hover:bg-white/[0.1] text-zinc-100 text-xs font-semibold transition-all cursor-pointer border border-white/10 shadow-xs"
-              >
-                <RotateCcw className="w-3.5 h-3.5 text-emerald-400" />
-                <span className="hidden sm:inline">
-                  {locale === 'ar' ? 'جديد' : locale === 'en' ? 'New' : locale === 'derja' ? 'Jdid' : 'Nouveau'}
-                </span>
-              </button>
-            )}
           </div>
         </header>
 
-        {/* Empty State: Pure Minimalist Canvas (Only when initialized & genuinely empty) */}
+        {/* Empty State: Exact Claude.ai Landing Page (Image 3) */}
         {isInitialized && messages.length === 0 && !isProcessing && (
-          <div className="flex-1 flex flex-col items-center justify-center px-4 sm:px-6 max-w-2xl lg:max-w-3xl mx-auto w-full py-6 overflow-y-auto">
-            <div className="text-center space-y-2.5 mb-6 animate-fade-in w-full">
-              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-xs font-medium mb-1">
-                <Sparkles className="w-3.5 h-3.5" />
-                <span>
-                  {locale === 'ar'
-                    ? 'المساعد الإداري الذكي · مرجع رسمي'
-                    : locale === 'derja'
-                    ? 'El Mosa3ed El Idari Edhki · JORT'
-                    : locale === 'en'
-                    ? 'Official Tunisian Civic AI'
-                    : 'Copilote Administratif Tunisien'}
-                </span>
-              </div>
-              <h1 className="text-2xl sm:text-4xl font-extrabold text-white tracking-tight">
-                {centerHeadline}
+          <div className="flex-1 flex flex-col items-center justify-center px-4 sm:px-6 max-w-2xl sm:max-w-3xl mx-auto w-full -mt-10 animate-fade-in">
+            {/* Terracotta Sunburst + Warm Serif Heading */}
+            <div className="flex items-center justify-center gap-3 mb-7 select-none text-center">
+              <ClaudeStarburst size={34} color="#da7756" />
+              <h1 className="font-serif italic text-3xl sm:text-4xl text-[#f4f4f5] tracking-tight font-normal">
+                {greetingHeadline}
               </h1>
-              <p className="text-xs sm:text-sm text-zinc-400 max-w-lg mx-auto leading-relaxed">
-                {centerSubtitle}
-              </p>
             </div>
 
-            {/* Centered Chat Input Box */}
+            {/* Floating Claude Chat Input Card */}
             <ChatInput
               locale={locale}
               inputVal={inputVal}
@@ -442,7 +417,15 @@ export default function CopilotPage() {
               isTranscribing={isTranscribing}
               thinkMode={thinkMode}
               showPlusMenu={showPlusMenu}
-              placeholder={placeholder}
+              placeholder={
+                locale === 'ar'
+                  ? 'كيف يمكنني مساعدتك اليوم؟'
+                  : locale === 'derja'
+                  ? 'Kifech n3awnek lyoum?'
+                  : locale === 'fr'
+                  ? "Comment puis-je vous aider aujourd'hui ?"
+                  : 'How can I help you today?'
+              }
               textareaRef={textareaRef}
               variant="centered"
               onInputChange={onTextareaChange}
@@ -453,117 +436,103 @@ export default function CopilotPage() {
               onTogglePlusMenu={() => setShowPlusMenu((p) => !p)}
             />
 
-            {/* Claude-Grade 2x2 Interactive Starter Cards */}
-            <QuickTopics locale={locale} isRtl={isRtl} onSelectPrompt={handleSendMessage} />
-          </div>
-        )}
-
-        {/* Quiet Loading Placeholder while restoring session state (0ms - 50ms) */}
-        {!isInitialized && !isProcessing && messages.length === 0 && (
-          <div className="flex-1 flex items-center justify-center">
-            <div className="flex items-center gap-2 text-zinc-600 text-xs select-none animate-fade-in">
-              <span className="w-1.5 h-1.5 rounded-full bg-emerald-500/60 animate-pulse" />
-              <span>Idaara AI</span>
+            {/* Clean Understated Prompt Chips */}
+            <div className="flex flex-wrap items-center justify-center gap-2 mt-4 text-xs text-zinc-400" dir={isRtl ? 'rtl' : 'ltr'}>
+              {[
+                {
+                  label: locale === 'ar' ? 'جواز السفر (80 د.ت)' : 'Passeport (80 DT)',
+                  q: 'Comment renouveler mon passeport tunisien (80 DT) ?',
+                },
+                {
+                  label: locale === 'ar' ? 'البطاقة الرمادية (145 د.ت)' : 'Carte Grise (145 DT)',
+                  q: 'Comment faire la mutation de carte grise en Tunisie (145 DT) ?',
+                },
+                {
+                  label: locale === 'ar' ? 'المبادر الذاتي 1%' : 'Auto-Entrepreneur 1%',
+                  q: 'Comment fonctionne le régime fiscal Auto-Entrepreneur 1% en Tunisie ?',
+                },
+                {
+                  label: locale === 'ar' ? 'عقد كراء سكني (3 د.ت)' : 'Contrat de Bail (3 DT)',
+                  q: 'Quelles sont les démarches pour un contrat de bail résidentiel conforme en Tunisie ?',
+                },
+              ].map((chip, idx) => (
+                <button
+                  key={idx}
+                  onClick={() => handleSendMessage(chip.q)}
+                  className="px-3 py-1 rounded-full bg-[#242428] hover:bg-[#2c2c32] hover:text-white border border-[#36363e] text-[11px] text-zinc-400 transition-colors cursor-pointer"
+                >
+                  {chip.label}
+                </button>
+              ))}
             </div>
           </div>
         )}
 
-        {/* Active Chat Messages Stream */}
+        {/* Quiet Loading Placeholder while restoring session state */}
+        {!isInitialized && !isProcessing && messages.length === 0 && (
+          <div className="flex-1 flex items-center justify-center">
+            <div className="flex items-center gap-2 text-zinc-400 text-xs select-none animate-fade-in">
+              <ClaudeStarburst size={16} spinning={true} color="#da7756" />
+              <span>Idaara</span>
+            </div>
+          </div>
+        )}
+
+        {/* Active Chat Messages Stream (Image 2) */}
         {(messages.length > 0 || isProcessing) && (
           <>
             <div
               ref={messagesContainerRef}
-              className="flex-1 overflow-y-auto px-3 sm:px-6 py-4 sm:py-6 pb-28 sm:pb-8 scroll-smooth"
+              className="flex-1 overflow-y-auto px-4 sm:px-6 py-6 pb-28 scroll-smooth"
             >
-              <div className="max-w-3xl mx-auto space-y-4">
+              <div className="max-w-3xl mx-auto space-y-6">
                 {messages.map((msg) => (
                   <ChatMessage key={msg.id} message={msg} onSelectPrompt={(p) => handleSendMessage(p)} />
                 ))}
 
-                {/* Claude-Grade Minimalist Thinking State */}
+                {/* Claude-style Rotating Starburst during thinking/generation (Image 2) */}
                 {isProcessing && (
-                  <div className="w-full py-3 space-y-3 animate-fade-in" dir={isRtl ? 'rtl' : 'ltr'}>
-                    {/* Assistant Identity Header */}
-                    <div className="flex items-center gap-2 select-none">
-                      <div className="w-5 h-5 rounded-md bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center text-emerald-400 shrink-0">
-                        <Sparkles className="w-3 h-3 animate-pulse" />
-                      </div>
-                      <div className="flex items-center gap-1.5 text-xs">
-                        <span className="font-semibold text-zinc-200">Idaara AI</span>
-                        <span className="text-[10px] text-zinc-500 font-mono">· JORT {new Date().getFullYear()}</span>
-                      </div>
-                    </div>
-
-                    {/* Thinking status card */}
-                    {thinkMode ? (
-                      <div className="p-3 rounded-2xl bg-white/[0.02] border border-emerald-500/20 max-w-lg space-y-2">
-                        <div className="flex items-center justify-between text-xs text-emerald-300/90 font-medium">
-                          <div className="flex items-center gap-2">
-                            <span className="relative flex h-2 w-2">
-                              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75" />
-                              <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500" />
-                            </span>
-                            <span>
-                              {locale === 'ar'
-                                ? 'تحليل قانوني معمق في النصوص الرسمية...'
-                                : locale === 'derja'
-                                ? 'Ta7lil 9anouni mezyen fel JORT...'
-                                : locale === 'fr'
-                                ? 'Raisonnement juridique approfondi...'
-                                : 'Deep statutory reasoning...'}
-                            </span>
-                          </div>
-                          <span className="font-mono text-[10px] text-zinc-500">JORT & Codes</span>
-                        </div>
-
-                        <div className="space-y-1.5 pt-1">
-                          <div className="h-1.5 rounded-full bg-gradient-to-r from-emerald-500/30 via-emerald-400/50 to-emerald-500/20 w-3/4 animate-pulse" />
-                          <div className="h-1.5 rounded-full bg-white/[0.06] w-1/2 animate-pulse" style={{ animationDelay: '200ms' }} />
-                        </div>
-                      </div>
-                    ) : (
-                      <div className="flex items-center gap-3 py-1 text-zinc-400 text-xs sm:text-sm font-medium">
-                        <div className="flex items-center gap-1">
-                          <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-bounce" style={{ animationDelay: '0ms', animationDuration: '0.9s' }} />
-                          <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-bounce" style={{ animationDelay: '180ms', animationDuration: '0.9s' }} />
-                          <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-bounce" style={{ animationDelay: '360ms', animationDuration: '0.9s' }} />
-                        </div>
-
-                        <span className="bg-gradient-to-r from-zinc-300 via-zinc-100 to-zinc-400 bg-clip-text text-transparent font-medium animate-pulse">
-                          {locale === 'ar'
-                            ? 'جارِ إعداد الإجابة والتحقق من التنابر...'
-                            : locale === 'derja'
-                            ? 'N7adherlek fel ijaba w nthabbet...'
-                            : locale === 'fr'
-                            ? 'Recherche et préparation de la réponse...'
-                            : 'Formulating official response...'}
-                        </span>
-                      </div>
-                    )}
+                  <div className="w-full py-2 flex items-center gap-3 animate-fade-in select-none">
+                    <ClaudeStarburst size={22} spinning={true} color="#da7756" />
+                    <span className="text-xs font-sans text-zinc-400 animate-pulse">
+                      {thinkMode
+                        ? (locale === 'ar' ? 'تفكير قانوني معمق في نصوص الرائد الرسمي...' : 'Deep statutory reasoning...')
+                        : (locale === 'ar' ? 'جارٍ إعداد الإجابة...' : 'Thinking...')}
+                    </span>
                   </div>
                 )}
               </div>
             </div>
 
-            {/* Sticky Bottom Dock Input (When chatting) */}
-            <ChatInput
-              locale={locale}
-              inputVal={inputVal}
-              isProcessing={isProcessing}
-              isRecording={isRecording}
-              isTranscribing={isTranscribing}
-              thinkMode={thinkMode}
-              showPlusMenu={showPlusMenu}
-              placeholder={placeholder}
-              textareaRef={textareaRef}
-              variant="dock"
-              onInputChange={onTextareaChange}
-              onKeyDown={onKeyDown}
-              onSendMessage={handleSendMessage}
-              onToggleVoice={toggleVoice}
-              onToggleThinkMode={() => setThinkMode((p) => !p)}
-              onTogglePlusMenu={() => setShowPlusMenu((p) => !p)}
-            />
+            {/* Floating Bottom Input Dock (Image 2) */}
+            <footer className="p-3 sm:p-4 bg-gradient-to-t from-[#1b1b1e] via-[#1b1b1e]/95 to-transparent shrink-0 z-20 pb-safe">
+              <ChatInput
+                locale={locale}
+                inputVal={inputVal}
+                isProcessing={isProcessing}
+                isRecording={isRecording}
+                isTranscribing={isTranscribing}
+                thinkMode={thinkMode}
+                showPlusMenu={showPlusMenu}
+                placeholder={
+                  locale === 'ar'
+                    ? 'اكتب رسالة...'
+                    : locale === 'derja'
+                    ? 'Ikteb msg...'
+                    : locale === 'fr'
+                    ? 'Écrivez un message...'
+                    : 'Write a message...'
+                }
+                textareaRef={textareaRef}
+                variant="dock"
+                onInputChange={onTextareaChange}
+                onKeyDown={onKeyDown}
+                onSendMessage={handleSendMessage}
+                onToggleVoice={toggleVoice}
+                onToggleThinkMode={() => setThinkMode((p) => !p)}
+                onTogglePlusMenu={() => setShowPlusMenu((p) => !p)}
+              />
+            </footer>
           </>
         )}
       </div>

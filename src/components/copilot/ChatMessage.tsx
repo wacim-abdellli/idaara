@@ -12,11 +12,14 @@ import {
   MapPin,
   CheckCircle2,
   Stamp,
-  Sparkles,
+  ThumbsUp,
+  ThumbsDown,
+  RotateCcw,
 } from 'lucide-react';
 import { ChatMessage as ChatMessageType } from '../../types/chat';
 import { useLocale } from '../../context/LocaleContext';
 import { getLocalized } from '../../lib/locale-utils';
+import { ClaudeStarburst } from './ClaudeStarburst';
 
 interface ChatMessageProps {
   message: ChatMessageType;
@@ -518,12 +521,10 @@ export const ChatMessage: React.FC<ChatMessageProps> = ({ message }) => {
     >
       {/* Claude-style Minimalist Identity Header */}
       <div className="flex items-center gap-2 pb-0.5 select-none">
-        <div className="w-5 h-5 rounded-md bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center text-emerald-400 shrink-0">
-          <Sparkles className="w-3 h-3" />
-        </div>
+        <ClaudeStarburst size={18} color="#da7756" />
         <div className="flex items-center gap-1.5 text-xs">
-          <span className="font-semibold text-zinc-200">Idaara AI</span>
-          <span className="text-[10px] text-zinc-500 font-mono">· JORT {new Date().getFullYear()}</span>
+          <span className="font-semibold text-[#f4f4f5]">Idaara</span>
+          <span className="text-[10px] text-zinc-400 font-mono">· JORT {new Date().getFullYear()}</span>
         </div>
       </div>
 
@@ -594,28 +595,39 @@ export const ChatMessage: React.FC<ChatMessageProps> = ({ message }) => {
         </div>
       )}
 
-      {/* Claude-style Clean Action Toolbar */}
+      {/* Claude-style Clean Action Toolbar matching Image 2 */}
       {!message.isStreaming && message.content && (
-        <div className="flex items-center gap-1 pt-1.5 text-zinc-500 opacity-0 group-hover:opacity-100 transition-opacity animate-fade-in select-none">
+        <div className="flex items-center gap-1.5 pt-1 text-zinc-400 opacity-0 group-hover:opacity-100 transition-opacity animate-fade-in select-none">
           <button
             onClick={copyToClipboard}
-            className="flex items-center gap-1 px-2 py-1 rounded-lg hover:bg-white/5 hover:text-zinc-300 text-zinc-500 text-xs transition-colors cursor-pointer border-0 outline-none"
+            className="p-1.5 rounded-md hover:bg-white/5 hover:text-zinc-200 text-zinc-400 transition-colors cursor-pointer border-0 outline-none flex items-center gap-1"
             title={copyTitleLabels[locale] ?? 'Copy'}
           >
             {copied ? (
-              <>
-                <Check className="w-3.5 h-3.5 text-emerald-400" />
-                <span className="text-emerald-400 text-[11px]">{copyLabels[locale] ?? 'Copied ✓'}</span>
-              </>
+              <Check className="w-3.5 h-3.5 text-emerald-400" />
             ) : (
-              <>
-                <Copy className="w-3.5 h-3.5" />
-                <span className="text-[11px]">{copyTitleLabels[locale] ?? 'Copy'}</span>
-              </>
+              <Copy className="w-3.5 h-3.5" />
             )}
           </button>
+
+          <button
+            type="button"
+            className="p-1.5 rounded-md hover:bg-white/5 hover:text-zinc-200 text-zinc-400 transition-colors cursor-pointer border-0 outline-none"
+            title="Good response"
+          >
+            <ThumbsUp className="w-3.5 h-3.5" />
+          </button>
+
+          <button
+            type="button"
+            className="p-1.5 rounded-md hover:bg-white/5 hover:text-zinc-200 text-zinc-400 transition-colors cursor-pointer border-0 outline-none"
+            title="Poor response"
+          >
+            <ThumbsDown className="w-3.5 h-3.5" />
+          </button>
+
           {message.timestamp && (
-            <span className="text-[10px] text-zinc-600 font-mono ms-2">
+            <span className="text-[11px] text-zinc-400 font-sans ms-1.5">
               {message.timestamp}
             </span>
           )}
