@@ -11,6 +11,66 @@ export interface ChatSession {
   messages: ChatMessage[];
 }
 
+export function generateUUID(): string {
+  if (typeof crypto !== 'undefined' && typeof crypto.randomUUID === 'function') {
+    return crypto.randomUUID();
+  }
+  return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, (c) => {
+    const r = (Math.random() * 16) | 0;
+    const v = c === 'x' ? r : (r & 0x3) | 0x8;
+    return v.toString(16);
+  });
+}
+
+export function isValidUUID(id: string): boolean {
+  return /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(id);
+}
+
+function areSessionsDuplicates(a: ChatSession, b: ChatSession): boolean {
+  const msgsA = a.messages || [];
+  const msgsB = b.messages || [];
+
+  if (msgsA.length === 0 && msgsB.length === 0) {
+    return a.title === b.title;
+  }
+  if (msgsA.length === 0 || msgsB.length === 0) {
+    return a.title === b.title;
+  }
+
+  const minLen = Math.min(msgsA.length, msgsB.length);
+  for (let i = 0; i < minLen; i++) {
+    if (msgsA[i].sender !== msgsB[i].sender || msgsA[i].content !== msgsB[i].content) {
+      return false;
+    }
+  }
+
+  return true;
+}
+
+export function deduplicateSessions(sessions: ChatSession[]): { unique: ChatSession[]; duplicateIds: string[] } {
+  const unique: ChatSession[] = [];
+  const duplicateIds: string[] = [];
+
+  for (const session of sessions) {
+    const matchIndex = unique.findIndex((u) => areSessionsDuplicates(u, session));
+    if (matchIndex === -1) {
+      unique.push(session);
+    } else {
+      const existing = unique[matchIndex];
+      const sessionLen = session.messages?.length || 0;
+      const existLen = existing.messages?.length || 0;
+      if (sessionLen > existLen) {
+        duplicateIds.push(existing.id);
+        unique[matchIndex] = session;
+      } else {
+        duplicateIds.push(session.id);
+      }
+    }
+  }
+
+  return { unique, duplicateIds };
+}
+
 const STORAGE_SESSIONS_KEY = 'idaara_copilot_saved_sessions';
 const STORAGE_ACTIVE_ID_KEY = 'idaara_copilot_active_session_id';
 
@@ -18,7 +78,7 @@ export function useCopilotSessions(onAutoQuery?: (query: string) => void) {
   const { user } = useAuth();
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [sessions, setSessions] = useState<ChatSession[]>([]);
-  const [currentSessionId, setCurrentSessionId] = useState<string>(() => `session-${Date.now()}`);
+  const [currentSessionId, setCurrentSessionId] = useState<string>(() => generateUUID());
   const [isInitialized, setIsInitialized] = useState(false);
   const [sessionToDelete, setSessionToDelete] = useState<ChatSession | null>(null);
   const [editingSessionId, setEditingSessionId] = useState<string | null>(null);
@@ -39,16 +99,31 @@ export function useCopilotSessions(onAutoQuery?: (query: string) => void) {
           if (res.ok) {
             const data = await res.json();
             if (Array.isArray(data.sessions) && data.sessions.length > 0 && isMounted) {
-              const cloudSessions: ChatSession[] = data.sessions.map((s: { id: string; title: string; messages: ChatMessage[]; updated_at: string }) => ({
+              const rawCloudSessions: ChatSession[] = data.sessions.map((s: { id: string; title: string; messages: ChatMessage[]; updated_at: string }) => ({
                 id: s.id,
                 title: s.title,
                 timestamp: new Date(s.updated_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
                 messages: s.messages || [],
               }));
 
+              const { unique: cloudSessions, duplicateIds } = deduplicateSessions(rawCloudSessions);
+
+              // Background purge of ghost duplicate sessions
+              if (duplicateIds.length > 0) {
+                duplicateIds.forEach((dupId) => {
+                  if (isValidUUID(dupId)) {
+                    fetch(`/api/sessions/${dupId}`, { method: 'DELETE' }).catch(() => {});
+                  }
+                });
+              }
+
               setSessions(cloudSessions);
               setCurrentSessionId(cloudSessions[0].id);
               setMessages(cloudSessions[0].messages);
+              if (typeof window !== 'undefined') {
+                localStorage.setItem(STORAGE_SESSIONS_KEY, JSON.stringify(cloudSessions));
+                localStorage.setItem(STORAGE_ACTIVE_ID_KEY, cloudSessions[0].id);
+              }
               setIsInitialized(true);
               return;
             }
@@ -72,9 +147,10 @@ export function useCopilotSessions(onAutoQuery?: (query: string) => void) {
                 loadedSessions.push(s);
               }
             }
+            const { unique: cleanLoaded } = deduplicateSessions(loadedSessions);
             if (isMounted) {
-              setSessions(loadedSessions);
-              localStorage.setItem(STORAGE_SESSIONS_KEY, JSON.stringify(loadedSessions));
+              setSessions(cleanLoaded);
+              localStorage.setItem(STORAGE_SESSIONS_KEY, JSON.stringify(cleanLoaded));
             }
           }
         }
@@ -153,15 +229,33 @@ export function useCopilotSessions(onAutoQuery?: (query: string) => void) {
           if (saveTimeoutRef.current) clearTimeout(saveTimeoutRef.current);
           saveTimeoutRef.current = setTimeout(async () => {
             try {
-              await fetch('/api/sessions', {
+              const safeId = isValidUUID(currentSessionId) ? currentSessionId : generateUUID();
+              if (safeId !== currentSessionId) {
+                setCurrentSessionId(safeId);
+                if (typeof window !== 'undefined') {
+                  localStorage.setItem(STORAGE_ACTIVE_ID_KEY, safeId);
+                }
+              }
+
+              const res = await fetch('/api/sessions', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
-                  id: currentSessionId.startsWith('session-') ? undefined : currentSessionId,
+                  id: safeId,
                   title: targetTitle,
                   messages,
                 }),
               });
+
+              if (res.ok) {
+                const data = await res.json();
+                if (data.session?.id && data.session.id !== safeId) {
+                  setCurrentSessionId(data.session.id);
+                  if (typeof window !== 'undefined') {
+                    localStorage.setItem(STORAGE_ACTIVE_ID_KEY, data.session.id);
+                  }
+                }
+              }
             } catch (cloudErr) {
               console.warn('Debounced cloud session save failed:', cloudErr);
             }
@@ -178,7 +272,7 @@ export function useCopilotSessions(onAutoQuery?: (query: string) => void) {
   }, [messages, isInitialized, currentSessionId, user]);
 
   const handleNewChat = useCallback(() => {
-    const newId = `session-${Date.now()}`;
+    const newId = generateUUID();
     setCurrentSessionId(newId);
     setMessages([]);
     if (typeof window !== 'undefined') {
@@ -217,7 +311,7 @@ export function useCopilotSessions(onAutoQuery?: (query: string) => void) {
     setSessionToDelete(null);
 
     // Delete from cloud if user is logged in
-    if (user && !id.startsWith('session-')) {
+    if (user && isValidUUID(id)) {
       try {
         await fetch(`/api/sessions/${id}`, { method: 'DELETE' });
       } catch (err) {
@@ -247,7 +341,7 @@ export function useCopilotSessions(onAutoQuery?: (query: string) => void) {
         return updated;
       });
 
-      if (user && !targetId.startsWith('session-')) {
+      if (user && isValidUUID(targetId)) {
         try {
           await fetch(`/api/sessions/${targetId}`, {
             method: 'PUT',
