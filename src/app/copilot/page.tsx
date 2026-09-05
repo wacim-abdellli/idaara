@@ -31,6 +31,7 @@ export default function CopilotPage() {
     setMessages,
     sessions,
     currentSessionId,
+    isInitialized,
     sessionToDelete,
     setSessionToDelete,
     editingSessionId,
@@ -332,8 +333,8 @@ export default function CopilotPage() {
           </div>
         </header>
 
-        {/* Empty State: Pure Minimalist Canvas */}
-        {messages.length === 0 && !isProcessing && (
+        {/* Empty State: Pure Minimalist Canvas (Only when initialized & genuinely empty) */}
+        {isInitialized && messages.length === 0 && !isProcessing && (
           <div className="flex-1 flex flex-col items-center justify-center px-4 sm:px-6 max-w-2xl mx-auto w-full -mt-6">
             <div className="text-center space-y-2 mb-8 animate-fade-in">
               <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-xs font-medium mb-3">
@@ -378,6 +379,16 @@ export default function CopilotPage() {
 
             {/* Quick Topic Suggestion Pills */}
             <QuickTopics locale={locale} isRtl={isRtl} onSelectPrompt={handleSendMessage} />
+          </div>
+        )}
+
+        {/* Quiet Loading Placeholder while restoring session state (0ms - 50ms) */}
+        {!isInitialized && !isProcessing && messages.length === 0 && (
+          <div className="flex-1 flex items-center justify-center">
+            <div className="flex items-center gap-2 text-zinc-600 text-xs select-none animate-fade-in">
+              <span className="w-1.5 h-1.5 rounded-full bg-emerald-500/60 animate-pulse" />
+              <span>Idaara AI</span>
+            </div>
           </div>
         )}
 

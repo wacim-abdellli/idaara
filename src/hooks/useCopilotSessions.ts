@@ -93,54 +93,16 @@ export function useCopilotSessions(onAutoQuery?: (query: string) => void) {
     let isMounted = true;
 
     async function loadSessions() {
-      if (user) {
-        try {
-          const res = await fetch('/api/sessions');
-          if (res.ok) {
-            const data = await res.json();
-            if (Array.isArray(data.sessions) && data.sessions.length > 0 && isMounted) {
-              const rawCloudSessions: ChatSession[] = data.sessions.map((s: { id: string; title: string; messages: ChatMessage[]; updated_at: string }) => ({
-                id: s.id,
-                title: s.title,
-                timestamp: new Date(s.updated_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
-                messages: s.messages || [],
-              }));
-
-              const { unique: cloudSessions, duplicateIds } = deduplicateSessions(rawCloudSessions);
-
-              // Background purge of ghost duplicate sessions
-              if (duplicateIds.length > 0) {
-                duplicateIds.forEach((dupId) => {
-                  if (isValidUUID(dupId)) {
-                    fetch(`/api/sessions/${dupId}`, { method: 'DELETE' }).catch(() => {});
-                  }
-                });
-              }
-
-              setSessions(cloudSessions);
-              setCurrentSessionId(cloudSessions[0].id);
-              setMessages(cloudSessions[0].messages);
-              if (typeof window !== 'undefined') {
-                localStorage.setItem(STORAGE_SESSIONS_KEY, JSON.stringify(cloudSessions));
-                localStorage.setItem(STORAGE_ACTIVE_ID_KEY, cloudSessions[0].id);
-              }
-              setIsInitialized(true);
-              return;
-            }
-          }
-        } catch (err) {
-          console.warn('Could not fetch cloud sessions, falling back to local storage:', err);
-        }
-      }
-
-      // Local storage fallback
+      // 1. Instantly restore from localStorage cache (0ms, zero-flash on reload)
+      let hasLocal = false;
       try {
         const savedSessions = localStorage.getItem(STORAGE_SESSIONS_KEY);
-        const loadedSessions: ChatSession[] = [];
+        const savedActiveId = localStorage.getItem(STORAGE_ACTIVE_ID_KEY);
         if (savedSessions) {
           const parsed = JSON.parse(savedSessions);
-          if (Array.isArray(parsed)) {
+          if (Array.isArray(parsed) && parsed.length > 0) {
             const seenIds = new Set<string>();
+            const loadedSessions: ChatSession[] = [];
             for (const s of parsed) {
               if (s && s.id && !seenIds.has(s.id)) {
                 seenIds.add(s.id);
@@ -148,23 +110,63 @@ export function useCopilotSessions(onAutoQuery?: (query: string) => void) {
               }
             }
             const { unique: cleanLoaded } = deduplicateSessions(loadedSessions);
-            if (isMounted) {
+            if (cleanLoaded.length > 0 && isMounted) {
+              const activeSession = cleanLoaded.find((s) => s.id === savedActiveId) || cleanLoaded[0];
               setSessions(cleanLoaded);
-              localStorage.setItem(STORAGE_SESSIONS_KEY, JSON.stringify(cleanLoaded));
+              setCurrentSessionId(activeSession.id);
+              setMessages(activeSession.messages || []);
+              setIsInitialized(true);
+              hasLocal = true;
             }
           }
         }
+      } catch (localErr) {
+        console.warn('Failed to load local session cache:', localErr);
+      }
 
-        const savedActiveId = localStorage.getItem(STORAGE_ACTIVE_ID_KEY);
-        if (savedActiveId && loadedSessions.length > 0 && isMounted) {
-          const activeSession = loadedSessions.find((s) => s.id === savedActiveId);
-          if (activeSession) {
-            setCurrentSessionId(activeSession.id);
-            setMessages(activeSession.messages || []);
+      // 2. Background cloud DB sync
+      if (user) {
+        try {
+          const res = await fetch('/api/sessions');
+          if (res.ok) {
+            const data = await res.json();
+            if (Array.isArray(data.sessions) && isMounted) {
+              if (data.sessions.length > 0) {
+                const rawCloudSessions: ChatSession[] = data.sessions.map((s: { id: string; title: string; messages: ChatMessage[]; updated_at: string }) => ({
+                  id: s.id,
+                  title: s.title,
+                  timestamp: new Date(s.updated_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+                  messages: s.messages || [],
+                }));
+
+                const { unique: cloudSessions, duplicateIds } = deduplicateSessions(rawCloudSessions);
+
+                // Background purge of ghost duplicate sessions
+                if (duplicateIds.length > 0) {
+                  duplicateIds.forEach((dupId) => {
+                    if (isValidUUID(dupId)) {
+                      fetch(`/api/sessions/${dupId}`, { method: 'DELETE' }).catch(() => {});
+                    }
+                  });
+                }
+
+                setSessions(cloudSessions);
+
+                // If not restored from local storage, adopt first cloud session
+                if (!hasLocal && cloudSessions.length > 0) {
+                  setCurrentSessionId(cloudSessions[0].id);
+                  setMessages(cloudSessions[0].messages);
+                }
+
+                if (typeof window !== 'undefined') {
+                  localStorage.setItem(STORAGE_SESSIONS_KEY, JSON.stringify(cloudSessions));
+                }
+              }
+            }
           }
+        } catch (err) {
+          console.warn('Could not fetch cloud sessions:', err);
         }
-      } catch (err) {
-        console.warn('Failed to load chat history from storage:', err);
       }
 
       if (isMounted) {
@@ -366,6 +368,7 @@ export function useCopilotSessions(onAutoQuery?: (query: string) => void) {
     setMessages,
     sessions,
     currentSessionId,
+    isInitialized,
     sessionToDelete,
     setSessionToDelete,
     editingSessionId,
