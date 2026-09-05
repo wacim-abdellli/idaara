@@ -24,8 +24,8 @@ interface ChatMessageProps {
 
 /** Parses markdown links, bold text, acronyms, and civic tags */
 function renderInlineStyles(text: string): React.ReactNode {
-  // Regex to split by markdown links, bold markers, backticks, raw URLs, currency amounts, and acronyms
-  const tokenRegex = /(\[[^\]]+\]\([^\s)]+\)|\*\*[^*]+\*\*|`[^`]+`|(?:https?:\/\/|www\.)[^\s)]+|\b\d+(?:[.,]\d+)?\s*(?:DT|TND|د\.ت|دينار)\b|\b(?:CIN|B3|CAPES|ATTT|STEG|SONEDE|CNSS|CNAM|RNE|JORT|PDF|COC|FCR|RIB|TND|DT)\b)/g;
+  // Regex to split by markdown links, bold markers, backticks, raw URLs, currency amounts, Latin parentheticals, and acronyms
+  const tokenRegex = /(\[[^\]]+\]\([^\s)]+\)|\*\*[^*]+\*\*|`[^`]+`|(?:https?:\/\/|www\.)[^\s)]+|\b\d+(?:[.,]\d+)?\s*(?:DT|TND|د\.ت|دينار)\b|\([a-zA-Z0-9\s/&'.,_-]+\)|\b(?:CIN|B3|CAPES|ATTT|STEG|SONEDE|CNSS|CNAM|RNE|JORT|PDF|COC|FCR|RIB|TND|DT|Transtu|SNCFT|SRT)\b)/g;
 
   const parts = text.split(tokenRegex);
 
@@ -96,11 +96,20 @@ function renderInlineStyles(text: string): React.ReactNode {
       );
     }
 
-    // 6. Latin Acronyms (e.g. CIN, B3, CAPES, ATTT, JORT, PDF) - ONLY Letters, NOT plain numbers!
-    if (/^(?:CIN|B3|CAPES|ATTT|STEG|SONEDE|CNSS|CNAM|RNE|JORT|PDF|COC|FCR|RIB|TND|DT)$/i.test(part)) {
+    // 6. Parenthetical Latin text: (Abonnement Scolaire / Universitaire) or (Transtu) - Prevents RTL BiDi colon inversion
+    if (/^\([a-zA-Z0-9\s/&'.,_-]+\)$/.test(part)) {
       return (
-        <span key={i} className="inline-block px-1.5 py-0.5 mx-1 rounded-md bg-zinc-800/90 border border-white/10 text-emerald-300 font-mono font-bold text-xs shadow-sm align-baseline" dir="ltr" style={{ unicodeBidi: 'isolate' }}>
-          {part.toUpperCase()}
+        <span key={i} className="inline-block mx-1 font-semibold text-emerald-300/95" dir="ltr" style={{ unicodeBidi: 'isolate' }}>
+          {part}
+        </span>
+      );
+    }
+
+    // 7. Latin Acronyms & Official Transports (e.g. CIN, B3, Transtu, SNCFT)
+    if (/^(?:CIN|B3|CAPES|ATTT|STEG|SONEDE|CNSS|CNAM|RNE|JORT|PDF|COC|FCR|RIB|TND|DT|Transtu|SNCFT|SRT)$/i.test(part)) {
+      return (
+        <span key={i} className="inline-block px-1.5 py-0.5 mx-0.5 rounded-md bg-zinc-800/90 border border-white/10 text-emerald-300 font-mono font-bold text-xs shadow-sm align-baseline" dir="ltr" style={{ unicodeBidi: 'isolate' }}>
+          {part}
         </span>
       );
     }
@@ -114,6 +123,10 @@ function renderFormattedContent(text: string, locale: string = 'derja', isRTLOve
   // 1. Sanitize any thinking or chain-of-thought blocks
   let cleanText = text.replace(/<think>[\s\S]*?(?:<\/think>|$)/gi, '').trim();
   cleanText = cleanText.replace(/^(?:Here's a thinking process|Analyze User Input|Check Constraints)[\s\S]*?\n\n/i, '').trim();
+
+  // 1b. Fix trailing colons after Latin or parentheses in RTL so they don't flip backwards
+  cleanText = cleanText.replace(/([a-zA-Z0-9)])\s*:\s*$/gm, '$1\u200F:');
+  cleanText = cleanText.replace(/([a-zA-Z0-9)])\s*:\s+/g, '$1\u200F: ');
 
   // 2. Accurate script direction detection
   const isMessageRTL = isRTLOverride !== undefined
@@ -218,39 +231,52 @@ function renderFormattedContent(text: string, locale: string = 'derja', isRTLOve
         }
       }
 
-      const summaryLabel = {
-        ar: 'الخلاصة الإدارية السريعة',
-        derja: 'El khoulassa el idaria',
-        fr: 'Résumé administratif rapide',
-        en: 'Quick Administrative Summary',
-      }[locale] ?? 'الخلاصة الإدارية السريعة';
+      const summaryLabel = isMessageRTL
+        ? 'الخلاصة الإدارية السريعة'
+        : (locale === 'fr' ? 'Résumé administratif rapide' : 'Quick Administrative Summary');
 
       blocks.push(
         <div
           key={`summary-${i}`}
           dir={lineDir}
-          className={`my-3 p-3.5 rounded-2xl bg-[#0f1513] border border-emerald-500/25 shadow-sm max-w-2xl ${lineAlign}`}
+          className={`my-3.5 p-4 rounded-2xl bg-gradient-to-br from-[#0e1613] to-[#0a0f0d] border border-emerald-500/30 shadow-md max-w-2xl ${lineAlign}`}
         >
-          <div className="flex items-center gap-2 pb-2 mb-2.5 border-b border-emerald-500/15 text-[11px] font-mono font-bold text-emerald-400 uppercase tracking-wider">
-            <span className="text-sm">📌</span>
+          <div className="flex items-center gap-2 pb-2.5 mb-3 border-b border-emerald-500/20 text-xs font-bold text-emerald-400">
+            <span className="text-base">📌</span>
             <span>{summaryLabel}</span>
           </div>
 
           {summaryItems.length > 0 ? (
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-2">
-              {summaryItems.map((item, sIdx) => (
-                <div
-                  key={sIdx}
-                  className="p-2.5 rounded-xl bg-white/[0.03] border border-white/[0.05] flex flex-col gap-1"
-                >
-                  <div className="text-xs text-zinc-300 leading-relaxed">
-                    {renderInlineStyles(item)}
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-2.5">
+              {summaryItems.map((item, sIdx) => {
+                const kvMatch = item.match(/^(\*{0,2}[^*:]+\*{0,2})\s*:\s*(.+)$/);
+                if (kvMatch) {
+                  const label = kvMatch[1].replace(/\*{2}/g, '').trim();
+                  const val = kvMatch[2].trim();
+                  return (
+                    <div
+                      key={sIdx}
+                      className="p-3 rounded-xl bg-white/[0.03] border border-white/[0.06] flex flex-col justify-between gap-1 hover:border-emerald-500/30 transition-colors"
+                    >
+                      <span className="text-[11px] font-semibold text-emerald-400/90 tracking-wide">{label}</span>
+                      <span className="text-xs sm:text-[13.5px] font-bold text-white leading-snug">{renderInlineStyles(val)}</span>
+                    </div>
+                  );
+                }
+                return (
+                  <div
+                    key={sIdx}
+                    className="p-3 rounded-xl bg-white/[0.03] border border-white/[0.06] flex flex-col gap-1"
+                  >
+                    <div className="text-xs sm:text-[13px] text-zinc-200 leading-relaxed font-medium">
+                      {renderInlineStyles(item)}
+                    </div>
                   </div>
-                </div>
-              ))}
+                );
+              })}
             </div>
           ) : (
-            <div className="text-xs sm:text-sm text-zinc-200 leading-relaxed">
+            <div className="text-xs sm:text-sm text-zinc-200 leading-relaxed font-medium">
               {renderInlineStyles(summaryHeader)}
             </div>
           )}
@@ -260,33 +286,59 @@ function renderFormattedContent(text: string, locale: string = 'derja', isRTLOve
     }
 
     // 3. Tip / Pro-Advice Callout: > 💡 or 💡 **نصيحة...
-    if (/^(?:>|###|##|#)?\s*💡/.test(line)) {
-      let tipText = line
+    if (/^(?:>|###|##|#)?\s*💡/.test(line) || /^>+\s*\*{0,2}💡/.test(line) || line.startsWith('💡')) {
+      let tipBody = line
         .replace(/^(?:>|###|##|#)?\s*💡\s*:?\s*/, '')
-        .replace(/^\*{2}نصيحة(?:\s*إدارة\.تونس)?\*{2}\s*:?\s*/i, '')
-        .replace(/^نصيحة(?:\s*إدارة\.تونس)?\s*:?\s*/i, '')
+        .replace(/^\*{1,2}(?:نصيحة|ملاحظة|إرشاد|Conseil|Astuce|Tip)(?:\s*إدارة\.تونس|\s*Idaara(?:\.tn)?)?\*{1,2}\s*:?\s*/i, '')
+        .replace(/^(?:نصيحة|ملاحظة|إرشاد|Conseil|Astuce|Tip)(?:\s*إدارة\.تونس|\s*Idaara(?:\.tn)?)?\s*:?\s*/i, '')
         .trim();
 
       i++;
 
-      // If the tip spans multiple lines or has quote lines:
-      while (i < rawLines.length && rawLines[i].trim().startsWith('>')) {
-        tipText += ' ' + rawLines[i].replace(/^>\s*/, '').trim();
+      // If tipBody is on following lines:
+      while (i < rawLines.length) {
+        const nextLine = rawLines[i].trim();
+        if (!nextLine) {
+          if (!tipBody) {
+            i++;
+            continue;
+          }
+          break;
+        }
+        // Stop if next line is a new section or header
+        if (
+          nextLine.startsWith('#') ||
+          /^(\*{2})?(📑|🎯|💰|🏛️|📍|📋|✅|🔑|📌|💡)/.test(nextLine) ||
+          nextLine.match(/^\d+\.\s+/) ||
+          nextLine.startsWith('---')
+        ) {
+          break;
+        }
+        tipBody += (tipBody ? ' ' : '') + nextLine.replace(/^>\s*/, '').trim();
         i++;
       }
 
-      blocks.push(
-        <div
-          key={`tip-${i}`}
-          dir={lineDir}
-          className={`my-3 p-3 rounded-xl bg-amber-500/[0.06] border border-amber-500/20 border-s-3 border-s-amber-400 flex items-start gap-2.5 max-w-2xl shadow-xs ${lineAlign}`}
-        >
-          <Lightbulb className="w-4 h-4 text-amber-400 shrink-0 mt-0.5" />
-          <div className="flex-1 text-xs sm:text-[13.5px] leading-relaxed text-amber-100/90 font-medium">
-            {renderInlineStyles(tipText)}
+      if (tipBody) {
+        blocks.push(
+          <div
+            key={`tip-${i}`}
+            dir={lineDir}
+            className={`my-3.5 p-4 rounded-2xl bg-amber-500/[0.08] border border-amber-500/25 border-s-4 border-s-amber-400 flex items-start gap-3 max-w-2xl shadow-sm ${lineAlign}`}
+          >
+            <div className="w-8 h-8 rounded-xl bg-amber-500/20 flex items-center justify-center shrink-0 mt-0.5">
+              <Lightbulb className="w-4 h-4 text-amber-400" />
+            </div>
+            <div className="flex-1 space-y-1">
+              <div className="text-xs font-bold text-amber-300">
+                {isMessageRTL ? 'نصيحة عملية' : (locale === 'fr' ? 'Conseil pratique' : 'Pro Tip')}
+              </div>
+              <div className="text-xs sm:text-[14px] leading-relaxed text-amber-100/90 font-normal">
+                {renderInlineStyles(tipBody)}
+              </div>
+            </div>
           </div>
-        </div>
-      );
+        );
+      }
       continue;
     }
 
@@ -295,7 +347,7 @@ function renderFormattedContent(text: string, locale: string = 'derja', isRTLOve
       const headerText = line.replace(/^#+\s*/, '');
       blocks.push(
         <div key={`h-${i}`} dir={lineDir} className={`pt-4 pb-2 mb-2 flex items-center gap-2 border-b border-white/[0.08] ${lineAlign}`}>
-          <h4 className="text-sm sm:text-base font-bold text-white tracking-wide">
+          <h4 className="text-sm sm:text-base font-bold text-white tracking-wide flex items-center gap-2">
             {renderInlineStyles(headerText)}
           </h4>
         </div>
@@ -307,16 +359,21 @@ function renderFormattedContent(text: string, locale: string = 'derja', isRTLOve
     // 5. Numbered List (1. 2. 3.) -> Main Step Items
     const numberedMatch = line.match(/^(\d+)\.\s+(.+)$/);
     if (numberedMatch) {
+      const isHeaderLike = numberedMatch[2].endsWith(':') || numberedMatch[2].length <= 50;
       blocks.push(
-        <div key={`num-${i}`} dir={lineDir} className={`flex items-start gap-3 my-2.5 ${lineAlign}`}>
+        <div key={`num-${i}`} dir={lineDir} className={`flex items-start gap-3 ${isHeaderLike ? 'pt-3 pb-1 my-1.5' : 'my-2'} ${lineAlign}`}>
           <span
             dir="ltr"
             style={{ unicodeBidi: 'isolate' }}
-            className="inline-flex items-center justify-center text-center w-5.5 h-5.5 rounded-lg bg-emerald-500/20 border border-emerald-500/40 text-emerald-300 text-xs font-bold leading-none shrink-0 mt-0.5 select-none shadow-sm"
+            className={`inline-flex items-center justify-center text-center rounded-lg font-bold leading-none shrink-0 select-none shadow-sm ${
+              isHeaderLike
+                ? 'w-6 h-6 bg-emerald-500/25 border border-emerald-400/40 text-emerald-300 text-xs mt-0.5'
+                : 'w-5 h-5 bg-zinc-800 border border-white/10 text-zinc-300 text-[11px] mt-1'
+            }`}
           >
             {numberedMatch[1]}
           </span>
-          <span className="text-zinc-100 flex-1 leading-relaxed text-sm sm:text-[15px]">
+          <span className={`flex-1 leading-relaxed ${isHeaderLike ? 'text-white font-bold text-sm sm:text-[15.5px]' : 'text-zinc-100 text-sm sm:text-[14.5px]'}`}>
             {renderInlineStyles(numberedMatch[2])}
           </span>
         </div>
@@ -327,17 +384,24 @@ function renderFormattedContent(text: string, locale: string = 'derja', isRTLOve
 
     // 6. Sub-Bullet Points (- or * or •) -> Indented under steps
     if (line.startsWith('- ') || line.startsWith('* ') || line.startsWith('• ') || line.startsWith('✔ ') || line.startsWith('✓ ')) {
-      const bulletText = line.replace(/^[-*•✔✓]\s+/, '');
+      const isCheck = line.startsWith('✔ ') || line.startsWith('✓ ') || line.includes('✅');
+      const bulletText = line.replace(/^[-*•✔✓✅]\s+/, '');
       blocks.push(
-        <div key={`bullet-${i}`} dir={lineDir} className={`flex items-start gap-2.5 my-1.5 ms-6 sm:ms-7 ${lineAlign}`}>
-          <span
-            dir="ltr"
-            style={{ unicodeBidi: 'isolate' }}
-            className="inline-flex items-center justify-center text-center w-4 h-4 rounded-full bg-emerald-500/15 text-emerald-400 shrink-0 mt-1 text-[10px] font-bold leading-none select-none"
-          >
-            ✓
-          </span>
-          <span className="text-zinc-300 flex-1 leading-relaxed text-xs sm:text-[14px]">
+        <div key={`bullet-${i}`} dir={lineDir} className={`flex items-start gap-2.5 my-1.5 ms-6 sm:ms-8 ${lineAlign}`}>
+          {isCheck ? (
+            <span
+              dir="ltr"
+              style={{ unicodeBidi: 'isolate' }}
+              className="inline-flex items-center justify-center text-center w-4 h-4 rounded-full bg-emerald-500/20 text-emerald-400 shrink-0 mt-1 text-[10px] font-bold leading-none select-none"
+            >
+              ✓
+            </span>
+          ) : (
+            <span
+              className="w-1.5 h-1.5 rounded-full bg-emerald-400/70 shrink-0 mt-2.5"
+            />
+          )}
+          <span className="text-zinc-200 flex-1 leading-relaxed text-xs sm:text-[14px]">
             {renderInlineStyles(bulletText)}
           </span>
         </div>
