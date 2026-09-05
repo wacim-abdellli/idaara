@@ -46,117 +46,152 @@ export function getQuickTopicsList(locale: SupportedLanguage) {
 }
 
 export function QuickTopics({ locale, isRtl, onSelectPrompt }: QuickTopicsProps) {
-  const currentYear = new Date().getFullYear();
+  const cards = [
+    {
+      icon: FileCheck2,
+      badge: '80 DT',
+      title:
+        locale === 'ar'
+          ? 'تجديد جواز السفر'
+          : locale === 'derja'
+          ? 'Renouveler Passeport'
+          : locale === 'en'
+          ? 'Passport Renewal'
+          : 'Renouvellement Passeport',
+      desc:
+        locale === 'ar'
+          ? 'الوثائق المطلوبة، معلوم التمبر 80 د.ت والتتبع بالداخل والخارج'
+          : locale === 'derja'
+          ? 'Awra9 lezma, timbre 80 DT w kifech t5arej el passeport fisa3'
+          : locale === 'en'
+          ? 'Required documents, 80 DT fiscal stamp & processing times'
+          : 'Documents requis, timbres fiscaux (80 DT / 25 DT) & délais',
+      prompt:
+        locale === 'ar'
+          ? 'شنوة يلزمني باش نجدد جواز السفر التونسي ومعلوم التنابر الجبائية؟'
+          : locale === 'derja'
+          ? "Chnouwa lezemni bech n'badal el passeport mte3i w 9adeh el timbre?"
+          : locale === 'en'
+          ? 'What documents and fees do I need to renew my Tunisian passport?'
+          : 'Quels sont les documents et timbres fiscaux pour renouveler mon passeport tunisien ?',
+    },
+    {
+      icon: Car,
+      badge: '145 DT',
+      title:
+        locale === 'ar'
+          ? 'البطاقة الرمادية للسيارة'
+          : locale === 'derja'
+          ? 'Carte Grise Karhba'
+          : locale === 'en'
+          ? 'Vehicle Registration'
+          : 'Mutation Carte Grise',
+      desc:
+        locale === 'ar'
+          ? 'عقد البيع، الفحص الفني، خلاص القباضة وملف وكالة ATTT'
+          : locale === 'derja'
+          ? 'Contrat bi3, visite technique, 5las 9badha w dosiyel ATTT'
+          : locale === 'en'
+          ? 'Bill of sale, technical inspection, tax office & ATTT transfer'
+          : 'Contrat de vente, visite technique, recette des finances & ATTT',
+      prompt:
+        locale === 'ar'
+          ? 'شريت كرهبة مستعملة في تونس، كيفاش نعمل البطاقة الرمادية ومعاليم التسجيل؟'
+          : locale === 'derja'
+          ? 'Chrit karhba jdid, kifech nbeddel el carte grise w 9adeh el ma3loum?'
+          : locale === 'en'
+          ? 'How do I transfer a car registration after buying a used vehicle?'
+          : "Comment faire la mutation de carte grise après achat d'un véhicule d'occasion en Tunisie ?",
+    },
+    {
+      icon: Briefcase,
+      badge: '1% Impôt',
+      title:
+        locale === 'ar'
+          ? 'المبادر الذاتي فريلانس'
+          : locale === 'derja'
+          ? 'Auto-Entrepreneur 1%'
+          : locale === 'en'
+          ? 'Auto-Entrepreneur 1%'
+          : 'Statut Auto-Entrepreneur',
+      desc:
+        locale === 'ar'
+          ? 'التسجيل المجاني، الضريبة المخفضة 1%، وفواتير التصدير بالعملة'
+          : locale === 'derja'
+          ? 'Tasjel fabor, impôt 1%, faktouret export w CNSS'
+          : locale === 'en'
+          ? 'Free registration, 1% flat tax rate, FX invoicing & social security'
+          : 'Inscription gratuite, impôt unique 1%, devises & facturation',
+      prompt:
+        locale === 'ar'
+          ? 'كيفاش نسجل في نظام المبادر الذاتي في تونس وشنوة الامتيازات الجبائية 1%؟'
+          : locale === 'derja'
+          ? 'Kifech n9ayed fi statut auto-entrepreneur 1% w n5allas l\'impôt?'
+          : locale === 'en'
+          ? 'How to register as an Auto-Entrepreneur with 1% tax in Tunisia?'
+          : 'Comment fonctionne le régime Auto-Entrepreneur 1% et la facturation en devises en Tunisie ?',
+    },
+    {
+      icon: FileText,
+      badge: '3 DT Baladiya',
+      title:
+        locale === 'ar'
+          ? 'عقد كراء سكني قانوني'
+          : locale === 'derja'
+          ? 'Contrat Kré Baladiya'
+          : locale === 'en'
+          ? 'Legal Lease Agreement'
+          : 'Contrat de Bail Conforme',
+      desc:
+        locale === 'ar'
+          ? 'التعريف بالإمضاء بالبلدية (3 د.ت)، الضمان، وحقوق المكتري'
+          : locale === 'derja'
+          ? 'Ta3rif bel imdha2 fel baladiya (3 DT), el 3arbon w 7ou9ou9ek'
+          : locale === 'en'
+          ? 'Legalization in Baladiya (3 DT), security deposit & tenant rights'
+          : 'Légalisation en mairie (3 DT), caution & clauses protectrices',
+      prompt:
+        locale === 'ar'
+          ? 'شنوة الشروط القانونية لعقد كراء سكني في تونس وكيفاش نصححه في البلدية؟'
+          : locale === 'derja'
+          ? 'A3melli contrat kré sakani mrigel lel baladiya'
+          : locale === 'en'
+          ? 'How to create a legal residential lease contract in Tunisia?'
+          : 'Quelles sont les démarches pour un contrat de bail résidentiel légalisé en Tunisie ?',
+    },
+  ];
 
   return (
-    <div className="flex flex-wrap items-center justify-center gap-2 mt-5 text-xs text-zinc-400" dir={isRtl ? 'rtl' : 'ltr'}>
-      <button
-        dir="auto"
-        onClick={() =>
-          onSelectPrompt(
-            locale === 'ar'
-              ? 'كيفاش نخرج أوراق جواز السفر التونسي؟'
-              : locale === 'fr'
-              ? 'Comment renouveler un passeport tunisien ?'
-              : locale === 'en'
-              ? 'How do I renew a Tunisian passport?'
-              : 'Kifech n5arej awra9 el passeport tounsi?'
-          )
-        }
-        className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-white/[0.03] hover:bg-white/[0.08] hover:text-zinc-200 border border-white/5 transition-all cursor-pointer"
-      >
-        <FileCheck2 className="w-3.5 h-3.5 text-emerald-400" />
-        <span>
-          {locale === 'ar'
-            ? 'جواز السفر (86 د.ت)'
-            : locale === 'derja'
-            ? 'Passeport (86 DT)'
-            : locale === 'en'
-            ? 'Passport (86 DT)'
-            : 'Passeport (86 DT)'}
-        </span>
-      </button>
+    <div className="w-full grid grid-cols-1 sm:grid-cols-2 gap-2.5 mt-5 text-start" dir={isRtl ? 'rtl' : 'ltr'}>
+      {cards.map((card, idx) => {
+        const Icon = card.icon;
+        return (
+          <button
+            key={idx}
+            type="button"
+            onClick={() => onSelectPrompt(card.prompt)}
+            className="group p-3 sm:p-3.5 rounded-2xl bg-white/[0.02] hover:bg-white/[0.05] border border-white/[0.06] hover:border-white/[0.14] transition-all cursor-pointer flex flex-col justify-between text-start outline-none"
+          >
+            <div className="flex items-center justify-between gap-2 mb-1.5 w-full">
+              <div className="p-1.5 rounded-lg bg-white/[0.04] text-zinc-400 group-hover:text-emerald-400 group-hover:bg-emerald-500/10 transition-colors">
+                <Icon className="w-4 h-4" />
+              </div>
+              <span className="text-[10px] font-mono font-medium px-2 py-0.5 rounded-md bg-white/[0.04] text-zinc-400 group-hover:text-zinc-200 border border-white/[0.06]">
+                {card.badge}
+              </span>
+            </div>
 
-      <button
-        dir="auto"
-        onClick={() =>
-          onSelectPrompt(
-            locale === 'ar'
-              ? 'كيفاش نعمل بطاقة رمادية في تونس؟'
-              : locale === 'fr'
-              ? 'Comment faire une mutation de carte grise en Tunisie ?'
-              : locale === 'en'
-              ? 'How do I transfer vehicle registration (carte grise)?'
-              : 'Kifech na3mel mutation carte grise fi Tounes?'
-          )
-        }
-        className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-white/[0.03] hover:bg-white/[0.08] hover:text-zinc-200 border border-white/5 transition-all cursor-pointer"
-      >
-        <Car className="w-3.5 h-3.5 text-amber-400" />
-        <span>
-          {locale === 'ar'
-            ? 'البطاقة الرمادية (145 د.ت)'
-            : locale === 'derja'
-            ? 'Carte Grise (145 DT)'
-            : locale === 'en'
-            ? 'Vehicle Reg. (145 DT)'
-            : 'Carte Grise (145 DT)'}
-        </span>
-      </button>
-
-      <button
-        dir="auto"
-        onClick={() =>
-          onSelectPrompt(
-            locale === 'ar'
-              ? 'اعمل لي عقد كراء سكني قانوني'
-              : locale === 'fr'
-              ? 'Rédige-moi un contrat de bail résidentiel légal'
-              : locale === 'en'
-              ? 'Draft a legal residential lease agreement'
-              : 'A3melli contrat de bail kré sakani mrigel'
-          )
-        }
-        className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-white/[0.03] hover:bg-white/[0.08] hover:text-zinc-200 border border-white/5 transition-all cursor-pointer"
-      >
-        <FileText className="w-3.5 h-3.5 text-blue-400" />
-        <span>
-          {locale === 'ar'
-            ? 'عقد كراء سكني'
-            : locale === 'derja'
-            ? 'Contrat de bail'
-            : locale === 'en'
-            ? 'Lease Agreement'
-            : 'Contrat de bail'}
-        </span>
-      </button>
-
-      <button
-        dir="auto"
-        onClick={() =>
-          onSelectPrompt(
-            locale === 'ar'
-              ? 'شنوة المناظرات المفتوحة توا في تونس؟'
-              : locale === 'fr'
-              ? 'Quels sont les concours ouverts actuellement en Tunisie ?'
-              : locale === 'en'
-              ? 'What civil service exams are currently open in Tunisia?'
-              : 'Chnowa les concours el maftou7in tawa fi Tounes?'
-          )
-        }
-        className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-white/[0.03] hover:bg-white/[0.08] hover:text-zinc-200 border border-white/5 transition-all cursor-pointer"
-      >
-        <Briefcase className="w-3.5 h-3.5 text-teal-400" />
-        <span>
-          {locale === 'ar'
-            ? `المناظرات ${currentYear}`
-            : locale === 'derja'
-            ? `Concourat ${currentYear}`
-            : locale === 'en'
-            ? `Competitions ${currentYear}`
-            : `Concours ${currentYear}`}
-        </span>
-      </button>
+            <div className="space-y-0.5 w-full">
+              <div className="text-xs sm:text-sm font-semibold text-zinc-200 group-hover:text-white transition-colors">
+                {card.title}
+              </div>
+              <p className="text-[11px] text-zinc-400 line-clamp-1 leading-normal font-normal">
+                {card.desc}
+              </p>
+            </div>
+          </button>
+        );
+      })}
     </div>
   );
 }

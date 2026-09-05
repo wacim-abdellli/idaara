@@ -82,6 +82,10 @@ export const Navbar: React.FC = () => {
     }
   };
 
+  if (!pathname || pathname === '/copilot' || pathname.startsWith('/copilot')) {
+    return null;
+  }
+
   return (
     <header className="sticky top-0 z-50 w-full border-b border-zinc-800/70 bg-zinc-950/95 backdrop-blur-2xl">
       <div className="max-w-[1440px] mx-auto px-3 sm:px-5 lg:px-7">

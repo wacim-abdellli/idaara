@@ -1,10 +1,12 @@
 'use client';
 
 import React, { useState, useRef, useEffect, useCallback } from 'react';
+import Link from 'next/link';
 import { useLocale } from '../../context/LocaleContext';
+import { useAuth } from '../../context/AuthContext';
 import { ChatMessage } from '../../components/copilot/ChatMessage';
 import { ChatMessage as ChatMessageType } from '../../types/chat';
-import { PanelLeft, RotateCcw, Sparkles } from 'lucide-react';
+import { PanelLeft, RotateCcw, Sparkles, Search, User as UserIcon } from 'lucide-react';
 
 import { useCopilotSessions, ChatSession } from '../../hooks/useCopilotSessions';
 import { useCopilotVoice } from '../../hooks/useCopilotVoice';
@@ -12,15 +14,20 @@ import { SessionSidebar } from '../../components/copilot/SessionSidebar';
 import { QuickTopics } from '../../components/copilot/QuickTopics';
 import { ChatInput } from '../../components/copilot/ChatInput';
 import { DeleteSessionModal } from '../../components/copilot/DeleteSessionModal';
+import { BrandIcon } from '../../components/layout/BrandLogo';
+import { LanguageSwitcher } from '../../components/layout/LanguageSwitcher';
+import { AuthModal } from '../../components/auth/AuthModal';
 
 export default function CopilotPage() {
   const { locale, isRtl } = useLocale();
+  const { user } = useAuth();
 
   const [inputVal, setInputVal] = useState('');
   const [isProcessing, setIsProcessing] = useState(false);
   const [showPlusMenu, setShowPlusMenu] = useState<boolean>(false);
   const [sidebarOpen, setSidebarOpen] = useState<boolean>(false);
   const [thinkMode, setThinkMode] = useState<boolean>(false);
+  const [authModalOpen, setAuthModalOpen] = useState<boolean>(false);
 
   const messagesContainerRef = useRef<HTMLDivElement | null>(null);
   const textareaRef = useRef<HTMLTextAreaElement | null>(null);
@@ -202,6 +209,25 @@ export default function CopilotPage() {
     };
   }, []);
 
+  // Global desktop keyboard shortcuts (⌘K search, Alt+N new chat)
+  useEffect(() => {
+    const handleGlobalKeyDown = (e: KeyboardEvent) => {
+      if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === 'k') {
+        e.preventDefault();
+        if (typeof window !== 'undefined') {
+          window.dispatchEvent(new CustomEvent('open-command-palette'));
+        }
+      }
+      if ((e.altKey && e.key.toLowerCase() === 'n') || (e.ctrlKey && e.shiftKey && e.key.toLowerCase() === 'n')) {
+        e.preventDefault();
+        handleNewChat();
+      }
+    };
+
+    window.addEventListener('keydown', handleGlobalKeyDown);
+    return () => window.removeEventListener('keydown', handleGlobalKeyDown);
+  }, [handleNewChat]);
+
   // Adaptive scroll to bottom (direct stick-to-bottom during streaming, smooth on new turns)
   useEffect(() => {
     if (messagesContainerRef.current) {
@@ -269,7 +295,7 @@ export default function CopilotPage() {
     : 'Ask about any Tunisian procedure, document, or stamp fee...';
 
   return (
-    <div className="fixed inset-x-0 top-14 bottom-0 z-30 flex bg-[#09090b] text-white overflow-hidden font-sans">
+    <div className="fixed inset-0 z-30 flex bg-[#090a0d] text-zinc-100 overflow-hidden font-sans">
       {/* ─── Modular Session Sidebar ─── */}
       <SessionSidebar
         isOpen={sidebarOpen}
@@ -296,36 +322,86 @@ export default function CopilotPage() {
 
       {/* ─── Main Canvas Area ─── */}
       <div className="flex-1 flex flex-col bg-[#090a0d] relative overflow-hidden w-full min-w-0">
-        {/* Minimalist Top Header */}
-        <header className="shrink-0 h-13 px-3 sm:px-6 flex items-center justify-between border-b border-white/[0.06] bg-[#090a0d]/90 backdrop-blur-md z-20">
-          <div className="flex items-center gap-2 sm:gap-2.5">
-            {!sidebarOpen && (
-              <button
-                onClick={() => setSidebarOpen(true)}
-                className="p-1.5 rounded-lg hover:bg-white/10 text-zinc-400 hover:text-white transition-colors cursor-pointer border-0 outline-none flex items-center justify-center"
-                title={locale === 'ar' ? 'فتح القائمة' : locale === 'derja' ? '7el el menu' : locale === 'en' ? 'Open sidebar' : 'Ouvrir le menu'}
-              >
-                <PanelLeft className="w-4 h-4" />
-              </button>
-            )}
+        {/* Integrated Claude-Grade Top Header */}
+        <header className="shrink-0 h-14 px-3 sm:px-5 flex items-center justify-between border-b border-white/[0.06] bg-[#090a0d]/95 backdrop-blur-md z-20">
+          <div className="flex items-center gap-2 sm:gap-3">
+            <button
+              onClick={() => setSidebarOpen((prev) => !prev)}
+              className="p-2 rounded-xl hover:bg-white/[0.06] text-zinc-400 hover:text-zinc-100 transition-colors cursor-pointer border-0 outline-none flex items-center justify-center"
+              title={
+                sidebarOpen
+                  ? locale === 'ar'
+                    ? 'إغلاق القائمة'
+                    : locale === 'derja'
+                    ? 'A9el el menu'
+                    : locale === 'en'
+                    ? 'Close sidebar'
+                    : 'Fermer le menu'
+                  : locale === 'ar'
+                  ? 'فتح القائمة'
+                  : locale === 'derja'
+                  ? '7el el menu'
+                  : locale === 'en'
+                  ? 'Open sidebar'
+                  : 'Ouvrir le menu'
+              }
+              aria-label="Toggle sidebar"
+            >
+              <PanelLeft className="w-4 h-4" />
+            </button>
 
-            <div className="flex items-center gap-2 text-xs font-semibold text-zinc-300">
-              <div className="w-2 h-2 rounded-full bg-emerald-400 shadow-sm shadow-emerald-400" />
-              <span>Idaara AI</span>
-              <span className="text-[10px] text-zinc-500 font-mono hidden sm:inline">
-                · JORT {new Date().getFullYear()}
+            <Link
+              href="/"
+              className="flex items-center gap-2.5 group cursor-pointer"
+              title={locale === 'ar' ? 'الرجوع إلى الرئيسية' : 'Return to Idaara.tn home'}
+            >
+              <BrandIcon size={26} className="group-hover:scale-105 transition-transform" />
+              <span className="font-bold text-sm sm:text-base text-zinc-100 group-hover:text-white tracking-tight transition-colors">
+                Idaara <span className="text-emerald-400 font-semibold">AI</span>
               </span>
+            </Link>
+
+            <div className="hidden sm:flex items-center gap-1.5 px-2 py-0.5 rounded-full bg-white/[0.04] border border-white/[0.08] text-[11px] font-mono text-zinc-400">
+              <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
+              <span>JORT {new Date().getFullYear()}</span>
             </div>
           </div>
 
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-1.5 sm:gap-2">
+            <button
+              onClick={() => {
+                if (typeof window !== 'undefined') {
+                  window.dispatchEvent(new CustomEvent('open-command-palette'));
+                }
+              }}
+              className="hidden md:flex items-center gap-2 px-2.5 py-1.5 rounded-xl bg-white/[0.04] hover:bg-white/[0.08] border border-white/[0.08] text-xs text-zinc-400 hover:text-zinc-200 transition-all cursor-pointer"
+              title={locale === 'ar' ? 'البحث السريع (⌘K)' : 'Quick Search (⌘K)'}
+            >
+              <Search className="w-3.5 h-3.5" />
+              <span className="text-[11px] font-medium hidden lg:inline">
+                {locale === 'ar' ? 'بحث' : locale === 'fr' ? 'Rechercher' : locale === 'derja' ? 'Lawwej' : 'Search'}
+              </span>
+              <kbd className="text-[10px] font-mono px-1 py-0.2 rounded bg-white/10 text-zinc-400">⌘K</kbd>
+            </button>
+
+            <LanguageSwitcher />
+
+            <button
+              onClick={() => setAuthModalOpen(true)}
+              className="p-2 rounded-xl hover:bg-white/[0.06] text-zinc-400 hover:text-zinc-100 transition-colors cursor-pointer border-0 outline-none flex items-center justify-center"
+              title={user ? user.email || 'Citizen' : locale === 'ar' ? 'تسجيل الدخول' : 'Sign in'}
+              aria-label="User Account"
+            >
+              <UserIcon className="w-4 h-4" />
+            </button>
+
             {messages.length > 0 && (
               <button
                 onClick={handleNewChat}
-                className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl hover:bg-white/10 text-zinc-300 hover:text-white text-xs font-medium transition-colors cursor-pointer border border-white/10"
+                className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-white/[0.06] hover:bg-white/[0.1] text-zinc-100 text-xs font-semibold transition-all cursor-pointer border border-white/10 shadow-xs"
               >
-                <RotateCcw className="w-3.5 h-3.5" />
-                <span>
+                <RotateCcw className="w-3.5 h-3.5 text-emerald-400" />
+                <span className="hidden sm:inline">
                   {locale === 'ar' ? 'جديد' : locale === 'en' ? 'New' : locale === 'derja' ? 'Jdid' : 'Nouveau'}
                 </span>
               </button>
@@ -335,24 +411,24 @@ export default function CopilotPage() {
 
         {/* Empty State: Pure Minimalist Canvas (Only when initialized & genuinely empty) */}
         {isInitialized && messages.length === 0 && !isProcessing && (
-          <div className="flex-1 flex flex-col items-center justify-center px-4 sm:px-6 max-w-2xl mx-auto w-full -mt-6">
-            <div className="text-center space-y-2 mb-8 animate-fade-in">
-              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-xs font-medium mb-3">
+          <div className="flex-1 flex flex-col items-center justify-center px-4 sm:px-6 max-w-2xl lg:max-w-3xl mx-auto w-full py-6 overflow-y-auto">
+            <div className="text-center space-y-2.5 mb-6 animate-fade-in w-full">
+              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-xs font-medium mb-1">
                 <Sparkles className="w-3.5 h-3.5" />
                 <span>
                   {locale === 'ar'
-                    ? 'المساعد الإداري الذكي'
+                    ? 'المساعد الإداري الذكي · مرجع رسمي'
                     : locale === 'derja'
-                    ? 'El Mosa3ed El Idari Edhki'
+                    ? 'El Mosa3ed El Idari Edhki · JORT'
                     : locale === 'en'
-                    ? 'Idaara AI Copilot'
-                    : 'Idaara AI Copilote'}
+                    ? 'Official Tunisian Civic AI'
+                    : 'Copilote Administratif Tunisien'}
                 </span>
               </div>
               <h1 className="text-2xl sm:text-4xl font-extrabold text-white tracking-tight">
                 {centerHeadline}
               </h1>
-              <p className="text-xs sm:text-sm text-zinc-400 max-w-md mx-auto leading-relaxed">
+              <p className="text-xs sm:text-sm text-zinc-400 max-w-lg mx-auto leading-relaxed">
                 {centerSubtitle}
               </p>
             </div>
@@ -377,7 +453,7 @@ export default function CopilotPage() {
               onTogglePlusMenu={() => setShowPlusMenu((p) => !p)}
             />
 
-            {/* Quick Topic Suggestion Pills */}
+            {/* Claude-Grade 2x2 Interactive Starter Cards */}
             <QuickTopics locale={locale} isRtl={isRtl} onSelectPrompt={handleSendMessage} />
           </div>
         )}
@@ -491,6 +567,12 @@ export default function CopilotPage() {
           </>
         )}
       </div>
+
+      {/* Citizen / Account Modal */}
+      <AuthModal
+        isOpen={authModalOpen}
+        onClose={() => setAuthModalOpen(false)}
+      />
 
       {/* Delete Confirmation Modal */}
       <DeleteSessionModal
