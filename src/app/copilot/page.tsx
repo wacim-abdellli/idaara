@@ -23,8 +23,9 @@ import { ChatInput } from '../../components/copilot/ChatInput';
 import { QuickTopics } from '../../components/copilot/QuickTopics';
 import { DeleteSessionModal } from '../../components/copilot/DeleteSessionModal';
 import { LanguageSwitcher } from '../../components/layout/LanguageSwitcher';
+import { BrandIcon } from '../../components/layout/BrandLogo';
+import { JortPulseOrb } from '../../components/copilot/IdaaraCrest';
 import { AuthModal } from '../../components/auth/AuthModal';
-import { IdaaraCrest, JortPulseOrb } from '../../components/copilot/IdaaraCrest';
 
 export default function CopilotPage() {
   const { locale, isRtl } = useLocale();
@@ -355,7 +356,7 @@ export default function CopilotPage() {
             {/* Brand Logo or Active Session Title */}
             {!isInitialized || (messages.length === 0 && !activeSession) ? (
               <div className="flex items-center gap-2">
-                <IdaaraCrest size={22} />
+                <BrandIcon size={22} />
                 <span className="font-bold text-sm text-zinc-200 tracking-tight hidden sm:inline">
                   Idaara AI · <span className="text-emerald-400 font-mono text-xs">الذكاء الإداري</span>
                 </span>
@@ -366,7 +367,7 @@ export default function CopilotPage() {
                 className="flex items-center gap-2 min-w-0 cursor-pointer group hover:bg-white/[0.04] px-2.5 py-1.5 rounded-xl transition-colors"
                 title={locale === 'ar' ? 'تعديل العنوان' : 'Renommer'}
               >
-                <IdaaraCrest size={18} />
+                <BrandIcon size={18} />
                 <span className="font-semibold text-xs sm:text-sm text-zinc-100 truncate max-w-[200px] sm:max-w-xs">
                   {activeChatTitle || 'Consultation'}
                 </span>
@@ -425,7 +426,7 @@ export default function CopilotPage() {
               {/* Minimalist Brand Header */}
               <div className="relative flex flex-col items-center text-center mb-6 select-none animate-fade-in w-full">
                 <div className="mb-3">
-                  <IdaaraCrest size={44} />
+                  <BrandIcon size={44} />
                 </div>
 
                 {/* Dignified Hero Title */}

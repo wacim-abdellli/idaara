@@ -21,7 +21,7 @@ import {
 import { ChatMessage as ChatMessageType } from '../../types/chat';
 import { useLocale } from '../../context/LocaleContext';
 import { getLocalized } from '../../lib/locale-utils';
-import { IdaaraCrest } from './IdaaraCrest';
+import { BrandIcon } from '../layout/BrandLogo';
 
 interface ChatMessageProps {
   message: ChatMessageType;
@@ -577,7 +577,7 @@ export const ChatMessage: React.FC<ChatMessageProps> = ({ message, onSelectPromp
     >
       {/* Elevated Assistant Identity Header */}
       <div className="flex items-center gap-2.5 pb-1 select-none">
-        <IdaaraCrest size={22} glow />
+        <BrandIcon size={22} />
         <div className="flex items-center gap-2">
           <span className="font-bold text-xs text-white tracking-tight">Idaara AI</span>
           <span className="text-[10px] px-2 py-0.5 rounded-full bg-emerald-500/10 border border-emerald-500/25 text-emerald-400 font-mono font-medium">

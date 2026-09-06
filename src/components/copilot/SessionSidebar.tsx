@@ -22,7 +22,7 @@ import {
 } from 'lucide-react';
 import { SupportedLanguage } from '../../data/translations';
 import { ChatSession } from '../../hooks/useCopilotSessions';
-import { IdaaraCrest } from './IdaaraCrest';
+import { BrandIcon } from '../layout/BrandLogo';
 
 export interface SessionSidebarProps {
   isOpen: boolean;
@@ -283,7 +283,7 @@ export function SessionSidebar({
               className="flex items-center gap-2.5 group cursor-pointer"
               title="Idaara.tn"
             >
-              <IdaaraCrest size={26} glow />
+              <BrandIcon size={26} />
               <div className="leading-tight">
                 <div className="flex items-center gap-1.5 font-bold text-sm text-zinc-100 group-hover:text-white tracking-tight">
                   <span>Idaara</span>
