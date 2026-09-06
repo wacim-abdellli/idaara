@@ -82,6 +82,14 @@ export default function CopilotPage() {
     setIsProcessing(true);
     if (textareaRef.current) textareaRef.current.style.height = 'auto';
 
+    // Smoothly focus/frame user message at the top of the viewing area
+    setTimeout(() => {
+      const el = document.getElementById(`msg-${userMsg.id}`);
+      if (el) {
+        el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+    }, 60);
+
     try {
       const history = messages.slice(-10).map((m) => ({
         role: m.sender === 'user' ? 'user' : 'assistant',
@@ -136,7 +144,11 @@ export default function CopilotPage() {
           );
 
           if (messagesContainerRef.current) {
-            messagesContainerRef.current.scrollTop = messagesContainerRef.current.scrollHeight;
+            const container = messagesContainerRef.current;
+            const isNearBottom = container.scrollHeight - container.scrollTop - container.clientHeight < 180;
+            if (isNearBottom) {
+              container.scrollTop = container.scrollHeight;
+            }
           }
 
           const isPunctuation = /[.!?:;\n،؟]/.test(token);
@@ -149,10 +161,6 @@ export default function CopilotPage() {
       setMessages((prev) =>
         prev.map((m) => (m.id === aiMsgId ? { ...m, content: fullText, isStreaming: false } : m))
       );
-
-      if (messagesContainerRef.current) {
-        messagesContainerRef.current.scrollTop = messagesContainerRef.current.scrollHeight;
-      }
     } catch {
       setMessages((prev) => [
         ...prev,
@@ -236,20 +244,15 @@ export default function CopilotPage() {
     return () => window.removeEventListener('keydown', handleGlobalKeyDown);
   }, [handleNewChat]);
 
-  // Adaptive scroll to bottom
+  // Initial session view: start from top so user sees context
+  const hasScrolledInitialRef = useRef(false);
   useEffect(() => {
-    if (messagesContainerRef.current) {
-      const isStreaming = messages.some((m) => m.isStreaming);
-      if (isStreaming) {
-        messagesContainerRef.current.scrollTop = messagesContainerRef.current.scrollHeight;
-      } else {
-        messagesContainerRef.current.scrollTo({
-          top: messagesContainerRef.current.scrollHeight,
-          behavior: 'smooth',
-        });
-      }
+    if (!messagesContainerRef.current) return;
+    if (!hasScrolledInitialRef.current && messages.length > 0) {
+      messagesContainerRef.current.scrollTop = 0;
+      hasScrolledInitialRef.current = true;
     }
-  }, [messages, isProcessing]);
+  }, [messages.length]);
 
   const onTextareaChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     setInputVal(e.target.value);
@@ -467,11 +470,13 @@ export default function CopilotPage() {
             <>
               <div
                 ref={messagesContainerRef}
-                className="flex-1 overflow-y-auto px-4 sm:px-6 py-6 pb-28 scroll-smooth"
+                className="flex-1 overflow-y-auto px-4 sm:px-6 py-6 pb-8 scroll-smooth"
               >
                 <div className="max-w-3xl mx-auto space-y-6">
                   {messages.map((msg) => (
-                    <ChatMessage key={msg.id} message={msg} onSelectPrompt={(p) => handleSendMessage(p)} />
+                    <div key={msg.id} id={`msg-${msg.id}`}>
+                      <ChatMessage message={msg} onSelectPrompt={(p) => handleSendMessage(p)} />
+                    </div>
                   ))}
 
                   {/* 🏛️ Bespoke JORT Verification Scanner Orb */}
@@ -501,7 +506,7 @@ export default function CopilotPage() {
               </div>
 
               {/* Sticky Bottom Dock Input (Active Chat Mode) */}
-              <footer className="p-3 sm:p-4 bg-gradient-to-t from-[#090b0e] via-[#090b0e]/95 to-transparent shrink-0 z-20 pb-safe">
+              <footer className="px-3 sm:px-4 py-2 sm:py-2.5 bg-gradient-to-t from-[#090b0e] via-[#090b0e]/95 to-transparent shrink-0 z-20 pb-safe">
                 <ChatInput
                   locale={locale}
                   inputVal={inputVal}

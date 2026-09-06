@@ -69,7 +69,7 @@ export function SessionSidebar({
   onOpenAuthModal,
 }: SessionSidebarProps) {
   const [searchQuery, setSearchQuery] = useState('');
-  const [isToolsOpen, setIsToolsOpen] = useState(true);
+  const [isToolsOpen, setIsToolsOpen] = useState(false);
 
   const citizenInitial = (userName.trim()[0] || 'C').toUpperCase();
 
@@ -185,9 +185,9 @@ export function SessionSidebar({
       <div
         key={sess.id}
         onClick={() => !isEditing && onSelectSession(sess)}
-        className={`group relative flex items-center justify-between px-3 py-2.5 rounded-xl text-xs transition-all duration-150 cursor-pointer ${
+        className={`group relative flex items-center justify-between px-2.5 py-2 rounded-xl text-xs transition-all duration-150 cursor-pointer ${
           isActive
-            ? 'bg-gradient-to-r from-emerald-500/15 via-white/[0.06] to-transparent text-white font-medium border-s-2 border-emerald-400 shadow-sm'
+            ? 'bg-white/[0.07] text-white font-medium border-s-2 border-emerald-400 shadow-sm'
             : 'text-zinc-400 hover:text-zinc-100 hover:bg-white/[0.04]'
         }`}
       >
@@ -219,26 +219,26 @@ export function SessionSidebar({
           </div>
         ) : (
           <>
-            <div className="flex items-center gap-2.5 truncate flex-1 pe-2">
+            <div className="flex items-center gap-2 truncate flex-1 pe-1.5">
               <MessageSquare
                 className={`w-3.5 h-3.5 shrink-0 transition-colors ${
-                  isActive ? 'text-emerald-400' : 'text-zinc-500 group-hover:text-zinc-300'
+                  isActive ? 'text-emerald-400' : 'text-zinc-400 group-hover:text-zinc-300'
                 }`}
               />
               <span className="truncate">{sess.title}</span>
             </div>
 
-            <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity shrink-0">
+            <div className="flex items-center gap-0.5 opacity-0 group-hover:opacity-100 transition-opacity shrink-0">
               <button
                 onClick={(e) => onStartRenaming(e, sess)}
-                className="p-1.5 rounded-md hover:bg-white/10 text-zinc-400 hover:text-white transition-colors"
+                className="p-1 rounded-md hover:bg-white/10 text-zinc-400 hover:text-white transition-colors"
                 title={locale === 'ar' ? 'تعديل العنوان' : 'Rename'}
               >
                 <Pencil className="w-3 h-3" />
               </button>
               <button
                 onClick={(e) => onPromptDeleteSession(e, sess)}
-                className="p-1.5 rounded-md hover:bg-red-500/20 text-zinc-400 hover:text-red-400 transition-colors"
+                className="p-1 rounded-md hover:bg-red-500/20 text-zinc-400 hover:text-red-400 transition-colors"
                 title={locale === 'ar' ? 'حذف' : 'Delete'}
               >
                 <Trash2 className="w-3 h-3" />
@@ -309,13 +309,13 @@ export function SessionSidebar({
           <div className="p-3 pb-2 shrink-0 space-y-2">
             <button
               onClick={onNewChat}
-              className="w-full flex items-center justify-between px-3.5 py-2.5 rounded-xl bg-emerald-500/15 hover:bg-emerald-500/25 text-emerald-300 hover:text-emerald-200 text-xs font-semibold transition-all cursor-pointer border border-emerald-500/30 hover:border-emerald-500/50 shadow-xs shadow-emerald-950/40 group"
+              className="w-full flex items-center justify-between px-3 py-2 rounded-xl bg-white/[0.04] hover:bg-white/[0.08] text-zinc-200 hover:text-white text-xs font-semibold transition-all cursor-pointer border border-white/[0.08] hover:border-emerald-500/40 shadow-xs group"
             >
-              <div className="flex items-center gap-2.5">
+              <div className="flex items-center gap-2">
                 <Plus className="w-4 h-4 text-emerald-400 group-hover:rotate-90 transition-transform duration-200" />
                 <span className="truncate">{labels.newChat}</span>
               </div>
-              <kbd className="hidden sm:inline-block text-[10px] font-mono text-emerald-400/80 bg-emerald-500/15 px-1.5 py-0.5 rounded border border-emerald-500/25">
+              <kbd className="hidden sm:inline-block text-[10px] font-mono text-zinc-400 bg-white/[0.04] px-1.5 py-0.5 rounded border border-white/[0.08]">
                 ⌘N
               </kbd>
             </button>
@@ -417,7 +417,7 @@ export function SessionSidebar({
                   onClick={onClose}
                   className="flex items-center gap-2 p-2 rounded-xl bg-white/[0.02] hover:bg-white/[0.06] border border-white/[0.04] text-[11px] text-zinc-300 hover:text-white transition-all group"
                 >
-                  <ScanText className="w-3.5 h-3.5 text-emerald-400 group-hover:scale-110 transition-transform shrink-0" />
+                  <ScanText className="w-3.5 h-3.5 text-zinc-400 group-hover:text-emerald-400 group-hover:scale-105 transition-all shrink-0" />
                   <span className="truncate">Scanner OCR</span>
                 </Link>
 
@@ -426,7 +426,7 @@ export function SessionSidebar({
                   onClick={onClose}
                   className="flex items-center gap-2 p-2 rounded-xl bg-white/[0.02] hover:bg-white/[0.06] border border-white/[0.04] text-[11px] text-zinc-300 hover:text-white transition-all group"
                 >
-                  <FileText className="w-3.5 h-3.5 text-blue-400 group-hover:scale-110 transition-transform shrink-0" />
+                  <FileText className="w-3.5 h-3.5 text-zinc-400 group-hover:text-emerald-400 group-hover:scale-105 transition-all shrink-0" />
                   <span className="truncate">Modèles PDF</span>
                 </Link>
 
@@ -435,7 +435,7 @@ export function SessionSidebar({
                   onClick={onClose}
                   className="flex items-center gap-2 p-2 rounded-xl bg-white/[0.02] hover:bg-white/[0.06] border border-white/[0.04] text-[11px] text-zinc-300 hover:text-white transition-all group"
                 >
-                  <Calculator className="w-3.5 h-3.5 text-amber-400 group-hover:scale-110 transition-transform shrink-0" />
+                  <Calculator className="w-3.5 h-3.5 text-zinc-400 group-hover:text-emerald-400 group-hover:scale-105 transition-all shrink-0" />
                   <span className="truncate">Timbres DT</span>
                 </Link>
 
@@ -444,7 +444,7 @@ export function SessionSidebar({
                   onClick={onClose}
                   className="flex items-center gap-2 p-2 rounded-xl bg-white/[0.02] hover:bg-white/[0.06] border border-white/[0.04] text-[11px] text-zinc-300 hover:text-white transition-all group"
                 >
-                  <Briefcase className="w-3.5 h-3.5 text-teal-400 group-hover:scale-110 transition-transform shrink-0" />
+                  <Briefcase className="w-3.5 h-3.5 text-zinc-400 group-hover:text-emerald-400 group-hover:scale-105 transition-all shrink-0" />
                   <span className="truncate">Concours 2026</span>
                 </Link>
               </div>

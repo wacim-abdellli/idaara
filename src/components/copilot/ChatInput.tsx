@@ -125,6 +125,7 @@ export function ChatInput({
             >
               <Scale className={`w-3.5 h-3.5 ${thinkMode ? 'text-emerald-400' : 'text-zinc-400'}`} />
               <span>{tThinkLabel}</span>
+              {thinkMode && <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse ms-0.5" />}
             </button>
           </div>
 

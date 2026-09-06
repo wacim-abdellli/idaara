@@ -285,7 +285,7 @@ function renderFormattedContent(text: string, locale: string = 'derja', isRTLOve
       continue;
     }
 
-    // 3. Illuminated Pro Tip Card (💡 نصيحة عملية)
+    // 3. Modern Pro Callout / Practical Civic Note (💡 نصيحة عملية)
     if (/^(?:>|###|##|#)?\s*💡/.test(line) || /^>+\s*\*{0,2}💡/.test(line) || line.startsWith('💡')) {
       let tipBody = line
         .replace(/^(?:>|###|##|#)?\s*💡\s*:?\s*/, '')
@@ -325,15 +325,21 @@ function renderFormattedContent(text: string, locale: string = 'derja', isRTLOve
           <div
             key={`tip-${i}`}
             dir={lineDir}
-            className={`my-3 p-4 rounded-2xl bg-gradient-to-r from-amber-500/[0.08] via-amber-500/[0.03] to-transparent border border-amber-500/30 shadow-md shadow-amber-950/20 space-y-2 max-w-2xl ${lineAlign}`}
+            className={`my-3 p-3.5 sm:p-4 rounded-xl border-s-2 border-amber-400/80 bg-amber-500/[0.04] text-zinc-200 text-sm leading-relaxed ${lineAlign}`}
           >
-            <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-amber-500/15 border border-amber-500/30 text-amber-300 text-[11px] font-bold">
-              <Lightbulb className="w-3.5 h-3.5 text-amber-400 shrink-0" />
+            <div className="flex items-center gap-1.5 text-xs font-semibold text-amber-400 mb-1.5 select-none">
+              <Lightbulb className="w-3.5 h-3.5 shrink-0 text-amber-400" />
               <span>
-                {isMessageRTL ? 'نصيحة قانونية عملية' : (locale === 'fr' ? 'Conseil juridique' : 'Statutory Pro Tip')}
+                {isMessageRTL
+                  ? 'نصيحة قانونية عملية'
+                  : locale === 'fr'
+                  ? 'Conseil pratique'
+                  : locale === 'derja'
+                  ? 'Nsi7a 3amaliya'
+                  : 'Statutory Pro Tip'}
               </span>
             </div>
-            <div className="text-xs sm:text-[14px] leading-relaxed text-zinc-200">
+            <div className="text-[13.5px] sm:text-sm text-zinc-300 leading-relaxed font-normal">
               {renderInlineStyles(tipBody)}
             </div>
           </div>
@@ -346,9 +352,9 @@ function renderFormattedContent(text: string, locale: string = 'derja', isRTLOve
     if (line.startsWith('#') || /^(\*{2})?(📑|🎯|💰|🏛️|📍|📋|✅|🔑)/.test(line)) {
       const headerText = line.replace(/^#+\s*/, '');
       blocks.push(
-        <div key={`h-${i}`} dir={lineDir} className={`pt-4 pb-2 mb-2 flex items-center gap-2.5 border-b border-white/[0.08] ${lineAlign}`}>
-          <div className="w-1.5 h-4 rounded-full bg-emerald-500 shrink-0" />
-          <h4 className="text-sm sm:text-base font-bold text-white tracking-tight flex items-center gap-2">
+        <div key={`h-${i}`} dir={lineDir} className={`pt-3.5 pb-1.5 mb-1 flex items-center gap-2 border-b border-white/[0.06] ${lineAlign}`}>
+          <div className="w-1 h-3.5 rounded-full bg-emerald-400 shrink-0" />
+          <h4 className="text-sm sm:text-[15px] font-bold text-white tracking-tight">
             {renderInlineStyles(headerText)}
           </h4>
         </div>
@@ -388,7 +394,7 @@ function renderFormattedContent(text: string, locale: string = 'derja', isRTLOve
       const isCheck = line.startsWith('✔ ') || line.startsWith('✓ ') || line.includes('✅');
       const bulletText = line.replace(/^[-*•✔✓✅]\s+/, '');
       blocks.push(
-        <div key={`bullet-${i}`} dir={lineDir} className={`flex items-start gap-2.5 my-1.5 ms-4 sm:ms-6 ${lineAlign}`}>
+        <div key={`bullet-${i}`} dir={lineDir} className={`flex items-start gap-2.5 my-2 ps-1 ${lineAlign}`}>
           {isCheck ? (
             <span
               dir="ltr"
@@ -398,9 +404,9 @@ function renderFormattedContent(text: string, locale: string = 'derja', isRTLOve
               ✓
             </span>
           ) : (
-            <span className="w-1.5 h-1.5 rounded-full bg-emerald-400/80 shrink-0 mt-2.5 ring-2 ring-emerald-500/20" />
+            <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 shrink-0 mt-2 ring-2 ring-emerald-500/20" />
           )}
-          <span className="text-zinc-200 flex-1 leading-relaxed text-xs sm:text-[14px]">
+          <span className="text-zinc-200 flex-1 leading-relaxed text-sm sm:text-[14.5px]">
             {renderInlineStyles(bulletText)}
           </span>
         </div>
@@ -474,30 +480,55 @@ export const ChatMessage: React.FC<ChatMessageProps> = ({ message, onSelectPromp
     const suggestions: string[] = [];
 
     if (text.includes('passeport') || text.includes('باسبور') || text.includes('جواز')) {
-      suggestions.push(
-        locale === 'ar' ? 'قداش ياخذ وقت باش يحضر الباسبور؟' : '9adeh yo93ed el passeport bech ya7dher?',
-        locale === 'ar' ? 'كيفاش نشري التمبر الإلكتروني؟' : 'Kifech nechri timbre en ligne?'
-      );
+      if (locale === 'ar') {
+        suggestions.push('قداش ياخذ وقت باش يحضر الباسبور؟', 'كيفاش نشري التمبر الإلكتروني؟');
+      } else if (locale === 'fr') {
+        suggestions.push('Quel est le délai de délivrance du passeport ?', 'Comment acheter le timbre fiscal en ligne ?');
+      } else if (locale === 'en') {
+        suggestions.push('How long does the passport take to be issued?', 'How do I purchase the fiscal e-stamp online?');
+      } else {
+        suggestions.push('9adeh yo93ed el passeport bech ya7dher?', 'Kifech nechri timbre en ligne?');
+      }
     } else if (text.includes('carte grise') || text.includes('رمادية') || text.includes('karhba')) {
-      suggestions.push(
-        locale === 'ar' ? 'شنوة الوثائق المطلوبة في المعاينة الفنية؟' : 'Awra9 el visite technique chnowa?',
-        locale === 'ar' ? 'قداش معلوم خلاص القباضة بالضبط؟' : '9adeh masrouf el 9badha bedhabt?'
-      );
+      if (locale === 'ar') {
+        suggestions.push('شنوة الوثائق المطلوبة في المعاينة الفنية؟', 'قداش معلوم خلاص القباضة بالضبط؟');
+      } else if (locale === 'fr') {
+        suggestions.push('Quels sont les documents pour la visite technique ?', 'Quel est le montant exact de la recette des finances ?');
+      } else if (locale === 'en') {
+        suggestions.push('What documents are needed for technical inspection?', 'What is the exact tax office fee?');
+      } else {
+        suggestions.push('Awra9 el visite technique chnowa?', '9adeh masrouf el 9badha bedhabt?');
+      }
     } else if (text.includes('cin') || text.includes('تعريف')) {
-      suggestions.push(
-        locale === 'ar' ? 'شنوة نعمل في حالة ضياع بطاقة التعريف؟' : 'Chnowa na3mel ken dha3et el CIN?',
-        locale === 'ar' ? 'قداش صلوحية المضمون المطلوب؟' : 'Madhmoun 9adeh 3omrou lezem?'
-      );
+      if (locale === 'ar') {
+        suggestions.push('شنوة نعمل في حالة ضياع بطاقة التعريف؟', 'قداش صلوحية المضمون المطلوب؟');
+      } else if (locale === 'fr') {
+        suggestions.push('Que faire en cas de perte de la CIN ?', 'Quelle est la validité de l’extrait de naissance ?');
+      } else if (locale === 'en') {
+        suggestions.push('What to do if my national ID (CIN) is lost?', 'How recent must the birth certificate be?');
+      } else {
+        suggestions.push('Chnowa na3mel ken dha3et el CIN?', 'Madhmoun 9adeh 3omrou lezem?');
+      }
     } else if (text.includes('auto-entrepreneur') || text.includes('مبادر') || text.includes('freelance')) {
-      suggestions.push(
-        locale === 'ar' ? 'كيفاش نفوتر بالعملة الصعبة (EUR/USD)؟' : 'Kifech nfacturi fel devises l barra?',
-        locale === 'ar' ? 'شنوة وضعية الضمان الاجتماعي CNSS؟' : 'CNSS kifech n5allas fiha?'
-      );
+      if (locale === 'ar') {
+        suggestions.push('كيفاش نفوتر بالعملة الصعبة (EUR/USD)؟', 'شنوة وضعية الضمان الاجتماعي CNSS؟');
+      } else if (locale === 'fr') {
+        suggestions.push('Comment facturer en devises (EUR/USD) ?', 'Quel est le régime de cotisation CNSS ?');
+      } else if (locale === 'en') {
+        suggestions.push('How to invoice foreign clients in EUR/USD?', 'How does CNSS social security contribution work?');
+      } else {
+        suggestions.push('Kifech nfacturi fel devises l barra?', 'CNSS kifech n5allas fiha?');
+      }
     } else if (text.includes('b3') || text.includes('سوابق')) {
-      suggestions.push(
-        locale === 'ar' ? 'قداش مدة صلوحية البطاقة عدد 3؟' : '9adeh to93ed sal7a el B3?',
-        locale === 'ar' ? 'كيفاش نتبع إرسالية Rapide Poste؟' : 'Kifech ntaba3 envoi rapide poste?'
-      );
+      if (locale === 'ar') {
+        suggestions.push('قداش مدة صلوحية البطاقة عدد 3؟', 'كيفاش نتبع إرسالية Rapide Poste؟');
+      } else if (locale === 'fr') {
+        suggestions.push('Quelle est la durée de validité du bulletin N°3 ?', 'Comment suivre l’envoi Rapide Poste ?');
+      } else if (locale === 'en') {
+        suggestions.push('What is the validity period of the B3 certificate?', 'How to track Rapide Poste parcel delivery?');
+      } else {
+        suggestions.push('9adeh to93ed sal7a el B3?', 'Kifech ntaba3 envoi rapide poste?');
+      }
     }
 
     return suggestions.slice(0, 2);
@@ -622,30 +653,15 @@ export const ChatMessage: React.FC<ChatMessageProps> = ({ message, onSelectPromp
         </div>
       )}
 
-      {/* Contextual Smart Follow-up Chips */}
-      {!message.isStreaming && followUpSuggestions.length > 0 && onSelectPrompt && (
-        <div className="pt-2 flex flex-wrap gap-2 animate-fade-in">
-          {followUpSuggestions.map((promptText, idx) => (
-            <button
-              key={idx}
-              type="button"
-              onClick={() => onSelectPrompt(promptText)}
-              className="inline-flex items-center gap-2 px-3 py-1.5 rounded-xl bg-emerald-500/10 hover:bg-emerald-500/20 border border-emerald-500/25 hover:border-emerald-500/40 text-xs text-emerald-300 hover:text-white transition-all cursor-pointer shadow-xs group"
-            >
-              <Sparkles className="w-3 h-3 text-emerald-400 group-hover:rotate-12 transition-transform" />
-              <span>{promptText}</span>
-              <ArrowRight className="w-3 h-3 text-emerald-400/80 rtl:rotate-180 group-hover:translate-x-0.5 rtl:group-hover:-translate-x-0.5 transition-transform" />
-            </button>
-          ))}
-        </div>
-      )}
-
       {/* Pro Action Toolbar */}
       {!message.isStreaming && message.content && (
-        <div className="flex items-center gap-2 pt-1 text-zinc-400 opacity-0 group-hover:opacity-100 transition-opacity animate-fade-in select-none">
+        <div
+          dir={isArabicScript ? 'rtl' : 'ltr'}
+          className="flex items-center gap-1.5 pt-1 text-zinc-400 opacity-80 hover:opacity-100 transition-opacity animate-fade-in select-none"
+        >
           <button
             onClick={copyToClipboard}
-            className="p-1.5 rounded-lg hover:bg-white/5 hover:text-zinc-200 text-zinc-400 transition-colors cursor-pointer border-0 outline-none flex items-center gap-1 text-xs"
+            className="p-1.5 rounded-lg hover:bg-white/[0.06] hover:text-zinc-200 text-zinc-400 transition-colors cursor-pointer border-0 outline-none flex items-center gap-1 text-xs"
             title={copyTitleLabels[locale] ?? 'Copy'}
           >
             {copied ? (
@@ -662,7 +678,7 @@ export const ChatMessage: React.FC<ChatMessageProps> = ({ message, onSelectPromp
             type="button"
             onClick={() => setFeedback(feedback === 'up' ? null : 'up')}
             className={`p-1.5 rounded-lg transition-colors cursor-pointer border-0 outline-none ${
-              feedback === 'up' ? 'bg-emerald-500/20 text-emerald-400' : 'hover:bg-white/5 text-zinc-400 hover:text-zinc-200'
+              feedback === 'up' ? 'bg-emerald-500/20 text-emerald-400' : 'hover:bg-white/[0.06] text-zinc-400 hover:text-zinc-200'
             }`}
             title="Good response"
           >
@@ -673,7 +689,7 @@ export const ChatMessage: React.FC<ChatMessageProps> = ({ message, onSelectPromp
             type="button"
             onClick={() => setFeedback(feedback === 'down' ? null : 'down')}
             className={`p-1.5 rounded-lg transition-colors cursor-pointer border-0 outline-none ${
-              feedback === 'down' ? 'bg-red-500/20 text-red-400' : 'hover:bg-white/5 text-zinc-400 hover:text-zinc-200'
+              feedback === 'down' ? 'bg-red-500/20 text-red-400' : 'hover:bg-white/[0.06] text-zinc-400 hover:text-zinc-200'
             }`}
             title="Poor response"
           >
@@ -681,10 +697,37 @@ export const ChatMessage: React.FC<ChatMessageProps> = ({ message, onSelectPromp
           </button>
 
           {message.timestamp && (
-            <span className="text-[11px] text-zinc-400 font-mono ms-1">
+            <span
+              dir="ltr"
+              style={{ unicodeBidi: 'isolate' }}
+              className="text-[10px] text-zinc-400 font-mono ms-2 select-none"
+            >
               {message.timestamp}
             </span>
           )}
+        </div>
+      )}
+
+      {/* Contextual Smart Follow-up Chips */}
+      {!message.isStreaming && followUpSuggestions.length > 0 && onSelectPrompt && (
+        <div className="pt-2.5 flex flex-wrap gap-2 animate-fade-in" dir={locale === 'ar' ? 'rtl' : 'ltr'}>
+          {followUpSuggestions.map((promptText, idx) => {
+            const isTextArabic = /[\u0600-\u06FF]/.test(promptText);
+            return (
+              <button
+                key={idx}
+                type="button"
+                dir={isTextArabic ? 'rtl' : 'ltr'}
+                style={{ unicodeBidi: 'isolate' }}
+                onClick={() => onSelectPrompt(promptText)}
+                className="inline-flex items-center gap-2 px-3 py-1.5 rounded-xl bg-emerald-500/10 hover:bg-emerald-500/20 border border-emerald-500/25 hover:border-emerald-500/40 text-xs text-emerald-300 hover:text-white transition-all cursor-pointer shadow-xs group"
+              >
+                <Sparkles className="w-3 h-3 text-emerald-400 group-hover:rotate-12 transition-transform shrink-0" />
+                <span className="font-medium">{promptText}</span>
+                <ArrowRight className="w-3 h-3 text-emerald-400/80 rtl:rotate-180 group-hover:translate-x-0.5 rtl:group-hover:-translate-x-0.5 transition-transform shrink-0" />
+              </button>
+            );
+          })}
         </div>
       )}
     </div>
