@@ -1,8 +1,10 @@
 'use client';
 
-import { useState, useEffect, useCallback, useRef } from 'react';
+import { useState, useEffect, useLayoutEffect, useCallback, useRef } from 'react';
 import { ChatMessage } from '../types/chat';
 import { useAuth } from '../context/AuthContext';
+
+const useIsomorphicLayoutEffect = typeof window !== 'undefined' ? useLayoutEffect : useEffect;
 
 export interface ChatSession {
   id: string;
@@ -89,7 +91,7 @@ export function useCopilotSessions(onAutoQuery?: (query: string) => void) {
   const saveTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
   // ── Load Chat Sessions (Cloud DB if signed in, fallback to LocalStorage) ──
-  useEffect(() => {
+  useIsomorphicLayoutEffect(() => {
     if (typeof window === 'undefined') return;
 
     let isMounted = true;
@@ -117,13 +119,16 @@ export function useCopilotSessions(onAutoQuery?: (query: string) => void) {
               setSessions(cleanLoaded);
               setCurrentSessionId(activeSession.id);
               setMessages(activeSession.messages || []);
-              setIsInitialized(true);
               hasLocal = true;
             }
           }
         }
       } catch (localErr) {
         console.warn('Failed to load local session cache:', localErr);
+      } finally {
+        if (isMounted) {
+          setIsInitialized(true);
+        }
       }
 
       // 2. Background cloud DB sync

@@ -28,6 +28,7 @@ export interface SessionSidebarProps {
   isOpen: boolean;
   locale: SupportedLanguage;
   sessions: ChatSession[];
+  isInitialized?: boolean;
   currentSessionId: string;
   editingSessionId: string | null;
   editingTitle: string;
@@ -54,6 +55,7 @@ export function SessionSidebar({
   isOpen,
   locale,
   sessions,
+  isInitialized = true,
   currentSessionId,
   editingSessionId,
   editingTitle,
@@ -337,7 +339,7 @@ export function SessionSidebar({
 
           {/* Scrollable Main Area (Grouped Sessions) */}
           <div className="px-2 py-1.5 flex-1 overflow-y-auto space-y-4">
-            {!hasAnySessions ? (
+            {!isInitialized ? null : !hasAnySessions ? (
               <div className="px-3 py-8 text-center space-y-2">
                 <div className="w-8 h-8 mx-auto rounded-full bg-white/[0.03] border border-white/[0.06] flex items-center justify-center text-zinc-400">
                   <MessageSquare className="w-4 h-4" />

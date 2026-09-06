@@ -47,6 +47,7 @@ export default function CopilotPage() {
     setMessages,
     sessions,
     currentSessionId,
+    isInitialized,
     sessionToDelete,
     setSessionToDelete,
     editingSessionId,
@@ -313,6 +314,7 @@ export default function CopilotPage() {
         isOpen={sidebarOpen}
         locale={locale}
         sessions={sessions}
+        isInitialized={isInitialized}
         currentSessionId={currentSessionId}
         editingSessionId={editingSessionId}
         editingTitle={editingTitle}
@@ -351,7 +353,7 @@ export default function CopilotPage() {
             )}
 
             {/* Brand Logo or Active Session Title */}
-            {messages.length === 0 ? (
+            {!isInitialized || (messages.length === 0 && !activeSession) ? (
               <div className="flex items-center gap-2">
                 <IdaaraCrest size={22} />
                 <span className="font-bold text-sm text-zinc-200 tracking-tight hidden sm:inline">
@@ -366,7 +368,7 @@ export default function CopilotPage() {
               >
                 <IdaaraCrest size={18} />
                 <span className="font-semibold text-xs sm:text-sm text-zinc-100 truncate max-w-[200px] sm:max-w-xs">
-                  {activeChatTitle}
+                  {activeChatTitle || 'Consultation'}
                 </span>
                 <ChevronDown className="w-3.5 h-3.5 text-zinc-400 group-hover:text-zinc-200 shrink-0" />
               </div>
@@ -412,8 +414,13 @@ export default function CopilotPage() {
 
         {/* ─── Main Chat Area (Suspense Wrapped) ─── */}
         <Suspense fallback={<Loading />}>
-          {/* ─── Empty State: Minimalist Landing Experience ─── */}
-          {messages.length === 0 && !isProcessing && (
+          {/* ─── Mounting placeholder before initialization ─── */}
+          {!isInitialized && (
+            <div className="flex-1 bg-[#090b0e]" />
+          )}
+
+          {/* ─── Empty State: Minimalist Landing Experience (Only when truly initialized with no messages) ─── */}
+          {isInitialized && messages.length === 0 && !isProcessing && (
             <div className="flex-1 flex flex-col items-center justify-center px-4 sm:px-6 max-w-3xl mx-auto w-full py-8 overflow-y-auto">
               {/* Minimalist Brand Header */}
               <div className="relative flex flex-col items-center text-center mb-6 select-none animate-fade-in w-full">
