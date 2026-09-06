@@ -9,6 +9,8 @@ export interface ChatSession {
   title: string;
   timestamp: string;
   messages: ChatMessage[];
+  createdAt?: number;
+  updatedAt?: number;
 }
 
 export function generateUUID(): string {
@@ -132,11 +134,13 @@ export function useCopilotSessions(onAutoQuery?: (query: string) => void) {
             const data = await res.json();
             if (Array.isArray(data.sessions) && isMounted) {
               if (data.sessions.length > 0) {
-                const rawCloudSessions: ChatSession[] = data.sessions.map((s: { id: string; title: string; messages: ChatMessage[]; updated_at: string }) => ({
+                const rawCloudSessions: ChatSession[] = data.sessions.map((s: { id: string; title: string; messages: ChatMessage[]; updated_at: string; created_at?: string }) => ({
                   id: s.id,
                   title: s.title,
                   timestamp: new Date(s.updated_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
                   messages: s.messages || [],
+                  updatedAt: new Date(s.updated_at).getTime(),
+                  createdAt: s.created_at ? new Date(s.created_at).getTime() : new Date(s.updated_at).getTime(),
                 }));
 
                 const { unique: cloudSessions, duplicateIds } = deduplicateSessions(rawCloudSessions);
@@ -208,9 +212,10 @@ export function useCopilotSessions(onAutoQuery?: (query: string) => void) {
         setSessions((prev) => {
           const exists = prev.find((s) => s.id === currentSessionId);
           let updated: ChatSession[];
+          const now = Date.now();
           if (exists) {
             targetTitle = exists.title && exists.title !== 'Discussion' ? exists.title : defaultTitle;
-            updated = prev.map((s) => (s.id === currentSessionId ? { ...s, title: targetTitle, messages } : s));
+            updated = prev.map((s) => (s.id === currentSessionId ? { ...s, title: targetTitle, messages, updatedAt: now } : s));
           } else {
             updated = [
               {
@@ -218,6 +223,8 @@ export function useCopilotSessions(onAutoQuery?: (query: string) => void) {
                 title: defaultTitle,
                 timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
                 messages,
+                createdAt: now,
+                updatedAt: now,
               },
               ...prev.slice(0, 20),
             ];
@@ -322,11 +329,14 @@ export function useCopilotSessions(onAutoQuery?: (query: string) => void) {
     }
   }, [sessionToDelete, currentSessionId, handleNewChat, user]);
 
-  const startRenaming = useCallback((e: React.MouseEvent, sess: ChatSession) => {
-    e.stopPropagation();
-    setEditingSessionId(sess.id);
-    setEditingTitle(sess.title);
-  }, []);
+  const startRenaming = useCallback((e?: React.MouseEvent, sess?: ChatSession) => {
+    if (e) e.stopPropagation();
+    const targetSession = sess || sessions.find((s) => s.id === currentSessionId);
+    if (targetSession) {
+      setEditingSessionId(targetSession.id);
+      setEditingTitle(targetSession.title);
+    }
+  }, [sessions, currentSessionId]);
 
   const saveRenamedTitle = useCallback(async (e?: React.FormEvent | React.MouseEvent | React.KeyboardEvent, id?: string) => {
     if (e) e.stopPropagation();
@@ -335,8 +345,9 @@ export function useCopilotSessions(onAutoQuery?: (query: string) => void) {
 
     const trimmed = editingTitle.trim();
     if (trimmed) {
+      const now = Date.now();
       setSessions((prev) => {
-        const updated = prev.map((s) => (s.id === targetId ? { ...s, title: trimmed } : s));
+        const updated = prev.map((s) => (s.id === targetId ? { ...s, title: trimmed, updatedAt: now } : s));
         if (typeof window !== 'undefined') {
           localStorage.setItem(STORAGE_SESSIONS_KEY, JSON.stringify(updated));
         }

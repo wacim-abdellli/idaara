@@ -357,7 +357,7 @@ export default function CopilotPage() {
               </div>
             ) : (
               <div
-                onClick={() => activeSession && startRenaming({} as any, activeSession)}
+                onClick={(e) => activeSession && startRenaming(e, activeSession)}
                 className="flex items-center gap-2 min-w-0 cursor-pointer group hover:bg-white/[0.04] px-2.5 py-1.5 rounded-xl transition-colors"
                 title={locale === 'ar' ? 'تعديل العنوان' : 'Renommer'}
               >
