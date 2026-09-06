@@ -1,9 +1,8 @@
 'use client';
 
 import React from 'react';
-import { Plus, Mic, MicOff, ArrowUp, Loader2, ChevronDown } from 'lucide-react';
+import { Plus, Mic, MicOff, ArrowUp, Loader2, Scale, Sparkles, ShieldCheck } from 'lucide-react';
 import { SupportedLanguage } from '../../data/translations';
-import { getLocalized } from '../../lib/locale-utils';
 import { getQuickTopicsList } from './QuickTopics';
 
 export interface ChatInputProps {
@@ -48,9 +47,18 @@ export function ChatInput({
   const isDock = variant === 'dock';
   const hasText = Boolean(inputVal.trim());
 
+  const tThinkLabel =
+    locale === 'ar'
+      ? 'تدقيق قانوني (JORT)'
+      : locale === 'derja'
+      ? 'Ta7lil JORT'
+      : locale === 'fr'
+      ? 'Vérification JORT'
+      : 'Legal Reasoning';
+
   return (
     <div className={isDock ? 'w-full max-w-3xl mx-auto' : 'w-full'}>
-      <div className="rounded-2xl sm:rounded-3xl bg-[#242429] border border-[#383840] hover:border-[#464650] focus-within:border-[#5a5a66] shadow-xl p-3 sm:p-3.5 transition-all space-y-2.5">
+      <div className="rounded-2xl sm:rounded-3xl bg-[#0c0e13]/95 border border-white/[0.1] hover:border-emerald-500/30 focus-within:border-emerald-500/50 focus-within:ring-1 focus-within:ring-emerald-500/20 shadow-2xl p-3 sm:p-3.5 transition-all space-y-2.5 backdrop-blur-xl">
         {/* Auto-growing Textarea */}
         <textarea
           ref={textareaRef}
@@ -60,27 +68,30 @@ export function ChatInput({
           onKeyDown={onKeyDown}
           placeholder={placeholder}
           disabled={isTranscribing}
-          className="w-full bg-transparent px-1.5 py-1 text-[15px] text-[#f4f4f5] placeholder-[#71717a] border-0 outline-none ring-0 resize-none max-h-36 leading-relaxed"
+          className="w-full bg-transparent px-1.5 py-1 text-base sm:text-[15px] text-zinc-100 placeholder-zinc-400 border-0 outline-none ring-0 resize-none max-h-36 leading-relaxed"
         />
 
-        {/* Bottom Toolbar matching Claude.ai Image 2 & 3 */}
+        {/* Bottom Civic Actions Toolbar */}
         <div className="flex items-center justify-between pt-1">
-          {/* Left: Plus attachment button + Segmented mode pill */}
+          {/* Left: Quick civic topics menu + Deep Legal Verification toggle */}
           <div className="flex items-center gap-2">
             <div className="relative">
               <button
                 type="button"
                 onClick={onTogglePlusMenu}
-                className="p-1.5 rounded-lg hover:bg-[#303036] text-zinc-400 hover:text-white transition-colors cursor-pointer border-0 outline-none"
-                title={locale === 'ar' ? 'مواضيع سريعة' : 'Quick topics'}
+                className="p-2 rounded-xl bg-white/[0.04] hover:bg-white/[0.08] text-zinc-300 hover:text-white transition-colors cursor-pointer border border-white/[0.08] outline-none flex items-center justify-center min-h-[36px] min-w-[36px]"
+                title={locale === 'ar' ? 'إجراءات ونماذج سريعة' : 'Procédures & Modèles'}
               >
                 <Plus className="w-4 h-4" />
               </button>
 
               {showPlusMenu && (
-                <div className="absolute bottom-full left-0 mb-3 w-72 rounded-2xl bg-[#202024] border border-[#383840] shadow-2xl p-2 z-50 animate-fade-in space-y-1">
-                  <div className="px-3 py-1 text-[10px] uppercase font-bold tracking-wider text-zinc-400">
-                    {locale === 'ar' ? 'مواضيع رسمية شائعة' : 'Popular Civic Queries'}
+                <div className="absolute bottom-full left-0 mb-3 w-80 rounded-2xl bg-[#11141b] border border-white/[0.12] shadow-2xl p-2.5 z-50 animate-fade-in space-y-1 backdrop-blur-2xl">
+                  <div className="px-3 py-1.5 text-[10px] uppercase font-bold tracking-wider text-emerald-400 flex items-center gap-1.5 border-b border-white/[0.06] mb-1">
+                    <Sparkles className="w-3 h-3" />
+                    <span>
+                      {locale === 'ar' ? 'استشارات وإجراءات رسمية' : 'Démarches & Modèles Clés'}
+                    </span>
                   </div>
                   {quickTopicsList.map((item, idx) => {
                     const Icon = item.icon;
@@ -88,9 +99,9 @@ export function ChatInput({
                       <button
                         key={idx}
                         onClick={() => onSendMessage(item.q)}
-                        className="w-full flex items-center gap-2.5 px-3 py-2 rounded-xl text-left hover:bg-[#2a2a30] text-xs text-zinc-200 transition-colors cursor-pointer border-0 outline-none"
+                        className="w-full flex items-center gap-2.5 px-3 py-2 rounded-xl text-start hover:bg-emerald-500/10 hover:text-emerald-300 text-xs text-zinc-300 transition-colors cursor-pointer border-0 outline-none group"
                       >
-                        <Icon className="w-3.5 h-3.5 text-[#da7756] shrink-0" />
+                        <Icon className="w-4 h-4 text-emerald-400 shrink-0 group-hover:scale-110 transition-transform" />
                         <span className="truncate">{item.label}</span>
                       </button>
                     );
@@ -99,68 +110,41 @@ export function ChatInput({
               )}
             </div>
 
-            {/* Segmented Mode Pill: [ Chat | Deep Legal ] */}
-            <div className="flex items-center rounded-lg bg-[#1a1a1d] p-0.5 border border-[#34343c]">
-              <button
-                type="button"
-                onClick={() => thinkMode && onToggleThinkMode()}
-                className={`px-2.5 py-1 rounded-md text-xs font-medium transition-all cursor-pointer ${
-                  !thinkMode
-                    ? 'bg-[#2a2a30] text-white shadow-xs'
-                    : 'text-zinc-400 hover:text-zinc-200'
-                }`}
-              >
-                {locale === 'ar'
-                  ? 'محادثة'
-                  : locale === 'derja'
-                  ? 'Chat'
-                  : locale === 'fr'
-                  ? 'Discussion'
-                  : 'Chat'}
-              </button>
-              <button
-                type="button"
-                onClick={() => !thinkMode && onToggleThinkMode()}
-                className={`px-2.5 py-1 rounded-md text-xs font-medium transition-all cursor-pointer flex items-center gap-1.5 ${
-                  thinkMode
-                    ? 'bg-[#da7756]/20 text-[#da7756] border border-[#da7756]/30 shadow-xs'
-                    : 'text-zinc-400 hover:text-zinc-200'
-                }`}
-              >
-                <span>
-                  {locale === 'ar'
-                    ? 'تحليل قانوني'
-                    : locale === 'derja'
-                    ? 'Ta7lil'
-                    : locale === 'fr'
-                    ? 'Raisonnement'
-                    : 'Think'}
-                </span>
-              </button>
-            </div>
+            {/* Deep JORT Verification Mode Toggle */}
+            <button
+              type="button"
+              onClick={onToggleThinkMode}
+              className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-semibold transition-all cursor-pointer border min-h-[36px] ${
+                thinkMode
+                  ? 'bg-emerald-500/15 text-emerald-300 border-emerald-500/40 shadow-xs shadow-emerald-950/40'
+                  : 'bg-white/[0.03] hover:bg-white/[0.06] text-zinc-400 hover:text-zinc-200 border-white/[0.06]'
+              }`}
+            >
+              <Scale className={`w-3.5 h-3.5 ${thinkMode ? 'text-emerald-400 animate-pulse' : 'text-zinc-400'}`} />
+              <span>{tThinkLabel}</span>
+            </button>
           </div>
 
-          {/* Right: Model badge, Voice mic, Send button */}
+          {/* Right: JORT Decree badge, Mic, High-contrast Send button */}
           <div className="flex items-center gap-2">
-            {/* Claude-style model badge */}
-            <div className="hidden sm:flex items-center gap-1 px-2 py-1 rounded-md text-xs text-zinc-400 hover:text-zinc-200 hover:bg-[#2c2c32] cursor-default transition-colors">
-              <span>Idaara 2.4 · JORT</span>
-              <ChevronDown className="w-3 h-3 text-zinc-400" />
+            <div className="hidden sm:flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-emerald-500/10 border border-emerald-500/20 text-[11px] font-mono text-emerald-300">
+              <ShieldCheck className="w-3.5 h-3.5 text-emerald-400" />
+              <span>JORT 2026</span>
             </div>
 
-            {/* Mic button */}
+            {/* Voice Mic Button */}
             <button
               type="button"
               onClick={onToggleVoice}
               disabled={isTranscribing}
-              className={`p-1.5 rounded-full transition-colors cursor-pointer border-0 outline-none ${
+              className={`p-2 rounded-xl transition-colors cursor-pointer border min-h-[36px] min-w-[36px] flex items-center justify-center ${
                 isRecording
-                  ? 'bg-red-500 text-white animate-pulse'
+                  ? 'bg-red-500 text-white animate-pulse border-red-400'
                   : isTranscribing
-                  ? 'text-[#da7756]'
-                  : 'text-zinc-400 hover:text-zinc-200 hover:bg-[#303036]'
+                  ? 'text-emerald-400 bg-emerald-500/10 border-emerald-500/30'
+                  : 'bg-white/[0.03] hover:bg-white/[0.08] text-zinc-400 hover:text-zinc-100 border-white/[0.06]'
               }`}
-              title={locale === 'ar' ? 'إملاء صوتي' : 'Voice dictation'}
+              title={locale === 'ar' ? 'إملاء صوتي بالدارجة أو العربية' : 'Dictée vocale'}
             >
               {isTranscribing ? (
                 <Loader2 className="w-4 h-4 animate-spin" />
@@ -171,17 +155,17 @@ export function ChatInput({
               )}
             </button>
 
-            {/* Circular Send Arrow */}
+            {/* High-Contrast Send Action Button */}
             <button
               type="button"
               onClick={() => onSendMessage()}
               disabled={!hasText || isProcessing || isTranscribing}
-              className={`w-7 h-7 sm:w-8 sm:h-8 rounded-full flex items-center justify-center transition-all ${
+              className={`w-9 h-9 rounded-xl flex items-center justify-center transition-all ${
                 hasText && !isProcessing && !isTranscribing
-                  ? 'bg-white hover:bg-zinc-200 text-black cursor-pointer shadow-md'
-                  : 'bg-[#303036] text-zinc-500 cursor-not-allowed opacity-50'
+                  ? 'bg-emerald-500 hover:bg-emerald-400 text-black cursor-pointer shadow-lg shadow-emerald-500/25 active:scale-95'
+                  : 'bg-white/[0.06] text-zinc-600 cursor-not-allowed border border-white/[0.04]'
               }`}
-              aria-label="Send message"
+              aria-label="Send query"
             >
               <ArrowUp className="w-4 h-4 stroke-[2.5]" />
             </button>
@@ -189,16 +173,16 @@ export function ChatInput({
         </div>
       </div>
 
-      {/* Claude-style Micro Disclaimer */}
+      {/* Official Civic Advisory Disclaimer */}
       {isDock && (
-        <p className="text-center text-[11px] text-zinc-400 pt-2">
+        <p className="text-center text-[11px] text-zinc-400 pt-2 font-mono">
           {locale === 'ar'
-            ? 'Idaara AI يقدم استشارات إرشادية. يرجى التثبت دائماً من النصوص الرسمية بالرائد الرسمي.'
+            ? '🏛️ Idaara AI يقدم معلومات إرشادية رسمية · يرجى دائماً مراجعة النصوص الأصلية بالرائد الرسمي للجمهورية التونسية.'
             : locale === 'derja'
-            ? 'Idaara AI ya3tik ma3loumet te9ribiya. Thabbet dima fel JORT.'
+            ? '🏛️ Idaara AI ya3tik ma3loumet rasmiya te9ribiya · Thabbet dima fel JORT.'
             : locale === 'fr'
-            ? 'Idaara AI est un copilote civique. Vérifiez les textes officiels au JORT.'
-            : 'Idaara AI is AI and can make mistakes. Please double-check official texts with JORT.'}
+            ? '🏛️ Idaara AI fournit une orientation civique officielle · Vérifiez toujours les textes au Journal Officiel (JORT).'
+            : '🏛️ Idaara AI provides official civic guidance · Always verify legal decrees in the Official Gazette (JORT).'}
         </p>
       )}
     </div>

@@ -15,12 +15,13 @@ import {
   X,
   Pencil,
   Trash2,
-  MoreHorizontal,
-  ChevronDown,
+  FolderLock,
+  Sparkles,
+  ExternalLink,
 } from 'lucide-react';
 import { SupportedLanguage } from '../../data/translations';
 import { ChatSession } from '../../hooks/useCopilotSessions';
-import { ClaudeStarburst } from './ClaudeStarburst';
+import { IdaaraCrest } from './IdaaraCrest';
 
 export interface SessionSidebarProps {
   isOpen: boolean;
@@ -59,7 +60,34 @@ export function SessionSidebar({
   onPromptDeleteSession,
   onOpenAuthModal,
 }: SessionSidebarProps) {
-  const initial = (userName.trim()[0] || 'C').toUpperCase();
+  const citizenInitial = (userName.trim()[0] || 'C').toUpperCase();
+
+  const tNewChat =
+    locale === 'ar'
+      ? 'استشارة إدارية جديدة'
+      : locale === 'derja'
+      ? 'Dossier / M7adtha Jdida'
+      : locale === 'fr'
+      ? 'Nouvelle Démarche'
+      : 'New Consultation';
+
+  const tCivicHub =
+    locale === 'ar'
+      ? 'الخدمات الإدارية المباشرة'
+      : locale === 'derja'
+      ? 'Khedmet el Idara'
+      : locale === 'fr'
+      ? 'Services & Outils Citoyens'
+      : 'Official Civic Tools';
+
+  const tRecents =
+    locale === 'ar'
+      ? 'الملفات والاستشارات'
+      : locale === 'derja'
+      ? 'Dossierét w M7adhathat'
+      : locale === 'fr'
+      ? 'Dossiers & Consultations'
+      : 'Recent Consultations';
 
   return (
     <>
@@ -67,34 +95,41 @@ export function SessionSidebar({
       {isOpen && (
         <div
           onClick={onClose}
-          className="fixed inset-0 bg-black/60 backdrop-blur-xs z-40 lg:hidden animate-fade-in"
+          className="fixed inset-0 bg-black/75 backdrop-blur-xs z-40 lg:hidden animate-fade-in"
         />
       )}
 
-      {/* Claude-Grade Dark Sidebar (#161618) */}
+      {/* ─── BESPOKE IDAARA CIVIC SIDEBAR ─── */}
       <aside
-        className={`fixed lg:static inset-y-0 start-0 z-50 lg:z-20 w-64 shrink-0 bg-[#161618] border-e border-[#26262a] flex flex-col justify-between select-none shadow-2xl lg:shadow-none transition-transform duration-200 ease-in-out font-sans ${
+        className={`fixed lg:static inset-y-0 start-0 z-50 lg:z-20 w-72 lg:w-68 shrink-0 bg-[#090b0e] border-e border-white/[0.08] flex flex-col justify-between select-none shadow-2xl lg:shadow-none transition-transform duration-200 ease-in-out font-sans ${
           isOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0 lg:hidden'
         }`}
       >
-        {/* Top Header & Navigation */}
         <div className="flex flex-col flex-1 overflow-hidden">
-          {/* Top Branding Row */}
-          <div className="h-12 px-4 flex items-center justify-between shrink-0">
+          {/* Top Brand Seal Header */}
+          <div className="h-14 px-3.5 flex items-center justify-between border-b border-white/[0.06] shrink-0">
             <Link
               href="/"
-              className="flex items-center gap-2 group cursor-pointer"
-              title={locale === 'ar' ? 'الرئيسية' : 'Idaara.tn'}
+              className="flex items-center gap-2.5 group cursor-pointer"
+              title={locale === 'ar' ? 'الرجوع إلى بوابة إدارة' : 'Idaara.tn'}
             >
-              <ClaudeStarburst size={20} color="#da7756" />
-              <span className="font-semibold text-[17px] text-[#f4f4f5] tracking-tight group-hover:text-white transition-colors">
-                Idaara
-              </span>
+              <IdaaraCrest size={28} glow />
+              <div className="leading-tight">
+                <div className="flex items-center gap-1.5 font-bold text-sm text-zinc-100 group-hover:text-white tracking-tight">
+                  <span>Idaara</span>
+                  <span className="text-[10px] px-1.5 py-0.5 rounded bg-emerald-500/15 border border-emerald-500/30 text-emerald-400 font-mono font-bold">
+                    .TN
+                  </span>
+                </div>
+                <span className="text-[10px] text-zinc-400 font-mono tracking-wide block">
+                  JORT {new Date().getFullYear()} · الذكاء الإداري
+                </span>
+              </div>
             </Link>
 
             <button
               onClick={onClose}
-              className="p-1 rounded-md text-zinc-400 hover:text-white hover:bg-white/5 transition-colors cursor-pointer border-0 outline-none"
+              className="p-1.5 rounded-lg text-zinc-400 hover:text-white hover:bg-white/[0.06] transition-colors cursor-pointer border-0 outline-none"
               title={locale === 'ar' ? 'إغلاق القائمة' : 'Close sidebar'}
               aria-label="Close sidebar"
             >
@@ -102,213 +137,246 @@ export function SessionSidebar({
             </button>
           </div>
 
-          {/* + New Button (Pill style matching Claude) */}
-          <div className="px-3 pt-1 pb-2">
+          {/* Primary Action Button: + Nouvelle Démarche */}
+          <div className="p-3 pb-2 shrink-0">
             <button
               onClick={onNewChat}
-              className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-[#242428] hover:bg-[#2a2a30] text-zinc-100 hover:text-white text-xs font-medium transition-all cursor-pointer border border-[#36363e] shadow-xs"
+              className="w-full flex items-center justify-between px-3.5 py-2.5 rounded-xl bg-gradient-to-r from-emerald-500/15 via-emerald-500/10 to-transparent hover:from-emerald-500/25 hover:to-emerald-500/10 text-emerald-300 hover:text-white text-xs font-semibold transition-all cursor-pointer border border-emerald-500/30 hover:border-emerald-500/50 shadow-sm shadow-emerald-950/50 group"
             >
-              <Plus className="w-3.5 h-3.5" />
-              <span>
-                {locale === 'ar'
-                  ? 'محادثة جديدة'
-                  : locale === 'derja'
-                  ? 'Jdid'
-                  : locale === 'en'
-                  ? 'New'
-                  : 'Nouveau'}
+              <div className="flex items-center gap-2.5">
+                <Plus className="w-4 h-4 text-emerald-400 group-hover:rotate-90 transition-transform duration-200" />
+                <span className="truncate">{tNewChat}</span>
+              </div>
+              <span className="hidden sm:inline-block text-[10px] font-mono text-emerald-400/80 bg-emerald-500/15 px-1.5 py-0.5 rounded border border-emerald-500/20">
+                ⌘N
               </span>
             </button>
           </div>
 
-          {/* Civic Hub Tools (Matching Claude's Projects / Artifacts / Code links) */}
-          <div className="px-2 py-1 space-y-0.5 border-b border-[#26262a]/80">
-            <Link
-              href="/fasserli"
-              onClick={onClose}
-              className="flex items-center gap-2.5 px-2.5 py-1.5 rounded-lg text-xs text-[#a1a1aa] hover:text-[#f4f4f5] hover:bg-[#202024] transition-colors"
-            >
-              <ScanText className="w-3.5 h-3.5 text-zinc-400" />
-              <span className="truncate">
-                {locale === 'ar' ? 'فسّرلي الورقة (OCR)' : 'Fasserli OCR'}
-              </span>
-            </Link>
+          {/* Scrollable Body */}
+          <div className="px-3 py-1 flex-1 overflow-y-auto space-y-4">
+            {/* Civic Tools Hub */}
+            <div>
+              <div className="px-2 pb-1 text-[10px] uppercase font-bold tracking-wider text-zinc-400">
+                {tCivicHub}
+              </div>
+              <nav className="space-y-0.5">
+                <Link
+                  href="/fasserli"
+                  onClick={onClose}
+                  className="group flex items-center justify-between px-2.5 py-2 rounded-xl text-xs text-zinc-400 hover:text-zinc-100 hover:bg-white/[0.04] transition-colors"
+                >
+                  <div className="flex items-center gap-2.5 min-w-0">
+                    <ScanText className="w-4 h-4 text-emerald-400 shrink-0" />
+                    <span className="truncate">
+                      {locale === 'ar' ? 'فسّرلي الوثائق (OCR)' : 'Scanner Document OCR'}
+                    </span>
+                  </div>
+                  <span className="text-[9px] font-mono text-zinc-400 group-hover:text-emerald-400 transition-colors">
+                    AI
+                  </span>
+                </Link>
 
-            <Link
-              href="/documents"
-              onClick={onClose}
-              className="flex items-center gap-2.5 px-2.5 py-1.5 rounded-lg text-xs text-[#a1a1aa] hover:text-[#f4f4f5] hover:bg-[#202024] transition-colors"
-            >
-              <FileText className="w-3.5 h-3.5 text-zinc-400" />
-              <span className="truncate">
-                {locale === 'ar' ? 'نماذج العقود' : 'Documents & Forms'}
-              </span>
-            </Link>
+                <Link
+                  href="/documents"
+                  onClick={onClose}
+                  className="group flex items-center justify-between px-2.5 py-2 rounded-xl text-xs text-zinc-400 hover:text-zinc-100 hover:bg-white/[0.04] transition-colors"
+                >
+                  <div className="flex items-center gap-2.5 min-w-0">
+                    <FileText className="w-4 h-4 text-blue-400 shrink-0" />
+                    <span className="truncate">
+                      {locale === 'ar' ? 'نماذج العقود والاستمارات' : 'Modèles & Contrats PDF'}
+                    </span>
+                  </div>
+                  <span className="text-[9px] font-mono text-zinc-400">PDF</span>
+                </Link>
 
-            <Link
-              href="/calculator"
-              onClick={onClose}
-              className="flex items-center gap-2.5 px-2.5 py-1.5 rounded-lg text-xs text-[#a1a1aa] hover:text-[#f4f4f5] hover:bg-[#202024] transition-colors"
-            >
-              <Calculator className="w-3.5 h-3.5 text-zinc-400" />
-              <span className="truncate">
-                {locale === 'ar' ? 'حاسبة التنابر' : 'Calculateur Timbres'}
-              </span>
-            </Link>
+                <Link
+                  href="/calculator"
+                  onClick={onClose}
+                  className="group flex items-center justify-between px-2.5 py-2 rounded-xl text-xs text-zinc-400 hover:text-zinc-100 hover:bg-white/[0.04] transition-colors"
+                >
+                  <div className="flex items-center gap-2.5 min-w-0">
+                    <Calculator className="w-4 h-4 text-amber-400 shrink-0" />
+                    <span className="truncate">
+                      {locale === 'ar' ? 'حاسبة التنابر والرسوم' : 'Calculateur de Timbres'}
+                    </span>
+                  </div>
+                  <span className="text-[9px] font-mono text-amber-400/80">DT</span>
+                </Link>
 
-            <Link
-              href="/concours"
-              onClick={onClose}
-              className="flex items-center gap-2.5 px-2.5 py-1.5 rounded-lg text-xs text-[#a1a1aa] hover:text-[#f4f4f5] hover:bg-[#202024] transition-colors"
-            >
-              <Briefcase className="w-3.5 h-3.5 text-zinc-400" />
-              <span className="truncate">
-                {locale === 'ar' ? 'المناظرات الوطنية' : 'Concours Nationaux'}
-              </span>
-            </Link>
+                <Link
+                  href="/concours"
+                  onClick={onClose}
+                  className="group flex items-center justify-between px-2.5 py-2 rounded-xl text-xs text-zinc-400 hover:text-zinc-100 hover:bg-white/[0.04] transition-colors"
+                >
+                  <div className="flex items-center gap-2.5 min-w-0">
+                    <Briefcase className="w-4 h-4 text-teal-400 shrink-0" />
+                    <span className="truncate">
+                      {locale === 'ar' ? 'رادار المناظرات الوطنية' : 'Concours Nationaux'}
+                    </span>
+                  </div>
+                  <span className="text-[9px] font-mono text-teal-400/80">2026</span>
+                </Link>
 
-            <Link
-              href="/locator"
-              onClick={onClose}
-              className="flex items-center gap-2.5 px-2.5 py-1.5 rounded-lg text-xs text-[#a1a1aa] hover:text-[#f4f4f5] hover:bg-[#202024] transition-colors"
-            >
-              <Building2 className="w-3.5 h-3.5 text-zinc-400" />
-              <span className="truncate">
-                {locale === 'ar' ? 'دليل القباضات والبلديات' : 'Guichets & Baladiyas'}
-              </span>
-            </Link>
+                <Link
+                  href="/locator"
+                  onClick={onClose}
+                  className="group flex items-center justify-between px-2.5 py-2 rounded-xl text-xs text-zinc-400 hover:text-zinc-100 hover:bg-white/[0.04] transition-colors"
+                >
+                  <div className="flex items-center gap-2.5 min-w-0">
+                    <Building2 className="w-4 h-4 text-indigo-400 shrink-0" />
+                    <span className="truncate">
+                      {locale === 'ar' ? 'دليل القباضات والبلديات' : 'Atlas des Guichets'}
+                    </span>
+                  </div>
+                  <span className="text-[9px] font-mono text-zinc-400">24 Gouv</span>
+                </Link>
 
-            <Link
-              href="/procedures"
-              onClick={onClose}
-              className="flex items-center gap-2.5 px-2.5 py-1.5 rounded-lg text-xs text-[#a1a1aa] hover:text-[#f4f4f5] hover:bg-[#202024] transition-colors"
-            >
-              <Landmark className="w-3.5 h-3.5 text-zinc-400" />
-              <span className="truncate">
-                {locale === 'ar' ? 'دليل الإجراءات' : 'Guide des Démarches'}
-              </span>
-            </Link>
-          </div>
-
-          {/* Chats and tasks Section (Claude.ai exact list format) */}
-          <div className="px-2 pt-3 pb-2 flex-1 overflow-y-auto space-y-0.5">
-            <div className="px-2.5 pb-1 text-[11px] font-medium text-zinc-400 flex items-center justify-between">
-              <span>
-                {locale === 'ar'
-                  ? 'المحادثات السابقة'
-                  : locale === 'en'
-                  ? 'Chats and tasks'
-                  : locale === 'derja'
-                  ? 'M7adhathat'
-                  : 'Chats et démarches'}
-              </span>
-              {sessions.length > 0 && (
-                <span className="text-[10px] font-mono text-zinc-400">{sessions.length}</span>
-              )}
+                <Link
+                  href="/procedures"
+                  onClick={onClose}
+                  className="group flex items-center justify-between px-2.5 py-2 rounded-xl text-xs text-zinc-400 hover:text-zinc-100 hover:bg-white/[0.04] transition-colors"
+                >
+                  <div className="flex items-center gap-2.5 min-w-0">
+                    <Landmark className="w-4 h-4 text-purple-400 shrink-0" />
+                    <span className="truncate">
+                      {locale === 'ar' ? 'دليل الإجراءات الشامل' : 'Guide des Démarches'}
+                    </span>
+                  </div>
+                  <span className="text-[9px] font-mono text-zinc-400">50+</span>
+                </Link>
+              </nav>
             </div>
 
-            {sessions.length === 0 ? (
-              <div className="px-2.5 py-4 text-xs text-zinc-400 italic">
-                {locale === 'ar' ? 'لا توجد محادثات سابقة' : 'No recent chats'}
+            {/* Dossiers & Consultations */}
+            <div>
+              <div className="px-2 pb-1 text-[10px] uppercase font-bold tracking-wider text-zinc-400 flex items-center justify-between">
+                <span>{tRecents}</span>
+                {sessions.length > 0 && (
+                  <span className="text-[9px] font-mono px-1.5 py-0.2 rounded bg-white/[0.06] text-zinc-400">
+                    {sessions.length}
+                  </span>
+                )}
               </div>
-            ) : (
-              sessions.map((sess) => {
-                const isEditing = editingSessionId === sess.id;
-                const isActive = currentSessionId === sess.id;
 
-                return (
-                  <div
-                    key={sess.id}
-                    onClick={() => !isEditing && onSelectSession(sess)}
-                    className={`group relative flex items-center justify-between px-2.5 py-1.5 rounded-lg text-xs transition-colors cursor-pointer ${
-                      isActive
-                        ? 'bg-[#27272b] text-[#f4f4f5] font-medium'
-                        : 'text-[#a1a1aa] hover:text-[#f4f4f5] hover:bg-[#202024]'
-                    }`}
-                  >
-                    {isEditing ? (
-                      <div className="flex items-center gap-1.5 w-full" onClick={(e) => e.stopPropagation()}>
-                        <input
-                          autoFocus
-                          type="text"
-                          value={editingTitle}
-                          onChange={(e) => onEditingTitleChange(e.target.value)}
-                          onKeyDown={(e) => {
-                            if (e.key === 'Enter') onSaveRenamedTitle(e, sess.id);
-                            if (e.key === 'Escape') onCancelRenaming(e);
-                          }}
-                          className="flex-1 bg-[#1e1e21] border border-[#da7756] rounded px-2 py-0.5 text-xs text-white outline-none"
-                        />
-                        <button
-                          onClick={(e) => onSaveRenamedTitle(e, sess.id)}
-                          className="p-1 rounded text-[#da7756] hover:bg-white/10"
-                        >
-                          <Check className="w-3 h-3" />
-                        </button>
-                        <button
-                          onClick={onCancelRenaming}
-                          className="p-1 rounded text-zinc-400 hover:text-white"
-                        >
-                          <X className="w-3 h-3" />
-                        </button>
-                      </div>
-                    ) : (
-                      <>
-                        <div className="flex items-center gap-2 truncate flex-1 pe-1">
-                          {/* Claude-style hollow bullet */}
-                          <span
-                            className={`w-1.5 h-1.5 rounded-full shrink-0 ${
-                              isActive ? 'bg-[#da7756]' : 'bg-zinc-600 group-hover:bg-zinc-400'
-                            }`}
-                          />
-                          <span className="truncate">{sess.title}</span>
-                        </div>
-
-                        {/* Hover actions */}
-                        <div className="flex items-center gap-0.5 opacity-0 group-hover:opacity-100 transition-opacity shrink-0">
-                          <button
-                            onClick={(e) => onStartRenaming(e, sess)}
-                            className="p-1 rounded hover:bg-white/10 text-zinc-400 hover:text-white transition-colors"
-                            title={locale === 'ar' ? 'تعديل' : 'Rename'}
-                          >
-                            <Pencil className="w-3 h-3" />
-                          </button>
-                          <button
-                            onClick={(e) => onPromptDeleteSession(e, sess)}
-                            className="p-1 rounded hover:bg-red-500/20 text-zinc-400 hover:text-red-400 transition-colors"
-                            title={locale === 'ar' ? 'حذف' : 'Delete'}
-                          >
-                            <Trash2 className="w-3 h-3" />
-                          </button>
-                        </div>
-                      </>
-                    )}
+              <div className="space-y-0.5">
+                {sessions.length === 0 ? (
+                  <div className="px-2.5 py-4 text-xs text-zinc-400 italic flex items-center gap-2">
+                    <FolderLock className="w-3.5 h-3.5 text-zinc-400" />
+                    <span>
+                      {locale === 'ar' ? 'لا توجد استشارات مسجلة' : 'Aucune démarche enregistrée'}
+                    </span>
                   </div>
-                );
-              })
-            )}
+                ) : (
+                  sessions.map((sess) => {
+                    const isEditing = editingSessionId === sess.id;
+                    const isActive = currentSessionId === sess.id;
+
+                    return (
+                      <div
+                        key={sess.id}
+                        onClick={() => !isEditing && onSelectSession(sess)}
+                        className={`group relative flex items-center justify-between px-2.5 py-2 rounded-xl text-xs transition-all cursor-pointer ${
+                          isActive
+                            ? 'bg-zinc-900/90 text-white font-medium border-s-2 border-emerald-400 shadow-sm'
+                            : 'text-zinc-400 hover:text-zinc-100 hover:bg-white/[0.03]'
+                        }`}
+                      >
+                        {isEditing ? (
+                          <div className="flex items-center gap-1.5 w-full" onClick={(e) => e.stopPropagation()}>
+                            <input
+                              autoFocus
+                              type="text"
+                              value={editingTitle}
+                              onChange={(e) => onEditingTitleChange(e.target.value)}
+                              onKeyDown={(e) => {
+                                if (e.key === 'Enter') onSaveRenamedTitle(e, sess.id);
+                                if (e.key === 'Escape') onCancelRenaming(e);
+                              }}
+                              className="flex-1 bg-black/80 border border-emerald-500/80 rounded-lg px-2 py-1 text-xs text-white outline-none focus:ring-1 focus:ring-emerald-400"
+                            />
+                            <button
+                              onClick={(e) => onSaveRenamedTitle(e, sess.id)}
+                              className="p-1 rounded bg-emerald-500/20 text-emerald-400 hover:bg-emerald-500/30"
+                            >
+                              <Check className="w-3 h-3" />
+                            </button>
+                            <button
+                              onClick={onCancelRenaming}
+                              className="p-1 rounded text-zinc-400 hover:text-white"
+                            >
+                              <X className="w-3 h-3" />
+                            </button>
+                          </div>
+                        ) : (
+                          <>
+                            <div className="flex items-center gap-2 truncate flex-1 pe-1">
+                              <span
+                                className={`w-1.5 h-1.5 rounded-full shrink-0 ${
+                                  isActive ? 'bg-emerald-400 ring-2 ring-emerald-400/30' : 'bg-zinc-600 group-hover:bg-zinc-400'
+                                }`}
+                              />
+                              <span className="truncate">{sess.title}</span>
+                            </div>
+
+                            <div className="flex items-center gap-0.5 opacity-0 group-hover:opacity-100 transition-opacity shrink-0">
+                              <button
+                                onClick={(e) => onStartRenaming(e, sess)}
+                                className="p-1.5 rounded-md hover:bg-white/10 text-zinc-400 hover:text-white transition-colors"
+                                title={locale === 'ar' ? 'تعديل العنوان' : 'Renommer'}
+                              >
+                                <Pencil className="w-3 h-3" />
+                              </button>
+                              <button
+                                onClick={(e) => onPromptDeleteSession(e, sess)}
+                                className="p-1.5 rounded-md hover:bg-red-500/20 text-zinc-400 hover:text-red-400 transition-colors"
+                                title={locale === 'ar' ? 'حذف' : 'Supprimer'}
+                              >
+                                <Trash2 className="w-3 h-3" />
+                              </button>
+                            </div>
+                          </>
+                        )}
+                      </div>
+                    );
+                  })
+                )}
+              </div>
+            </div>
           </div>
         </div>
 
-        {/* Bottom User Card (Matching `wacim · Free v` in Claude Image 2 & 3) */}
-        <div className="p-2.5 border-t border-[#26262a]">
-          <button
-            type="button"
-            onClick={onOpenAuthModal}
-            className="w-full flex items-center justify-between px-2 py-1.5 rounded-lg hover:bg-[#202024] text-xs text-[#a1a1aa] hover:text-[#f4f4f5] transition-colors cursor-pointer border-0 outline-none"
-          >
-            <div className="flex items-center gap-2 min-w-0">
-              <div className="w-6 h-6 rounded-full bg-[#27272b] border border-[#383840] text-white flex items-center justify-center font-medium text-[11px] shrink-0">
-                {initial}
+        {/* Bottom Tunisian Citizen ID Badge */}
+        <div className="p-3 border-t border-white/[0.08] bg-[#0c0e12]">
+          <div className="flex items-center justify-between">
+            <button
+              type="button"
+              onClick={onOpenAuthModal}
+              className="flex items-center gap-2.5 text-start hover:opacity-90 transition-opacity cursor-pointer border-0 outline-none min-w-0"
+            >
+              <div className="w-7 h-7 rounded-xl bg-gradient-to-br from-emerald-500/30 to-emerald-600/10 border border-emerald-500/40 text-emerald-300 flex items-center justify-center font-bold text-xs shadow-inner shrink-0">
+                {citizenInitial}
               </div>
-              <div className="truncate text-start leading-tight">
-                <span className="font-medium text-zinc-200 truncate block">
-                  {userName} <span className="text-zinc-400">· Free</span>
-                </span>
+              <div className="leading-tight min-w-0">
+                <div className="text-xs font-semibold text-zinc-100 truncate">
+                  {userName}
+                </div>
+                <div className="text-[10px] text-emerald-400/90 font-medium flex items-center gap-1">
+                  <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
+                  <span>JORT Connecté</span>
+                </div>
               </div>
-            </div>
-            <ChevronDown className="w-3.5 h-3.5 text-zinc-400 shrink-0" />
-          </button>
+            </button>
+
+            <Link
+              href="/launchpad"
+              onClick={onClose}
+              className="px-2 py-1 rounded-lg bg-emerald-500/10 hover:bg-emerald-500/20 border border-emerald-500/30 text-[10px] font-bold text-emerald-300 transition-colors shrink-0"
+            >
+              1% Freelance
+            </Link>
+          </div>
         </div>
       </aside>
     </>

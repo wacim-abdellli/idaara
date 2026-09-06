@@ -162,7 +162,7 @@ export function QuickTopics({ locale, isRtl, onSelectPrompt }: QuickTopicsProps)
   ];
 
   return (
-    <div className="w-full grid grid-cols-1 sm:grid-cols-2 gap-2.5 mt-5 text-start" dir={isRtl ? 'rtl' : 'ltr'}>
+    <div className="w-full grid grid-cols-1 sm:grid-cols-2 gap-3 mt-6 text-start" dir={isRtl ? 'rtl' : 'ltr'}>
       {cards.map((card, idx) => {
         const Icon = card.icon;
         return (
@@ -170,22 +170,22 @@ export function QuickTopics({ locale, isRtl, onSelectPrompt }: QuickTopicsProps)
             key={idx}
             type="button"
             onClick={() => onSelectPrompt(card.prompt)}
-            className="group p-3 sm:p-3.5 rounded-2xl bg-white/[0.02] hover:bg-white/[0.05] border border-white/[0.06] hover:border-white/[0.14] transition-all cursor-pointer flex flex-col justify-between text-start outline-none"
+            className="group p-4 rounded-2xl bg-[#0c0f15]/90 hover:bg-[#121620] border border-white/[0.08] hover:border-emerald-500/30 transition-all duration-200 cursor-pointer flex flex-col justify-between text-start outline-none shadow-sm hover:shadow-emerald-950/20"
           >
-            <div className="flex items-center justify-between gap-2 mb-1.5 w-full">
-              <div className="p-1.5 rounded-lg bg-white/[0.04] text-zinc-400 group-hover:text-emerald-400 group-hover:bg-emerald-500/10 transition-colors">
+            <div className="flex items-center justify-between gap-2 mb-2 w-full">
+              <div className="p-2 rounded-xl bg-emerald-500/10 text-emerald-400 group-hover:scale-105 transition-transform">
                 <Icon className="w-4 h-4" />
               </div>
-              <span className="text-[10px] font-mono font-medium px-2 py-0.5 rounded-md bg-white/[0.04] text-zinc-400 group-hover:text-zinc-200 border border-white/[0.06]">
+              <span className="text-[10px] font-mono font-bold px-2 py-0.5 rounded-lg bg-emerald-500/10 text-emerald-300 border border-emerald-500/20">
                 {card.badge}
               </span>
             </div>
 
-            <div className="space-y-0.5 w-full">
-              <div className="text-xs sm:text-sm font-semibold text-zinc-200 group-hover:text-white transition-colors">
+            <div className="space-y-1 w-full">
+              <div className="text-xs sm:text-sm font-bold text-zinc-100 group-hover:text-emerald-300 transition-colors">
                 {card.title}
               </div>
-              <p className="text-[11px] text-zinc-400 line-clamp-1 leading-normal font-normal">
+              <p className="text-[11px] text-zinc-400 line-clamp-2 leading-relaxed font-normal">
                 {card.desc}
               </p>
             </div>

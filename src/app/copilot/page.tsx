@@ -6,16 +6,26 @@ import { useLocale } from '../../context/LocaleContext';
 import { useAuth } from '../../context/AuthContext';
 import { ChatMessage } from '../../components/copilot/ChatMessage';
 import { ChatMessage as ChatMessageType } from '../../types/chat';
-import { PanelLeft, RotateCcw, Share2, ChevronDown, User as UserIcon } from 'lucide-react';
+import {
+  PanelLeft,
+  RotateCcw,
+  Share2,
+  ChevronDown,
+  User as UserIcon,
+  Search,
+  ShieldCheck,
+  Sparkles,
+} from 'lucide-react';
 
 import { useCopilotSessions, ChatSession } from '../../hooks/useCopilotSessions';
 import { useCopilotVoice } from '../../hooks/useCopilotVoice';
 import { SessionSidebar } from '../../components/copilot/SessionSidebar';
 import { ChatInput } from '../../components/copilot/ChatInput';
+import { QuickTopics } from '../../components/copilot/QuickTopics';
 import { DeleteSessionModal } from '../../components/copilot/DeleteSessionModal';
 import { LanguageSwitcher } from '../../components/layout/LanguageSwitcher';
 import { AuthModal } from '../../components/auth/AuthModal';
-import { ClaudeStarburst } from '../../components/copilot/ClaudeStarburst';
+import { IdaaraCrest, JortPulseOrb } from '../../components/copilot/IdaaraCrest';
 
 export default function CopilotPage() {
   const { locale, isRtl } = useLocale();
@@ -38,7 +48,6 @@ export default function CopilotPage() {
     setMessages,
     sessions,
     currentSessionId,
-    isInitialized,
     sessionToDelete,
     setSessionToDelete,
     editingSessionId,
@@ -112,7 +121,7 @@ export default function CopilotPage() {
       ]);
       setIsProcessing(false);
 
-      // Silky Smooth Natural Typewriter (Claude-Grade Cadence)
+      // Silky Smooth Natural Typewriter (Cadence with natural punctuation pause)
       const tokens = fullText.split(/(\s+)/);
       let currentText = '';
       const baseDelay = tokens.length > 300 ? 10 : tokens.length > 150 ? 14 : 18;
@@ -209,7 +218,7 @@ export default function CopilotPage() {
     };
   }, []);
 
-  // Global desktop keyboard shortcuts (⌘K search, Alt+N new chat)
+  // Global desktop keyboard shortcuts (⌘K search, Alt+N / ⌘N new chat)
   useEffect(() => {
     const handleGlobalKeyDown = (e: KeyboardEvent) => {
       if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === 'k') {
@@ -268,34 +277,36 @@ export default function CopilotPage() {
     }
   };
 
-  // User display name from metadata or email (e.g. "wacim" in Image 3)
+  // User display name from metadata or email
   const displayName = user?.user_metadata?.full_name || user?.email?.split('@')[0] || '';
 
-  // Claude-style Warm Serif Greeting (Image 3)
-  const greetingHeadline = displayName
-    ? locale === 'ar'
-      ? `شنوة تحب تقضي اليوم، ${displayName}؟`
+  // Bespoke Tunisian Civic Greeting
+  const greetingHeadline =
+    locale === 'ar'
+      ? 'شنوة الإجراء اللي تحب تقضيه اليوم؟'
       : locale === 'derja'
-      ? `Chnowa 7achtek lyoum, ${displayName}?`
+      ? 'Chnowa l\'procédure elli thabb ta9dhiha lyoum?'
       : locale === 'fr'
-      ? `Que préparons-nous aujourd'hui, ${displayName} ?`
-      : `What's cooking, ${displayName}?`
-    : locale === 'ar'
-    ? 'كيف يمكنني مساعدتك اليوم في تونس؟'
-    : locale === 'derja'
-    ? 'Chnowa thabb ta3ref lyoum fi Tounes?'
-    : locale === 'fr'
-    ? "Comment puis-je vous aider aujourd'hui ?"
-    : 'How can I help you today?';
+      ? 'Quelle démarche administrative réalisons-nous aujourd\'hui ?'
+      : 'What civic procedure can Idaara assist you with today?';
+
+  const greetingSubtitle =
+    locale === 'ar'
+      ? 'دليلك الرسمي المباشر للإجراءات الإدارية، التنابر الجبائية، ومناظرات الوظيفة العمومية.'
+      : locale === 'derja'
+      ? 'Mosa3dek el idari el rasmi lel awra9, el timbres wel concourat fi Tounes.'
+      : locale === 'fr'
+      ? 'Votre copilote officiel pour les démarches citoyennes, timbres fiscaux et textes du JORT.'
+      : 'Your official statutory copilot for administrative workflows, fiscal stamps, and JORT decrees.';
 
   const activeSession = sessions.find((s) => s.id === currentSessionId);
   const activeChatTitle =
     activeSession?.title ||
-    (messages[0]?.content ? messages[0].content.slice(0, 34) : 'Discussion');
+    (messages[0]?.content ? messages[0].content.slice(0, 36) : 'Consultation');
 
   return (
-    <div className="fixed inset-0 z-30 flex bg-[#1b1b1e] text-[#f4f4f5] overflow-hidden font-sans">
-      {/* ─── Modular Claude-Grade Sidebar ─── */}
+    <div className="fixed inset-0 z-30 flex bg-[#090b0e] text-zinc-100 overflow-hidden font-sans">
+      {/* ─── Bespoke Idaara Civic Sidebar ─── */}
       <SessionSidebar
         isOpen={sidebarOpen}
         locale={locale}
@@ -303,7 +314,7 @@ export default function CopilotPage() {
         currentSessionId={currentSessionId}
         editingSessionId={editingSessionId}
         editingTitle={editingTitle}
-        userName={displayName || (locale === 'ar' ? 'مواطن' : 'Citizen')}
+        userName={displayName || (locale === 'ar' ? 'مواطن' : 'Citoyen')}
         onClose={() => setSidebarOpen(false)}
         onNewChat={() => {
           handleNewChat();
@@ -321,30 +332,38 @@ export default function CopilotPage() {
         onOpenAuthModal={() => setAuthModalOpen(true)}
       />
 
-      {/* ─── Main Canvas Area (#1b1b1e) ─── */}
-      <div className="flex-1 flex flex-col bg-[#1b1b1e] relative overflow-hidden w-full min-w-0">
-        {/* Top Header (Matching Image 2 & 3) */}
-        <header className="shrink-0 h-12 px-4 flex items-center justify-between border-b border-[#26262a] bg-[#1b1b1e]/95 backdrop-blur-md z-20">
+      {/* ─── Main Canvas Area ─── */}
+      <div className="flex-1 flex flex-col bg-[#090b0e] relative overflow-hidden w-full min-w-0">
+        {/* Integrated Top Navigation Header */}
+        <header className="shrink-0 h-14 px-4 flex items-center justify-between border-b border-white/[0.08] bg-[#090b0e]/95 backdrop-blur-xl z-20">
           <div className="flex items-center gap-3 min-w-0">
             {!sidebarOpen && (
               <button
                 onClick={() => setSidebarOpen(true)}
-                className="p-1 rounded-md text-zinc-400 hover:text-white hover:bg-[#26262a] transition-colors cursor-pointer border-0 outline-none flex items-center justify-center shrink-0"
-                title={locale === 'ar' ? 'فتح القائمة' : 'Open sidebar'}
-                aria-label="Open sidebar"
+                className="p-2 rounded-xl text-zinc-400 hover:text-white hover:bg-white/[0.06] transition-colors cursor-pointer border-0 outline-none flex items-center justify-center shrink-0 min-h-[40px] min-w-[40px]"
+                title={locale === 'ar' ? 'فتح القائمة' : 'Ouvrir le menu'}
+                aria-label="Toggle sidebar"
               >
                 <PanelLeft className="w-4 h-4" />
               </button>
             )}
 
-            {/* Active chat title with chevron (Image 2) */}
-            {messages.length > 0 && (
+            {/* Brand Logo or Active Session Title */}
+            {messages.length === 0 ? (
+              <div className="flex items-center gap-2">
+                <IdaaraCrest size={22} />
+                <span className="font-bold text-sm text-zinc-200 tracking-tight hidden sm:inline">
+                  Idaara AI · <span className="text-emerald-400 font-mono text-xs">الذكاء الإداري</span>
+                </span>
+              </div>
+            ) : (
               <div
                 onClick={() => activeSession && startRenaming({} as any, activeSession)}
-                className="flex items-center gap-1.5 min-w-0 cursor-pointer group hover:bg-[#26262a]/50 px-2 py-1 rounded-lg transition-colors"
-                title={locale === 'ar' ? 'إعادة تسمية' : 'Rename chat'}
+                className="flex items-center gap-2 min-w-0 cursor-pointer group hover:bg-white/[0.04] px-2.5 py-1.5 rounded-xl transition-colors"
+                title={locale === 'ar' ? 'تعديل العنوان' : 'Renommer'}
               >
-                <span className="font-medium text-xs sm:text-sm text-[#f4f4f5] truncate">
+                <IdaaraCrest size={18} />
+                <span className="font-semibold text-xs sm:text-sm text-zinc-100 truncate max-w-[200px] sm:max-w-xs">
                   {activeChatTitle}
                 </span>
                 <ChevronDown className="w-3.5 h-3.5 text-zinc-400 group-hover:text-zinc-200 shrink-0" />
@@ -354,32 +373,45 @@ export default function CopilotPage() {
 
           {/* Right Top Header Actions */}
           <div className="flex items-center gap-2">
-            {messages.length === 0 ? (
-              <div className="hidden sm:flex items-center gap-1.5 text-xs text-zinc-400 me-2">
-                <span>Free plan ·</span>
-                <Link
-                  href="/launchpad"
-                  className="text-zinc-300 hover:text-white underline transition-colors"
-                >
-                  Upgrade
-                </Link>
-              </div>
-            ) : (
+            {/* Live JORT Legal Badge */}
+            <div className="hidden md:flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/25 text-xs text-emerald-300 font-medium">
+              <ShieldCheck className="w-3.5 h-3.5 text-emerald-400" />
+              <span>JORT {new Date().getFullYear()}</span>
+            </div>
+
+            {/* Command Palette Trigger Button */}
+            <button
+              onClick={() => {
+                if (typeof window !== 'undefined') {
+                  window.dispatchEvent(new CustomEvent('open-command-palette'));
+                }
+              }}
+              className="hidden sm:flex items-center gap-2 px-2.5 py-1.5 rounded-xl bg-white/[0.04] hover:bg-white/[0.08] border border-white/[0.08] text-xs text-zinc-400 hover:text-zinc-200 transition-colors cursor-pointer"
+              title={locale === 'ar' ? 'البحث السريع (⌘K)' : 'Recherche Rapide (⌘K)'}
+            >
+              <Search className="w-3.5 h-3.5 text-zinc-400" />
+              <span className="text-[11px] font-medium hidden lg:inline">
+                {locale === 'ar' ? 'بحث' : 'Rechercher'}
+              </span>
+              <kbd className="text-[10px] font-mono px-1 py-0.2 rounded bg-white/10 text-zinc-400">⌘K</kbd>
+            </button>
+
+            {messages.length > 0 && (
               <>
                 <button
                   onClick={handleShare}
-                  className="flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-[#242428] hover:bg-[#2c2c32] text-zinc-300 hover:text-white text-xs font-medium border border-[#36363e] transition-colors cursor-pointer"
+                  className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-white/[0.05] hover:bg-white/[0.1] text-zinc-200 hover:text-white text-xs font-medium border border-white/[0.08] transition-colors cursor-pointer"
                 >
-                  <Share2 className="w-3.5 h-3.5" />
-                  <span className="hidden sm:inline">{shareCopied ? 'Copied ✓' : 'Share'}</span>
+                  <Share2 className="w-3.5 h-3.5 text-zinc-400" />
+                  <span className="hidden sm:inline">{shareCopied ? 'Copié ✓' : 'Partager'}</span>
                 </button>
 
                 <button
                   onClick={handleNewChat}
-                  className="flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-[#242428] hover:bg-[#2c2c32] text-zinc-300 hover:text-white text-xs font-medium border border-[#36363e] transition-colors cursor-pointer"
+                  className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-emerald-500/15 hover:bg-emerald-500/25 text-emerald-300 hover:text-white text-xs font-semibold border border-emerald-500/30 transition-colors cursor-pointer shadow-xs"
                 >
-                  <RotateCcw className="w-3.5 h-3.5 text-[#da7756]" />
-                  <span className="hidden sm:inline">{locale === 'ar' ? 'جديد' : 'New'}</span>
+                  <RotateCcw className="w-3.5 h-3.5 text-emerald-400" />
+                  <span className="hidden sm:inline">{locale === 'ar' ? 'جديد' : 'Nouveau'}</span>
                 </button>
               </>
             )}
@@ -388,8 +420,8 @@ export default function CopilotPage() {
 
             <button
               onClick={() => setAuthModalOpen(true)}
-              className="p-1 rounded-md text-zinc-400 hover:text-white hover:bg-[#26262a] transition-colors cursor-pointer border-0 outline-none flex items-center justify-center"
-              title={user ? user.email || 'Citizen' : 'Sign in'}
+              className="p-2 rounded-xl text-zinc-400 hover:text-white hover:bg-white/[0.06] transition-colors cursor-pointer border-0 outline-none flex items-center justify-center min-h-[40px] min-w-[40px]"
+              title={user ? user.email || 'Citizen' : 'Connexion'}
               aria-label="User Account"
             >
               <UserIcon className="w-4 h-4" />
@@ -397,18 +429,43 @@ export default function CopilotPage() {
           </div>
         </header>
 
-        {/* Empty State: Exact Claude.ai Landing Page (Image 3) */}
-        {isInitialized && messages.length === 0 && !isProcessing && (
-          <div className="flex-1 flex flex-col items-center justify-center px-4 sm:px-6 max-w-2xl sm:max-w-3xl mx-auto w-full -mt-10 animate-fade-in">
-            {/* Terracotta Sunburst + Warm Serif Heading */}
-            <div className="flex items-center justify-center gap-3 mb-7 select-none text-center">
-              <ClaudeStarburst size={34} color="#da7756" />
-              <h1 className="font-serif italic text-3xl sm:text-4xl text-[#f4f4f5] tracking-tight font-normal">
+        {/* ─── Empty State: Bespoke Idaara Landing Experience ─── */}
+        {messages.length === 0 && !isProcessing && (
+          <div className="flex-1 flex flex-col items-center justify-center px-4 sm:px-6 max-w-3xl mx-auto w-full py-8 overflow-y-auto">
+            {/* Official Civic Brand Aura */}
+            <div className="relative flex flex-col items-center text-center mb-6 select-none animate-fade-in w-full">
+              {/* Glowing Seal */}
+              <div className="mb-4 relative">
+                <div className="absolute inset-0 bg-emerald-500/20 blur-2xl rounded-full scale-150" />
+                <IdaaraCrest size={52} glow />
+              </div>
+
+              {/* Official Republic Badge */}
+              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-xs font-medium mb-3">
+                <Sparkles className="w-3.5 h-3.5" />
+                <span>
+                  {locale === 'ar'
+                    ? 'الجمهورية التونسية · المنظومة الوطنية للذكاء الإداري'
+                    : locale === 'derja'
+                    ? 'Tounes · El Mosa3ed El Idari Edhki'
+                    : locale === 'fr'
+                    ? 'République Tunisienne · Copilote Civique d\'Intelligence Administrative'
+                    : 'Republic of Tunisia · Official Civic AI Intelligence Platform'}
+                </span>
+              </div>
+
+              {/* Grand Dignified Hero Title */}
+              <h1 className="text-2xl sm:text-4xl font-extrabold text-white tracking-tight font-heading leading-tight mb-2">
                 {greetingHeadline}
               </h1>
+
+              {/* Subtitle */}
+              <p className="text-xs sm:text-sm text-zinc-400 max-w-xl mx-auto leading-relaxed">
+                {greetingSubtitle}
+              </p>
             </div>
 
-            {/* Floating Claude Chat Input Card */}
+            {/* Centered Obsidian Civic Input Card */}
             <ChatInput
               locale={locale}
               inputVal={inputVal}
@@ -419,12 +476,12 @@ export default function CopilotPage() {
               showPlusMenu={showPlusMenu}
               placeholder={
                 locale === 'ar'
-                  ? 'كيف يمكنني مساعدتك اليوم؟'
+                  ? 'اسأل عن أي إجراء، وثيقة، معلوم تمبر جبائي، أو مناظرة عمومية...'
                   : locale === 'derja'
-                  ? 'Kifech n3awnek lyoum?'
+                  ? 'Es\'el 3la ay war9a, procédure, timbre, walla concour...'
                   : locale === 'fr'
-                  ? "Comment puis-je vous aider aujourd'hui ?"
-                  : 'How can I help you today?'
+                  ? 'Posez votre question sur une démarche, un timbre ou un texte du JORT...'
+                  : 'Ask about any Tunisian procedure, fiscal stamp, or public exam...'
               }
               textareaRef={textareaRef}
               variant="centered"
@@ -436,49 +493,12 @@ export default function CopilotPage() {
               onTogglePlusMenu={() => setShowPlusMenu((p) => !p)}
             />
 
-            {/* Clean Understated Prompt Chips */}
-            <div className="flex flex-wrap items-center justify-center gap-2 mt-4 text-xs text-zinc-400" dir={isRtl ? 'rtl' : 'ltr'}>
-              {[
-                {
-                  label: locale === 'ar' ? 'جواز السفر (80 د.ت)' : 'Passeport (80 DT)',
-                  q: 'Comment renouveler mon passeport tunisien (80 DT) ?',
-                },
-                {
-                  label: locale === 'ar' ? 'البطاقة الرمادية (145 د.ت)' : 'Carte Grise (145 DT)',
-                  q: 'Comment faire la mutation de carte grise en Tunisie (145 DT) ?',
-                },
-                {
-                  label: locale === 'ar' ? 'المبادر الذاتي 1%' : 'Auto-Entrepreneur 1%',
-                  q: 'Comment fonctionne le régime fiscal Auto-Entrepreneur 1% en Tunisie ?',
-                },
-                {
-                  label: locale === 'ar' ? 'عقد كراء سكني (3 د.ت)' : 'Contrat de Bail (3 DT)',
-                  q: 'Quelles sont les démarches pour un contrat de bail résidentiel conforme en Tunisie ?',
-                },
-              ].map((chip, idx) => (
-                <button
-                  key={idx}
-                  onClick={() => handleSendMessage(chip.q)}
-                  className="px-3 py-1 rounded-full bg-[#242428] hover:bg-[#2c2c32] hover:text-white border border-[#36363e] text-[11px] text-zinc-400 transition-colors cursor-pointer"
-                >
-                  {chip.label}
-                </button>
-              ))}
-            </div>
+            {/* 4 Bespoke Tunisian Civic Portals */}
+            <QuickTopics locale={locale} isRtl={isRtl} onSelectPrompt={handleSendMessage} />
           </div>
         )}
 
-        {/* Quiet Loading Placeholder while restoring session state */}
-        {!isInitialized && !isProcessing && messages.length === 0 && (
-          <div className="flex-1 flex items-center justify-center">
-            <div className="flex items-center gap-2 text-zinc-400 text-xs select-none animate-fade-in">
-              <ClaudeStarburst size={16} spinning={true} color="#da7756" />
-              <span>Idaara</span>
-            </div>
-          </div>
-        )}
-
-        {/* Active Chat Messages Stream (Image 2) */}
+        {/* ─── Active Chat Messages Stream ─── */}
         {(messages.length > 0 || isProcessing) && (
           <>
             <div
@@ -490,22 +510,34 @@ export default function CopilotPage() {
                   <ChatMessage key={msg.id} message={msg} onSelectPrompt={(p) => handleSendMessage(p)} />
                 ))}
 
-                {/* Claude-style Rotating Starburst during thinking/generation (Image 2) */}
+                {/* 🏛️ Bespoke JORT Verification Scanner Orb */}
                 {isProcessing && (
-                  <div className="w-full py-2 flex items-center gap-3 animate-fade-in select-none">
-                    <ClaudeStarburst size={22} spinning={true} color="#da7756" />
-                    <span className="text-xs font-sans text-zinc-400 animate-pulse">
+                  <div className="w-full py-3 flex items-center gap-3 animate-fade-in select-none" dir={isRtl ? 'rtl' : 'ltr'}>
+                    <JortPulseOrb size={22} />
+                    <span className="text-xs text-emerald-300/90 font-medium animate-pulse">
                       {thinkMode
-                        ? (locale === 'ar' ? 'تفكير قانوني معمق في نصوص الرائد الرسمي...' : 'Deep statutory reasoning...')
-                        : (locale === 'ar' ? 'جارٍ إعداد الإجابة...' : 'Thinking...')}
+                        ? (locale === 'ar'
+                            ? 'جارٍ التحليل والتدقيق في الرائد الرسمي ومجلة الالتزامات والعقود...'
+                            : locale === 'derja'
+                            ? 'Ta7lil 9anouni mezyen fel JORT w nouthous el 9anoun...'
+                            : locale === 'fr'
+                            ? 'Vérification en cours dans les textes officiels du JORT et les codes de loi...'
+                            : 'Deep statutory reasoning in official JORT gazettes and legal codes...')
+                        : (locale === 'ar'
+                            ? 'جارٍ إعداد الإجابة الإدارية الرسمية والتحقق من التنابر...'
+                            : locale === 'derja'
+                            ? 'N7adherlek fel ijaba el rasmiya w nthabbet fel timbre...'
+                            : locale === 'fr'
+                            ? 'Recherche et formulation de la réponse administrative officielle...'
+                            : 'Formulating official statutory response and checking stamp fees...')}
                     </span>
                   </div>
                 )}
               </div>
             </div>
 
-            {/* Floating Bottom Input Dock (Image 2) */}
-            <footer className="p-3 sm:p-4 bg-gradient-to-t from-[#1b1b1e] via-[#1b1b1e]/95 to-transparent shrink-0 z-20 pb-safe">
+            {/* Sticky Bottom Dock Input (Active Chat Mode) */}
+            <footer className="p-3 sm:p-4 bg-gradient-to-t from-[#090b0e] via-[#090b0e]/95 to-transparent shrink-0 z-20 pb-safe">
               <ChatInput
                 locale={locale}
                 inputVal={inputVal}
@@ -516,12 +548,12 @@ export default function CopilotPage() {
                 showPlusMenu={showPlusMenu}
                 placeholder={
                   locale === 'ar'
-                    ? 'اكتب رسالة...'
+                    ? 'اكتب سؤالك الإداري هنا...'
                     : locale === 'derja'
-                    ? 'Ikteb msg...'
+                    ? 'Ikteb el sou2al mte3ek houni...'
                     : locale === 'fr'
-                    ? 'Écrivez un message...'
-                    : 'Write a message...'
+                    ? 'Posez une question sur votre démarche administrative...'
+                    : 'Ask about any Tunisian procedure or legal step...'
                 }
                 textareaRef={textareaRef}
                 variant="dock"

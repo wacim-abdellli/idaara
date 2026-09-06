@@ -19,7 +19,7 @@ import {
 import { ChatMessage as ChatMessageType } from '../../types/chat';
 import { useLocale } from '../../context/LocaleContext';
 import { getLocalized } from '../../lib/locale-utils';
-import { ClaudeStarburst } from './ClaudeStarburst';
+import { IdaaraCrest } from './IdaaraCrest';
 
 interface ChatMessageProps {
   message: ChatMessageType;
@@ -122,7 +122,7 @@ function renderInlineStyles(text: string): React.ReactNode {
   });
 }
 
-/** Modern, Clean Markdown & Civic Element Parser (ChatGPT/Claude Grade) */
+/** Modern, Clean Markdown & Civic Element Parser (Bespoke Idaara Civic Grade) */
 function renderFormattedContent(text: string, locale: string = 'derja', isRTLOverride?: boolean): React.ReactNode {
   // 1. Sanitize any thinking or chain-of-thought blocks
   let cleanText = text.replace(/<think>[\s\S]*?(?:<\/think>|$)/gi, '').trim();
@@ -479,7 +479,7 @@ export const ChatMessage: React.FC<ChatMessageProps> = ({ message }) => {
     }
   };
 
-  // ── USER MESSAGE BUBBLE (Claude Grade) ──
+  // ── USER MESSAGE BUBBLE (Obsidian Glass) ──
   if (!isAssistant) {
     return (
       <div className="w-full py-2 flex flex-col items-end group">
@@ -513,18 +513,18 @@ export const ChatMessage: React.FC<ChatMessageProps> = ({ message }) => {
     );
   }
 
-  // ── ASSISTANT MESSAGE (Claude Grade) ──
+  // ── ASSISTANT MESSAGE (Bespoke Idaara Civic) ──
   return (
     <div
       dir={isArabicScript ? 'rtl' : 'ltr'}
       className={`w-full py-3 space-y-2.5 group ${isArabicScript ? 'text-right' : 'text-left'}`}
     >
-      {/* Claude-style Minimalist Identity Header */}
+      {/* Bespoke Idaara Civic Assistant Header */}
       <div className="flex items-center gap-2 pb-0.5 select-none">
-        <ClaudeStarburst size={18} color="#da7756" />
+        <IdaaraCrest size={20} />
         <div className="flex items-center gap-1.5 text-xs">
-          <span className="font-semibold text-[#f4f4f5]">Idaara</span>
-          <span className="text-[10px] text-zinc-400 font-mono">· JORT {new Date().getFullYear()}</span>
+          <span className="font-semibold text-[#f4f4f5] tracking-tight">Idaara</span>
+          <span className="text-[10px] text-emerald-400/80 font-mono bg-emerald-500/10 border border-emerald-500/20 px-1.5 py-0.5 rounded">JORT {new Date().getFullYear()}</span>
         </div>
       </div>
 
@@ -595,7 +595,7 @@ export const ChatMessage: React.FC<ChatMessageProps> = ({ message }) => {
         </div>
       )}
 
-      {/* Claude-style Clean Action Toolbar matching Image 2 */}
+      {/* Bespoke Idaara Clean Action Toolbar */}
       {!message.isStreaming && message.content && (
         <div className="flex items-center gap-1.5 pt-1 text-zinc-400 opacity-0 group-hover:opacity-100 transition-opacity animate-fade-in select-none">
           <button
