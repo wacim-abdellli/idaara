@@ -17,121 +17,151 @@ function getGroqKey(): string {
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
-// DEEP TUNISIAN CIVIC RESEARCH ENGINE (JORT, LF 2025-2026, DECREES)
+// ─────────────────────────────────────────────────────────────────────────────
+// TUNISIAN CIVIC RESEARCH ENGINE (TOPICAL CHUNKS & GREETING GUARDS)
 // ─────────────────────────────────────────────────────────────────────────────
 
-const DEEP_CIVIC_KNOWLEDGE = `
-═══════════════════════════════════════════════════════════════════════
-🏛️  IDAARA DEEP CIVIC RESEARCH DATABASE — AUTHORITATIVE TUNISIAN DATA
-═══════════════════════════════════════════════════════════════════════
+export const GREETING_REGEX = /^(hi|hello|hey|bonjour|salut|coucou|salam|3aslema|aslema|ahla|mar7ba|marhaba|صباح الخير|مساء الخير|السلام|عسلامة|أهلا|مرحبا|اهلين|test|yo|cv|ça va)[\s!.,?]*$/i;
 
-[CIN — Carte d'Identité Nationale / بطاقة التعريف الوطنية]
+const CIVIC_KNOWLEDGE_TOPICS: Array<{ keywords: string[]; content: string }> = [
+  {
+    keywords: ['cin', 'identite', 'تعريف', 'بطاقة', 'بطاقه'],
+    content: `[CIN — Carte d'Identité Nationale / بطاقة التعريف الوطنية]
 - Authority: Commissariat de Police / Brigade Garde Nationale
 - Fiscal Stamp: 3 DT (nouvelle) | 10 DT (perte/vol) — LF 2025 Art. 52
 - Processing Delay: 10 à 15 jours
-- Required: Madhmoun original (< 3 mois), 3 photos 3.5x4.5cm fond blanc, justificatif domicile (facture STEG/SONEDE), ancienne carte ou attestation de perte.
-
-[PASSEPORT / جواز السفر]
+- Required: Madhmoun original (< 3 mois), 3 photos 3.5x4.5cm fond blanc, justificatif domicile (facture STEG/SONEDE), ancienne carte ou attestation de perte.`
+  },
+  {
+    keywords: ['passeport', 'passport', 'جواز', 'سفر', 'باسبور'],
+    content: `[PASSEPORT / جواز السفر]
 - Authority: Commissariat de Police / Brigade Garde Nationale
 - Fiscal Stamp: 80 DT (adulte) | 25 DT (étudiant/élève avec attestation) — LF 2025
 - Processing Delay: 7 à 15 jours
-- Required: CIN originale + copie, 4 photos fond blanc, madhmoun récent, ancien passeport (si renouvellement), timbre fiscal 80 DT (ou 25 DT).
-
-[BULLETIN N°3 / بطاقة عدد 3 — Casier Judiciaire]
+- Required: CIN originale + copie, 4 photos fond blanc, madhmoun récent, ancien passeport (si renouvellement), timbre fiscal 80 DT (ou 25 DT).`
+  },
+  {
+    keywords: ['b3', 'bulletin 3', 'سوابق', 'عدلية', 'casier', '3dad 3', 'بطاقة عدد 3'],
+    content: `[BULLETIN N°3 / بطاقة عدد 3 — Casier Judiciaire]
 - Authority: b3.interieur.gov.tn (en ligne) ou Commissariat de police
 - Cost: 3 DT timbre fiscal (+ 4.500 DT frais de livraison Rapide Poste = 7.500 DT au total pour commande en ligne)
 - Delay: 3 à 8 jours ouvrables
-- Validity: 3 mois
-
-[CARTE GRISE / نقل ملكية سيارة]
+- Validity: 3 mois`
+  },
+  {
+    keywords: ['carte grise', 'grise', 'رمادية', 'attt', 'سيارة', 'كرهبة', 'karhba', 'mutation'],
+    content: `[CARTE GRISE / نقل ملكية سيارة]
 - Authority: ATTT (Agence Technique des Transports Terrestres)
 - Total Cost: ~145 à 250 DT (Légalisation contrat 6 DT [3 DT x 2 signatures] + Recette 30-50 DT + Visite ATTT 40-60 DT + Timbre 20-40 DT)
-- Required: Contrat de vente légalisé (3 copies), ancienne carte grise, certificat de visite technique valide, attestation de non-gage, CIN vendeur et acheteur.
-
-[AUTO-ENTREPRENEUR / المبادر الذاتي]
+- Required: Contrat de vente légalisé (3 copies), ancienne carte grise, certificat de visite technique valide, attestation de non-gage, CIN vendeur et acheteur.`
+  },
+  {
+    keywords: ['auto-entrepreneur', 'autoentrepreneur', 'مبادر', 'ذاتي', 'freelance', 'فريلانس', 'patente', 'باتيندة', '1%'],
+    content: `[AUTO-ENTREPRENEUR / المبادر الذاتي]
 - Platform: www.autoentrepreneur.tn / auto-entrepreneur.tn (Inscription 100% gratuite)
 - Impôt unique: 1% sur CA (Services, Freelance, IT, Design) / 0.5% (Commerce, Industrie)
 - TVA: 0% (exonération totale Art. 13 Code TVA)
 - Plafond CA: 75 000 DT/an (Services)
-- Facturation en devises (EUR/USD) légale via BCT. Cotisation CNSS forfaitaire trimestrielle.
-
-[CONCOURS CAPES — وزارة التربية]
+- Facturation en devises (EUR/USD) légale via BCT. Cotisation CNSS forfaitaire trimestrielle.`
+  },
+  {
+    keywords: ['capes', 'كاباس', 'تربية', 'تعليم', 'concours', 'مناظرة', 'مناظرات'],
+    content: `[CONCOURS CAPES — وزارة التربية]
 - Recrutement: 1 250 postes (Maths 230, Arabe 200, Physique 180, SVT 160, Français 110, Anglais 95, Info 85, Histoire-Géo 80...)
 - Diplôme: Licence ou Maîtrise dans la spécialité (Bac+3 min)
 - Inscription: www.concours.gov.tn et www.edunet.tn
-- Dossier: Formulaire imprimé, CIN certifiée, B3 < 3 mois, copie certifiée diplôme + relevés de notes, certificat médical, 2 enveloppes timbrées avec adresse.
-
-[STEG & SONEDE]
+- Dossier: Formulaire imprimé, CIN certifiée, B3 < 3 mois, copie certifiée diplôme + relevés de notes, certificat médical, 2 enveloppes timbrées avec adresse.`
+  },
+  {
+    keywords: ['steg', 'sonede', 'ستاغ', 'صوناد', 'كهرباء', 'ماء'],
+    content: `[STEG & SONEDE]
 - STEG: Concours Ingénieurs & Cadres (180 postes), Techniciens (350 postes) via www.steg.com.tn / www.concours.gov.tn.
-- SONEDE: Ingénieurs hydrauliques/électromécaniques & agents via www.sonede.com.tn / www.concours.gov.tn.
-
-[CNSS RETRAITE / جراية التقاعد والشيخوخة]
+- SONEDE: Ingénieurs hydrauliques/électromécaniques & agents via www.sonede.com.tn / www.concours.gov.tn.`
+  },
+  {
+    keywords: ['cnss', 'retraite', 'تقاعد', 'ضمان اجتماعي'],
+    content: `[CNSS RETRAITE / جراية التقاعد والشيخوخة]
 - Authority: Caisse Nationale de Sécurité Sociale (CNSS)
 - Conditions: 60 ans d'âge (ou 50 ans anticipée avec 180 trimestres) + 120 trimestres cotisés minimum.
 - Cost: 0 DT (Gratuit) | Delay: 30 à 60 jours
-- Required: Formulaire CNSS, relevé de carrière, certificat de cessation d'activité employeur, CIN, extrait de naissance, RIB bancaire.
-
-[CNAM CARNET DE SOINS / بطاقة علاج الكنام]
+- Required: Formulaire CNSS, relevé de carrière, certificat de cessation d'activité employeur, CIN, extrait de naissance, RIB bancaire.`
+  },
+  {
+    keywords: ['cnam', 'كنام', 'علاج', 'carnet', 'soins'],
+    content: `[CNAM CARNET DE SOINS / بطاقة علاج الكنام]
 - Authority: Caisse Nationale d'Assurance Maladie (CNAM)
 - Filières: Publique (hôpitaux publics), Privée (médecin de famille référent), Remboursement (70%).
 - Changement de filière: 1er sept au 31 oct chaque année.
-- Required: Attestation CNSS, formulaire adhésion, copie CIN, extraits de naissance famille, RIB.
-
-[PERMIS DE BÂTIR / رخصة البناء البلدية]
+- Required: Attestation CNSS, formulaire adhésion, copie CIN, extraits de naissance famille, RIB.`
+  },
+  {
+    keywords: ['permis', 'batir', 'bâtir', 'رخصة', 'بناء', 'بلدية', 'baladiya'],
+    content: `[PERMIS DE BÂTIR / رخصة البناء البلدية]
 - Authority: Municipalité (Baladiya) — Service Urbanisme
 - Legal Delay: 45 jours (silence = accord tacite Art. 70 Code de l'Urbanisme)
 - Total Cost: 50 à 200 DT
-- Required: Plans d'architecte agréé (5 copies), certificat de propriété CPF (titre foncier), plan de situation, quittance taxe TIB (zebla w kharrouba).
-
-[HOJJET WAFET / حجة الوفاة وحصر الإرث]
+- Required: Plans d'architecte agréé (5 copies), certificat de propriété CPF (titre foncier), plan de situation, quittance taxe TIB (zebla w kharrouba).`
+  },
+  {
+    keywords: ['hojjet', 'wafet', 'وفاة', 'حصر', 'إرث', 'ميراث', 'ورثة'],
+    content: `[HOJJET WAFET / حجة الوفاة وحصر الإرث]
 - Authority: 2 Notaires (Adoul Ichhad) + Homologation Juge Cantonal
 - Cost: 35 DT (Adoul) + 10 DT (Enregistrement Recette) | Delay: 7 à 15 jours
-- Required: Extrait de décès, extraits de naissance des héritiers, acte de mariage, 2 témoins majeurs avec CIN.
-
-[DÉCLARATION DE NAISSANCE / التصريح بالولادة]
+- Required: Extrait de décès, extraits de naissance des héritiers, acte de mariage, 2 témoins majeurs avec CIN.`
+  },
+  {
+    keywords: ['naissance', 'ولادة', 'مضمون', 'madhmoun'],
+    content: `[DÉCLARATION DE NAISSANCE / التصريح بالولادة]
 - Authority: Bureau d'État Civil de la Baladiya du lieu d'accouchement
 - Legal Delay: 10 jours ouvrables impératifs (passé 10 jours, jugement au tribunal obligatoire)
 - Cost: 0 DT (Gratuit) | Extrait: 0.500 DT
-- Required: Certificat médical d'accouchement, livret de famille / acte de mariage, CIN du déclarant.
-
-[FCR — Franchise Changement de Résidence / الامتياز الجبائي للسيارات للتونسيين بالخارج]
+- Required: Certificat médical d'accouchement, livret de famille / acte de mariage, CIN du déclarant.`
+  },
+  {
+    keywords: ['fcr', 'douane', 'ديوانة', 'ن.ت', 'rs', 'خارج'],
+    content: `[FCR — Franchise Changement de Résidence / الامتياز الجبائي للسيارات للتونسيين بالخارج]
 - Authority: Direction Générale des Douanes (الديوانة التونسية — douane.gov.tn)
 - Conditions: Être Tunisien(ne) résidant à l'étranger (TRE) depuis 2 ans minimum sans avoir séjourné plus de 120 jours en Tunisie par période de 365 jours. Âge minimum 18 ans.
-- Âge maximum du véhicule: 5 ans (véhicule de tourisme) / 7 ans (camionnette ou utilitaire).
-- Options de dédouanement:
-  1. الإعفاء الكلي (Régime Suspensif - RS / ن.ت): إعفاء تام 100% من المعاليم الديوانية، السيارة تاخذ لوحة "ن.ت" ولا تباع إلا للأقارب من الدرجة الأولى. بعد مرور سنة، يمكن تسوية وضعيتها الجبائية ودفع 25% أو 30% لتحويلها إلى لوحة منجمية تونسية عادية وتصبح قابلة للبيع بحرية دون قيود (قانون المالية 2024/2025).
-  2. الإعفاء الجزئي (25% أو 30% مع نمرة تونسية عادية): خلاص 25% من المعاليم الديوانية للسيارات سعة محرك أقل من 2000cm³ (بنزين) أو 2500cm³ (ديزل). السيارة تاخذ مباشرة لوحة تونسية عادية وقابلة للبيع فوراً دون أي شرط أو تأخير.
-- Required: Passeport de l'expatrié avec cachets d'entrée/sortie, carte de séjour étrangère, carte grise originale du véhicule, facture d'achat ou certificat d'immatriculation, demande de privilège FCR.
-
-[FREELANCE — COMPTE DEVISES & EXPORT IT — البنك المركزي والمبادر الذاتي]
-- Authority: Banque Centrale de Tunisie (BCT — Circulaire 2017-06 & 2024) / RNE / Ministère des Finances
-- Statut 1: المبادر الذاتي (Auto-Entrepreneur) عبر auto-entrepreneur.tn: ضريبة موحدة 1% فقط على رقم المعاملات، إعفاء تام 100% من الأداء على القيمة المضافة TVA (الفصل 13 من مجلة الأداء على القيمة المضافة لخدمات التصدير)، انخراط CNSS بنظام العاملين غير الأجراء (Régime 14).
-- Statut 2: شركة الشخص الواحد (SUARL) عبر rne.tn: ضريبة 15% على الأرباح الصافية مع محاسب قانوني.
-- الدخول بالعملة الصعبة وحساب البنك (BCT): لا يحتاج المستقل التونسي إلى رخصة مسبقة من البنك المركزي لتحويل مستحقاته من الخارج (EUR/USD). تفتح البنوك التونسية (BIAT, Attijari, STB, UIB, BH...) مباشرة "حساب مهني بالعملة الصعبة أو بالدينار القابل للتحويل" للمطورين والمصممين بمجرد تقديم بطاقة المبادر الذاتي أو معرف جبائي + عقد العمل أو الفاتورة الرسمية الصادرة للشركة الأجنبية.
-
-[VISAS — CANADA & SCHENGEN / تأشيرات السفر من تونس]
-- Visa Canada (IRCC / VFS Global): تقديم إلكتروني حصري عبر canada.ca (بوابة IRCC). أخذ البصمات بمركز VFS Global البحيرة 1 بتونس. الرسوم: 100 CAD (الطلب) + 85 CAD (البصمات). الوثائق: جواز سفر > 6 أشهر، استمارة IMM 5257، كشوفات بنكية لآخر 3-6 أشهر مختومة، شهادة عمل وكشف CNSS، حجز فندقي وتأمين سفر.
-- Visa France / Schengen (TLScontact / BLS): تقديم عبر france-visas.gouv.fr وحجز موعد بمركز TLScontact (تونس/صفاقس) أو BLS International. الرسوم: 90 EUR (حوالي 300 د.ت). الوثائق: جواز سفر + نسخ، صور شمسية بيومترية، كشف حساب بنكي لـ 3 أشهر أصلي ومختوم، شهادة عمل وتصريح بالراتب + كشف انخراط CNSS، حجز طيران وفندق أو شهادة إيواء، تأمين سفر دولي يغطي 30,000 EUR.
-
-[ÉQUIVALENCE DIPLÔMES ÉTRANGERS / معادلة الشهائد العلمية]
-- Authority: Ministère de l'Enseignement Supérieur (MESRS)
-- Portal: www.mesrs.tn | Cost: 20 DT frais de dossier | Delay: 60 à 90 jours
-- Required: Diplôme original avec apostille/visa consulaire, relevés de notes complets de toutes les années, copie Bac, traduction assermentée.
-
-[TRANSTU & TRANSPORT — اشتراك الكار والمترو والنقل العمومي بتونس]
+- Âge maximum du véhicule: 5 ans (véhicule de tourisme) / 7 ans (camionnette ou utilitaire).`
+  },
+  {
+    keywords: ['visa', 'visas', 'فيزا', 'تأشيرة', 'canada', 'france', 'schengen', 'tls', 'vfs', 'كندا', 'فرنسا'],
+    content: `[VISAS — CANADA & SCHENGEN / تأشيرات السفر من تونس]
+- Visa Canada (IRCC / VFS Global): تقديم إلكتروني حصري عبر canada.ca (بوابة IRCC). أخذ البصمات بمركز VFS Global البحيرة 1 بتونس. الرسوم: 100 CAD (الطلب) + 85 CAD (البصمات).
+- Visa France / Schengen (TLScontact / BLS): تقديم عبر france-visas.gouv.fr وحجز موعد بمركز TLScontact (تونس/صفاقس) أو BLS International. الرسوم: 90 EUR (حوالي 300 د.ت).`
+  },
+  {
+    keywords: ['transtu', 'ترانستو', 'bus', 'metro', 'حافلة', 'مترو', 'كار', 'اشتراك', 'abonnement', 'نقل'],
+    content: `[TRANSTU & TRANSPORT — اشتراك الكار والمترو والنقل العمومي بتونس]
 - Authority: شركة نقل تونس (Transtu — transtu.tn) / مكاتب البريد التونسي / الشركات الجهوية للنقل (SRT)
-- 1. الاشتراك المدرسي والجامعي (Abonnement Scolaire / Universitaire):
-  * الفئة: لتلاميذ المدارس والمعاهد، طلبة الجامعات والمتربصين بمراكز التكوين المهني.
-  * التسجيل: مطبوعة تسحب من المعهد/الكلية أو يتم تعميرها عبر الموقع الرسمي www.transtu.tn ومصادقة المؤسسة التعليمية عليها بالختم الرسمي.
-  * الوثائق المطلوبة: استمارة الاشتراك ممضاة ومختومة من المعهد/الكلية، 2 صور شمسية حديثة بخلفية بيضاء، نسخة من بطاقة التعريف الوطنية CIN (أو مضمون ولادة للتلاميذ القصر)، وصل خلاص معلوم الاشتراك من البريد التونسي (أو الدفع الإلكتروني عبر البوابة).
-  * المعلوم: مدعم ورمزي يتراوح بين 10 و 15 د.ت للخط الحضري الواحد وشبكة المترو.
-- 2. الاشتراك العادي للعموم (Abonnement Ordinaire):
-  * يسحب مباشرة من شبابيك الوكالات التجارية لشركة نقل تونس (محطة تونس البحرية TGM، ساحة برشلونة، باب عليوة، محطة الباساج، محطة سليمان كاهية).
-  * الصيغ: أسبوعي، شهري أو سنوي لخطوط الحافلات وشبكة المترو الخفيف.
-`;
+- 1. الاشتراك المدرسي والجامعي: مطبوعة تسحب من المعهد/الكلية، 2 صور شمسية، نسخة CIN أو مضمون، وصل خلاص البريد. المعلوم: 10 إلى 15 د.ت.
+- 2. الاشتراك العادي للعموم: يسحب من شبابيك الوكالات التجارية (TGM، ساحة برشلونة، باب عليوة، الباساج، سليمان كاهية).`
+  }
+];
 
 function buildGroundingContext(query: string, locale: string): string {
   const q = query.toLowerCase();
+
+  // If query is just a greeting, return no heavy procedure knowledge
+  if (GREETING_REGEX.test(query.trim())) {
+    return '';
+  }
+
+  // Filter relevant knowledge chunks by keywords
+  const matchedChunks = CIVIC_KNOWLEDGE_TOPICS.filter((topic) =>
+    topic.keywords.some((kw) => q.includes(kw))
+  );
+
+  let context = '';
+  if (matchedChunks.length > 0) {
+    context = matchedChunks.map((c) => c.content).join('\n\n');
+  } else {
+    // Default baseline: top 2 frequent procedures
+    context = CIVIC_KNOWLEDGE_TOPICS.slice(0, 2).map((c) => c.content).join('\n\n');
+  }
+
+  const civicMatch = queryCivicKnowledge(query, locale);
+  if (civicMatch) context += '\n\n' + civicMatch;
 
   const matchedProcedures = proceduresData.filter((p) => {
     const title = (p.title.fr + ' ' + (p.title.ar || '') + ' ' + (p.title.derja || '')).toLowerCase();
@@ -139,11 +169,6 @@ function buildGroundingContext(query: string, locale: string): string {
     const slug = p.slug.toLowerCase();
     return q.split(/\s+/).some((word) => word.length > 2 && (title.includes(word) || tags.includes(word) || slug.includes(word)));
   }).slice(0, 2);
-
-  let context = DEEP_CIVIC_KNOWLEDGE;
-
-  const civicMatch = queryCivicKnowledge(query, locale);
-  if (civicMatch) context += '\n' + civicMatch;
 
   if (matchedProcedures.length > 0) {
     context += '\n\n=== MATCHED PROCEDURES ===\n';
@@ -155,8 +180,10 @@ function buildGroundingContext(query: string, locale: string): string {
     }
   }
 
-  const concoursContext = buildConcoursGroundingPrompt(query, locale);
-  if (concoursContext) context += '\n' + concoursContext;
+  if (q.includes('concours') || q.includes('مناظرة') || q.includes('مناظرات') || q.includes('capes') || q.includes('steg') || q.includes('sonede')) {
+    const concoursContext = buildConcoursGroundingPrompt(query, locale);
+    if (concoursContext) context += '\n\n' + concoursContext;
+  }
 
   return context;
 }
@@ -285,6 +312,8 @@ export async function POST(req: NextRequest) {
 - We are currently in ${now.toLocaleString('en-GB', { month: 'long', year: 'numeric' })}. The active recruitment cycle is the ${now.getFullYear()}/${now.getFullYear() + 1} session.
 - Always use the real-time live official feed below from Tunisian government servers (concours.gov.tn / edunet.tn).`;
 
+    const isGreeting = GREETING_REGEX.test(prompt.trim());
+
     const thinkDirective = think
       ? `\n🧠 DEEP CIVIC THINKING & LEGAL REASONING MODE ACTIVATED:
 - Perform an exhaustive, step-by-step statutory breakdown.
@@ -293,25 +322,25 @@ export async function POST(req: NextRequest) {
 
     const [groundingContext, liveFeed] = await Promise.all([
       buildGroundingContext(prompt, locale),
-      buildLiveGroundingFeed(),
+      isGreeting ? Promise.resolve('') : buildLiveGroundingFeed(),
     ]);
 
     const languageDirective = `\nCRITICAL UNIVERSAL DIRECTIVE — TUNISIAN ARABIC DERJA ONLY (NO MATTER WHAT):
 - You MUST ALWAYS speak, formulate, and answer strictly in 100% authentic Tunisian Arabic Derja in ARABIC SCRIPT (الدارجة التونسية بالحروف العربية) NO MATTER WHAT language the user uses (English, French, Arabizi, Standard Arabic, etc.).
 - NEVER respond in English, French, or Standard Arabic.
 - Translate and explain all foreign terms, requirements, steps, and procedures into natural Tunisian Derja in Arabic script (e.g. "عسلامة! بالنسبة لفيزا كندا من تونس، هذي الأوراق والخطوات اللازمة:").
-- STRICT DOMAIN BOUNDARY: If the user asks an off-topic question (coding like "npm run build", general chat), decline warmly in Tunisian Derja in character as Idaara AI:
-  "عسلامة! راهو أنا **Idaara AI** مخصص حصرياً للإجراءات، الأوراق، والبيروقراطية التونسية 🇹🇳 (موش للمطورين ولا البرمجة والكود 😄).
+- STRICT DOMAIN BOUNDARY: If the user asks an off-topic question (coding like "npm run build", general chat), decline warmly in Tunisian Derja in character as Idaara AI.`;
 
-  تنجم تسألني على:
-  - 🛂 **الأوراق والوثائق والتأشيرات**: باسبور، بطاقة تعريف (CIN)، بطاقة عدد 3، نقل ملكية سيارة (ATTT)، فيزا كندا وشنغن
-  - 💼 **الشركات والمبادر الذاتي**: خلاص الأداء 1%، فواتير التصدير، الضمان الاجتماعي (CNSS)
-  - 🏛️ **القباضة والبلدية**: التنابر، العقود الرسمية، المعاليم البلدية
-  - 🏆 **المناظرات العمومية**: الكاباس، STEG، SONEDE...
+    const greetingDirective = isGreeting
+      ? `\nCRITICAL DIRECTIVE — GREETING INTENT DETECTED:
+- The user has sent a greeting ('${prompt.trim()}').
+- Respond in 2-4 lines of pure, warm Tunisian Arabic Derja in Arabic script (الدارجة التونسية).
+- Welcome them to Idaara.tn, explain that you are their civic assistant for Tunisian administration, paperwork, stamps, and official procedures.
+- Ask them: شنوة الإجراء ولا الورقة اللي تحب تقضيها ولا تستفسر عليها اليوم؟
+- DO NOT dump procedural text, DO NOT mention Transtu, Visas, or Passports unprompted.`
+      : '';
 
-  شنوة الإجراء الإداري اللي تحب تقضيه اليوم؟"`;
-
-    const completeSystemPrompt = `${IDAARA_MASTER_SYSTEM_PROMPT}\n${languageDirective}\n${temporalDirective}${thinkDirective}\n${liveFeed}\n\n${groundingContext}`;
+    const completeSystemPrompt = `${IDAARA_MASTER_SYSTEM_PROMPT}\n${languageDirective}\n${temporalDirective}${thinkDirective}${greetingDirective}\n${liveFeed}\n\n${groundingContext}`;
 
     // ─── TIER 1: Google Gemini 2.5 Flash (Master of Tunisian Derja & Civic Knowledge) ───
     const geminiKey = getGeminiKey();
@@ -382,9 +411,8 @@ export async function POST(req: NextRequest) {
 
     if (apiKey) {
       const groqModels = [
-        'openai/gpt-oss-120b',
-        'qwen/qwen3.8-27b',
-        'groq/compound',
+        'llama-3.3-70b-versatile',
+        'llama-3.1-8b-instant',
       ];
       for (const model of groqModels) {
         try {

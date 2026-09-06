@@ -519,13 +519,10 @@ export const ChatMessage: React.FC<ChatMessageProps> = ({ message }) => {
       dir={isArabicScript ? 'rtl' : 'ltr'}
       className={`w-full py-3 space-y-2.5 group ${isArabicScript ? 'text-right' : 'text-left'}`}
     >
-      {/* Bespoke Idaara Civic Assistant Header */}
+      {/* Minimalist Assistant Header */}
       <div className="flex items-center gap-2 pb-0.5 select-none">
-        <IdaaraCrest size={20} />
-        <div className="flex items-center gap-1.5 text-xs">
-          <span className="font-semibold text-[#f4f4f5] tracking-tight">Idaara</span>
-          <span className="text-[10px] text-emerald-400/80 font-mono bg-emerald-500/10 border border-emerald-500/20 px-1.5 py-0.5 rounded">JORT {new Date().getFullYear()}</span>
-        </div>
+        <IdaaraCrest size={18} />
+        <span className="font-semibold text-xs text-zinc-300 tracking-tight">Idaara AI</span>
       </div>
 
       <div

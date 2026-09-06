@@ -162,7 +162,7 @@ export function QuickTopics({ locale, isRtl, onSelectPrompt }: QuickTopicsProps)
   ];
 
   return (
-    <div className="w-full grid grid-cols-1 sm:grid-cols-2 gap-3 mt-6 text-start" dir={isRtl ? 'rtl' : 'ltr'}>
+    <div className="w-full grid grid-cols-1 sm:grid-cols-2 gap-2.5 mt-5 text-start" dir={isRtl ? 'rtl' : 'ltr'}>
       {cards.map((card, idx) => {
         const Icon = card.icon;
         return (
@@ -170,25 +170,24 @@ export function QuickTopics({ locale, isRtl, onSelectPrompt }: QuickTopicsProps)
             key={idx}
             type="button"
             onClick={() => onSelectPrompt(card.prompt)}
-            className="group p-4 rounded-2xl bg-[#0c0f15]/90 hover:bg-[#121620] border border-white/[0.08] hover:border-emerald-500/30 transition-all duration-200 cursor-pointer flex flex-col justify-between text-start outline-none shadow-sm hover:shadow-emerald-950/20"
+            className="group p-3 rounded-xl bg-white/[0.02] hover:bg-white/[0.05] border border-white/[0.06] hover:border-white/[0.12] transition-all cursor-pointer flex items-center justify-between text-start outline-none"
           >
-            <div className="flex items-center justify-between gap-2 mb-2 w-full">
-              <div className="p-2 rounded-xl bg-emerald-500/10 text-emerald-400 group-hover:scale-105 transition-transform">
+            <div className="flex items-center gap-2.5 min-w-0">
+              <div className="p-2 rounded-lg bg-white/[0.04] text-zinc-300 group-hover:text-emerald-400 group-hover:bg-emerald-500/10 transition-colors shrink-0">
                 <Icon className="w-4 h-4" />
               </div>
-              <span className="text-[10px] font-mono font-bold px-2 py-0.5 rounded-lg bg-emerald-500/10 text-emerald-300 border border-emerald-500/20">
-                {card.badge}
-              </span>
-            </div>
-
-            <div className="space-y-1 w-full">
-              <div className="text-xs sm:text-sm font-bold text-zinc-100 group-hover:text-emerald-300 transition-colors">
-                {card.title}
+              <div className="min-w-0">
+                <div className="text-xs font-medium text-zinc-200 group-hover:text-white truncate">
+                  {card.title}
+                </div>
+                <div className="text-[11px] text-zinc-500 truncate">
+                  {card.desc}
+                </div>
               </div>
-              <p className="text-[11px] text-zinc-400 line-clamp-2 leading-relaxed font-normal">
-                {card.desc}
-              </p>
             </div>
+            <span className="text-[10px] font-mono text-zinc-400 px-1.5 py-0.5 rounded bg-white/[0.04] border border-white/[0.06] shrink-0 ms-2">
+              {card.badge}
+            </span>
           </button>
         );
       })}

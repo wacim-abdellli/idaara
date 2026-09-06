@@ -1,7 +1,7 @@
 'use client';
 
 import React from 'react';
-import { Plus, Mic, MicOff, ArrowUp, Loader2, Scale, Sparkles, ShieldCheck } from 'lucide-react';
+import { Plus, Mic, MicOff, ArrowUp, Loader2, Scale, Sparkles } from 'lucide-react';
 import { SupportedLanguage } from '../../data/translations';
 import { getQuickTopicsList } from './QuickTopics';
 
@@ -49,16 +49,16 @@ export function ChatInput({
 
   const tThinkLabel =
     locale === 'ar'
-      ? 'تدقيق قانوني (JORT)'
+      ? 'تدقيق قانوني'
       : locale === 'derja'
       ? 'Ta7lil JORT'
       : locale === 'fr'
       ? 'Vérification JORT'
-      : 'Legal Reasoning';
+      : 'Legal reasoning';
 
   return (
     <div className={isDock ? 'w-full max-w-3xl mx-auto' : 'w-full'}>
-      <div className="rounded-2xl sm:rounded-3xl bg-[#0c0e13]/95 border border-white/[0.1] hover:border-emerald-500/30 focus-within:border-emerald-500/50 focus-within:ring-1 focus-within:ring-emerald-500/20 shadow-2xl p-3 sm:p-3.5 transition-all space-y-2.5 backdrop-blur-xl">
+      <div className="rounded-2xl sm:rounded-3xl bg-[#0c0e13]/95 border border-white/[0.1] hover:border-emerald-500/30 focus-within:border-emerald-500/50 focus-within:ring-1 focus-within:ring-emerald-500/20 shadow-2xl p-3 sm:p-3.5 transition-all space-y-2 backdrop-blur-xl">
         {/* Auto-growing Textarea */}
         <textarea
           ref={textareaRef}
@@ -68,10 +68,10 @@ export function ChatInput({
           onKeyDown={onKeyDown}
           placeholder={placeholder}
           disabled={isTranscribing}
-          className="w-full bg-transparent px-1.5 py-1 text-base sm:text-[15px] text-zinc-100 placeholder-zinc-400 border-0 outline-none ring-0 resize-none max-h-36 leading-relaxed"
+          className="w-full bg-transparent px-1.5 py-1 text-base sm:text-[15px] text-zinc-100 placeholder-zinc-500 border-0 outline-none ring-0 resize-none max-h-36 leading-relaxed"
         />
 
-        {/* Bottom Civic Actions Toolbar */}
+        {/* Bottom Actions Toolbar */}
         <div className="flex items-center justify-between pt-1">
           {/* Left: Quick civic topics menu + Deep Legal Verification toggle */}
           <div className="flex items-center gap-2">
@@ -79,18 +79,18 @@ export function ChatInput({
               <button
                 type="button"
                 onClick={onTogglePlusMenu}
-                className="p-2 rounded-xl bg-white/[0.04] hover:bg-white/[0.08] text-zinc-300 hover:text-white transition-colors cursor-pointer border border-white/[0.08] outline-none flex items-center justify-center min-h-[36px] min-w-[36px]"
-                title={locale === 'ar' ? 'إجراءات ونماذج سريعة' : 'Procédures & Modèles'}
+                className="p-2 rounded-xl bg-white/[0.04] hover:bg-white/[0.08] text-zinc-400 hover:text-zinc-200 transition-colors cursor-pointer border border-white/[0.06] outline-none flex items-center justify-center min-h-[36px] min-w-[36px]"
+                title={locale === 'ar' ? 'إجراءات سريعة' : 'Procédures'}
               >
                 <Plus className="w-4 h-4" />
               </button>
 
               {showPlusMenu && (
-                <div className="absolute bottom-full left-0 mb-3 w-80 rounded-2xl bg-[#11141b] border border-white/[0.12] shadow-2xl p-2.5 z-50 animate-fade-in space-y-1 backdrop-blur-2xl">
+                <div className="absolute bottom-full left-0 mb-3 w-80 rounded-2xl bg-[#11141b] border border-white/[0.12] shadow-2xl p-2 z-50 animate-fade-in space-y-1 backdrop-blur-2xl">
                   <div className="px-3 py-1.5 text-[10px] uppercase font-bold tracking-wider text-emerald-400 flex items-center gap-1.5 border-b border-white/[0.06] mb-1">
                     <Sparkles className="w-3 h-3" />
                     <span>
-                      {locale === 'ar' ? 'استشارات وإجراءات رسمية' : 'Démarches & Modèles Clés'}
+                      {locale === 'ar' ? 'استشارات وإجراءات شائعة' : 'Démarches fréquentes'}
                     </span>
                   </div>
                   {quickTopicsList.map((item, idx) => {
@@ -99,9 +99,9 @@ export function ChatInput({
                       <button
                         key={idx}
                         onClick={() => onSendMessage(item.q)}
-                        className="w-full flex items-center gap-2.5 px-3 py-2 rounded-xl text-start hover:bg-emerald-500/10 hover:text-emerald-300 text-xs text-zinc-300 transition-colors cursor-pointer border-0 outline-none group"
+                        className="w-full flex items-center gap-2.5 px-3 py-2 rounded-xl text-start hover:bg-white/[0.06] text-xs text-zinc-300 hover:text-white transition-colors cursor-pointer border-0 outline-none group"
                       >
-                        <Icon className="w-4 h-4 text-emerald-400 shrink-0 group-hover:scale-110 transition-transform" />
+                        <Icon className="w-4 h-4 text-emerald-400 shrink-0 group-hover:scale-105 transition-transform" />
                         <span className="truncate">{item.label}</span>
                       </button>
                     );
@@ -114,24 +114,19 @@ export function ChatInput({
             <button
               type="button"
               onClick={onToggleThinkMode}
-              className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-semibold transition-all cursor-pointer border min-h-[36px] ${
+              className={`flex items-center gap-1.5 px-2.5 py-1.5 rounded-xl text-xs font-medium transition-all cursor-pointer border min-h-[36px] ${
                 thinkMode
-                  ? 'bg-emerald-500/15 text-emerald-300 border-emerald-500/40 shadow-xs shadow-emerald-950/40'
-                  : 'bg-white/[0.03] hover:bg-white/[0.06] text-zinc-400 hover:text-zinc-200 border-white/[0.06]'
+                  ? 'bg-emerald-500/15 text-emerald-300 border-emerald-500/40 shadow-xs'
+                  : 'bg-white/[0.02] hover:bg-white/[0.05] text-zinc-400 hover:text-zinc-200 border-white/[0.06]'
               }`}
             >
-              <Scale className={`w-3.5 h-3.5 ${thinkMode ? 'text-emerald-400 animate-pulse' : 'text-zinc-400'}`} />
+              <Scale className={`w-3.5 h-3.5 ${thinkMode ? 'text-emerald-400' : 'text-zinc-400'}`} />
               <span>{tThinkLabel}</span>
             </button>
           </div>
 
-          {/* Right: JORT Decree badge, Mic, High-contrast Send button */}
-          <div className="flex items-center gap-2">
-            <div className="hidden sm:flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-emerald-500/10 border border-emerald-500/20 text-[11px] font-mono text-emerald-300">
-              <ShieldCheck className="w-3.5 h-3.5 text-emerald-400" />
-              <span>JORT 2026</span>
-            </div>
-
+          {/* Right: Mic & High-contrast Send button */}
+          <div className="flex items-center gap-1.5">
             {/* Voice Mic Button */}
             <button
               type="button"
@@ -142,9 +137,9 @@ export function ChatInput({
                   ? 'bg-red-500 text-white animate-pulse border-red-400'
                   : isTranscribing
                   ? 'text-emerald-400 bg-emerald-500/10 border-emerald-500/30'
-                  : 'bg-white/[0.03] hover:bg-white/[0.08] text-zinc-400 hover:text-zinc-100 border-white/[0.06]'
+                  : 'bg-white/[0.02] hover:bg-white/[0.06] text-zinc-400 hover:text-zinc-100 border-white/[0.06]'
               }`}
-              title={locale === 'ar' ? 'إملاء صوتي بالدارجة أو العربية' : 'Dictée vocale'}
+              title={locale === 'ar' ? 'إملاء صوتي' : 'Dictée vocale'}
             >
               {isTranscribing ? (
                 <Loader2 className="w-4 h-4 animate-spin" />
@@ -155,17 +150,17 @@ export function ChatInput({
               )}
             </button>
 
-            {/* High-Contrast Send Action Button */}
+            {/* Clean Send Action Button */}
             <button
               type="button"
               onClick={() => onSendMessage()}
               disabled={!hasText || isProcessing || isTranscribing}
               className={`w-9 h-9 rounded-xl flex items-center justify-center transition-all ${
                 hasText && !isProcessing && !isTranscribing
-                  ? 'bg-emerald-500 hover:bg-emerald-400 text-black cursor-pointer shadow-lg shadow-emerald-500/25 active:scale-95'
-                  : 'bg-white/[0.06] text-zinc-600 cursor-not-allowed border border-white/[0.04]'
+                  ? 'bg-emerald-500 hover:bg-emerald-400 text-black cursor-pointer shadow-md shadow-emerald-500/20 active:scale-95'
+                  : 'bg-white/[0.05] text-zinc-600 cursor-not-allowed border border-white/[0.04]'
               }`}
-              aria-label="Send query"
+              aria-label="Send"
             >
               <ArrowUp className="w-4 h-4 stroke-[2.5]" />
             </button>
@@ -173,16 +168,16 @@ export function ChatInput({
         </div>
       </div>
 
-      {/* Official Civic Advisory Disclaimer */}
+      {/* Subtle, Minimalist Disclaimer */}
       {isDock && (
-        <p className="text-center text-[11px] text-zinc-400 pt-2 font-mono">
+        <p className="text-center text-[11px] text-zinc-500 pt-2">
           {locale === 'ar'
-            ? '🏛️ Idaara AI يقدم معلومات إرشادية رسمية · يرجى دائماً مراجعة النصوص الأصلية بالرائد الرسمي للجمهورية التونسية.'
+            ? 'قد يخطئ Idaara AI. يُنصح دائماً بالرجوع للنصوص الرسمية بالرائد الرسمي.'
             : locale === 'derja'
-            ? '🏛️ Idaara AI ya3tik ma3loumet rasmiya te9ribiya · Thabbet dima fel JORT.'
+            ? 'Idaara AI ynajem yaghlet. Thabbet dima fel Raed el Rasmi (JORT).'
             : locale === 'fr'
-            ? '🏛️ Idaara AI fournit une orientation civique officielle · Vérifiez toujours les textes au Journal Officiel (JORT).'
-            : '🏛️ Idaara AI provides official civic guidance · Always verify legal decrees in the Official Gazette (JORT).'}
+            ? 'Idaara AI peut faire des erreurs. Vérifiez les textes au Journal Officiel (JORT).'
+            : 'Idaara AI can make mistakes. Verify important decrees in the Official Gazette (JORT).'}
         </p>
       )}
     </div>

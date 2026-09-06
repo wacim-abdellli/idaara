@@ -12,9 +12,7 @@ import {
   Share2,
   ChevronDown,
   User as UserIcon,
-  Search,
-  ShieldCheck,
-  Sparkles,
+  SquarePen,
 } from 'lucide-react';
 
 import { useCopilotSessions, ChatSession } from '../../hooks/useCopilotSessions';
@@ -372,46 +370,25 @@ export default function CopilotPage() {
           </div>
 
           {/* Right Top Header Actions */}
-          <div className="flex items-center gap-2">
-            {/* Live JORT Legal Badge */}
-            <div className="hidden md:flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/25 text-xs text-emerald-300 font-medium">
-              <ShieldCheck className="w-3.5 h-3.5 text-emerald-400" />
-              <span>JORT {new Date().getFullYear()}</span>
-            </div>
-
-            {/* Command Palette Trigger Button */}
-            <button
-              onClick={() => {
-                if (typeof window !== 'undefined') {
-                  window.dispatchEvent(new CustomEvent('open-command-palette'));
-                }
-              }}
-              className="hidden sm:flex items-center gap-2 px-2.5 py-1.5 rounded-xl bg-white/[0.04] hover:bg-white/[0.08] border border-white/[0.08] text-xs text-zinc-400 hover:text-zinc-200 transition-colors cursor-pointer"
-              title={locale === 'ar' ? 'البحث السريع (⌘K)' : 'Recherche Rapide (⌘K)'}
-            >
-              <Search className="w-3.5 h-3.5 text-zinc-400" />
-              <span className="text-[11px] font-medium hidden lg:inline">
-                {locale === 'ar' ? 'بحث' : 'Rechercher'}
-              </span>
-              <kbd className="text-[10px] font-mono px-1 py-0.2 rounded bg-white/10 text-zinc-400">⌘K</kbd>
-            </button>
-
+          <div className="flex items-center gap-1.5">
             {messages.length > 0 && (
               <>
                 <button
                   onClick={handleShare}
-                  className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-white/[0.05] hover:bg-white/[0.1] text-zinc-200 hover:text-white text-xs font-medium border border-white/[0.08] transition-colors cursor-pointer"
+                  className="p-2 rounded-xl text-zinc-400 hover:text-white hover:bg-white/[0.06] transition-colors cursor-pointer border-0 outline-none flex items-center justify-center min-h-[38px] min-w-[38px]"
+                  title={shareCopied ? 'Copié ✓' : 'Partager'}
+                  aria-label="Share"
                 >
-                  <Share2 className="w-3.5 h-3.5 text-zinc-400" />
-                  <span className="hidden sm:inline">{shareCopied ? 'Copié ✓' : 'Partager'}</span>
+                  <Share2 className="w-4 h-4" />
                 </button>
 
                 <button
                   onClick={handleNewChat}
-                  className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-emerald-500/15 hover:bg-emerald-500/25 text-emerald-300 hover:text-white text-xs font-semibold border border-emerald-500/30 transition-colors cursor-pointer shadow-xs"
+                  className="p-2 rounded-xl text-zinc-400 hover:text-white hover:bg-white/[0.06] transition-colors cursor-pointer border-0 outline-none flex items-center justify-center min-h-[38px] min-w-[38px]"
+                  title={locale === 'ar' ? 'محادثة جديدة' : 'New chat'}
+                  aria-label="New chat"
                 >
-                  <RotateCcw className="w-3.5 h-3.5 text-emerald-400" />
-                  <span className="hidden sm:inline">{locale === 'ar' ? 'جديد' : 'Nouveau'}</span>
+                  <SquarePen className="w-4 h-4" />
                 </button>
               </>
             )}
@@ -420,7 +397,7 @@ export default function CopilotPage() {
 
             <button
               onClick={() => setAuthModalOpen(true)}
-              className="p-2 rounded-xl text-zinc-400 hover:text-white hover:bg-white/[0.06] transition-colors cursor-pointer border-0 outline-none flex items-center justify-center min-h-[40px] min-w-[40px]"
+              className="p-2 rounded-xl text-zinc-400 hover:text-white hover:bg-white/[0.06] transition-colors cursor-pointer border-0 outline-none flex items-center justify-center min-h-[38px] min-w-[38px]"
               title={user ? user.email || 'Citizen' : 'Connexion'}
               aria-label="User Account"
             >
@@ -429,38 +406,22 @@ export default function CopilotPage() {
           </div>
         </header>
 
-        {/* ─── Empty State: Bespoke Idaara Landing Experience ─── */}
+        {/* ─── Empty State: Minimalist Landing Experience ─── */}
         {messages.length === 0 && !isProcessing && (
           <div className="flex-1 flex flex-col items-center justify-center px-4 sm:px-6 max-w-3xl mx-auto w-full py-8 overflow-y-auto">
-            {/* Official Civic Brand Aura */}
+            {/* Minimalist Brand Header */}
             <div className="relative flex flex-col items-center text-center mb-6 select-none animate-fade-in w-full">
-              {/* Glowing Seal */}
-              <div className="mb-4 relative">
-                <div className="absolute inset-0 bg-emerald-500/20 blur-2xl rounded-full scale-150" />
-                <IdaaraCrest size={52} glow />
+              <div className="mb-3">
+                <IdaaraCrest size={44} />
               </div>
 
-              {/* Official Republic Badge */}
-              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-xs font-medium mb-3">
-                <Sparkles className="w-3.5 h-3.5" />
-                <span>
-                  {locale === 'ar'
-                    ? 'الجمهورية التونسية · المنظومة الوطنية للذكاء الإداري'
-                    : locale === 'derja'
-                    ? 'Tounes · El Mosa3ed El Idari Edhki'
-                    : locale === 'fr'
-                    ? 'République Tunisienne · Copilote Civique d\'Intelligence Administrative'
-                    : 'Republic of Tunisia · Official Civic AI Intelligence Platform'}
-                </span>
-              </div>
-
-              {/* Grand Dignified Hero Title */}
-              <h1 className="text-2xl sm:text-4xl font-extrabold text-white tracking-tight font-heading leading-tight mb-2">
+              {/* Dignified Hero Title */}
+              <h1 className="text-xl sm:text-3xl font-bold text-white tracking-tight leading-tight mb-2">
                 {greetingHeadline}
               </h1>
 
               {/* Subtitle */}
-              <p className="text-xs sm:text-sm text-zinc-400 max-w-xl mx-auto leading-relaxed">
+              <p className="text-xs sm:text-sm text-zinc-400 max-w-md mx-auto leading-relaxed">
                 {greetingSubtitle}
               </p>
             </div>
