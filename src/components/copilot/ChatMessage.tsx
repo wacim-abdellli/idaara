@@ -15,8 +15,6 @@ import {
   ThumbsUp,
   ThumbsDown,
   RotateCcw,
-  Sparkles,
-  ArrowRight,
 } from 'lucide-react';
 import { ChatMessage as ChatMessageType } from '../../types/chat';
 import { useLocale } from '../../context/LocaleContext';
@@ -472,68 +470,6 @@ export const ChatMessage: React.FC<ChatMessageProps> = ({ message, onSelectPromp
     }
   };
 
-  // ── Contextual Smart Follow-up Chips ──
-  const followUpSuggestions = useMemo(() => {
-    if (!isAssistant || message.isStreaming || !message.content || message.content.length < 50) return [];
-
-    const text = message.content.toLowerCase();
-    const suggestions: string[] = [];
-
-    if (text.includes('passeport') || text.includes('باسبور') || text.includes('جواز')) {
-      if (locale === 'ar') {
-        suggestions.push('قداش ياخذ وقت باش يحضر الباسبور؟', 'كيفاش نشري التمبر الإلكتروني؟');
-      } else if (locale === 'fr') {
-        suggestions.push('Quel est le délai de délivrance du passeport ?', 'Comment acheter le timbre fiscal en ligne ?');
-      } else if (locale === 'en') {
-        suggestions.push('How long does the passport take to be issued?', 'How do I purchase the fiscal e-stamp online?');
-      } else {
-        suggestions.push('9adeh yo93ed el passeport bech ya7dher?', 'Kifech nechri timbre en ligne?');
-      }
-    } else if (text.includes('carte grise') || text.includes('رمادية') || text.includes('karhba')) {
-      if (locale === 'ar') {
-        suggestions.push('شنوة الوثائق المطلوبة في المعاينة الفنية؟', 'قداش معلوم خلاص القباضة بالضبط؟');
-      } else if (locale === 'fr') {
-        suggestions.push('Quels sont les documents pour la visite technique ?', 'Quel est le montant exact de la recette des finances ?');
-      } else if (locale === 'en') {
-        suggestions.push('What documents are needed for technical inspection?', 'What is the exact tax office fee?');
-      } else {
-        suggestions.push('Awra9 el visite technique chnowa?', '9adeh masrouf el 9badha bedhabt?');
-      }
-    } else if (text.includes('cin') || text.includes('تعريف')) {
-      if (locale === 'ar') {
-        suggestions.push('شنوة نعمل في حالة ضياع بطاقة التعريف؟', 'قداش صلوحية المضمون المطلوب؟');
-      } else if (locale === 'fr') {
-        suggestions.push('Que faire en cas de perte de la CIN ?', 'Quelle est la validité de l’extrait de naissance ?');
-      } else if (locale === 'en') {
-        suggestions.push('What to do if my national ID (CIN) is lost?', 'How recent must the birth certificate be?');
-      } else {
-        suggestions.push('Chnowa na3mel ken dha3et el CIN?', 'Madhmoun 9adeh 3omrou lezem?');
-      }
-    } else if (text.includes('auto-entrepreneur') || text.includes('مبادر') || text.includes('freelance')) {
-      if (locale === 'ar') {
-        suggestions.push('كيفاش نفوتر بالعملة الصعبة (EUR/USD)؟', 'شنوة وضعية الضمان الاجتماعي CNSS؟');
-      } else if (locale === 'fr') {
-        suggestions.push('Comment facturer en devises (EUR/USD) ?', 'Quel est le régime de cotisation CNSS ?');
-      } else if (locale === 'en') {
-        suggestions.push('How to invoice foreign clients in EUR/USD?', 'How does CNSS social security contribution work?');
-      } else {
-        suggestions.push('Kifech nfacturi fel devises l barra?', 'CNSS kifech n5allas fiha?');
-      }
-    } else if (text.includes('b3') || text.includes('سوابق')) {
-      if (locale === 'ar') {
-        suggestions.push('قداش مدة صلوحية البطاقة عدد 3؟', 'كيفاش نتبع إرسالية Rapide Poste؟');
-      } else if (locale === 'fr') {
-        suggestions.push('Quelle est la durée de validité du bulletin N°3 ?', 'Comment suivre l’envoi Rapide Poste ?');
-      } else if (locale === 'en') {
-        suggestions.push('What is the validity period of the B3 certificate?', 'How to track Rapide Poste parcel delivery?');
-      } else {
-        suggestions.push('9adeh to93ed sal7a el B3?', 'Kifech ntaba3 envoi rapide poste?');
-      }
-    }
-
-    return suggestions.slice(0, 2);
-  }, [isAssistant, message.isStreaming, message.content, locale]);
-
   // ── USER MESSAGE BUBBLE (Elevated Obsidian Glass) ──
   if (!isAssistant) {
     return (
@@ -705,29 +641,6 @@ export const ChatMessage: React.FC<ChatMessageProps> = ({ message, onSelectPromp
               {message.timestamp}
             </span>
           )}
-        </div>
-      )}
-
-      {/* Contextual Smart Follow-up Chips */}
-      {!message.isStreaming && followUpSuggestions.length > 0 && onSelectPrompt && (
-        <div className="pt-2.5 flex flex-wrap gap-2 animate-fade-in" dir={locale === 'ar' ? 'rtl' : 'ltr'}>
-          {followUpSuggestions.map((promptText, idx) => {
-            const isTextArabic = /[\u0600-\u06FF]/.test(promptText);
-            return (
-              <button
-                key={idx}
-                type="button"
-                dir={isTextArabic ? 'rtl' : 'ltr'}
-                style={{ unicodeBidi: 'isolate' }}
-                onClick={() => onSelectPrompt(promptText)}
-                className="inline-flex items-center gap-2 px-3 py-1.5 rounded-xl bg-emerald-500/10 hover:bg-emerald-500/20 border border-emerald-500/25 hover:border-emerald-500/40 text-xs text-emerald-300 hover:text-white transition-all cursor-pointer shadow-xs group"
-              >
-                <Sparkles className="w-3 h-3 text-emerald-400 group-hover:rotate-12 transition-transform shrink-0" />
-                <span className="font-medium">{promptText}</span>
-                <ArrowRight className="w-3 h-3 text-emerald-400/80 rtl:rotate-180 group-hover:translate-x-0.5 rtl:group-hover:-translate-x-0.5 transition-transform shrink-0" />
-              </button>
-            );
-          })}
         </div>
       )}
     </div>

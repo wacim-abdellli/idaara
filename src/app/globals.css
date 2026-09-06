@@ -321,14 +321,19 @@ select {
 /* Focus outlines — keyboard nav visible, mouse click hidden (WCAG 2.4.7) */
 input:focus:not(:focus-visible),
 textarea:focus:not(:focus-visible),
-button:focus:not(:focus-visible) {
-  outline: none;
-  box-shadow: none;
+button:focus:not(:focus-visible),
+input.no-focus-ring,
+textarea.no-focus-ring,
+[data-no-focus],
+[data-no-focus]:focus,
+[data-no-focus]:focus-visible {
+  outline: none !important;
+  box-shadow: none !important;
 }
 
-input:focus-visible,
-textarea:focus-visible,
-button:focus-visible {
+input:focus-visible:not(.no-focus-ring):not([data-no-focus]),
+textarea:focus-visible:not(.no-focus-ring):not([data-no-focus]),
+button:focus-visible:not(.no-focus-ring):not([data-no-focus]) {
   outline: 2px solid var(--stamp-green);
   outline-offset: 2px;
   box-shadow: 0 0 0 4px var(--stamp-glow);

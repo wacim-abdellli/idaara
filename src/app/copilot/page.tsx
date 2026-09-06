@@ -483,7 +483,7 @@ export default function CopilotPage() {
                 <div className="max-w-3xl mx-auto space-y-6">
                   {messages.map((msg) => (
                     <div key={msg.id} id={`msg-${msg.id}`}>
-                      <ChatMessage message={msg} onSelectPrompt={(p) => handleSendMessage(p)} />
+                      <ChatMessage message={msg} />
                     </div>
                   ))}
 

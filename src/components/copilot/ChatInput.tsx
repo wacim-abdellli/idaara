@@ -58,7 +58,7 @@ export function ChatInput({
 
   return (
     <div className={isDock ? 'w-full max-w-3xl mx-auto' : 'w-full'}>
-      <div className="rounded-2xl sm:rounded-3xl bg-[#0c0e13]/95 border border-white/[0.1] hover:border-emerald-500/30 focus-within:border-emerald-500/50 focus-within:ring-1 focus-within:ring-emerald-500/20 shadow-2xl p-3 sm:p-3.5 transition-all space-y-2 backdrop-blur-xl">
+      <div className="rounded-2xl sm:rounded-3xl bg-[#0c0e13]/95 border border-white/[0.1] hover:border-white/20 focus-within:border-white/30 focus-within:ring-1 focus-within:ring-white/10 shadow-2xl p-3 sm:p-3.5 transition-all space-y-2 backdrop-blur-xl">
         {/* Auto-growing Textarea */}
         <textarea
           ref={textareaRef}
@@ -68,7 +68,8 @@ export function ChatInput({
           onKeyDown={onKeyDown}
           placeholder={placeholder}
           disabled={isTranscribing}
-          className="w-full bg-transparent px-1.5 py-1 text-base text-zinc-100 placeholder-zinc-500 border-0 outline-none ring-0 resize-none max-h-36 leading-relaxed"
+          data-no-focus="true"
+          className="w-full bg-transparent px-1.5 py-1 text-base text-zinc-100 placeholder-zinc-500 border-0 outline-none ring-0 focus:outline-none focus:ring-0 focus-visible:outline-none focus-visible:ring-0 !outline-none !shadow-none resize-none max-h-36 leading-relaxed no-focus-ring"
         />
 
         {/* Bottom Actions Toolbar */}
