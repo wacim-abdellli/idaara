@@ -318,15 +318,20 @@ select {
   padding-right: 32px !important;
 }
 
-/* ── Clean Focus outlines ────────────── */
-input:focus,
-input:focus-visible,
-textarea:focus,
-textarea:focus-visible,
-button:focus,
-button:focus-visible {
-  outline: none !important;
+/* Focus outlines — keyboard nav visible, mouse click hidden (WCAG 2.4.7) */
+input:focus:not(:focus-visible),
+textarea:focus:not(:focus-visible),
+button:focus:not(:focus-visible) {
+  outline: none;
   box-shadow: none;
+}
+
+input:focus-visible,
+textarea:focus-visible,
+button:focus-visible {
+  outline: 2px solid var(--stamp-green);
+  outline-offset: 2px;
+  box-shadow: 0 0 0 4px var(--stamp-glow);
 }
 
 /* ── Reduced motion ────────────────────────── */

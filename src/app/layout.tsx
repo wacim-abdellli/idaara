@@ -102,10 +102,18 @@ export default async function RootLayout({
     savedLocale && VALID_LOCALES.includes(savedLocale) ? savedLocale : 'fr';
 
   const langAttr = initialLocale === 'ar' ? 'ar' : initialLocale === 'en' ? 'en' : 'fr';
-  const dirAttr = initialLocale === 'ar' ? 'rtl' : 'ltr';
+  const dirAttr = (initialLocale === 'ar' || initialLocale === 'derja') ? 'rtl' : 'ltr';
 
   return (
     <html lang={langAttr} dir={dirAttr} className="dark scroll-smooth" suppressHydrationWarning>
+      <head>
+        {/* Preconnect to critical third-party domains */}
+        <link rel="preconnect" href="https://qaszgaysayzxajwblqqb.supabase.co" />
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
+        <link rel="dns-prefetch" href="https://generativelanguage.googleapis.com" />
+        <link rel="dns-prefetch" href="https://api.groq.com" />
+      </head>
       <body className="antialiased min-h-screen flex flex-col selection:bg-emerald-500/30 selection:text-emerald-200 pb-[calc(4rem+env(safe-area-inset-bottom,0px))] lg:pb-0" suppressHydrationWarning>
         <AuthProvider>
           <LocaleProvider initialLocale={initialLocale}>

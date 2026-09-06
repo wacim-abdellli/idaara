@@ -31,6 +31,8 @@ export const ExportInvoiceGen: React.FC = () => {
   const title =
     locale === 'ar'
       ? 'استخراج فاتورة تصدير دولية (EUR / USD)'
+      : locale === 'derja'
+      ? 'Faktoura Export'
       : locale === 'en'
       ? 'International FX Export Invoice Generator'
       : "Générateur de Facture d'Export Internationale (EUR / USD)";
@@ -38,6 +40,8 @@ export const ExportInvoiceGen: React.FC = () => {
   const subtitle =
     locale === 'ar'
       ? 'مطابقة لمواصفات بنك تونس المركزي (BCT) مع التنصيص على الإعفاء من الأداء على القيمة المضافة (TVA)'
+      : locale === 'derja'
+      ? 'TVA (0% Export) : Motaba9 lel BCT ma3a i3fe2 men TVA'
       : locale === 'en'
       ? 'Central Bank of Tunisia (BCT) compliant export invoice with 0% VAT export exemption statement'
       : 'Conforme aux exigences BCT pour les virements en devises avec mention d’exonération TVA légale (Art. 13 Code TVA)';
@@ -200,6 +204,8 @@ export const ExportInvoiceGen: React.FC = () => {
               <span className="text-zinc-700">
                 {locale === 'ar'
                   ? 'المبلغ الصافي للدفع / NET À PAYER :'
+                  : locale === 'derja'
+                  ? 'El Majmou3 :'
                   : locale === 'en'
                   ? 'TOTAL AMOUNT DUE (NET À PAYER) :'
                   : 'NET À PAYER :'}
@@ -211,6 +217,8 @@ export const ExportInvoiceGen: React.FC = () => {
               <strong>
                 {locale === 'ar'
                   ? 'التنصيص الجبائي القانوني الإلزامي :'
+                  : locale === 'derja'
+                  ? 'Tariikh :'
                   : locale === 'en'
                   ? 'Mandatory Legal & Tax Notice:'
                   : 'Mention légale fiscale obligatoire :'}

@@ -496,7 +496,7 @@ export const ChatMessage: React.FC<ChatMessageProps> = ({ message }) => {
           {message.timestamp && <span>{message.timestamp}</span>}
           <button
             onClick={copyToClipboard}
-            className="p-1 rounded-md hover:bg-white/10 text-zinc-500 hover:text-zinc-300 transition-colors cursor-pointer border-0 outline-none flex items-center gap-1 text-[11px]"
+            className="p-1 rounded-md hover:bg-white/10 text-zinc-500 hover:text-zinc-300 transition-colors cursor-pointer border-0 focus-visible:ring-2 focus-visible:ring-emerald-500 flex items-center gap-1 text-[11px]"
             title={copyTitleLabels[locale] ?? 'Copy'}
           >
             {copied ? (
@@ -517,6 +517,9 @@ export const ChatMessage: React.FC<ChatMessageProps> = ({ message }) => {
   return (
     <div
       dir={isArabicScript ? 'rtl' : 'ltr'}
+      aria-live="polite"
+      aria-atomic="false"
+      aria-label={locale === 'ar' ? 'رد المساعد الذكي إدارة' : locale === 'derja' ? 'Jaweb Idaara AI' : locale === 'en' ? 'Idaara AI response' : 'Réponse du copilote Idaara'}
       className={`w-full py-3 space-y-2.5 group ${isArabicScript ? 'text-right' : 'text-left'}`}
     >
       {/* Minimalist Assistant Header */}
@@ -597,7 +600,7 @@ export const ChatMessage: React.FC<ChatMessageProps> = ({ message }) => {
         <div className="flex items-center gap-1.5 pt-1 text-zinc-400 opacity-0 group-hover:opacity-100 transition-opacity animate-fade-in select-none">
           <button
             onClick={copyToClipboard}
-            className="p-1.5 rounded-md hover:bg-white/5 hover:text-zinc-200 text-zinc-400 transition-colors cursor-pointer border-0 outline-none flex items-center gap-1"
+            className="p-1.5 rounded-md hover:bg-white/5 hover:text-zinc-200 text-zinc-400 transition-colors cursor-pointer border-0 focus-visible:ring-2 focus-visible:ring-emerald-500 flex items-center gap-1"
             title={copyTitleLabels[locale] ?? 'Copy'}
           >
             {copied ? (
@@ -609,16 +612,16 @@ export const ChatMessage: React.FC<ChatMessageProps> = ({ message }) => {
 
           <button
             type="button"
-            className="p-1.5 rounded-md hover:bg-white/5 hover:text-zinc-200 text-zinc-400 transition-colors cursor-pointer border-0 outline-none"
-            title="Good response"
+            className="p-1.5 rounded-md hover:bg-white/5 hover:text-zinc-200 text-zinc-400 transition-colors cursor-pointer border-0 focus-visible:ring-2 focus-visible:ring-emerald-500"
+            title={locale === 'ar' ? 'إجابة جيدة' : locale === 'derja' ? 'Jaweb mli7' : locale === 'en' ? 'Good response' : 'Bonne réponse'}
           >
             <ThumbsUp className="w-3.5 h-3.5" />
           </button>
 
           <button
             type="button"
-            className="p-1.5 rounded-md hover:bg-white/5 hover:text-zinc-200 text-zinc-400 transition-colors cursor-pointer border-0 outline-none"
-            title="Poor response"
+            className="p-1.5 rounded-md hover:bg-white/5 hover:text-zinc-200 text-zinc-400 transition-colors cursor-pointer border-0 focus-visible:ring-2 focus-visible:ring-emerald-500"
+            title={locale === 'ar' ? 'إجابة ضعيفة' : locale === 'derja' ? 'Jaweb m3awej' : locale === 'en' ? 'Poor response' : 'Mauvaise réponse'}
           >
             <ThumbsDown className="w-3.5 h-3.5" />
           </button>

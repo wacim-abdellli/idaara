@@ -1,6 +1,7 @@
 'use client';
 
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, Suspense } from 'react';
+import Loading from '../loading';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useLocale } from '../../context/LocaleContext';
 import { DocumentUploader } from '../../components/fasserli/DocumentUploader';
@@ -71,7 +72,8 @@ export default function FasserliPage() {
       : "Scannez n'importe quel courrier officiel (redressement fiscal, convocation, mise en demeure CNSS) et obtenez une synthèse juridique en 3 points.";
 
   return (
-    <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12 space-y-8 relative overflow-hidden">
+    <Suspense fallback={<Loading />}>
+      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12 space-y-8 relative overflow-hidden">
       
       {/* Cinematic Ambient Glow */}
       <AmbientOrbs variant="cyan" />
@@ -177,6 +179,7 @@ export default function FasserliPage() {
         )}
       </AnimatePresence>
 
-    </div>
+      </div>
+    </Suspense>
   );
 }

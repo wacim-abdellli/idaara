@@ -7,6 +7,11 @@ import { buildConcoursGroundingPrompt } from '../../../lib/concours-knowledge';
 import { buildLiveGroundingFeed } from '../../../lib/live-civic-fetcher';
 import { getLocalized } from '../../../lib/locale-utils';
 import { checkRateLimit, getClientIp } from '../../../lib/rate-limit';
+import {
+  CIVIC_STAMP_RATES,
+  AUTO_ENTREPRENEUR_RATES,
+  FISCAL_YEAR_LABEL,
+} from '../../../data/fiscal-rates';
 
 function getGeminiKey(): string {
   return (process.env.GEMINI_API_KEY || '').trim();
@@ -28,7 +33,7 @@ const CIVIC_KNOWLEDGE_TOPICS: Array<{ keywords: string[]; content: string }> = [
     keywords: ['cin', 'identite', 'تعريف', 'بطاقة', 'بطاقه'],
     content: `[CIN — Carte d'Identité Nationale / بطاقة التعريف الوطنية]
 - Authority: Commissariat de Police / Brigade Garde Nationale
-- Fiscal Stamp: 3 DT (nouvelle) | 10 DT (perte/vol) — LF 2025 Art. 52
+- Fiscal Stamp: ${CIVIC_STAMP_RATES.cinStandardTND} DT (nouvelle) | ${CIVIC_STAMP_RATES.cinLostReplacementTND} DT (perte/vol) — ${FISCAL_YEAR_LABEL}
 - Processing Delay: 10 à 15 jours
 - Required: Madhmoun original (< 3 mois), 3 photos 3.5x4.5cm fond blanc, justificatif domicile (facture STEG/SONEDE), ancienne carte ou attestation de perte.`
   },
@@ -36,7 +41,7 @@ const CIVIC_KNOWLEDGE_TOPICS: Array<{ keywords: string[]; content: string }> = [
     keywords: ['passeport', 'passport', 'جواز', 'سفر', 'باسبور'],
     content: `[PASSEPORT / جواز السفر]
 - Authority: Commissariat de Police / Brigade Garde Nationale
-- Fiscal Stamp: 80 DT (adulte) | 25 DT (étudiant/élève avec attestation) — LF 2025
+- Fiscal Stamp: ${CIVIC_STAMP_RATES.passportAdultTND} DT (adulte) | ${CIVIC_STAMP_RATES.passportStudentMinorTND} DT (étudiant/élève avec attestation) — ${FISCAL_YEAR_LABEL}
 - Processing Delay: 7 à 15 jours
 - Required: CIN originale + copie, 4 photos fond blanc, madhmoun récent, ancien passeport (si renouvellement), timbre fiscal 80 DT (ou 25 DT).`
   },
@@ -59,7 +64,7 @@ const CIVIC_KNOWLEDGE_TOPICS: Array<{ keywords: string[]; content: string }> = [
     keywords: ['auto-entrepreneur', 'autoentrepreneur', 'مبادر', 'ذاتي', 'freelance', 'فريلانس', 'patente', 'باتيندة', '1%'],
     content: `[AUTO-ENTREPRENEUR / المبادر الذاتي]
 - Platform: www.autoentrepreneur.tn / auto-entrepreneur.tn (Inscription 100% gratuite)
-- Impôt unique: 1% sur CA (Services, Freelance, IT, Design) / 0.5% (Commerce, Industrie)
+- Impôt unique: ${AUTO_ENTREPRENEUR_RATES.servicesTaxRate * 100}% sur CA (Services, Freelance, IT, Design) / ${AUTO_ENTREPRENEUR_RATES.commerceTaxRate * 100}% (Commerce, Industrie)
 - TVA: 0% (exonération totale Art. 13 Code TVA)
 - Plafond CA: 75 000 DT/an (Services)
 - Facturation en devises (EUR/USD) légale via BCT. Cotisation CNSS forfaitaire trimestrielle.`
@@ -106,7 +111,7 @@ const CIVIC_KNOWLEDGE_TOPICS: Array<{ keywords: string[]; content: string }> = [
     keywords: ['hojjet', 'wafet', 'وفاة', 'حصر', 'إرث', 'ميراث', 'ورثة'],
     content: `[HOJJET WAFET / حجة الوفاة وحصر الإرث]
 - Authority: 2 Notaires (Adoul Ichhad) + Homologation Juge Cantonal
-- Cost: 35 DT (Adoul) + 10 DT (Enregistrement Recette) | Delay: 7 à 15 jours
+- Cost: 35 DT (Adoul) + 10.000 DT (Enregistrement Recette) | Delay: 7 à 15 jours
 - Required: Extrait de décès, extraits de naissance des héritiers, acte de mariage, 2 témoins majeurs avec CIN.`
   },
   {
@@ -286,15 +291,34 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: 'Request too large.' }, { status: 413 });
     }
     const body = await req.json();
-    const { prompt, locale = 'derja', history = [], think = false } = body;
+    const { prompt: bodyPrompt, message, locale = 'derja', history = [], think = false } = body;
 
-    // Runtime validation — never trust client-sent data
-    if (typeof prompt !== 'string' || prompt.trim().length === 0) {
-      return NextResponse.json({ error: 'Invalid prompt.' }, { status: 400 });
+    // ── Input Sanitisation ────────────────────────────────────────────────────
+    const MAX_MESSAGE_CHARS = 2000;
+    const rawMessage: string =
+      typeof (body as Record<string, unknown>)?.message === 'string'
+        ? ((body as Record<string, unknown>).message as string)
+        : typeof bodyPrompt === 'string'
+        ? bodyPrompt
+        : typeof message === 'string'
+        ? message
+        : '';
+    if (!rawMessage.trim()) {
+      return NextResponse.json({ error: 'Message is required.' }, { status: 400 });
     }
-    if (prompt.length > 4000) {
-      return NextResponse.json({ error: 'Prompt too long (max 4000 characters).' }, { status: 400 });
+    if (rawMessage.length > MAX_MESSAGE_CHARS) {
+      return NextResponse.json(
+        { error: `Message too long. Maximum ${MAX_MESSAGE_CHARS} characters.` },
+        { status: 400 }
+      );
     }
+    // Strip null bytes / dangerous control chars; preserve Arabic/Derja unicode
+    const sanitisedMessage = rawMessage
+      .replace(/[\x00-\x08\x0B\x0C\x0E-\x1F\x7F]/g, '')
+      .trim();
+    // ── End Sanitisation ─────────────────────────────────────────────────────
+
+    const prompt = sanitisedMessage;
     const safeHistory = Array.isArray(history)
       ? history
           .filter((m): m is { role: string; content: string } =>

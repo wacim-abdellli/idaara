@@ -68,9 +68,10 @@ export const Navbar: React.FC = () => {
     return () => document.removeEventListener('mousedown', handler);
   }, []);
 
-  const copilotLabel = locale === 'ar' ? 'المساعد الذكي' : 'Idaara AI';
+  const copilotLabel =
+    locale === 'ar' ? 'المساعد الذكي' : locale === 'derja' ? 'Idaara AI' : locale === 'en' ? 'Idaara AI' : 'Idaara AI';
   const moreLabel =
-    locale === 'ar' ? 'المزيد' : locale === 'fr' ? 'Plus' : locale === 'derja' ? 'Akther' : 'More';
+    locale === 'ar' ? 'المزيد' : locale === 'derja' ? 'Akther' : locale === 'en' ? 'More' : 'Plus';
 
   const isMoreActive = MORE_LINKS.some(
     (link) => pathname === link.href || pathname.startsWith(link.href)
@@ -237,9 +238,9 @@ export const Navbar: React.FC = () => {
                   ? 'بحث في إدارة (Ctrl+K)'
                   : locale === 'derja'
                   ? 'Lawwej fi Idaara (Ctrl+K)'
-                  : locale === 'fr'
-                  ? 'Rechercher sur Idaara (Ctrl+K)'
-                  : 'Search Idaara (Ctrl+K)'
+                  : locale === 'en'
+                  ? 'Search Idaara (Ctrl+K)'
+                  : 'Rechercher sur Idaara (Ctrl+K)'
               }
             >
               <Search className="w-3.5 h-3.5 text-zinc-500 shrink-0" />

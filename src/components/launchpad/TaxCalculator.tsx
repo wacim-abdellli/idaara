@@ -48,29 +48,35 @@ export const TaxCalculator: React.FC = () => {
   const title =
     locale === 'ar'
       ? 'محاكي الضرائب والـ CNSS للمبادر الذاتي'
+      : locale === 'derja'
+      ? 'Simulator Dhariba w CNSS Auto-Entrepreneur'
       : locale === 'en'
       ? 'Auto-Entrepreneur Tax & CNSS Simulator'
-      : locale === 'fr'
-      ? 'Simulateur Fiscal & Social Auto-Entrepreneur'
-      : 'Simulateur Dhariba & CNSS Auto-Entrepreneur';
+      : 'Simulateur Fiscal & Social Auto-Entrepreneur';
 
   const revenueLabel =
     locale === 'ar'
       ? 'رقم المعاملات السنوي التقديري (د.ت) :'
+      : locale === 'derja'
+      ? "CA mte3ek fi l'3am (TND) :"
       : locale === 'en'
       ? 'Estimated Annual Revenue (TND):'
-      : locale === 'fr'
-      ? "Chiffre d'Affaires Annuel Estimé (TND) :"
-      : "Chiffre d'Affaires fi l'3am (TND) :";
+      : "Chiffre d'Affaires Annuel Estimé (TND) :";
 
   const activityLabel =
-    locale === 'ar' ? 'نوع النشاط :' : locale === 'derja' ? 'Type el activité :' : locale === 'en' ? 'Activity Type:' : "Type d'Activité :";
+    locale === 'ar'
+      ? 'نوع النشاط :'
+      : locale === 'derja'
+      ? 'Type el activité :'
+      : locale === 'en'
+      ? 'Activity Type:'
+      : "Type d'Activité :";
 
   const taxLabel =
     locale === 'ar'
       ? 'الضريبة الجزافية السنوية :'
       : locale === 'derja'
-      ? 'Impôt forfaitaire fi l3am :'
+      ? 'Dhariba 3la CA :'
       : locale === 'en'
       ? 'Annual Flat Tax:'
       : 'Impôt Forfaitaire Annuel :';
@@ -88,7 +94,7 @@ export const TaxCalculator: React.FC = () => {
     locale === 'ar'
       ? 'الدخل الصافي في جيبك :'
       : locale === 'derja'
-      ? 'Revenu net fi jibek :'
+      ? 'Dakhl Safi :'
       : locale === 'en'
       ? 'Net Income in Your Pocket:'
       : 'Revenu Net dans votre poche :';

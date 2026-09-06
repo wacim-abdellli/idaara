@@ -1,6 +1,7 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, Suspense } from 'react';
+import Loading from '../loading';
 import Link from 'next/link';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useLocale } from '../../context/LocaleContext';
@@ -132,7 +133,8 @@ export default function ConcoursPage() {
       : 'Suivi en temps réel de tous les concours de la fonction publique tunisienne (STEG, SONEDE, CAPES, DGI...) avec constitution du dossier et liens officiels.';
 
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-8 min-h-screen">
+    <Suspense fallback={<Loading />}>
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-8 min-h-screen">
       
       {/* ── Top Hero Banner & Live Telemetry ── */}
       <FadeIn direction="down" className="relative">
@@ -526,6 +528,7 @@ export default function ConcoursPage() {
         </FadeInStagger>
       </div>
 
-    </div>
+      </div>
+    </Suspense>
   );
 }

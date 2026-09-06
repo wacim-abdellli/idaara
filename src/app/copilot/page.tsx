@@ -1,6 +1,7 @@
 'use client';
 
-import React, { useState, useRef, useEffect, useCallback } from 'react';
+import React, { useState, useRef, useEffect, useCallback, Suspense } from 'react';
+import Loading from '../loading';
 import Link from 'next/link';
 import { useLocale } from '../../context/LocaleContext';
 import { useAuth } from '../../context/AuthContext';
@@ -340,7 +341,7 @@ export default function CopilotPage() {
                 onClick={() => setSidebarOpen(true)}
                 className="p-2 rounded-xl text-zinc-400 hover:text-white hover:bg-white/[0.06] transition-colors cursor-pointer border-0 outline-none flex items-center justify-center shrink-0 min-h-[40px] min-w-[40px]"
                 title={locale === 'ar' ? 'فتح القائمة' : 'Ouvrir le menu'}
-                aria-label="Toggle sidebar"
+                aria-label={locale === 'ar' ? 'فتح/إغلاق الشريط الجانبي' : locale === 'derja' ? 'Ferma/7el el sidebar' : locale === 'en' ? 'Toggle sidebar' : 'Ouvrir/fermer le panneau'}
               >
                 <PanelLeft className="w-4 h-4" />
               </button>
@@ -377,7 +378,7 @@ export default function CopilotPage() {
                   onClick={handleShare}
                   className="p-2 rounded-xl text-zinc-400 hover:text-white hover:bg-white/[0.06] transition-colors cursor-pointer border-0 outline-none flex items-center justify-center min-h-[38px] min-w-[38px]"
                   title={shareCopied ? 'Copié ✓' : 'Partager'}
-                  aria-label="Share"
+                  aria-label={locale === 'ar' ? 'مشاركة المحادثة' : locale === 'derja' ? 'Partagi el conversacion' : locale === 'en' ? 'Share conversation' : 'Partager la conversation'}
                 >
                   <Share2 className="w-4 h-4" />
                 </button>
@@ -386,7 +387,7 @@ export default function CopilotPage() {
                   onClick={handleNewChat}
                   className="p-2 rounded-xl text-zinc-400 hover:text-white hover:bg-white/[0.06] transition-colors cursor-pointer border-0 outline-none flex items-center justify-center min-h-[38px] min-w-[38px]"
                   title={locale === 'ar' ? 'محادثة جديدة' : 'New chat'}
-                  aria-label="New chat"
+                  aria-label={locale === 'ar' ? 'محادثة جديدة' : locale === 'derja' ? 'Conversacion jedida' : locale === 'en' ? 'New chat' : 'Nouvelle conversation'}
                 >
                   <SquarePen className="w-4 h-4" />
                 </button>
@@ -399,106 +400,36 @@ export default function CopilotPage() {
               onClick={() => setAuthModalOpen(true)}
               className="p-2 rounded-xl text-zinc-400 hover:text-white hover:bg-white/[0.06] transition-colors cursor-pointer border-0 outline-none flex items-center justify-center min-h-[38px] min-w-[38px]"
               title={user ? user.email || 'Citizen' : 'Connexion'}
-              aria-label="User Account"
+              aria-label={locale === 'ar' ? 'حساب المستخدم' : locale === 'derja' ? 'Compte mte3i' : locale === 'en' ? 'My account' : 'Mon compte'}
             >
               <UserIcon className="w-4 h-4" />
             </button>
           </div>
         </header>
 
-        {/* ─── Empty State: Minimalist Landing Experience ─── */}
-        {messages.length === 0 && !isProcessing && (
-          <div className="flex-1 flex flex-col items-center justify-center px-4 sm:px-6 max-w-3xl mx-auto w-full py-8 overflow-y-auto">
-            {/* Minimalist Brand Header */}
-            <div className="relative flex flex-col items-center text-center mb-6 select-none animate-fade-in w-full">
-              <div className="mb-3">
-                <IdaaraCrest size={44} />
+        {/* ─── Main Chat Area (Suspense Wrapped) ─── */}
+        <Suspense fallback={<Loading />}>
+          {/* ─── Empty State: Minimalist Landing Experience ─── */}
+          {messages.length === 0 && !isProcessing && (
+            <div className="flex-1 flex flex-col items-center justify-center px-4 sm:px-6 max-w-3xl mx-auto w-full py-8 overflow-y-auto">
+              {/* Minimalist Brand Header */}
+              <div className="relative flex flex-col items-center text-center mb-6 select-none animate-fade-in w-full">
+                <div className="mb-3">
+                  <IdaaraCrest size={44} />
+                </div>
+
+                {/* Dignified Hero Title */}
+                <h1 className="text-xl sm:text-3xl font-bold text-white tracking-tight leading-tight mb-2">
+                  {greetingHeadline}
+                </h1>
+
+                {/* Subtitle */}
+                <p className="text-xs sm:text-sm text-zinc-400 max-w-md mx-auto leading-relaxed">
+                  {greetingSubtitle}
+                </p>
               </div>
 
-              {/* Dignified Hero Title */}
-              <h1 className="text-xl sm:text-3xl font-bold text-white tracking-tight leading-tight mb-2">
-                {greetingHeadline}
-              </h1>
-
-              {/* Subtitle */}
-              <p className="text-xs sm:text-sm text-zinc-400 max-w-md mx-auto leading-relaxed">
-                {greetingSubtitle}
-              </p>
-            </div>
-
-            {/* Centered Obsidian Civic Input Card */}
-            <ChatInput
-              locale={locale}
-              inputVal={inputVal}
-              isProcessing={isProcessing}
-              isRecording={isRecording}
-              isTranscribing={isTranscribing}
-              thinkMode={thinkMode}
-              showPlusMenu={showPlusMenu}
-              placeholder={
-                locale === 'ar'
-                  ? 'اسأل عن أي إجراء، وثيقة، معلوم تمبر جبائي، أو مناظرة عمومية...'
-                  : locale === 'derja'
-                  ? 'Es\'el 3la ay war9a, procédure, timbre, walla concour...'
-                  : locale === 'fr'
-                  ? 'Posez votre question sur une démarche, un timbre ou un texte du JORT...'
-                  : 'Ask about any Tunisian procedure, fiscal stamp, or public exam...'
-              }
-              textareaRef={textareaRef}
-              variant="centered"
-              onInputChange={onTextareaChange}
-              onKeyDown={onKeyDown}
-              onSendMessage={handleSendMessage}
-              onToggleVoice={toggleVoice}
-              onToggleThinkMode={() => setThinkMode((p) => !p)}
-              onTogglePlusMenu={() => setShowPlusMenu((p) => !p)}
-            />
-
-            {/* 4 Bespoke Tunisian Civic Portals */}
-            <QuickTopics locale={locale} isRtl={isRtl} onSelectPrompt={handleSendMessage} />
-          </div>
-        )}
-
-        {/* ─── Active Chat Messages Stream ─── */}
-        {(messages.length > 0 || isProcessing) && (
-          <>
-            <div
-              ref={messagesContainerRef}
-              className="flex-1 overflow-y-auto px-4 sm:px-6 py-6 pb-28 scroll-smooth"
-            >
-              <div className="max-w-3xl mx-auto space-y-6">
-                {messages.map((msg) => (
-                  <ChatMessage key={msg.id} message={msg} onSelectPrompt={(p) => handleSendMessage(p)} />
-                ))}
-
-                {/* 🏛️ Bespoke JORT Verification Scanner Orb */}
-                {isProcessing && (
-                  <div className="w-full py-3 flex items-center gap-3 animate-fade-in select-none" dir={isRtl ? 'rtl' : 'ltr'}>
-                    <JortPulseOrb size={22} />
-                    <span className="text-xs text-emerald-300/90 font-medium animate-pulse">
-                      {thinkMode
-                        ? (locale === 'ar'
-                            ? 'جارٍ التحليل والتدقيق في الرائد الرسمي ومجلة الالتزامات والعقود...'
-                            : locale === 'derja'
-                            ? 'Ta7lil 9anouni mezyen fel JORT w nouthous el 9anoun...'
-                            : locale === 'fr'
-                            ? 'Vérification en cours dans les textes officiels du JORT et les codes de loi...'
-                            : 'Deep statutory reasoning in official JORT gazettes and legal codes...')
-                        : (locale === 'ar'
-                            ? 'جارٍ إعداد الإجابة الإدارية الرسمية والتحقق من التنابر...'
-                            : locale === 'derja'
-                            ? 'N7adherlek fel ijaba el rasmiya w nthabbet fel timbre...'
-                            : locale === 'fr'
-                            ? 'Recherche et formulation de la réponse administrative officielle...'
-                            : 'Formulating official statutory response and checking stamp fees...')}
-                    </span>
-                  </div>
-                )}
-              </div>
-            </div>
-
-            {/* Sticky Bottom Dock Input (Active Chat Mode) */}
-            <footer className="p-3 sm:p-4 bg-gradient-to-t from-[#090b0e] via-[#090b0e]/95 to-transparent shrink-0 z-20 pb-safe">
+              {/* Centered Obsidian Civic Input Card */}
               <ChatInput
                 locale={locale}
                 inputVal={inputVal}
@@ -509,15 +440,15 @@ export default function CopilotPage() {
                 showPlusMenu={showPlusMenu}
                 placeholder={
                   locale === 'ar'
-                    ? 'اكتب سؤالك الإداري هنا...'
+                    ? 'اسأل عن أي إجراء، وثيقة، معلوم تمبر جبائي، أو مناظرة عمومية...'
                     : locale === 'derja'
-                    ? 'Ikteb el sou2al mte3ek houni...'
+                    ? 'Es\'el 3la ay war9a, procédure, timbre, walla concour...'
                     : locale === 'fr'
-                    ? 'Posez une question sur votre démarche administrative...'
-                    : 'Ask about any Tunisian procedure or legal step...'
+                    ? 'Posez votre question sur une démarche, un timbre ou un texte du JORT...'
+                    : 'Ask about any Tunisian procedure, fiscal stamp, or public exam...'
                 }
                 textareaRef={textareaRef}
-                variant="dock"
+                variant="centered"
                 onInputChange={onTextareaChange}
                 onKeyDown={onKeyDown}
                 onSendMessage={handleSendMessage}
@@ -525,9 +456,82 @@ export default function CopilotPage() {
                 onToggleThinkMode={() => setThinkMode((p) => !p)}
                 onTogglePlusMenu={() => setShowPlusMenu((p) => !p)}
               />
-            </footer>
-          </>
-        )}
+
+              {/* 4 Bespoke Tunisian Civic Portals */}
+              <QuickTopics locale={locale} isRtl={isRtl} onSelectPrompt={handleSendMessage} />
+            </div>
+          )}
+
+          {/* ─── Active Chat Messages Stream ─── */}
+          {(messages.length > 0 || isProcessing) && (
+            <>
+              <div
+                ref={messagesContainerRef}
+                className="flex-1 overflow-y-auto px-4 sm:px-6 py-6 pb-28 scroll-smooth"
+              >
+                <div className="max-w-3xl mx-auto space-y-6">
+                  {messages.map((msg) => (
+                    <ChatMessage key={msg.id} message={msg} onSelectPrompt={(p) => handleSendMessage(p)} />
+                  ))}
+
+                  {/* 🏛️ Bespoke JORT Verification Scanner Orb */}
+                  {isProcessing && (
+                    <div className="w-full py-3 flex items-center gap-3 animate-fade-in select-none" dir={isRtl ? 'rtl' : 'ltr'}>
+                      <JortPulseOrb size={22} />
+                      <span className="text-xs text-emerald-300/90 font-medium animate-pulse">
+                        {thinkMode
+                          ? (locale === 'ar'
+                              ? 'جارٍ التحليل والتدقيق في الرائد الرسمي ومجلة الالتزامات والعقود...'
+                              : locale === 'derja'
+                              ? 'Ta7lil 9anouni mezyen fel JORT w nouthous el 9anoun...'
+                              : locale === 'fr'
+                              ? 'Vérification en cours dans les textes officiels du JORT et les codes de loi...'
+                              : 'Deep statutory reasoning in official JORT gazettes and legal codes...')
+                          : (locale === 'ar'
+                              ? 'جارٍ إعداد الإجابة الإدارية الرسمية والتحقق من التنابر...'
+                              : locale === 'derja'
+                              ? 'N7adherlek fel ijaba el rasmiya w nthabbet fel timbre...'
+                              : locale === 'fr'
+                              ? 'Recherche et formulation de la réponse administrative officielle...'
+                              : 'Formulating official statutory response and checking stamp fees...')}
+                      </span>
+                    </div>
+                  )}
+                </div>
+              </div>
+
+              {/* Sticky Bottom Dock Input (Active Chat Mode) */}
+              <footer className="p-3 sm:p-4 bg-gradient-to-t from-[#090b0e] via-[#090b0e]/95 to-transparent shrink-0 z-20 pb-safe">
+                <ChatInput
+                  locale={locale}
+                  inputVal={inputVal}
+                  isProcessing={isProcessing}
+                  isRecording={isRecording}
+                  isTranscribing={isTranscribing}
+                  thinkMode={thinkMode}
+                  showPlusMenu={showPlusMenu}
+                  placeholder={
+                    locale === 'ar'
+                      ? 'اكتب سؤالك الإداري هنا...'
+                      : locale === 'derja'
+                      ? 'Ikteb el sou2al mte3ek houni...'
+                      : locale === 'fr'
+                      ? 'Posez une question sur votre démarche administrative...'
+                      : 'Ask about any Tunisian procedure or legal step...'
+                  }
+                  textareaRef={textareaRef}
+                  variant="dock"
+                  onInputChange={onTextareaChange}
+                  onKeyDown={onKeyDown}
+                  onSendMessage={handleSendMessage}
+                  onToggleVoice={toggleVoice}
+                  onToggleThinkMode={() => setThinkMode((p) => !p)}
+                  onTogglePlusMenu={() => setShowPlusMenu((p) => !p)}
+                />
+              </footer>
+            </>
+          )}
+        </Suspense>
       </div>
 
       {/* Citizen / Account Modal */}

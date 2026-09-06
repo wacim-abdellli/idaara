@@ -128,9 +128,9 @@ export function SessionSidebar({
 
             <button
               onClick={onClose}
-              className="p-1.5 rounded-lg text-zinc-400 hover:text-white hover:bg-white/[0.06] transition-colors cursor-pointer border-0 outline-none"
+              className="p-1.5 rounded-lg text-zinc-400 hover:text-white hover:bg-white/[0.06] transition-colors cursor-pointer border-0"
               title={locale === 'ar' ? 'إغلاق القائمة' : 'Close'}
-              aria-label="Close sidebar"
+              aria-label={locale === 'ar' ? 'إغلاق اللائحة' : locale === 'derja' ? 'Sker el sidebar' : locale === 'en' ? 'Close sidebar' : 'Fermer le panneau'}
             >
               <PanelLeftClose className="w-4 h-4" />
             </button>
@@ -295,7 +295,7 @@ export function SessionSidebar({
           <button
             type="button"
             onClick={onOpenAuthModal}
-            className="w-full flex items-center justify-between p-1.5 rounded-xl hover:bg-white/[0.04] transition-colors cursor-pointer border-0 outline-none text-start"
+            className="w-full flex items-center justify-between p-1.5 rounded-xl hover:bg-white/[0.04] transition-colors cursor-pointer border-0 focus-visible:ring-2 focus-visible:ring-emerald-500 text-start"
           >
             <div className="flex items-center gap-2.5 min-w-0">
               <div className="w-7 h-7 rounded-full bg-emerald-500/20 border border-emerald-500/30 text-emerald-300 flex items-center justify-center font-bold text-xs shrink-0">

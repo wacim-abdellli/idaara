@@ -68,7 +68,7 @@ export function ChatInput({
           onKeyDown={onKeyDown}
           placeholder={placeholder}
           disabled={isTranscribing}
-          className="w-full bg-transparent px-1.5 py-1 text-base sm:text-[15px] text-zinc-100 placeholder-zinc-500 border-0 outline-none ring-0 resize-none max-h-36 leading-relaxed"
+          className="w-full bg-transparent px-1.5 py-1 text-base text-zinc-100 placeholder-zinc-500 border-0 outline-none ring-0 resize-none max-h-36 leading-relaxed"
         />
 
         {/* Bottom Actions Toolbar */}
@@ -78,8 +78,9 @@ export function ChatInput({
             <div className="relative">
               <button
                 type="button"
+                aria-label={locale === 'ar' ? 'إضافة ملف أو موضوع' : locale === 'derja' ? 'Zid fichier wala sujet' : locale === 'en' ? 'Attach file or topic' : 'Ajouter un fichier ou sujet'}
                 onClick={onTogglePlusMenu}
-                className="p-2 rounded-xl bg-white/[0.04] hover:bg-white/[0.08] text-zinc-400 hover:text-zinc-200 transition-colors cursor-pointer border border-white/[0.06] outline-none flex items-center justify-center min-h-[36px] min-w-[36px]"
+                className="p-2 rounded-xl bg-white/[0.04] hover:bg-white/[0.08] text-zinc-400 hover:text-zinc-200 transition-colors cursor-pointer border border-white/[0.06] focus-visible:ring-2 focus-visible:ring-emerald-500 flex items-center justify-center min-h-[36px] min-w-[36px]"
                 title={locale === 'ar' ? 'إجراءات سريعة' : 'Procédures'}
               >
                 <Plus className="w-4 h-4" />
@@ -99,7 +100,7 @@ export function ChatInput({
                       <button
                         key={idx}
                         onClick={() => onSendMessage(item.q)}
-                        className="w-full flex items-center gap-2.5 px-3 py-2 rounded-xl text-start hover:bg-white/[0.06] text-xs text-zinc-300 hover:text-white transition-colors cursor-pointer border-0 outline-none group"
+                        className="w-full flex items-center gap-2.5 px-3 py-2 rounded-xl text-start hover:bg-white/[0.06] text-xs text-zinc-300 hover:text-white transition-colors cursor-pointer border-0 focus-visible:ring-2 focus-visible:ring-emerald-500 group"
                       >
                         <Icon className="w-4 h-4 text-emerald-400 shrink-0 group-hover:scale-105 transition-transform" />
                         <span className="truncate">{item.label}</span>
@@ -113,6 +114,8 @@ export function ChatInput({
             {/* Deep JORT Verification Mode Toggle */}
             <button
               type="button"
+              aria-label={tThinkLabel}
+              aria-pressed={thinkMode}
               onClick={onToggleThinkMode}
               className={`flex items-center gap-1.5 px-2.5 py-1.5 rounded-xl text-xs font-medium transition-all cursor-pointer border min-h-[36px] ${
                 thinkMode
@@ -130,6 +133,8 @@ export function ChatInput({
             {/* Voice Mic Button */}
             <button
               type="button"
+              aria-label={isRecording ? "Arrêter l'enregistrement vocal" : "Démarrer la saisie vocale"}
+              aria-pressed={isRecording}
               onClick={onToggleVoice}
               disabled={isTranscribing}
               className={`p-2 rounded-xl transition-colors cursor-pointer border min-h-[36px] min-w-[36px] flex items-center justify-center ${
@@ -153,6 +158,9 @@ export function ChatInput({
             {/* Clean Send Action Button */}
             <button
               type="button"
+              aria-label={isProcessing ? "Traitement en cours..." : "Envoyer le message"}
+              aria-busy={isProcessing}
+              aria-disabled={!hasText || isProcessing}
               onClick={() => onSendMessage()}
               disabled={!hasText || isProcessing || isTranscribing}
               className={`w-9 h-9 rounded-xl flex items-center justify-center transition-all ${
@@ -160,7 +168,6 @@ export function ChatInput({
                   ? 'bg-emerald-500 hover:bg-emerald-400 text-black cursor-pointer shadow-md shadow-emerald-500/20 active:scale-95'
                   : 'bg-white/[0.05] text-zinc-600 cursor-not-allowed border border-white/[0.04]'
               }`}
-              aria-label="Send"
             >
               <ArrowUp className="w-4 h-4 stroke-[2.5]" />
             </button>

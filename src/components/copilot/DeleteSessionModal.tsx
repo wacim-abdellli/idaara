@@ -35,7 +35,7 @@ export function DeleteSessionModal({
           </h3>
           <button
             onClick={onClose}
-            className="p-1 rounded-lg text-zinc-400 hover:text-white hover:bg-white/10 transition-colors cursor-pointer border-0 outline-none"
+            className="p-1 rounded-lg text-zinc-400 hover:text-white hover:bg-white/10 transition-colors cursor-pointer border-0 focus-visible:ring-2 focus-visible:ring-emerald-500"
           >
             <X className="w-4 h-4" />
           </button>
@@ -54,7 +54,7 @@ export function DeleteSessionModal({
         <div className="flex items-center justify-end gap-2.5 pt-2">
           <button
             onClick={onClose}
-            className="px-4 py-2 rounded-xl text-xs font-semibold text-zinc-300 hover:text-white hover:bg-white/10 transition-colors cursor-pointer border-0 outline-none"
+            className="px-4 py-2 rounded-xl text-xs font-semibold text-zinc-300 hover:text-white hover:bg-white/10 transition-colors cursor-pointer border-0 focus-visible:ring-2 focus-visible:ring-emerald-500"
           >
             {locale === 'ar'
               ? 'إلغاء'
@@ -66,7 +66,7 @@ export function DeleteSessionModal({
           </button>
           <button
             onClick={onConfirm}
-            className="flex items-center gap-1.5 px-4 py-2 rounded-xl bg-red-600 hover:bg-red-500 text-white text-xs font-semibold transition-colors cursor-pointer border-0 outline-none shadow-md shadow-red-900/40"
+            className="flex items-center gap-1.5 px-4 py-2 rounded-xl bg-red-600 hover:bg-red-500 text-white text-xs font-semibold transition-colors cursor-pointer border-0 focus-visible:ring-2 focus-visible:ring-red-400 shadow-md shadow-red-900/40"
           >
             <Trash2 className="w-3.5 h-3.5" />
             <span>

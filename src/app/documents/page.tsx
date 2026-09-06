@@ -1,6 +1,7 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, Suspense } from 'react';
+import Loading from '../loading';
 import { motion } from 'framer-motion';
 import { documentTemplatesData } from '../../data/documentTemplates';
 import { DocumentCard } from '../../components/documents/DocumentCard';
@@ -176,7 +177,8 @@ export default function DocumentsPage() {
   ];
 
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-10 space-y-10 relative overflow-hidden">
+    <Suspense fallback={<Loading />}>
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-10 space-y-10 relative overflow-hidden">
 
       {/* Cinematic Ambient Orbs */}
       <AmbientOrbs variant="emerald" />
@@ -294,6 +296,7 @@ export default function DocumentsPage() {
           </FadeInItem>
         ))}
       </FadeInStagger>
-    </div>
+      </div>
+    </Suspense>
   );
 }

@@ -1,6 +1,7 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, Suspense } from 'react';
+import Loading from '../loading';
 import { motion, AnimatePresence } from 'framer-motion';
 import { publicOfficesData, GOVERNORATES_LIST } from '../../data/offices';
 import { OfficeCard } from '../../components/locator/OfficeCard';
@@ -352,7 +353,8 @@ export default function LocatorPage() {
   ];
 
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-10 space-y-10 relative overflow-hidden">
+    <Suspense fallback={<Loading />}>
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-10 space-y-10 relative overflow-hidden">
 
       {/* Cinematic Ambient Glow */}
       <AmbientOrbs variant="emerald" />
@@ -668,6 +670,7 @@ export default function LocatorPage() {
           </motion.div>
         )}
       </AnimatePresence>
-    </div>
+      </div>
+    </Suspense>
   );
 }

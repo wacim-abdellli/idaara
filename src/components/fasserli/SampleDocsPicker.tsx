@@ -22,11 +22,11 @@ export const SampleDocsPicker: React.FC<SampleDocsPickerProps> = ({
   const sectionHeading =
     locale === 'ar'
       ? 'جرّب وثيقة رسمية نموذجية (أمثلة واقعية لإشعارات ومراسلات الدولة) :'
+      : locale === 'derja'
+      ? 'Wathaye9 rasmiya tounes (Amthila wa9i3iya lel ta7lil) :'
       : locale === 'en'
       ? 'Try with a verified sample notice (Real Tunisian official letters) :'
-      : locale === 'fr'
-      ? "Tester un courrier type (Exemples réels d'avis administratifs) :"
-      : "Jarreb b'un document type (Avis & courriers réels) :";
+      : "Tester un courrier type (Exemples réels d'avis administratifs) :";
 
   return (
     <div className="space-y-3.5">
@@ -56,17 +56,37 @@ export const SampleDocsPicker: React.FC<SampleDocsPickerProps> = ({
           const urgencyConfig =
             doc.simulatedOCRResult.urgency === 'critical'
               ? {
-                  label: locale === 'ar' ? 'عاجل جداً' : locale === 'en' ? 'Critical' : locale === 'fr' ? 'Critique' : '3ajel',
+                  label:
+                    locale === 'ar'
+                      ? 'عاجل جداً'
+                      : locale === 'derja'
+                      ? '3ajel barcha'
+                      : locale === 'en'
+                      ? 'Critical'
+                      : 'Critique',
                   badge: 'bg-red-500/15 text-red-300 border-red-500/30',
                 }
               : doc.simulatedOCRResult.urgency === 'high'
               ? {
-                  label: locale === 'ar' ? 'أولوية عالية' : locale === 'en' ? 'High' : locale === 'fr' ? 'Élevée' : '3ali',
+                  label:
+                    locale === 'ar'
+                      ? 'أولوية عالية'
+                      : locale === 'derja'
+                      ? 'Awlawiya 3aliya'
+                      : locale === 'en'
+                      ? 'High'
+                      : 'Élevée',
                   badge: 'bg-amber-500/15 text-amber-300 border-amber-500/30',
                 }
               : {
                   label:
-                    locale === 'ar' ? 'عادي' : locale === 'en' ? 'Normal' : locale === 'fr' ? 'Normal' : 'Normal',
+                    locale === 'ar'
+                      ? 'عادي'
+                      : locale === 'derja'
+                      ? '3adi'
+                      : locale === 'en'
+                      ? 'Normal'
+                      : 'Normal',
                   badge: 'bg-blue-500/15 text-blue-300 border-blue-500/30',
                 };
 
@@ -110,10 +130,10 @@ export const SampleDocsPicker: React.FC<SampleDocsPickerProps> = ({
                     {(doc.simulatedOCRResult.deadlineDate || '').split('(')[0].trim() ||
                       (locale === 'ar'
                         ? 'الأجل القانوني'
+                        : locale === 'derja'
+                        ? 'Ajel 9anouni'
                         : locale === 'en'
                         ? 'Legal deadline'
-                        : locale === 'fr'
-                        ? 'Délai légal'
                         : 'Délai légal')}
                   </span>
                 </span>
@@ -122,7 +142,7 @@ export const SampleDocsPicker: React.FC<SampleDocsPickerProps> = ({
                     {locale === 'ar'
                       ? 'تحليل'
                       : locale === 'derja'
-                      ? 'Tester'
+                      ? 'Fasserli hal war9a'
                       : locale === 'en'
                       ? 'Test'
                       : 'Tester'}

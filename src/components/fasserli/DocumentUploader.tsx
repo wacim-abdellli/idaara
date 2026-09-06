@@ -91,13 +91,13 @@ export const DocumentUploader: React.FC<DocumentUploaderProps> = ({ onAnalyze, i
   };
 
   const analyzeBtnText =
-    locale === 'en'
-      ? 'Scan & Decode Notice'
-      : locale === 'ar'
+    locale === 'ar'
       ? 'تحليل وفك رموز الوثيقة'
-      : locale === 'fr'
-      ? 'Lancer le Décryptage IA'
-      : 'Fasserli Hal War9a';
+      : locale === 'derja'
+      ? 'Fasserli Hal War9a'
+      : locale === 'en'
+      ? 'Scan & Decode Notice'
+      : 'Lancer le Décryptage IA';
 
   return (
     <div className="w-full">
@@ -215,9 +215,9 @@ export const DocumentUploader: React.FC<DocumentUploaderProps> = ({ onAnalyze, i
                   ? 'تتم قراءة الوثيقة واستخراج المعلومات مؤقتاً في الذاكرة الحية لفك الرموز القانونية. لا يتم حفظ أو تخزين أي ملف على خوادمنا.'
                   : locale === 'derja'
                   ? 'El war9a tet3alech fi la7dha fel mémoire w ma tet7fadhch direct fel serveuret.'
-                  : locale === 'fr'
-                  ? 'Le document est traité de manière éphémère en mémoire pour le décryptage. Aucun fichier n’est conservé sur nos serveurs.'
-                  : 'Documents are processed ephemerally in volatile memory for legal analysis and are never stored on servers.'}
+                  : locale === 'en'
+                  ? 'Documents are processed ephemerally in volatile memory for legal analysis and are never stored on servers.'
+                  : 'Le document est traité de manière éphémère en mémoire pour le décryptage. Aucun fichier n’est conservé sur nos serveurs.'}
               </span>
             </div>
           </div>
