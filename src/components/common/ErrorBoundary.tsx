@@ -52,7 +52,8 @@ export class ErrorBoundary extends Component<Props, State> {
             className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-zinc-800 hover:bg-zinc-700 text-xs font-bold text-emerald-400 border border-white/10 transition-colors cursor-pointer"
           >
             <RefreshCw className="w-3.5 h-3.5" />
-            <span>Réessayer</span>
+            {/* i18n-ignore: multilingual static text for class component */}
+            <span>Réessayer / Retry / إعادة المحاولة</span>
           </button>
         </div>
       );

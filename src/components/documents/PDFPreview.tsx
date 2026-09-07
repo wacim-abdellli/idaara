@@ -247,6 +247,7 @@ export const PDFPreview: React.FC<PDFPreviewProps> = ({ template, formData }) =>
                   </>
                 ) : (
                   <>
+                    {/* i18n-ignore: start - official Tunisian legal document text in French (JORT) */}
                     <div className="p-3.5 bg-zinc-50 border border-zinc-200 rounded space-y-2">
                       <p className="font-bold uppercase text-[11px] text-zinc-900">ENTRE LES SOUSSIGNÉS :</p>
                       <p>
@@ -275,6 +276,7 @@ export const PDFPreview: React.FC<PDFPreviewProps> = ({ template, formData }) =>
                       <h3 className="font-bold uppercase text-[11px] mb-0.5 text-zinc-900">Article 4 : Enregistrement & Légalisation</h3>
                       <p>Les parties s’engagent à faire légaliser leurs signatures auprès de la Municipalité et à enregistrer le présent acte à la Recette des Finances.</p>
                     </div>
+                    {/* i18n-ignore: end */}
                   </>
                 )
               )}
@@ -307,6 +309,7 @@ export const PDFPreview: React.FC<PDFPreviewProps> = ({ template, formData }) =>
                   </>
                 ) : (
                   <>
+                    {/* i18n-ignore: start - official legal text */}
                     <div className="p-3.5 bg-zinc-50 border border-zinc-200 rounded space-y-2">
                       <p className="font-bold uppercase text-[11px] text-zinc-900">DÉLÉGATION DE POUVOIR (MANDAT) :</p>
                       <p>
@@ -325,6 +328,7 @@ export const PDFPreview: React.FC<PDFPreviewProps> = ({ template, formData }) =>
                         «{formData.objet_procuration || 'Effectuer en mon nom et pour mon compte toutes démarches administratives, signer tout document et formulaire officiel requis auprès des administrations et organismes publics.'}»
                       </p>
                     </div>
+                    {/* i18n-ignore: end */}
                   </>
                 )
               )}
@@ -393,6 +397,7 @@ export const PDFPreview: React.FC<PDFPreviewProps> = ({ template, formData }) =>
                   </>
                 ) : (
                   <>
+                    {/* i18n-ignore: start - official legal text */}
                     <div className="p-3.5 bg-zinc-50 border border-zinc-200 rounded space-y-2">
                       <p>
                         <strong>Vendeur :</strong> {formData.vendeur_name || '...........................................'} (CIN: {formData.vendeur_cin || '........'})<br/>
@@ -412,6 +417,7 @@ export const PDFPreview: React.FC<PDFPreviewProps> = ({ template, formData }) =>
                         Le vendeur cède le véhicule en l’état et l’acquéreur s’engage à effectuer la mutation auprès de l’ATTT.
                       </p>
                     </div>
+                    {/* i18n-ignore: end */}
                   </>
                 )
               )}
@@ -445,6 +451,7 @@ export const PDFPreview: React.FC<PDFPreviewProps> = ({ template, formData }) =>
                   </>
                 ) : (
                   <>
+                    {/* i18n-ignore: start - official legal text */}
                     <div className="p-3.5 bg-zinc-50 border border-zinc-200 rounded space-y-2">
                       <p>
                         Je soussigné(e) (Le Débiteur) : <strong>{formData.debiteur_name || '...........................................'}</strong>, 
@@ -467,6 +474,7 @@ export const PDFPreview: React.FC<PDFPreviewProps> = ({ template, formData }) =>
                         Engagement pris sous l’empire des dispositions des articles 339 et suivants du Code des Obligations et des Contrats (COC).
                       </p>
                     </div>
+                    {/* i18n-ignore: end */}
                   </>
                 )
               )}
@@ -501,6 +509,7 @@ export const PDFPreview: React.FC<PDFPreviewProps> = ({ template, formData }) =>
                   </>
                 ) : (
                   <>
+                    {/* i18n-ignore: start - official legal text */}
                     <div className="p-3.5 bg-zinc-50 border border-zinc-200 rounded space-y-2">
                       <p>
                         Je soussigné(e) : <strong>{formData.declarant_name || '...........................................'}</strong>, 
@@ -524,6 +533,7 @@ export const PDFPreview: React.FC<PDFPreviewProps> = ({ template, formData }) =>
                         Fait pour servir et valoir ce que de droit. Toute fausse déclaration expose son auteur aux peines de l’Article 173 du Code Pénal.
                       </p>
                     </div>
+                    {/* i18n-ignore: end */}
                   </>
                 )
               )}
@@ -553,6 +563,7 @@ export const PDFPreview: React.FC<PDFPreviewProps> = ({ template, formData }) =>
                   </>
                 ) : (
                   <>
+                    {/* i18n-ignore: start - official legal text */}
                     <div className="p-3.5 bg-zinc-50 border border-zinc-200 rounded space-y-2">
                       <p>
                         Je soussigné(e) (L’Hébergeant) : <strong>{formData.host_name || '...........................................'}</strong>, 
@@ -571,6 +582,7 @@ export const PDFPreview: React.FC<PDFPreviewProps> = ({ template, formData }) =>
                         Attestation établie pour satisfaire aux exigences des autorités consulaires et de séjour.
                       </p>
                     </div>
+                    {/* i18n-ignore: end */}
                   </>
                 )
               )}
@@ -600,6 +612,7 @@ export const PDFPreview: React.FC<PDFPreviewProps> = ({ template, formData }) =>
                   </>
                 ) : (
                   <>
+                    {/* i18n-ignore: start - official legal text */}
                     <div className="p-3.5 bg-zinc-50 border border-zinc-200 rounded space-y-2">
                       <div className="border-b border-zinc-300 pb-1.5">
                         <p className="font-bold text-zinc-900 text-sm">{formData.company_name || 'ENTREPRISE / SOCIÉTÉ'}</p>
@@ -618,6 +631,7 @@ export const PDFPreview: React.FC<PDFPreviewProps> = ({ template, formData }) =>
                         Certificat délivré en application de l’Article 14 du Code du Travail tunisien pour servir et valoir ce que de droit.
                       </p>
                     </div>
+                    {/* i18n-ignore: end */}
                   </>
                 )
               )}

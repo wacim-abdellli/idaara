@@ -47,7 +47,7 @@ export const FormWizard: React.FC<FormWizardProps> = ({
             className="flex items-center space-x-1.5 rtl:space-x-reverse px-2.5 py-1 rounded-lg bg-amber-500/10 hover:bg-amber-500/20 border border-amber-500/20 text-amber-300 text-xs font-semibold transition-colors cursor-pointer"
           >
             <Sparkles className="w-3 h-3" />
-            <span>{locale === 'ar' ? 'ملء تجريبي' : locale === 'derja' ? 'Exemple réel (auto-fill)' : 'Exemple'}</span>
+            <span>{locale === 'ar' ? 'ملء تجريبي' : locale === 'derja' ? 'Exemple réel (auto-fill)' : locale === 'en' ? 'Real example (auto-fill)' : 'Exemple'}</span>
           </button>
         )}
       </div>

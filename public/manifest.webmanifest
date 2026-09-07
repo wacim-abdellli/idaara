@@ -1,0 +1,18 @@
+{
+  "name": "Idaara.tn",
+  "short_name": "Idaara",
+  "description": "Le copilote citoyen intelligent pour les démarches administratives en Tunisie.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#08090b",
+  "theme_color": "#00C07F",
+  "orientation": "portrait",
+  "icons": [
+    {
+      "src": "/icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}

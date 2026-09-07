@@ -20,7 +20,7 @@ const ALLOWED_WORDS = new Set(
     'idaara', 'tn', 'jort', 'baladiya', 'dt', 'tnd', 'pdf', 'ocr', 'cin', 'ai',
     'cnss', 'cnam', 'attt', 'steg', 'sonede', 'onas', 'aneti', 'rne', 'tva',
     'sarl', 'esc', 'live', 'kb', 'mb', 'bct', 'copilot', 'fasserli', 'id',
-    'eu', 'eur', 'usd', 'iso', 'coco', 'th', 'td',
+    'eu', 'eur', 'usd', 'iso', 'coco', 'th', 'td', 'verified',
   ].map((w) => w.toLowerCase())
 );
 
@@ -132,9 +132,28 @@ for (const path of walk(join(ROOT, 'src'), ['.tsx'])) {
   const rel = path.slice(ROOT.length + 1);
   const lines = readFileSync(path, 'utf8').split('\n');
 
+  let inIgnoreBlock = false;
+  let skipNext = false;
   lines.forEach((line, idx) => {
-    // Skip comment lines
     const trimmed = line.trim();
+    if (trimmed.includes('i18n-ignore: start') || trimmed.includes('i18n-ignore-start')) {
+      inIgnoreBlock = true;
+      return;
+    }
+    if (trimmed.includes('i18n-ignore: end') || trimmed.includes('i18n-ignore-end')) {
+      inIgnoreBlock = false;
+      return;
+    }
+    if (inIgnoreBlock) return;
+    if (skipNext) {
+      skipNext = false;
+      return;
+    }
+    if (trimmed.includes('i18n-ignore')) {
+      skipNext = true;
+      return;
+    }
+    // Skip comment lines
     if (trimmed.startsWith('//') || trimmed.startsWith('*') || trimmed.startsWith('/*')) return;
 
     // JSX text nodes: >Text<
