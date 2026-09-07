@@ -8,7 +8,6 @@
 ---
 
 ## 📋 What the Live Audit Found (Hard Data)
-
 | # | Issue | File | Lines | Effort |
 |---|---|---|---|---|
 | 1 | `TimbreCostBreakdown.tsx` — 5 ternaries missing `derja` | `calculator/TimbreCostBreakdown.tsx` | 45, 47, 49, 63, 65 | Tiny |

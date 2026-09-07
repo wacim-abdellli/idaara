@@ -300,8 +300,8 @@ export default function CopilotPage() {
       : locale === 'derja'
       ? 'Mosa3dek el idari el rasmi lel awra9, el timbres wel concourat fi Tounes.'
       : locale === 'fr'
-      ? 'Votre copilote officiel pour les démarches citoyennes, timbres fiscaux et textes du JORT.'
-      : 'Your official statutory copilot for administrative workflows, fiscal stamps, and JORT decrees.';
+      ? 'Votre copilote officiel pour les démarches citoyennes, timbres fiscaux et textes réglementaires.'
+      : 'Your official statutory copilot for administrative workflows, fiscal stamps, and official regulations.';
 
   const activeSession = sessions.find((s) => s.id === currentSessionId);
   const activeChatTitle =
@@ -467,7 +467,7 @@ export default function CopilotPage() {
                       ? 'Es\'el 3la ay war9a, procédure, timbre, walla concour...'
                       : locale === 'en'
                       ? 'Ask about any Tunisian procedure, fiscal stamp, or public exam...'
-                      : 'Posez votre question sur une démarche, un timbre ou un texte du JORT...'
+                      : 'Posez votre question sur une démarche, un timbre ou une formalité...'
                 }
                 textareaRef={textareaRef}
                 variant="centered"
@@ -505,12 +505,12 @@ export default function CopilotPage() {
                       <span className="text-xs text-emerald-300/90 font-medium animate-pulse">
                         {thinkMode
                           ? (locale === 'ar'
-                              ? 'جارٍ التحليل والتدقيق في الرائد الرسمي ومجلة الالتزامات والعقود...'
+                              ? 'جارٍ التحليل والتدقيق في النصوص القانونية والمراجع الرسمية...'
                               : locale === 'derja'
-                              ? 'Ta7lil 9anouni mezyen fel JORT w nouthous el 9anoun...'
+                              ? 'Ta7lil 9anouni fi nouthous el 9anoun wel maraji3 el rasmiya...'
                               : locale === 'fr'
-                              ? 'Vérification en cours dans les textes officiels du JORT et les codes de loi...'
-                              : 'Deep statutory reasoning in official JORT gazettes and legal codes...')
+                              ? 'Analyse en cours des textes juridiques et décrets officiels...'
+                              : 'Deep legal analysis of official decrees and statutes...')
                           : (locale === 'ar'
                               ? 'جارٍ إعداد الإجابة الإدارية الرسمية والتحقق من التنابر...'
                               : locale === 'derja'

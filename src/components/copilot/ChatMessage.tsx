@@ -513,14 +513,9 @@ export const ChatMessage: React.FC<ChatMessageProps> = ({ message, onSelectPromp
       className={`w-full py-3.5 space-y-3 group animate-fade-in ${isArabicScript ? 'text-right' : 'text-left'}`}
     >
       {/* Elevated Assistant Identity Header */}
-      <div className="flex items-center gap-2.5 pb-1 select-none">
-        <BrandIcon size={22} />
-        <div className="flex items-center gap-2">
-          <span className="font-bold text-xs text-white tracking-tight">Idaara AI</span>
-          <span className="text-[10px] px-2 py-0.5 rounded-full bg-emerald-500/10 border border-emerald-500/25 text-emerald-400 font-mono font-medium">
-            JORT {new Date().getFullYear()}
-          </span>
-        </div>
+      <div className="flex items-center gap-2 pb-1 select-none">
+        <BrandIcon size={20} />
+        <span className="font-bold text-xs text-white tracking-tight">Idaara AI</span>
       </div>
 
       <div

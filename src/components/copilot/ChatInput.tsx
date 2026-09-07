@@ -51,10 +51,10 @@ export function ChatInput({
     locale === 'ar'
       ? 'تدقيق قانوني'
       : locale === 'derja'
-      ? 'Ta7lil JORT'
+      ? 'Ta7lil 9anouni'
       : locale === 'en'
       ? 'Legal reasoning'
-      : 'Vérification JORT';
+      : 'Analyse juridique';
 
   return (
     <div className={isDock ? 'w-full max-w-3xl mx-auto' : 'w-full'}>
@@ -181,12 +181,12 @@ export function ChatInput({
       {isDock && (
         <p className="text-center text-[11px] text-zinc-500 pt-2">
           {locale === 'ar'
-            ? 'قد يخطئ Idaara AI. يُنصح دائماً بالرجوع للنصوص الرسمية بالرائد الرسمي.'
+            ? 'قد يرتكب Idaara AI أخطاء. يُنصح دائماً بالرجوع للمصادر الرسمية.'
             : locale === 'derja'
-            ? 'Idaara AI ynajem yaghlet. Thabbet dima fel Raed el Rasmi (JORT).'
+            ? 'Idaara AI ynajem yaghlet. Thabbet dima fel masader el rasmiya.'
             : locale === 'en'
-            ? 'Idaara AI can make mistakes. Verify important decrees in the Official Gazette (JORT).'
-            : 'Idaara AI peut faire des erreurs. Vérifiez les textes au Journal Officiel (JORT).'}
+            ? 'Idaara AI can make mistakes. Verify important procedures with official sources.'
+            : 'Idaara AI peut faire des erreurs. Vérifiez les démarches auprès des sources officielles.'}
         </p>
       )}
     </div>

@@ -144,12 +144,12 @@ export function SessionSidebar({
         : 'Connexion',
     status:
       locale === 'ar'
-        ? 'المنظومة متصلة'
+        ? 'متصل'
         : locale === 'derja'
         ? 'Connecté'
         : locale === 'en'
-        ? 'JORT Verified'
-        : 'JORT Connecté',
+        ? 'Connected'
+        : 'En ligne',
     empty:
       locale === 'ar'
         ? 'لا توجد محادثات سابقة'
