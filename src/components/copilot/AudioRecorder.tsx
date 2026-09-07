@@ -119,7 +119,14 @@ export const AudioRecorder: React.FC<AudioRecorderProps> = ({
         recognition.continuous = true;
         recognition.interimResults = true;
         recognition.maxAlternatives = 1;
-        recognition.lang = locale === 'ar' ? 'ar-TN' : locale === 'fr' ? 'fr-FR' : 'en-US';
+        recognition.lang =
+          locale === 'ar'
+            ? 'ar-TN'
+            : locale === 'derja'
+            ? 'ar-TN'
+            : locale === 'en'
+            ? 'en-US'
+            : 'fr-FR';
 
         recognition.onresult = (event: SpeechRecognitionEvent) => {
           let accumulated = '';
@@ -304,6 +311,7 @@ export const AudioRecorder: React.FC<AudioRecorderProps> = ({
           )}
           <span>{isRecording ? `LIVE · ${formatTimer(recordingSeconds)}` : typeMode ? 'TEXT INPUT' : 'VOICE STREAM'}</span>
         </div>
+        {/* i18n-ignore: intentional multilingual badge listing all supported locales */}
         <span className="text-[10px] font-mono text-zinc-500">DERJA · AR · FR · EN</span>
       </div>
 
@@ -423,7 +431,13 @@ export const AudioRecorder: React.FC<AudioRecorderProps> = ({
                 onClick={() => setTypeMode(true)}
                 className="text-[11px] font-mono text-zinc-600 hover:text-zinc-400 underline underline-offset-2 cursor-pointer transition-colors"
               >
-                {locale === 'ar' ? 'أو اكتب' : locale === 'en' ? 'or type' : locale === 'fr' ? 'ou tapez' : 'wella ekteb'}
+                {locale === 'ar'
+                  ? 'أو اكتب'
+                  : locale === 'derja'
+                  ? 'wella ekteb'
+                  : locale === 'en'
+                  ? 'or type'
+                  : 'ou tapez'}
               </button>
             )}
           </div>

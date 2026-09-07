@@ -44,11 +44,11 @@ export const TimbreCostBreakdown: React.FC<TimbreCostBreakdownProps> = ({ proced
   const tip =
     locale === 'ar'
       ? 'اقتنِ التنابر الجبائية مباشرةً من القباضات المالية الرسمية لتفادي الزيادات غير القانونية.'
+      : locale === 'derja'
+      ? 'Ashtri timbres mte3ek men Recette des Finances rasmiyin bech ma yakhdhoulekch bezzef.'
       : locale === 'en'
       ? 'Buy your fiscal stamps directly at official Recettes des Finances to avoid unauthorized fees.'
-      : locale === 'fr'
-      ? "N'achetez vos timbres qu'auprès des Recettes des Finances officielles pour éviter les majorations illégales."
-      : "Ashtri timbres mte3ek men Recette des Finances rasmiyin bech ma yakhdhoulekch bezzef.";
+      : "N'achetez vos timbres qu'auprès des Recettes des Finances officielles pour éviter les majorations illégales.";
 
   return (
     <div className="glass-panel rounded-3xl p-5 sm:p-6 border border-zinc-800/80 space-y-4">
@@ -62,11 +62,11 @@ export const TimbreCostBreakdown: React.FC<TimbreCostBreakdownProps> = ({ proced
             <h3 className="text-xs sm:text-sm font-bold text-white leading-tight">
               {locale === 'ar'
                 ? 'تفاصيل التنابر والمعاليم'
+                : locale === 'derja'
+                ? 'Tafassil el Timbres wel Masarif'
                 : locale === 'en'
                 ? 'Stamps & Fees Breakdown'
-                : locale === 'fr'
-                ? 'Détail des Timbres & Frais'
-                : 'Tafassil el Timbres wel Masarif'}
+                : 'Détail des Timbres & Frais'}
             </h3>
             <span className="text-[10px] text-zinc-500">
               {locale === 'ar' ? 'تقدير ميزانية الإجراء' : locale === 'derja' ? 'Estimation mte3 budget el procédure' : locale === 'en' ? 'Budget estimate' : 'Budget estimatif'}

@@ -123,6 +123,7 @@ function renderInlineStyles(text: string): React.ReactNode {
 
 /** Modern, Clean Markdown & Civic Element Parser (Pro Web Grade) */
 function renderFormattedContent(text: string, locale: string = 'derja', isRTLOverride?: boolean): React.ReactNode {
+  // i18n-ignore: regex pattern in code
   let cleanText = text.replace(/<think>[\s\S]*?(?:<\/think>|$)/gi, '').trim();
   cleanText = cleanText.replace(/^(?:Here's a thinking process|Analyze User Input|Check Constraints)[\s\S]*?\n\n/i, '').trim();
 
@@ -167,9 +168,9 @@ function renderFormattedContent(text: string, locale: string = 'derja', isRTLOve
       }
 
       if (tableLines.length >= 2) {
-        const headerRow = tableLines[0].split('|').filter((_, idx, arr) => idx > 0 && idx < arr.length - 1).map((c) => c.trim());
+        const headerRow = tableLines[0].split('|').filter((_, idx, arr) => idx !== 0 && idx !== arr.length - 1).map((c) => c.trim());
         const bodyRows = tableLines.slice(2).map((row) =>
-          row.split('|').filter((_, idx, arr) => idx > 0 && idx < arr.length - 1).map((c) => c.trim())
+          row.split('|').filter((_, idx, arr) => idx !== 0 && idx !== arr.length - 1).map((c) => c.trim())
         );
 
         blocks.push(
@@ -328,13 +329,13 @@ function renderFormattedContent(text: string, locale: string = 'derja', isRTLOve
             <div className="flex items-center gap-1.5 text-xs font-semibold text-amber-400 mb-1.5 select-none">
               <Lightbulb className="w-3.5 h-3.5 shrink-0 text-amber-400" />
               <span>
-                {isMessageRTL
+                {isMessageRTL || locale === 'ar'
                   ? 'نصيحة قانونية عملية'
-                  : locale === 'fr'
-                  ? 'Conseil pratique'
                   : locale === 'derja'
                   ? 'Nsi7a 3amaliya'
-                  : 'Statutory Pro Tip'}
+                  : locale === 'en'
+                  ? 'Statutory Pro Tip'
+                  : 'Conseil pratique'}
               </span>
             </div>
             <div className="text-[13.5px] sm:text-sm text-zinc-300 leading-relaxed font-normal">

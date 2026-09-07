@@ -433,7 +433,7 @@ export default function CopilotPage() {
 
           {/* ─── Empty State: Minimalist Landing Experience (Only when truly initialized with no messages) ─── */}
           {isInitialized && messages.length === 0 && !isProcessing && (
-            <div className="flex-1 flex flex-col items-center justify-center px-4 sm:px-6 max-w-3xl mx-auto w-full py-8 overflow-y-auto">
+            <div className="flex-1 flex flex-col items-center justify-center px-4 sm:px-6 max-w-3xl mx-auto w-full py-8 overflow-y-auto pb-safe">
               {/* Minimalist Brand Header */}
               <div className="relative flex flex-col items-center text-center mb-6 select-none animate-fade-in w-full">
                 <div className="mb-3">
