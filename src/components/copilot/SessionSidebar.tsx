@@ -81,39 +81,57 @@ export function SessionSidebar({
         ? 'محادثة إدارية جديدة'
         : locale === 'derja'
         ? 'Dossier Jdid'
-        : locale === 'fr'
-        ? 'Nouvelle démarche'
-        : 'New consultation',
+        : locale === 'en'
+        ? 'New consultation'
+        : 'Nouvelle démarche',
     search:
       locale === 'ar'
         ? 'بحث في المحادثات...'
         : locale === 'derja'
         ? 'Lawwej fel dossiers...'
-        : locale === 'fr'
-        ? 'Rechercher...'
-        : 'Search chats...',
+        : locale === 'en'
+        ? 'Search chats...'
+        : 'Rechercher...',
     today:
-      locale === 'ar' ? 'اليوم' : locale === 'derja' ? 'Lyoum' : locale === 'fr' ? "Aujourd'hui" : 'Today',
+      locale === 'ar'
+        ? 'اليوم'
+        : locale === 'derja'
+        ? 'Lyoum'
+        : locale === 'en'
+        ? 'Today'
+        : "Aujourd'hui",
     yesterday:
-      locale === 'ar' ? 'أمس' : locale === 'derja' ? 'El bare7' : locale === 'fr' ? 'Hier' : 'Yesterday',
+      locale === 'ar'
+        ? 'أمس'
+        : locale === 'derja'
+        ? 'El bare7'
+        : locale === 'en'
+        ? 'Yesterday'
+        : 'Hier',
     lastWeek:
       locale === 'ar'
         ? 'الأيام الـ 7 الفارطة'
         : locale === 'derja'
         ? 'Hal jem3a'
-        : locale === 'fr'
-        ? '7 derniers jours'
-        : 'Previous 7 days',
+        : locale === 'en'
+        ? 'Previous 7 days'
+        : '7 derniers jours',
     older:
-      locale === 'ar' ? 'سابقاً' : locale === 'derja' ? '9bal' : locale === 'fr' ? 'Plus ancien' : 'Older',
+      locale === 'ar'
+        ? 'سابقاً'
+        : locale === 'derja'
+        ? '9bal'
+        : locale === 'en'
+        ? 'Older'
+        : 'Plus ancien',
     tools:
       locale === 'ar'
         ? 'الخدمات الإدارية المباشرة'
         : locale === 'derja'
         ? 'Khedmet el Idara'
-        : locale === 'fr'
-        ? 'Services Citoyens'
-        : 'Civic Services',
+        : locale === 'en'
+        ? 'Civic Services'
+        : 'Services Citoyens',
     account:
       userName !== 'Citizen' && userName !== 'مواطن'
         ? userName
@@ -121,27 +139,33 @@ export function SessionSidebar({
         ? 'تسجيل الدخول'
         : locale === 'derja'
         ? 'Dkhol lel compte'
-        : locale === 'fr'
-        ? 'Connexion'
-        : 'Sign in',
+        : locale === 'en'
+        ? 'Sign in'
+        : 'Connexion',
     status:
       locale === 'ar'
         ? 'المنظومة متصلة'
         : locale === 'derja'
         ? 'Connecté'
-        : locale === 'fr'
-        ? 'JORT Connecté'
-        : 'JORT Verified',
+        : locale === 'en'
+        ? 'JORT Verified'
+        : 'JORT Connecté',
     empty:
       locale === 'ar'
         ? 'لا توجد محادثات سابقة'
         : locale === 'derja'
         ? 'Ma fama 7ata dossier'
-        : locale === 'fr'
-        ? 'Aucune démarche'
-        : 'No consultations yet',
+        : locale === 'en'
+        ? 'No consultations yet'
+        : 'Aucune démarche',
     noResults:
-      locale === 'ar' ? 'لا توجد نتائج مطابقة' : 'No matching consultations',
+      locale === 'ar'
+        ? 'لا توجد نتائج مطابقة'
+        : locale === 'derja'
+        ? 'Ma l9ina chay'
+        : locale === 'en'
+        ? 'No matching consultations'
+        : 'Aucune démarche trouvée',
   };
 
   // Group filtered sessions chronologically
@@ -292,16 +316,22 @@ export function SessionSidebar({
                   </span>
                 </div>
                 <span className="text-[10px] text-zinc-400 font-mono block">
-                  الذكاء الإداري التونسي
+                  {locale === 'ar'
+                    ? 'الذكاء الإداري التونسي'
+                    : locale === 'derja'
+                    ? 'Dhéka Idari Tounsi'
+                    : locale === 'en'
+                    ? 'Tunisian Civic AI'
+                    : 'IA Civique Tunisienne'}
                 </span>
               </div>
             </Link>
 
             <button
               onClick={onClose}
-              className="p-1.5 rounded-lg text-zinc-400 hover:text-white hover:bg-white/[0.06] transition-colors cursor-pointer border-0 outline-none"
-              title={locale === 'ar' ? 'إغلاق القائمة' : 'Close'}
-              aria-label="Close sidebar"
+              className="p-1.5 rounded-lg text-zinc-400 hover:text-white hover:bg-white/[0.06] transition-colors cursor-pointer border-0 focus-visible:ring-2 focus-visible:ring-emerald-500 focus-visible:outline-none"
+              title={locale === 'ar' ? 'إغلاق القائمة' : locale === 'derja' ? 'Sker el قائمة' : locale === 'en' ? 'Close sidebar' : 'Fermer le panneau'}
+              aria-label={locale === 'ar' ? 'إغلاق اللائحة' : locale === 'derja' ? 'Sker el sidebar' : locale === 'en' ? 'Close sidebar' : 'Fermer le panneau'}
             >
               <PanelLeftClose className="w-4 h-4" />
             </button>
@@ -420,7 +450,9 @@ export function SessionSidebar({
                   className="flex items-center gap-2 p-2 rounded-xl bg-white/[0.02] hover:bg-white/[0.06] border border-white/[0.04] text-[11px] text-zinc-300 hover:text-white transition-all group"
                 >
                   <ScanText className="w-3.5 h-3.5 text-zinc-400 group-hover:text-emerald-400 group-hover:scale-105 transition-all shrink-0" />
-                  <span className="truncate">Scanner OCR</span>
+                  <span className="truncate">
+                    {locale === 'ar' ? 'ماسح OCR' : locale === 'derja' ? 'Scanner OCR' : locale === 'en' ? 'OCR Scanner' : 'Scanner OCR'}
+                  </span>
                 </Link>
 
                 <Link
@@ -429,7 +461,9 @@ export function SessionSidebar({
                   className="flex items-center gap-2 p-2 rounded-xl bg-white/[0.02] hover:bg-white/[0.06] border border-white/[0.04] text-[11px] text-zinc-300 hover:text-white transition-all group"
                 >
                   <FileText className="w-3.5 h-3.5 text-zinc-400 group-hover:text-emerald-400 group-hover:scale-105 transition-all shrink-0" />
-                  <span className="truncate">Modèles PDF</span>
+                  <span className="truncate">
+                    {locale === 'ar' ? 'نماذج PDF' : locale === 'derja' ? 'Modèles PDF' : locale === 'en' ? 'PDF Templates' : 'Modèles PDF'}
+                  </span>
                 </Link>
 
                 <Link
@@ -438,7 +472,9 @@ export function SessionSidebar({
                   className="flex items-center gap-2 p-2 rounded-xl bg-white/[0.02] hover:bg-white/[0.06] border border-white/[0.04] text-[11px] text-zinc-300 hover:text-white transition-all group"
                 >
                   <Calculator className="w-3.5 h-3.5 text-zinc-400 group-hover:text-emerald-400 group-hover:scale-105 transition-all shrink-0" />
-                  <span className="truncate">Timbres DT</span>
+                  <span className="truncate">
+                    {locale === 'ar' ? 'الطوابع المالية' : locale === 'derja' ? 'Timbres DT' : locale === 'en' ? 'Fiscal Stamps' : 'Timbres DT'}
+                  </span>
                 </Link>
 
                 <Link
@@ -447,7 +483,9 @@ export function SessionSidebar({
                   className="flex items-center gap-2 p-2 rounded-xl bg-white/[0.02] hover:bg-white/[0.06] border border-white/[0.04] text-[11px] text-zinc-300 hover:text-white transition-all group"
                 >
                   <Briefcase className="w-3.5 h-3.5 text-zinc-400 group-hover:text-emerald-400 group-hover:scale-105 transition-all shrink-0" />
-                  <span className="truncate">Concours 2026</span>
+                  <span className="truncate">
+                    {locale === 'ar' ? 'المناظرات 2026' : locale === 'derja' ? 'Concours 2026' : locale === 'en' ? 'Competitions 2026' : 'Concours 2026'}
+                  </span>
                 </Link>
               </div>
             )}
@@ -459,7 +497,7 @@ export function SessionSidebar({
           <button
             type="button"
             onClick={onOpenAuthModal}
-            className="w-full flex items-center justify-between p-2 rounded-xl bg-white/[0.02] hover:bg-white/[0.06] border border-white/[0.04] hover:border-white/[0.08] transition-all cursor-pointer outline-none text-start group"
+            className="w-full flex items-center justify-between p-2 rounded-xl bg-white/[0.02] hover:bg-white/[0.06] border border-white/[0.04] hover:border-white/[0.08] transition-all cursor-pointer focus-visible:ring-2 focus-visible:ring-emerald-500 focus-visible:outline-none text-start group"
           >
             <div className="flex items-center gap-2.5 min-w-0">
               <div className="w-8 h-8 rounded-full bg-emerald-500/20 border border-emerald-500/30 text-emerald-300 flex items-center justify-center font-bold text-xs shadow-inner shrink-0 group-hover:scale-105 transition-transform">

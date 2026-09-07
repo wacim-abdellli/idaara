@@ -543,9 +543,9 @@ export const ChatMessage: React.FC<ChatMessageProps> = ({ message, onSelectPromp
                   ? 'المعاليم الجبائية والتنابر'
                   : locale === 'derja'
                   ? 'El Masrouf wel Timbres'
-                  : locale === 'fr'
-                  ? 'Frais et Timbres Fiscaux'
-                  : 'Statutory Stamp Fees'}
+                  : locale === 'en'
+                  ? 'Statutory Stamp Fees'
+                  : 'Frais et Timbres Fiscaux'}
               </span>
             </div>
             <span className="px-2.5 py-0.5 rounded-md bg-amber-500/20 text-amber-300 font-mono font-bold tabular-nums">
@@ -613,10 +613,10 @@ export const ChatMessage: React.FC<ChatMessageProps> = ({ message, onSelectPromp
           <button
             type="button"
             onClick={() => setFeedback(feedback === 'up' ? null : 'up')}
-            className={`p-1.5 rounded-lg transition-colors cursor-pointer border-0 outline-none ${
+            className={`p-1.5 rounded-lg transition-colors cursor-pointer border-0 focus-visible:ring-2 focus-visible:ring-emerald-500 ${
               feedback === 'up' ? 'bg-emerald-500/20 text-emerald-400' : 'hover:bg-white/[0.06] text-zinc-400 hover:text-zinc-200'
             }`}
-            title="Good response"
+            title={locale === 'ar' ? 'إجابة جيدة' : locale === 'derja' ? 'Jaweb mli7' : locale === 'en' ? 'Good response' : 'Bonne réponse'}
           >
             <ThumbsUp className="w-3.5 h-3.5" />
           </button>
@@ -624,10 +624,10 @@ export const ChatMessage: React.FC<ChatMessageProps> = ({ message, onSelectPromp
           <button
             type="button"
             onClick={() => setFeedback(feedback === 'down' ? null : 'down')}
-            className={`p-1.5 rounded-lg transition-colors cursor-pointer border-0 outline-none ${
+            className={`p-1.5 rounded-lg transition-colors cursor-pointer border-0 focus-visible:ring-2 focus-visible:ring-emerald-500 ${
               feedback === 'down' ? 'bg-red-500/20 text-red-400' : 'hover:bg-white/[0.06] text-zinc-400 hover:text-zinc-200'
             }`}
-            title="Poor response"
+            title={locale === 'ar' ? 'إجابة ضعيفة' : locale === 'derja' ? 'Jaweb m3awej' : locale === 'en' ? 'Poor response' : 'Mauvaise réponse'}
           >
             <ThumbsDown className="w-3.5 h-3.5" />
           </button>

@@ -355,19 +355,30 @@ export default function CopilotPage() {
 
             {/* Brand Logo or Active Session Title */}
             {!isInitialized || (messages.length === 0 && !activeSession) ? (
-              <div className="flex items-center gap-2">
-                <BrandIcon size={22} />
-                <span className="font-bold text-sm text-zinc-200 tracking-tight hidden sm:inline">
-                  Idaara AI · <span className="text-emerald-400 font-mono text-xs">الذكاء الإداري</span>
-                </span>
-              </div>
+              !sidebarOpen ? (
+                <div className="flex items-center gap-2">
+                  <BrandIcon size={22} />
+                  <span className="font-bold text-sm text-zinc-200 tracking-tight hidden sm:inline">
+                    Idaara AI ·{' '}
+                    <span className="text-emerald-400 font-mono text-xs">
+                      {locale === 'ar'
+                        ? 'الذكاء الإداري'
+                        : locale === 'derja'
+                        ? 'Ed-Dhéka el Idari'
+                        : locale === 'fr'
+                        ? 'Intelligence Civique'
+                        : 'Civic AI'}
+                    </span>
+                  </span>
+                </div>
+              ) : null
             ) : (
               <div
                 onClick={(e) => activeSession && startRenaming(e, activeSession)}
                 className="flex items-center gap-2 min-w-0 cursor-pointer group hover:bg-white/[0.04] px-2.5 py-1.5 rounded-xl transition-colors"
                 title={locale === 'ar' ? 'تعديل العنوان' : 'Renommer'}
               >
-                <BrandIcon size={18} />
+                {!sidebarOpen && <BrandIcon size={18} />}
                 <span className="font-semibold text-xs sm:text-sm text-zinc-100 truncate max-w-[200px] sm:max-w-xs">
                   {activeChatTitle || 'Consultation'}
                 </span>
@@ -450,13 +461,13 @@ export default function CopilotPage() {
                 thinkMode={thinkMode}
                 showPlusMenu={showPlusMenu}
                 placeholder={
-                  locale === 'ar'
-                    ? 'اسأل عن أي إجراء، وثيقة، معلوم تمبر جبائي، أو مناظرة عمومية...'
-                    : locale === 'derja'
-                    ? 'Es\'el 3la ay war9a, procédure, timbre, walla concour...'
-                    : locale === 'fr'
-                    ? 'Posez votre question sur une démarche, un timbre ou un texte du JORT...'
-                    : 'Ask about any Tunisian procedure, fiscal stamp, or public exam...'
+                    locale === 'ar'
+                      ? 'اسأل عن أي إجراء، وثيقة، معلوم تمبر جبائي، أو مناظرة عمومية...'
+                      : locale === 'derja'
+                      ? 'Es\'el 3la ay war9a, procédure, timbre, walla concour...'
+                      : locale === 'en'
+                      ? 'Ask about any Tunisian procedure, fiscal stamp, or public exam...'
+                      : 'Posez votre question sur une démarche, un timbre ou un texte du JORT...'
                 }
                 textareaRef={textareaRef}
                 variant="centered"
@@ -528,9 +539,9 @@ export default function CopilotPage() {
                       ? 'اكتب سؤالك الإداري هنا...'
                       : locale === 'derja'
                       ? 'Ikteb el sou2al mte3ek houni...'
-                      : locale === 'fr'
-                      ? 'Posez une question sur votre démarche administrative...'
-                      : 'Ask about any Tunisian procedure or legal step...'
+                      : locale === 'en'
+                      ? 'Ask about any Tunisian procedure or legal step...'
+                      : 'Posez une question sur votre démarche administrative...'
                   }
                   textareaRef={textareaRef}
                   variant="dock"
