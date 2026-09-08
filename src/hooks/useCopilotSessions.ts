@@ -115,11 +115,18 @@ export function useCopilotSessions(onAutoQuery?: (query: string) => void) {
             }
             const { unique: cleanLoaded } = deduplicateSessions(loadedSessions);
             if (cleanLoaded.length > 0 && isMounted) {
-              const activeSession = cleanLoaded.find((s) => s.id === savedActiveId) || cleanLoaded[0];
               setSessions(cleanLoaded);
-              setCurrentSessionId(activeSession.id);
-              setMessages(activeSession.messages || []);
-              hasLocal = true;
+              // Only load previous messages if a specific session ID is requested in the URL
+              const urlParams = new URLSearchParams(window.location.search);
+              const sessionParam = urlParams.get('session');
+              if (sessionParam) {
+                const targetSession = cleanLoaded.find((s) => s.id === sessionParam);
+                if (targetSession) {
+                  setCurrentSessionId(targetSession.id);
+                  setMessages(targetSession.messages || []);
+                  hasLocal = true;
+                }
+              }
             }
           }
         }
@@ -161,10 +168,15 @@ export function useCopilotSessions(onAutoQuery?: (query: string) => void) {
 
                 setSessions(cloudSessions);
 
-                // If not restored from local storage, adopt first cloud session
-                if (!hasLocal && cloudSessions.length > 0) {
-                  setCurrentSessionId(cloudSessions[0].id);
-                  setMessages(cloudSessions[0].messages);
+                // Only load cloud messages if a specific session ID was requested in the URL
+                const urlParams = new URLSearchParams(window.location.search);
+                const sessionParam = urlParams.get('session');
+                if (sessionParam && !hasLocal && cloudSessions.length > 0) {
+                  const cloudActive = cloudSessions.find((s) => s.id === sessionParam);
+                  if (cloudActive) {
+                    setCurrentSessionId(cloudActive.id);
+                    setMessages(cloudActive.messages || []);
+                  }
                 }
 
                 if (typeof window !== 'undefined') {
@@ -206,7 +218,14 @@ export function useCopilotSessions(onAutoQuery?: (query: string) => void) {
 
     try {
       if (messages.length > 0) {
-        localStorage.setItem(STORAGE_ACTIVE_ID_KEY, currentSessionId);
+        if (typeof window !== 'undefined') {
+          localStorage.setItem(STORAGE_ACTIVE_ID_KEY, currentSessionId);
+          const currentUrl = new URL(window.location.href);
+          if (currentUrl.searchParams.get('session') !== currentSessionId) {
+            currentUrl.searchParams.set('session', currentSessionId);
+            window.history.replaceState(null, '', currentUrl.toString());
+          }
+        }
 
         const firstUserMsg = messages.find((m) => m.sender === 'user')?.content || 'Discussion';
         const defaultTitle = firstUserMsg.slice(0, 32) + (firstUserMsg.length > 32 ? '...' : '');
@@ -290,7 +309,11 @@ export function useCopilotSessions(onAutoQuery?: (query: string) => void) {
     setCurrentSessionId(newId);
     setMessages([]);
     if (typeof window !== 'undefined') {
-      localStorage.setItem(STORAGE_ACTIVE_ID_KEY, newId);
+      localStorage.removeItem(STORAGE_ACTIVE_ID_KEY);
+      const url = new URL(window.location.href);
+      url.searchParams.delete('session');
+      const cleanSearch = url.searchParams.toString();
+      window.history.replaceState(null, '', url.pathname + (cleanSearch ? `?${cleanSearch}` : ''));
     }
   }, []);
 
@@ -299,6 +322,9 @@ export function useCopilotSessions(onAutoQuery?: (query: string) => void) {
     setMessages(session.messages || []);
     if (typeof window !== 'undefined') {
       localStorage.setItem(STORAGE_ACTIVE_ID_KEY, session.id);
+      const url = new URL(window.location.href);
+      url.searchParams.set('session', session.id);
+      window.history.replaceState(null, '', url.toString());
     }
   }, []);
 

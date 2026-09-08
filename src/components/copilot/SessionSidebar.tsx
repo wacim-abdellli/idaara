@@ -302,10 +302,12 @@ export function SessionSidebar({
         <div className="flex flex-col flex-1 overflow-hidden">
           {/* Top Brand Header */}
           <div className="h-14 px-4 flex items-center justify-between border-b border-white/[0.06] shrink-0 bg-[#090b0e]/90">
-            <Link
-              href="/"
-              className="flex items-center gap-2.5 group cursor-pointer"
-              title="Idaara.tn"
+            <button
+              type="button"
+              onClick={onNewChat}
+              className="flex items-center gap-2.5 group cursor-pointer bg-transparent border-0 p-0 text-start outline-none focus-visible:ring-2 focus-visible:ring-emerald-500 rounded-lg min-h-[44px]"
+              title={locale === 'ar' ? 'محادثة جديدة' : locale === 'derja' ? 'Mwa7da jdida' : locale === 'en' ? 'New consultation' : 'Nouvelle démarche'}
+              aria-label={locale === 'ar' ? 'محادثة جديدة' : locale === 'derja' ? 'Mwa7da jdida' : locale === 'en' ? 'New consultation' : 'Nouvelle démarche'}
             >
               <BrandIcon size={26} />
               <div className="leading-tight">
@@ -325,7 +327,7 @@ export function SessionSidebar({
                     : 'IA Civique Tunisienne'}
                 </span>
               </div>
-            </Link>
+            </button>
 
             <button
               onClick={onClose}

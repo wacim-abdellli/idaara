@@ -356,9 +356,14 @@ export default function CopilotPage() {
             {/* Brand Logo or Active Session Title */}
             {!isInitialized || (messages.length === 0 && !activeSession) ? (
               !sidebarOpen ? (
-                <div className="flex items-center gap-2">
+                <button
+                  type="button"
+                  onClick={handleNewChat}
+                  className="flex items-center gap-2 bg-transparent border-0 p-0 cursor-pointer text-start outline-none group"
+                  title={locale === 'ar' ? 'محادثة جديدة' : locale === 'derja' ? 'Mwa7da jdida' : locale === 'en' ? 'New consultation' : 'Nouvelle démarche'}
+                >
                   <BrandIcon size={22} />
-                  <span className="font-bold text-sm text-zinc-200 tracking-tight hidden sm:inline">
+                  <span className="font-bold text-sm text-zinc-200 group-hover:text-white tracking-tight hidden sm:inline transition-colors">
                     Idaara AI ·{' '}
                     <span className="text-emerald-400 font-mono text-xs">
                       {locale === 'ar'
@@ -370,7 +375,7 @@ export default function CopilotPage() {
                         : 'Civic AI'}
                     </span>
                   </span>
-                </div>
+                </button>
               ) : null
             ) : (
               <div
@@ -378,7 +383,19 @@ export default function CopilotPage() {
                 className="flex items-center gap-2 min-w-0 cursor-pointer group hover:bg-white/[0.04] px-2.5 py-1.5 rounded-xl transition-colors"
                 title={locale === 'ar' ? 'تعديل العنوان' : 'Renommer'}
               >
-                {!sidebarOpen && <BrandIcon size={18} />}
+                {!sidebarOpen && (
+                  <button
+                    type="button"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      handleNewChat();
+                    }}
+                    className="p-0 border-0 bg-transparent cursor-pointer flex items-center shrink-0 hover:opacity-80 transition-opacity"
+                    title={locale === 'ar' ? 'محادثة جديدة' : locale === 'derja' ? 'Mwa7da jdida' : locale === 'en' ? 'New consultation' : 'Nouvelle démarche'}
+                  >
+                    <BrandIcon size={18} />
+                  </button>
+                )}
                 <span className="font-semibold text-xs sm:text-sm text-zinc-100 truncate max-w-[200px] sm:max-w-xs">
                   {activeChatTitle || 'Consultation'}
                 </span>
