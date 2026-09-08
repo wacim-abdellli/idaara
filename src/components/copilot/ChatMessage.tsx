@@ -93,7 +93,7 @@ function renderInlineStyles(text: string): React.ReactNode {
     // 5. Currency amounts (e.g. 80 DT, 25 د.ت, 145 DT, 3 د.ت)
     if (/\b\d+(?:[.,]\d+)?\s*(?:DT|TND|د\.ت|دينار)\b/i.test(part)) {
       return (
-        <span key={i} className="inline-block px-2 py-0.5 mx-0.5 rounded-md bg-amber-500/15 border border-amber-500/30 text-amber-300 font-mono font-bold text-xs shadow-inner align-baseline" dir="ltr" style={{ unicodeBidi: 'isolate' }}>
+        <span key={i} className="inline-block px-1.5 py-0.5 mx-0.5 rounded-md bg-amber-500/10 border border-amber-500/25 text-amber-300 font-mono font-semibold text-xs align-baseline" dir="ltr" style={{ unicodeBidi: 'isolate' }}>
           {part}
         </span>
       );
@@ -102,16 +102,16 @@ function renderInlineStyles(text: string): React.ReactNode {
     // 6. Parenthetical Latin text
     if (/^\([a-zA-Z0-9\s/&'.,_-]+\)$/.test(part)) {
       return (
-        <span key={i} className="inline-block mx-1 font-semibold text-emerald-300/90" dir="ltr" style={{ unicodeBidi: 'isolate' }}>
+        <span key={i} className="inline-block mx-0.5 font-medium text-emerald-400/85 text-[0.92em]" dir="ltr" style={{ unicodeBidi: 'isolate' }}>
           {part}
         </span>
       );
     }
 
-    // 7. Latin Acronyms
+    // 7. Latin Acronyms & Civic Entities (sleek inline typography, no heavy box)
     if (/^(?:CIN|B3|CAPES|ATTT|STEG|SONEDE|CNSS|CNAM|RNE|JORT|PDF|COC|FCR|RIB|TND|DT|Transtu|SNCFT|SRT)$/i.test(part)) {
       return (
-        <span key={i} className="inline-block px-1.5 py-0.5 mx-0.5 rounded-md bg-zinc-800/90 border border-white/10 text-emerald-300 font-mono font-bold text-xs shadow-sm align-baseline" dir="ltr" style={{ unicodeBidi: 'isolate' }}>
+        <span key={i} className="inline-block font-mono font-semibold text-emerald-400 px-0.5 tracking-tight align-baseline" dir="ltr" style={{ unicodeBidi: 'isolate' }}>
           {part}
         </span>
       );
@@ -351,9 +351,9 @@ function renderFormattedContent(text: string, locale: string = 'derja', isRTLOve
     if (line.startsWith('#') || /^(\*{2})?(📑|🎯|💰|🏛️|📍|📋|✅|🔑)/.test(line)) {
       const headerText = line.replace(/^#+\s*/, '');
       blocks.push(
-        <div key={`h-${i}`} dir={lineDir} className={`pt-3.5 pb-1.5 mb-1 flex items-center gap-2 border-b border-white/[0.06] ${lineAlign}`}>
-          <div className="w-1 h-3.5 rounded-full bg-emerald-400 shrink-0" />
-          <h4 className="text-sm sm:text-[15px] font-bold text-white tracking-tight">
+        <div key={`h-${i}`} dir={lineDir} className={`pt-4 pb-1.5 mb-1 flex items-center gap-2 border-b border-white/[0.06] ${lineAlign}`}>
+          <div className="w-1.5 h-4 rounded-full bg-emerald-400 shrink-0" />
+          <h4 className="text-[14.5px] sm:text-[15.5px] font-bold text-white tracking-tight">
             {renderInlineStyles(headerText)}
           </h4>
         </div>
@@ -367,19 +367,19 @@ function renderFormattedContent(text: string, locale: string = 'derja', isRTLOve
     if (numberedMatch) {
       const isHeaderLike = numberedMatch[2].endsWith(':') || numberedMatch[2].length <= 50;
       blocks.push(
-        <div key={`num-${i}`} dir={lineDir} className={`flex items-start gap-3 ${isHeaderLike ? 'pt-2.5 pb-1 my-1' : 'my-2'} ${lineAlign}`}>
+        <div key={`num-${i}`} dir={lineDir} className={`flex items-start gap-3 ${isHeaderLike ? 'pt-2.5 pb-1 my-1.5' : 'my-2'} ${lineAlign}`}>
           <span
             dir="ltr"
             style={{ unicodeBidi: 'isolate' }}
-            className={`inline-flex items-center justify-center text-center rounded-lg font-bold leading-none shrink-0 select-none shadow-sm ${
+            className={`inline-flex items-center justify-center text-center rounded-lg font-bold font-mono leading-none shrink-0 select-none ${
               isHeaderLike
-                ? 'w-6 h-6 bg-emerald-500/20 border border-emerald-400/30 text-emerald-300 text-xs mt-0.5'
-                : 'w-5 h-5 bg-zinc-800 border border-white/10 text-zinc-300 text-[11px] mt-1'
+                ? 'w-6 h-6 bg-emerald-500/15 border border-emerald-500/30 text-emerald-300 text-xs mt-0.5 shadow-xs'
+                : 'w-5 h-5 bg-white/[0.05] border border-white/10 text-zinc-300 text-[11px] mt-1'
             }`}
           >
             {numberedMatch[1]}
           </span>
-          <span className={`flex-1 leading-relaxed ${isHeaderLike ? 'text-white font-bold text-sm sm:text-[15px]' : 'text-zinc-200 text-sm sm:text-[14.5px]'}`}>
+          <span className={`flex-1 leading-[1.85] ${isHeaderLike ? 'text-white font-bold text-[14.5px] sm:text-[15px]' : 'text-zinc-200 text-[14px] sm:text-[14.5px]'}`}>
             {renderInlineStyles(numberedMatch[2])}
           </span>
         </div>
@@ -398,14 +398,14 @@ function renderFormattedContent(text: string, locale: string = 'derja', isRTLOve
             <span
               dir="ltr"
               style={{ unicodeBidi: 'isolate' }}
-              className="inline-flex items-center justify-center text-center w-4 h-4 rounded-full bg-emerald-500/20 text-emerald-400 shrink-0 mt-1 text-[10px] font-bold leading-none select-none"
+              className="inline-flex items-center justify-center text-center w-4 h-4 rounded-full bg-emerald-500/20 text-emerald-400 shrink-0 mt-1.5 text-[10px] font-bold leading-none select-none border border-emerald-500/30"
             >
               ✓
             </span>
           ) : (
-            <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 shrink-0 mt-2 ring-2 ring-emerald-500/20" />
+            <span className="w-1.5 h-1.5 rounded-full bg-emerald-400/90 shrink-0 mt-2.5 ring-2 ring-emerald-500/20" />
           )}
-          <span className="text-zinc-200 flex-1 leading-relaxed text-sm sm:text-[14.5px]">
+          <span className="text-zinc-200 flex-1 leading-[1.85] text-[14px] sm:text-[14.5px]">
             {renderInlineStyles(bulletText)}
           </span>
         </div>
@@ -416,7 +416,7 @@ function renderFormattedContent(text: string, locale: string = 'derja', isRTLOve
 
     // 7. Standard Paragraph
     blocks.push(
-      <p key={`p-${i}`} dir={lineDir} className={`leading-relaxed text-zinc-200 ${lineAlign} font-normal my-1.5 text-sm sm:text-[15px]`}>
+      <p key={`p-${i}`} dir={lineDir} className={`leading-[1.85] text-zinc-200 ${lineAlign} font-normal my-2 text-[14.5px] sm:text-[15px]`}>
         {renderInlineStyles(line)}
       </p>
     );
@@ -426,7 +426,7 @@ function renderFormattedContent(text: string, locale: string = 'derja', isRTLOve
   return (
     <div
       dir={isMessageRTL ? 'rtl' : 'ltr'}
-      className={`space-y-1 text-sm sm:text-[15px] leading-relaxed text-zinc-100 font-normal ${
+      className={`space-y-1.5 text-[14.5px] sm:text-[15px] leading-[1.85] text-zinc-100 font-normal ${
         isMessageRTL ? 'text-right font-["Cairo",sans-serif]' : 'text-left'
       }`}
     >
@@ -474,21 +474,21 @@ export const ChatMessage: React.FC<ChatMessageProps> = ({ message, onSelectPromp
   // ── USER MESSAGE BUBBLE (Elevated Obsidian Glass) ──
   if (!isAssistant) {
     return (
-      <div className="w-full py-2 flex flex-col items-end group animate-fade-in">
+      <div className="w-full py-2.5 flex flex-col items-end group animate-fade-in">
         <div
           dir={isArabicScript ? 'rtl' : 'ltr'}
-          className={`max-w-[85%] sm:max-w-[75%] px-4 py-3 rounded-2xl bg-[#161922] hover:bg-[#1a1e28] border border-white/[0.08] hover:border-emerald-500/20 text-zinc-100 text-sm sm:text-[15px] leading-relaxed shadow-sm transition-all ${
+          className={`max-w-[85%] sm:max-w-[75%] px-4 py-3 rounded-2xl bg-gradient-to-b from-[#181c26] to-[#12151e] border border-white/[0.09] hover:border-white/[0.16] text-zinc-100 text-[14.5px] sm:text-[15px] leading-[1.75] shadow-lg shadow-black/25 transition-all ${
             isArabicScript ? 'text-right font-["Cairo",sans-serif]' : 'text-left'
           }`}
         >
           {message.content}
         </div>
 
-        <div className="flex items-center gap-2 pt-1 px-1 text-[11px] text-zinc-400 font-mono select-none opacity-0 group-hover:opacity-100 transition-opacity">
+        <div className="flex items-center gap-2 pt-1.5 px-1 text-[11px] text-zinc-400 font-mono select-none opacity-0 group-hover:opacity-100 transition-opacity">
           {message.timestamp && <span>{message.timestamp}</span>}
           <button
             onClick={copyToClipboard}
-            className="p-1 rounded-md hover:bg-white/10 text-zinc-400 hover:text-zinc-200 transition-colors cursor-pointer border-0 outline-none flex items-center gap-1 text-[11px]"
+            className="p-1 rounded-md hover:bg-white/[0.08] text-zinc-400 hover:text-zinc-200 transition-colors cursor-pointer border-0 outline-none flex items-center gap-1 text-[11px]"
             title={copyTitleLabels[locale] ?? 'Copy'}
           >
             {copied ? (
@@ -513,9 +513,20 @@ export const ChatMessage: React.FC<ChatMessageProps> = ({ message, onSelectPromp
       className={`w-full py-3.5 space-y-3 group animate-fade-in ${isArabicScript ? 'text-right' : 'text-left'}`}
     >
       {/* Elevated Assistant Identity Header */}
-      <div className="flex items-center gap-2 pb-1 select-none">
-        <BrandIcon size={20} />
-        <span className="font-bold text-xs text-white tracking-tight">Idaara AI</span>
+      <div className="flex items-center gap-2.5 pb-1 select-none">
+        <BrandIcon size={22} className="shadow-sm shadow-emerald-500/20" />
+        <div className="flex items-center gap-2">
+          <span className="font-bold text-xs text-white tracking-tight">Idaara AI</span>
+          <span className="text-[10px] px-1.5 py-0.5 rounded-md bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 font-medium">
+            {locale === 'ar'
+              ? 'المساعد الرسمي'
+              : locale === 'derja'
+              ? 'El Mosa3ed el Rasmi'
+              : locale === 'en'
+              ? 'Official Copilot'
+              : 'Copilote Officiel'}
+          </span>
+        </div>
       </div>
 
       <div
@@ -589,17 +600,18 @@ export const ChatMessage: React.FC<ChatMessageProps> = ({ message, onSelectPromp
       {!message.isStreaming && message.content && (
         <div
           dir={isArabicScript ? 'rtl' : 'ltr'}
-          className="flex items-center gap-1.5 pt-1 text-zinc-400 opacity-80 hover:opacity-100 transition-opacity animate-fade-in select-none"
+          className="flex items-center gap-1 pt-1.5 text-zinc-400 opacity-70 hover:opacity-100 transition-opacity animate-fade-in select-none"
         >
           <button
             onClick={copyToClipboard}
-            className="p-1.5 rounded-lg hover:bg-white/[0.06] hover:text-zinc-200 text-zinc-400 transition-colors cursor-pointer border-0 outline-none flex items-center gap-1 text-xs"
+            className="p-2 rounded-lg hover:bg-white/[0.08] hover:text-zinc-200 text-zinc-400 transition-colors cursor-pointer border-0 outline-none flex items-center gap-1.5 text-xs min-h-[36px] min-w-[36px] justify-center focus-visible:ring-2 focus-visible:ring-emerald-500"
             title={copyTitleLabels[locale] ?? 'Copy'}
+            aria-label={copyTitleLabels[locale] ?? 'Copy'}
           >
             {copied ? (
               <>
                 <Check className="w-3.5 h-3.5 text-emerald-400" />
-                <span className="text-emerald-400 text-[10px]">{copyLabels[locale] ?? 'Copied ✓'}</span>
+                <span className="text-emerald-400 text-[10px] font-medium">{copyLabels[locale] ?? 'Copied ✓'}</span>
               </>
             ) : (
               <Copy className="w-3.5 h-3.5" />
@@ -609,10 +621,11 @@ export const ChatMessage: React.FC<ChatMessageProps> = ({ message, onSelectPromp
           <button
             type="button"
             onClick={() => setFeedback(feedback === 'up' ? null : 'up')}
-            className={`p-1.5 rounded-lg transition-colors cursor-pointer border-0 focus-visible:ring-2 focus-visible:ring-emerald-500 ${
-              feedback === 'up' ? 'bg-emerald-500/20 text-emerald-400' : 'hover:bg-white/[0.06] text-zinc-400 hover:text-zinc-200'
+            className={`p-2 rounded-lg transition-colors cursor-pointer border-0 min-h-[36px] min-w-[36px] flex items-center justify-center focus-visible:ring-2 focus-visible:ring-emerald-500 ${
+              feedback === 'up' ? 'bg-emerald-500/20 text-emerald-400' : 'hover:bg-white/[0.08] text-zinc-400 hover:text-zinc-200'
             }`}
             title={locale === 'ar' ? 'إجابة جيدة' : locale === 'derja' ? 'Jaweb mli7' : locale === 'en' ? 'Good response' : 'Bonne réponse'}
+            aria-label={locale === 'ar' ? 'إجابة جيدة' : locale === 'derja' ? 'Jaweb mli7' : locale === 'en' ? 'Good response' : 'Bonne réponse'}
           >
             <ThumbsUp className="w-3.5 h-3.5" />
           </button>
@@ -620,10 +633,11 @@ export const ChatMessage: React.FC<ChatMessageProps> = ({ message, onSelectPromp
           <button
             type="button"
             onClick={() => setFeedback(feedback === 'down' ? null : 'down')}
-            className={`p-1.5 rounded-lg transition-colors cursor-pointer border-0 focus-visible:ring-2 focus-visible:ring-emerald-500 ${
-              feedback === 'down' ? 'bg-red-500/20 text-red-400' : 'hover:bg-white/[0.06] text-zinc-400 hover:text-zinc-200'
+            className={`p-2 rounded-lg transition-colors cursor-pointer border-0 min-h-[36px] min-w-[36px] flex items-center justify-center focus-visible:ring-2 focus-visible:ring-emerald-500 ${
+              feedback === 'down' ? 'bg-red-500/20 text-red-400' : 'hover:bg-white/[0.08] text-zinc-400 hover:text-zinc-200'
             }`}
             title={locale === 'ar' ? 'إجابة ضعيفة' : locale === 'derja' ? 'Jaweb m3awej' : locale === 'en' ? 'Poor response' : 'Mauvaise réponse'}
+            aria-label={locale === 'ar' ? 'إجابة ضعيفة' : locale === 'derja' ? 'Jaweb m3awej' : locale === 'en' ? 'Poor response' : 'Mauvaise réponse'}
           >
             <ThumbsDown className="w-3.5 h-3.5" />
           </button>
@@ -632,7 +646,7 @@ export const ChatMessage: React.FC<ChatMessageProps> = ({ message, onSelectPromp
             <span
               dir="ltr"
               style={{ unicodeBidi: 'isolate' }}
-              className="text-[10px] text-zinc-400 font-mono ms-2 select-none"
+              className="text-[11px] text-zinc-500 font-mono ms-2 select-none"
             >
               {message.timestamp}
             </span>

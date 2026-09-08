@@ -339,8 +339,11 @@ export default function CopilotPage() {
 
       {/* ─── Main Canvas Area ─── */}
       <div className="flex-1 flex flex-col bg-[#090b0e] relative overflow-hidden w-full min-w-0">
+        {/* Subtle Ambient Radial Glow for Architectural Depth */}
+        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[650px] sm:w-[850px] h-[280px] bg-gradient-to-b from-emerald-500/[0.04] via-emerald-500/[0.015] to-transparent rounded-full blur-3xl pointer-events-none -z-0" />
+
         {/* Integrated Top Navigation Header */}
-        <header className="shrink-0 h-14 px-4 flex items-center justify-between border-b border-white/[0.08] bg-[#090b0e]/95 backdrop-blur-xl z-20">
+        <header className="shrink-0 h-14 px-3 sm:px-4 flex items-center justify-between border-b border-white/[0.06] bg-[#090b0e]/85 backdrop-blur-2xl z-20 transition-all">
           <div className="flex items-center gap-3 min-w-0">
             {!sidebarOpen && (
               <button
@@ -362,7 +365,7 @@ export default function CopilotPage() {
                   className="flex items-center gap-2 bg-transparent border-0 p-0 cursor-pointer text-start outline-none group"
                   title={locale === 'ar' ? 'محادثة جديدة' : locale === 'derja' ? 'Mwa7da jdida' : locale === 'en' ? 'New consultation' : 'Nouvelle démarche'}
                 >
-                  <BrandIcon size={22} />
+                  <BrandIcon size={22} className="shadow-xs shadow-emerald-500/20" />
                   <span className="font-bold text-sm text-zinc-200 group-hover:text-white tracking-tight hidden sm:inline transition-colors">
                     Idaara AI ·{' '}
                     <span className="text-emerald-400 font-mono text-xs">
@@ -380,15 +383,15 @@ export default function CopilotPage() {
             ) : (
               <div
                 onClick={(e) => activeSession && startRenaming(e, activeSession)}
-                className="flex items-center gap-2 min-w-0 cursor-pointer group hover:bg-white/[0.04] px-2.5 py-1.5 rounded-xl transition-colors"
+                className="flex items-center gap-2 min-w-0 cursor-pointer group hover:bg-white/[0.05] border border-transparent hover:border-white/[0.08] px-2.5 py-1.5 rounded-xl transition-all"
                 title={locale === 'ar' ? 'تعديل العنوان' : 'Renommer'}
               >
                 {!sidebarOpen && (
                   <button
                     type="button"
                     onClick={(e) => {
-                      e.stopPropagation();
-                      handleNewChat();
+                       e.stopPropagation();
+                       handleNewChat();
                     }}
                     className="p-0 border-0 bg-transparent cursor-pointer flex items-center shrink-0 hover:opacity-80 transition-opacity"
                     title={locale === 'ar' ? 'محادثة جديدة' : locale === 'derja' ? 'Mwa7da jdida' : locale === 'en' ? 'New consultation' : 'Nouvelle démarche'}
@@ -396,7 +399,7 @@ export default function CopilotPage() {
                     <BrandIcon size={18} />
                   </button>
                 )}
-                <span className="font-semibold text-xs sm:text-sm text-zinc-100 truncate max-w-[200px] sm:max-w-xs">
+                <span className="font-semibold text-xs sm:text-[13px] text-zinc-100 truncate max-w-[180px] sm:max-w-xs tracking-tight">
                   {activeChatTitle || 'Consultation'}
                 </span>
                 <ChevronDown className="w-3.5 h-3.5 text-zinc-400 group-hover:text-zinc-200 shrink-0" />
@@ -405,7 +408,7 @@ export default function CopilotPage() {
           </div>
 
           {/* Right Top Header Actions */}
-          <div className="flex items-center gap-1.5">
+          <div className="flex items-center gap-1 sm:gap-1.5">
             {messages.length > 0 && (
               <>
                 <button
@@ -452,13 +455,14 @@ export default function CopilotPage() {
           {isInitialized && messages.length === 0 && !isProcessing && (
             <div className="flex-1 flex flex-col items-center justify-center px-4 sm:px-6 max-w-3xl mx-auto w-full py-8 overflow-y-auto pb-safe">
               {/* Minimalist Brand Header */}
-              <div className="relative flex flex-col items-center text-center mb-6 select-none animate-fade-in w-full">
-                <div className="mb-3">
-                  <BrandIcon size={44} />
+              <div className="relative flex flex-col items-center text-center mb-7 select-none animate-fade-in w-full">
+                <div className="mb-4 relative">
+                  <div className="absolute -inset-3 rounded-2xl bg-emerald-500/10 blur-xl pointer-events-none" />
+                  <BrandIcon size={46} className="shadow-lg shadow-emerald-500/25" />
                 </div>
 
                 {/* Dignified Hero Title */}
-                <h1 className="text-xl sm:text-3xl font-bold text-white tracking-tight leading-tight mb-2">
+                <h1 className="text-2xl sm:text-3xl font-extrabold text-white tracking-tight leading-tight mb-2.5">
                   {greetingHeadline}
                 </h1>
 
@@ -517,25 +521,32 @@ export default function CopilotPage() {
 
                   {/* 🏛️ Bespoke JORT Verification Scanner Orb */}
                   {isProcessing && (
-                    <div className="w-full py-3 flex items-center gap-3 animate-fade-in select-none" dir={isRtl ? 'rtl' : 'ltr'}>
-                      <JortPulseOrb size={22} />
-                      <span className="text-xs text-emerald-300/90 font-medium animate-pulse">
-                        {thinkMode
-                          ? (locale === 'ar'
-                              ? 'جارٍ التحليل والتدقيق في النصوص القانونية والمراجع الرسمية...'
-                              : locale === 'derja'
-                              ? 'Ta7lil 9anouni fi nouthous el 9anoun wel maraji3 el rasmiya...'
-                              : locale === 'fr'
-                              ? 'Analyse en cours des textes juridiques et décrets officiels...'
-                              : 'Deep legal analysis of official decrees and statutes...')
-                          : (locale === 'ar'
-                              ? 'جارٍ إعداد الإجابة الإدارية الرسمية والتحقق من التنابر...'
-                              : locale === 'derja'
-                              ? 'N7adherlek fel ijaba el rasmiya w nthabbet fel timbre...'
-                              : locale === 'fr'
-                              ? 'Recherche et formulation de la réponse administrative officielle...'
-                              : 'Formulating official statutory response and checking stamp fees...')}
-                      </span>
+                    <div className="w-full py-4 flex items-center gap-3.5 animate-fade-in select-none" dir={isRtl ? 'rtl' : 'ltr'}>
+                      <div className="p-2 rounded-xl bg-emerald-500/10 border border-emerald-500/25 shadow-xs shrink-0">
+                        <JortPulseOrb size={20} />
+                      </div>
+                      <div className="flex flex-col">
+                        <span className="text-xs text-emerald-300 font-medium tracking-tight">
+                          {thinkMode
+                            ? (locale === 'ar'
+                                ? 'جارٍ التحليل والتدقيق في النصوص القانونية والمراجع الرسمية...'
+                                : locale === 'derja'
+                                ? 'Ta7lil 9anouni fi nouthous el 9anoun wel maraji3 el rasmiya...'
+                                : locale === 'en'
+                                ? 'Deep legal analysis of official decrees and statutes...'
+                                : 'Analyse en cours des textes juridiques et décrets officiels...')
+                            : (locale === 'ar'
+                                ? 'جارٍ إعداد الإجابة الإدارية الرسمية والتحقق من التنابر...'
+                                : locale === 'derja'
+                                ? 'N7adherlek fel ijaba el rasmiya w nthabbet fel timbre...'
+                                : locale === 'en'
+                                ? 'Formulating official statutory response and checking stamp fees...'
+                                : 'Recherche et formulation de la réponse administrative officielle...')}
+                        </span>
+                        <span className="text-[10px] text-zinc-500 font-mono">
+                          {locale === 'ar' ? 'التحقق وفق التراتيب الجاري بها العمل' : locale === 'derja' ? 'Mothbat 7asb el 9anoun' : locale === 'en' ? 'Verified against official Tunisian statutes' : 'Vérification conforme aux textes officiels'}
+                        </span>
+                      </div>
                     </div>
                   )}
                 </div>

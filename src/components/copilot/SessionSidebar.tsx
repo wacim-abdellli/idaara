@@ -213,8 +213,8 @@ export function SessionSidebar({
         onClick={() => !isEditing && onSelectSession(sess)}
         className={`group relative flex items-center justify-between px-2.5 py-2 rounded-xl text-xs transition-all duration-150 cursor-pointer ${
           isActive
-            ? 'bg-white/[0.07] text-white font-medium border-s-2 border-emerald-400 shadow-sm'
-            : 'text-zinc-400 hover:text-zinc-100 hover:bg-white/[0.04]'
+            ? 'bg-emerald-500/[0.08] text-white font-medium border border-emerald-500/25 shadow-xs shadow-emerald-500/10'
+            : 'text-zinc-400 hover:text-zinc-100 hover:bg-white/[0.04] border border-transparent'
         }`}
       >
         {isEditing ? (
@@ -343,13 +343,13 @@ export function SessionSidebar({
           <div className="p-3 pb-2 shrink-0 space-y-2">
             <button
               onClick={onNewChat}
-              className="w-full flex items-center justify-between px-3 py-2 rounded-xl bg-white/[0.04] hover:bg-white/[0.08] text-zinc-200 hover:text-white text-xs font-semibold transition-all cursor-pointer border border-white/[0.08] hover:border-emerald-500/40 shadow-xs group"
+              className="w-full flex items-center justify-between px-3 py-2.5 rounded-xl bg-white/[0.03] hover:bg-emerald-500/10 text-zinc-200 hover:text-emerald-300 text-xs font-semibold transition-all cursor-pointer border border-white/[0.08] hover:border-emerald-500/30 shadow-xs group active:scale-[0.99]"
             >
               <div className="flex items-center gap-2">
                 <Plus className="w-4 h-4 text-emerald-400 group-hover:rotate-90 transition-transform duration-200" />
                 <span className="truncate">{labels.newChat}</span>
               </div>
-              <kbd className="hidden sm:inline-block text-[10px] font-mono text-zinc-400 bg-white/[0.04] px-1.5 py-0.5 rounded border border-white/[0.08]">
+              <kbd className="hidden sm:inline-block text-[10px] font-mono text-zinc-500 group-hover:text-emerald-400/90 bg-white/[0.04] px-1.5 py-0.5 rounded border border-white/[0.08]">
                 ⌘N
               </kbd>
             </button>
