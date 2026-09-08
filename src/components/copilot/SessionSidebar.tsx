@@ -211,10 +211,10 @@ export function SessionSidebar({
       <div
         key={sess.id}
         onClick={() => !isEditing && onSelectSession(sess)}
-        className={`group relative flex items-center justify-between px-2.5 py-2 rounded-xl text-xs transition-all duration-150 cursor-pointer ${
+        className={`group relative flex items-center justify-between px-2.5 py-2 rounded-lg text-xs transition-colors cursor-pointer ${
           isActive
-            ? 'bg-emerald-500/[0.08] text-white font-medium border border-emerald-500/25 shadow-xs shadow-emerald-500/10'
-            : 'text-zinc-400 hover:text-zinc-100 hover:bg-white/[0.04] border border-transparent'
+            ? 'bg-[#212121] text-white font-medium'
+            : 'text-zinc-400 hover:text-zinc-200 hover:bg-[#212121]/60'
         }`}
       >
         {isEditing ? (
@@ -228,11 +228,11 @@ export function SessionSidebar({
                 if (e.key === 'Enter') onSaveRenamedTitle(e, sess.id);
                 if (e.key === 'Escape') onCancelRenaming(e);
               }}
-              className="flex-1 bg-black/90 border border-emerald-500/80 rounded-lg px-2 py-1 text-xs text-white outline-none focus:ring-1 focus:ring-emerald-400"
+              className="flex-1 bg-[#212121] border border-white/20 rounded-lg px-2 py-1 text-xs text-white outline-none focus:ring-1 focus:ring-white/40"
             />
             <button
               onClick={(e) => onSaveRenamedTitle(e, sess.id)}
-              className="p-1 rounded bg-emerald-500/20 text-emerald-400 hover:bg-emerald-500/30"
+              className="p-1 rounded bg-white/10 text-zinc-200 hover:bg-white/20"
             >
               <Check className="w-3 h-3" />
             </button>
@@ -248,7 +248,7 @@ export function SessionSidebar({
             <div className="flex items-center gap-2 truncate flex-1 pe-1.5">
               <MessageSquare
                 className={`w-3.5 h-3.5 shrink-0 transition-colors ${
-                  isActive ? 'text-emerald-400' : 'text-zinc-400 group-hover:text-zinc-300'
+                  isActive ? 'text-zinc-200' : 'text-zinc-500 group-hover:text-zinc-400'
                 }`}
               />
               <span className="truncate">{sess.title}</span>
@@ -295,43 +295,32 @@ export function SessionSidebar({
 
       {/* ─── PRO WEB IDAARA CIVIC SIDEBAR ─── */}
       <aside
-        className={`fixed lg:static inset-y-0 start-0 z-50 lg:z-20 w-72 lg:w-68 shrink-0 bg-[#090b0e] border-e border-white/[0.08] flex flex-col justify-between select-none shadow-2xl lg:shadow-none transition-transform duration-200 ease-in-out font-sans ${
+        className={`fixed lg:static inset-y-0 start-0 z-50 lg:z-20 w-68 shrink-0 bg-[#171717] border-e border-white/5 flex flex-col justify-between select-none shadow-2xl lg:shadow-none transition-transform duration-200 ease-in-out font-sans ${
           isOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0 lg:hidden'
         }`}
       >
         <div className="flex flex-col flex-1 overflow-hidden">
           {/* Top Brand Header */}
-          <div className="h-14 px-4 flex items-center justify-between border-b border-white/[0.06] shrink-0 bg-[#090b0e]/90">
+          <div className="h-14 px-3.5 flex items-center justify-between border-b border-white/5 shrink-0 bg-[#171717]">
             <button
               type="button"
               onClick={onNewChat}
-              className="flex items-center gap-2.5 group cursor-pointer bg-transparent border-0 p-0 text-start outline-none focus-visible:ring-2 focus-visible:ring-emerald-500 rounded-lg min-h-[44px]"
+              className="flex items-center gap-2 group cursor-pointer bg-transparent border-0 p-1.5 text-start outline-none rounded-lg hover:bg-[#212121] transition-colors"
               title={locale === 'ar' ? 'محادثة جديدة' : locale === 'derja' ? 'Mwa7da jdida' : locale === 'en' ? 'New consultation' : 'Nouvelle démarche'}
               aria-label={locale === 'ar' ? 'محادثة جديدة' : locale === 'derja' ? 'Mwa7da jdida' : locale === 'en' ? 'New consultation' : 'Nouvelle démarche'}
             >
-              <BrandIcon size={26} />
-              <div className="leading-tight">
-                <div className="flex items-center gap-1.5 font-bold text-sm text-zinc-100 group-hover:text-white tracking-tight">
-                  <span>Idaara</span>
-                  <span className="text-[10px] px-1.5 py-0.2 rounded bg-emerald-500/15 border border-emerald-500/30 text-emerald-400 font-mono font-bold">
-                    AI
-                  </span>
-                </div>
-                <span className="text-[10px] text-zinc-400 font-mono block">
-                  {locale === 'ar'
-                    ? 'الذكاء الإداري التونسي'
-                    : locale === 'derja'
-                    ? 'Dhéka Idari Tounsi'
-                    : locale === 'en'
-                    ? 'Tunisian Civic AI'
-                    : 'IA Civique Tunisienne'}
+              <BrandIcon size={22} />
+              <div className="flex items-center gap-1.5 font-medium text-sm text-zinc-200 group-hover:text-white">
+                <span>Idaara</span>
+                <span className="text-[10px] px-1.5 py-0.5 rounded bg-white/10 text-zinc-300 font-mono">
+                  AI
                 </span>
               </div>
             </button>
 
             <button
               onClick={onClose}
-              className="p-1.5 rounded-lg text-zinc-400 hover:text-white hover:bg-white/[0.06] transition-colors cursor-pointer border-0 focus-visible:ring-2 focus-visible:ring-emerald-500 focus-visible:outline-none"
+              className="p-1.5 rounded-lg text-zinc-400 hover:text-white hover:bg-[#212121] transition-colors cursor-pointer border-0 outline-none"
               title={locale === 'ar' ? 'إغلاق القائمة' : locale === 'derja' ? 'Sker el قائمة' : locale === 'en' ? 'Close sidebar' : 'Fermer le panneau'}
               aria-label={locale === 'ar' ? 'إغلاق اللائحة' : locale === 'derja' ? 'Sker el sidebar' : locale === 'en' ? 'Close sidebar' : 'Fermer le panneau'}
             >
@@ -339,17 +328,17 @@ export function SessionSidebar({
             </button>
           </div>
 
-          {/* Primary Action Button: + Nouvelle Démarche */}
+          {/* Primary Action Button: + New Chat */}
           <div className="p-3 pb-2 shrink-0 space-y-2">
             <button
               onClick={onNewChat}
-              className="w-full flex items-center justify-between px-3 py-2.5 rounded-xl bg-white/[0.03] hover:bg-emerald-500/10 text-zinc-200 hover:text-emerald-300 text-xs font-semibold transition-all cursor-pointer border border-white/[0.08] hover:border-emerald-500/30 shadow-xs group active:scale-[0.99]"
+              className="w-full flex items-center justify-between px-3 py-2 rounded-lg bg-[#212121] hover:bg-[#2a2a2a] text-zinc-200 hover:text-white text-xs font-medium transition-colors cursor-pointer border border-white/5 group"
             >
               <div className="flex items-center gap-2">
-                <Plus className="w-4 h-4 text-emerald-400 group-hover:rotate-90 transition-transform duration-200" />
+                <Plus className="w-4 h-4 text-zinc-400 group-hover:text-white transition-colors" />
                 <span className="truncate">{labels.newChat}</span>
               </div>
-              <kbd className="hidden sm:inline-block text-[10px] font-mono text-zinc-500 group-hover:text-emerald-400/90 bg-white/[0.04] px-1.5 py-0.5 rounded border border-white/[0.08]">
+              <kbd className="hidden sm:inline-block text-[10px] font-mono text-zinc-500 bg-white/5 px-1.5 py-0.5 rounded border border-white/5">
                 ⌘N
               </kbd>
             </button>
@@ -357,13 +346,13 @@ export function SessionSidebar({
             {/* Quick Live Search Filter */}
             {hasAnySessions && (
               <div className="relative">
-                <Search className="w-3.5 h-3.5 text-zinc-400 absolute start-2.5 top-1/2 -translate-y-1/2 pointer-events-none" />
+                <Search className="w-3.5 h-3.5 text-zinc-500 absolute start-2.5 top-1/2 -translate-y-1/2 pointer-events-none" />
                 <input
                   type="text"
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
                   placeholder={labels.search}
-                  className="w-full bg-white/[0.03] border border-white/[0.06] rounded-xl ps-8 pe-3 py-1.5 text-xs text-zinc-200 placeholder-zinc-400 outline-none focus:border-emerald-500/40 focus:bg-white/[0.05] transition-all"
+                  className="w-full bg-[#212121] border border-white/5 rounded-lg ps-8 pe-3 py-1.5 text-xs text-zinc-200 placeholder-zinc-500 outline-none focus:border-white/20 transition-all"
                 />
               </div>
             )}
@@ -428,17 +417,17 @@ export function SessionSidebar({
           </div>
 
           {/* ─── Refined Civic Tools Hub Drawer ─── */}
-          <div className="p-3 border-t border-white/[0.06] shrink-0 bg-[#090b0e]/95 space-y-2">
+          <div className="p-3 border-t border-white/5 shrink-0 bg-[#171717] space-y-2">
             <button
               onClick={() => setIsToolsOpen((prev) => !prev)}
-              className="w-full flex items-center justify-between px-1 text-[11px] font-semibold text-zinc-400 hover:text-zinc-200 transition-colors cursor-pointer border-0 outline-none"
+              className="w-full flex items-center justify-between px-1 text-[11px] font-medium text-zinc-400 hover:text-zinc-200 transition-colors cursor-pointer border-0 outline-none"
             >
               <div className="flex items-center gap-1.5">
-                <Sparkles className="w-3.5 h-3.5 text-emerald-400" />
+                <Sparkles className="w-3.5 h-3.5 text-zinc-400" />
                 <span>{labels.tools}</span>
               </div>
               <ChevronDown
-                className={`w-3.5 h-3.5 text-zinc-400 transition-transform duration-200 ${
+                className={`w-3.5 h-3.5 text-zinc-500 transition-transform duration-200 ${
                   isToolsOpen ? 'rotate-0' : '-rotate-90'
                 }`}
               />
@@ -449,9 +438,9 @@ export function SessionSidebar({
                 <Link
                   href="/fasserli"
                   onClick={onClose}
-                  className="flex items-center gap-2 p-2 rounded-xl bg-white/[0.02] hover:bg-white/[0.06] border border-white/[0.04] text-[11px] text-zinc-300 hover:text-white transition-all group"
+                  className="flex items-center gap-2 p-2 rounded-lg bg-[#212121] hover:bg-[#2a2a2a] border border-white/5 text-[11px] text-zinc-300 hover:text-white transition-colors group"
                 >
-                  <ScanText className="w-3.5 h-3.5 text-zinc-400 group-hover:text-emerald-400 group-hover:scale-105 transition-all shrink-0" />
+                  <ScanText className="w-3.5 h-3.5 text-zinc-400 group-hover:text-zinc-200 shrink-0" />
                   <span className="truncate">
                     {locale === 'ar' ? 'ماسح OCR' : locale === 'derja' ? 'Scanner OCR' : locale === 'en' ? 'OCR Scanner' : 'Scanner OCR'}
                   </span>
@@ -460,9 +449,9 @@ export function SessionSidebar({
                 <Link
                   href="/documents"
                   onClick={onClose}
-                  className="flex items-center gap-2 p-2 rounded-xl bg-white/[0.02] hover:bg-white/[0.06] border border-white/[0.04] text-[11px] text-zinc-300 hover:text-white transition-all group"
+                  className="flex items-center gap-2 p-2 rounded-lg bg-[#212121] hover:bg-[#2a2a2a] border border-white/5 text-[11px] text-zinc-300 hover:text-white transition-colors group"
                 >
-                  <FileText className="w-3.5 h-3.5 text-zinc-400 group-hover:text-emerald-400 group-hover:scale-105 transition-all shrink-0" />
+                  <FileText className="w-3.5 h-3.5 text-zinc-400 group-hover:text-zinc-200 shrink-0" />
                   <span className="truncate">
                     {locale === 'ar' ? 'نماذج PDF' : locale === 'derja' ? 'Modèles PDF' : locale === 'en' ? 'PDF Templates' : 'Modèles PDF'}
                   </span>
@@ -471,9 +460,9 @@ export function SessionSidebar({
                 <Link
                   href="/calculator"
                   onClick={onClose}
-                  className="flex items-center gap-2 p-2 rounded-xl bg-white/[0.02] hover:bg-white/[0.06] border border-white/[0.04] text-[11px] text-zinc-300 hover:text-white transition-all group"
+                  className="flex items-center gap-2 p-2 rounded-lg bg-[#212121] hover:bg-[#2a2a2a] border border-white/5 text-[11px] text-zinc-300 hover:text-white transition-colors group"
                 >
-                  <Calculator className="w-3.5 h-3.5 text-zinc-400 group-hover:text-emerald-400 group-hover:scale-105 transition-all shrink-0" />
+                  <Calculator className="w-3.5 h-3.5 text-zinc-400 group-hover:text-zinc-200 shrink-0" />
                   <span className="truncate">
                     {locale === 'ar' ? 'الطوابع المالية' : locale === 'derja' ? 'Timbres DT' : locale === 'en' ? 'Fiscal Stamps' : 'Timbres DT'}
                   </span>
@@ -482,9 +471,9 @@ export function SessionSidebar({
                 <Link
                   href="/concours"
                   onClick={onClose}
-                  className="flex items-center gap-2 p-2 rounded-xl bg-white/[0.02] hover:bg-white/[0.06] border border-white/[0.04] text-[11px] text-zinc-300 hover:text-white transition-all group"
+                  className="flex items-center gap-2 p-2 rounded-lg bg-[#212121] hover:bg-[#2a2a2a] border border-white/5 text-[11px] text-zinc-300 hover:text-white transition-colors group"
                 >
-                  <Briefcase className="w-3.5 h-3.5 text-zinc-400 group-hover:text-emerald-400 group-hover:scale-105 transition-all shrink-0" />
+                  <Briefcase className="w-3.5 h-3.5 text-zinc-400 group-hover:text-zinc-200 shrink-0" />
                   <span className="truncate">
                     {locale === 'ar' ? 'المناظرات 2026' : locale === 'derja' ? 'Concours 2026' : locale === 'en' ? 'Competitions 2026' : 'Concours 2026'}
                   </span>
@@ -495,28 +484,27 @@ export function SessionSidebar({
         </div>
 
         {/* ─── Dignified Citizen Account Footer ─── */}
-        <div className="p-3 border-t border-white/[0.08] bg-[#0c0e14]">
+        <div className="p-3 border-t border-white/5 bg-[#171717]">
           <button
             type="button"
             onClick={onOpenAuthModal}
-            className="w-full flex items-center justify-between p-2 rounded-xl bg-white/[0.02] hover:bg-white/[0.06] border border-white/[0.04] hover:border-white/[0.08] transition-all cursor-pointer focus-visible:ring-2 focus-visible:ring-emerald-500 focus-visible:outline-none text-start group"
+            className="w-full flex items-center justify-between p-2 rounded-lg hover:bg-[#212121] transition-colors cursor-pointer outline-none text-start group"
           >
             <div className="flex items-center gap-2.5 min-w-0">
-              <div className="w-8 h-8 rounded-full bg-emerald-500/20 border border-emerald-500/30 text-emerald-300 flex items-center justify-center font-bold text-xs shadow-inner shrink-0 group-hover:scale-105 transition-transform">
+              <div className="w-8 h-8 rounded-full bg-zinc-700 text-zinc-200 flex items-center justify-center font-medium text-xs shrink-0">
                 {citizenInitial}
               </div>
               <div className="min-w-0 leading-tight">
-                <div className="text-xs font-semibold text-zinc-200 group-hover:text-white truncate">
+                <div className="text-xs font-medium text-zinc-200 group-hover:text-white truncate">
                   {userName}
                 </div>
-                <div className="text-[10px] text-emerald-400/90 font-medium flex items-center gap-1 pt-0.5">
-                  <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
+                <div className="text-[10px] text-zinc-500 font-normal pt-0.5">
                   <span>{labels.status}</span>
                 </div>
               </div>
             </div>
 
-            <User className="w-3.5 h-3.5 text-zinc-400 group-hover:text-zinc-200 shrink-0" />
+            <User className="w-4 h-4 text-zinc-500 group-hover:text-zinc-300 shrink-0" />
           </button>
         </div>
       </aside>

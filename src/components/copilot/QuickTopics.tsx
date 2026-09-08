@@ -162,7 +162,7 @@ export function QuickTopics({ locale, isRtl, onSelectPrompt }: QuickTopicsProps)
   ];
 
   return (
-    <div className="w-full grid grid-cols-1 sm:grid-cols-2 gap-3 mt-6 text-start select-none" dir={isRtl ? 'rtl' : 'ltr'}>
+    <div className="w-full flex flex-wrap items-center justify-center gap-2 mt-4 text-start select-none" dir={isRtl ? 'rtl' : 'ltr'}>
       {cards.map((card, idx) => {
         const Icon = card.icon;
         return (
@@ -170,24 +170,11 @@ export function QuickTopics({ locale, isRtl, onSelectPrompt }: QuickTopicsProps)
             key={idx}
             type="button"
             onClick={() => onSelectPrompt(card.prompt)}
-            className="group p-3.5 rounded-2xl bg-zinc-950/60 hover:bg-white/[0.04] border border-white/[0.07] hover:border-emerald-500/30 transition-all duration-200 cursor-pointer flex items-center justify-between text-start focus-visible:ring-2 focus-visible:ring-emerald-500 hover:shadow-lg hover:shadow-emerald-950/20 active:scale-[0.99]"
+            className="flex items-center gap-2 px-3.5 py-2 rounded-full bg-[#2f2f2f] hover:bg-[#383838] border border-white/5 text-xs text-zinc-300 hover:text-white transition-all cursor-pointer shadow-xs active:scale-95"
           >
-            <div className="flex items-center gap-3 min-w-0">
-              <div className="p-2.5 rounded-xl bg-white/[0.03] border border-white/[0.06] text-zinc-400 group-hover:text-emerald-400 group-hover:bg-emerald-500/10 group-hover:border-emerald-500/20 transition-all shrink-0">
-                <Icon className="w-4 h-4" />
-              </div>
-              <div className="min-w-0 leading-tight">
-                <div className="text-xs sm:text-[13px] font-semibold text-zinc-200 group-hover:text-white truncate tracking-tight">
-                  {card.title}
-                </div>
-                <div className="text-[11px] text-zinc-400 truncate pt-1">
-                  {card.desc}
-                </div>
-              </div>
-            </div>
-            <span className="text-[10px] font-mono font-medium text-emerald-400/90 px-2 py-0.5 rounded-lg bg-emerald-500/10 border border-emerald-500/20 shrink-0 ms-2">
-              {card.badge}
-            </span>
+            <Icon className="w-3.5 h-3.5 text-zinc-400 shrink-0" />
+            <span className="font-medium truncate">{card.title}</span>
+            <span className="text-[11px] text-zinc-400 font-mono">({card.badge})</span>
           </button>
         );
       })}
