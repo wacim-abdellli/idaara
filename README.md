@@ -15,7 +15,7 @@
 [![Groq AI](https://img.shields.io/badge/AI-Groq_Llama_3.3_70B-F55036?style=for-the-badge&logo=groq&logoColor=white)](https://groq.com/)
 [![Gemini Vision](https://img.shields.io/badge/Vision-Gemini_2.5_Flash-4285F4?style=for-the-badge&logo=google&logoColor=white)](https://ai.google.dev/)
 [![Whisper Audio](https://img.shields.io/badge/Audio-Whisper_Large_v3_Turbo-10B981?style=for-the-badge&logo=openai&logoColor=white)](https://openai.com/research/whisper)
-[![Vitest](https://img.shields.io/badge/Vitest-66_Tests_Passing-6E9F18?style=for-the-badge&logo=vitest&logoColor=white)](https://vitest.dev/)
+[![Vitest](https://img.shields.io/badge/Vitest-100_Tests_Passing-6E9F18?style=for-the-badge&logo=vitest&logoColor=white)](https://vitest.dev/)
 [![Security](https://img.shields.io/badge/Security-Strict_CSP_%26_INPDP_Compliant-00C07F?style=for-the-badge&logo=shield&logoColor=white)](#-security-privacy--compliance)
 [![Locales](https://img.shields.io/badge/Languages-Derja_%7C_FR_%7C_AR_(RTL)_%7C_EN-EA580C?style=for-the-badge&logo=translate&logoColor=white)](#-multilingual-support)
 
@@ -40,9 +40,11 @@
   - [10. Complete Civic Procedures Directory (`/procedures`)](#10-complete-civic-procedures-directory-procedures)
 - [Deep Tunisian Infrastructure Grounding (38 Legal Frameworks)](#-deep-tunisian-infrastructure-grounding-38-legal-frameworks)
 - [Tech Stack & Architecture](#-tech-stack--architecture)
+- [API Routes & Serverless Services](#-api-routes--serverless-services)
 - [Getting Started](#-getting-started)
   - [Prerequisites](#prerequisites)
   - [Installation & Environment Setup](#installation--environment-setup)
+  - [Verification & Quality Gate](#verification--quality-gate)
 - [Security, Privacy & Compliance](#-security-privacy--compliance)
 - [License](#-license)
 
@@ -53,33 +55,35 @@
 Navigating public administration in Tunisia (*l'Idara*, *Baladiya*, *Recette des Finances*, *CNSS*, *Douane*, *Ministères*) has long been plagued by:
 
 - **The Missing Paperwork Trap**: Citizens wait in queue for hours only to be sent home (*"أرجع غدوة"*) over a missing 3 DT fiscal stamp, an expired birth certificate, or an uncertified copy.
-- **Complex Statutory Jargon**: Tax notices, court summons, and JORT decrees are written in dense legal terminology that is difficult for citizens to interpret.
+- **Complex Statutory Jargon**: Tax notices, court summons, and legal decrees are written in dense administrative terminology that is difficult for citizens to interpret.
 - **Scattered Information**: Requirements differ by municipality, opening hours change during summer (*Séance Unique*) and Ramadan, and official government portals are fragmented.
 
 ### 💡 The Solution
-**Idaara.tn** consolidates Tunisian administrative procedures, laws (*JORT*), and municipal knowledge into a unified, AI-powered civic copilot. Citizens can speak naturally in **Tunisian Derja**, upload letters for instant plain-language decoding, calculate exact statutory stamp costs, and generate certified, ready-to-print legal documents.
+**Idaara.tn** consolidates Tunisian administrative procedures, legal frameworks (*JORT / الرائد الرسمي*), and municipal knowledge into a unified, AI-powered civic copilot. Citizens can speak naturally in **Tunisian Derja**, upload official letters for instant plain-language decoding, calculate exact statutory stamp costs, and generate certified, ready-to-print legal documents.
 
 ---
 
 ## ✨ Core Features & Modules
 
 ### 1. Universal Derja AI Copilot (`/copilot`)
-- **100% Tunisian Derja in Arabic Script**: Formulates all responses strictly in warm, natural Tunisian Arabic Derja (الدارجة التونسية بالحروف العربية), regardless of whether the user types in English, French, Latin Arabizi, or Arabic.
+- **100% Tunisian Derja in Arabic Script**: Formulates all responses strictly in warm, natural Tunisian Arabic Derja (الدارجة التونسية بالحروف العربية), regardless of whether the citizen writes in English, French, Latin Arabizi, or Arabic.
 - **Dual-Model Cascade Inference**: Powered by `llama-3.3-70b-versatile` running on Groq LPU hardware with automatic fallback to `llama-3.1-8b-instant` and local heuristic reasoning.
+- **Deep Legal Reasoning Mode (`[ ⚖️ Legal reasoning ]`)**: In-depth statutory breakdown cross-referenced with exact legal decrees and official tariffs.
+- **Whisper Speech-to-Text (`/api/transcribe`)**: High-precision voice input powered by `whisper-large-v3-turbo` with seamless Web Speech API browser integration. Validates audio magic bytes (WebM, OGG, MP3, WAV, M4A, FLAC) server-side with a 25 MB payload ceiling.
 - **Cloud Session Sync & Auth**: Save, rename, and synchronize full conversation histories across devices using Supabase SSR Auth with seamless offline fallback to `localStorage`.
-- **Deep Think Mode (`[ 🧠 Think ]`)**: Exhaustive statutory breakdown cross-referenced with exact JORT decrees and official tariffs.
-- **Whisper Speech-to-Text**: High-precision voice input powered by `whisper-large-v3-turbo`.
+- **Mobile Ergonomics**: Full `.pb-safe` iOS Safari home indicator accommodation, 44px tap targets, and auto-zoom prevention (`text-base`).
 - **Real-Time Dynamic Browser Tab Text**: Tab titles dynamically adapt to the active language (`AR`, `FR`, `EN`, `TN`) in real-time.
 
 ### 2. "Fasserli Hal War9a" Document Scanner & OCR Decoder (`/fasserli`)
-- **Multimodal Document Decoding**: Upload or snap a photo of any official administrative letter (Tax adjustment, CNSS demand, Police summons, Court order, Utility bill) powered by Google Gemini 2.5 Flash Vision & Groq OCR.
+- **Multimodal Document Decoding (`/api/ocr`)**: Upload or snap a photo of any official administrative letter (Tax adjustment, CNSS demand, Police summons, Court order, Utility bill) powered by Google Gemini 2.5 Flash Vision & Groq OCR.
 - **Automatic PII Redaction**: Sensitive Tunisian identifiers (CIN, RIB, phone numbers) are masked using regex before being processed by any LLM.
 - **3-Point Plain Language Summary**: Breaks down the document in Tunisian Derja, French, and Arabic.
 - **Statutory Deadlines & Penalty Radar**: Identifies strict appeal windows, payment deadlines, and late penalty rates.
-- **Magic-Byte MIME Validation**: Inspects binary headers (`ffd8ff` for JPEG, `89504e47` for PNG, `25504446` for PDF) to reject spoofed executable payloads.
+- **Magic-Byte MIME Validation**: Inspects binary headers (`ffd8ff` JPEG, `89504e47` PNG, `25504446` PDF) to reject spoofed executable payloads with HTTP 415 and enforces a 10 MB payload limit (HTTP 413).
+- **Honest Zero-Retention Privacy**: Files are processed ephemerally in RAM buffer memory and are never persisted to disk or external storage.
 
 ### 3. National Concours & Public Recruitment Hub (`/concours`)
-- **Live Recruitment Feed**: Openings across Tunisian ministries, public enterprises (STEG, SONEDE), and agencies (*Concours Nationaux*).
+- **Live Recruitment Feed**: Openings across Tunisian ministries, public enterprises (STEG, SONEDE), and agencies (*Concours Nationaux 2026*).
 - **Multi-Filter Discovery**: Filter by educational level (Bac, Licence, Master, Ingénieur), sector, closing date, and required papers.
 - **Statutory Checklists**: Pre-submission dossier checklists (B3 < 3 months, medical certificates, certified diplomas).
 
@@ -99,9 +103,9 @@ Navigating public administration in Tunisia (*l'Idara*, *Baladiya*, *Recette des
 - **Persistent Local Checklist**: Check off requirements as you prepare your dossier.
 
 ### 6. Territorial Atlas of Public Offices (`/locator`)
-- **All 24 Governorates**: Directory covering 130+ Municipalities (*Baladiyas*), Post Offices, Tax Receipts (*Recettes des Finances*), ATTT, and CNSS centers.
-- **Sleek Minimalist Segment Filter**: Responsive flex-wrapped region selectors with live office counters.
-- **Seasonal Working Hours**: Live schedules adjusted for **Ramadan** and summer single-shift (*Séance Unique*).
+- **All 24 Governorates**: Comprehensive directory covering 130+ Municipalities (*Baladiyas*), Post Offices, Tax Receipts (*Recettes des Finances*), ATTT, CNSS, CNAM, Police/Garde Nationale, STEG, SONEDE, Courts, ANETI, Hospitals, and Ministries.
+- **Sleek Segment Filter**: Responsive region selectors with live office counters and instant text search.
+- **Seasonal Working Hours**: Real-time schedules adjusted for **Ramadan** and summer single-shift (*Séance Unique*).
 - **GPS Integration**: One-tap direct navigation via Google Maps and Waze.
 
 ### 7. E-Government Portals Directory (`/portails`)
@@ -114,7 +118,7 @@ Navigating public administration in Tunisia (*l'Idara*, *Baladiya*, *Recette des
   - 🏆 **Concours Fonction Publique** (`concours.gov.tn`)
 
 ### 8. Emergency Contacts & National Directory (`/contacts`)
-- **Emergency Hotlines**: Police (197), SAMU (190), Protection Civile (198), Garde Nationale, SOS Violence (1899).
+- **Emergency Hotlines**: Police (197), SAMU (190), Protection Civile (198), Garde Nationale (193), SOS Violence (1899).
 - **Ministry Directory**: Direct contact numbers, addresses, and official web portals for all state ministries.
 
 ### 9. Freelancer & Entrepreneur Launchpad (`/launchpad`)
@@ -140,23 +144,37 @@ Idaara AI is grounded with verified legislation, decrees, and administrative pro
 | **🏥 Healthcare & CNAM** | • **APET 100% Coverage**: Unlimited coverage with 0 DT copay for the 25 official Long-Term Affections (Diabetes, Cancer, Hypertension, Renal failure). |
 | **🛃 Customs & Expatriates** | • **FCR & TRE Privileges**: 2-year foreign residency, 120-day annual stay limit, 5-year vehicle age, and regularization from `RS / ن.ت` to `TU` under Finance Laws 2024/2026.<br>• **Foreign Resident Permits**: Student, work, and investment dossiers with the Foreigners Police Bureau. |
 | **⚡ Public Utilities** | • **STEG**: Connection dossiers, Baladiya conformity certificates, and certified electrician compliance.<br>• **SONEDE**: Property titles, municipal excavation permits (*ترخيص حفر الطرقات*), and standard meter housing. |
-| **🚀 Business Incorporation** | • **SARL / SUARL via RNE & APII**: Articles of association, 150 DT fixed tax registration, and automated electronic JORT publication. |
+| **🚀 Business Incorporation** | • **SARL / SUARL via RNE & APII**: Articles of association, 150 DT fixed tax registration, and automated electronic official gazette publication. |
 
 ---
 
 ## 💻 Tech Stack & Architecture
 
 ```
-Frontend:          Next.js 16.3 (App Router, Turbopack), React 19, TypeScript 5.7
-Styling & UI:      Tailwind CSS 4.0, Framer Motion, Lucide Icons, Glassmorphism Design
-AI Engine:         Groq API (Llama 3.3 70B Versatile, Llama 3.1 8B Instant)
-Vision Engine:     Google Gemini 2.5 Flash Vision + Tesseract.js (Node.js runtime guarded)
-Speech Engine:     Whisper Large v3 Turbo (Phonetic Derja & Arabic Speech-to-Text)
-Auth & Database:   Supabase SSR Auth (Google OAuth + Magic Link) & PostgreSQL Sessions Table
-Caching & Rate:    Upstash Redis + Serverless-Safe Lazy In-Memory Sliding Window
-Document Engine:   jsPDF, html2canvas-pro (High-DPI Vector Legal PDF Studio)
-Testing:           Vitest 4.1 (40 automated tests across 9 suites)
+Frontend:          Next.js 16.3.1 (App Router, Turbopack), React 19.2, TypeScript 5.7
+Styling & UI:      Tailwind CSS 4.0, Framer Motion, Lucide Icons, Glassmorphism Dark Theme
+AI Copilot:        Groq API (Llama 3.3 70B Versatile, Llama 3.1 8B Instant)
+Vision OCR:        Google Gemini 2.5 Flash Vision + Tesseract.js fallback (Node.js runtime)
+Speech Engine:     Groq Whisper Large v3 Turbo (Phonetic Derja, Arabic, French)
+Auth & Database:   Supabase SSR Auth (@supabase/ssr) & PostgreSQL Sessions Table
+Caching & Limits:  Upstash Redis (@upstash/ratelimit) + Serverless In-Memory Sliding Window
+Document Studio:   jsPDF, html2canvas-pro (High-DPI Vector Legal PDF Engine)
+Testing:           Vitest 4.1.11 (100 automated tests across 16 suites)
 ```
+
+---
+
+## 🔌 API Routes & Serverless Services
+
+| Endpoint | Method | Purpose | Guards & Protocols |
+|---|---|---|---|
+| `/api/copilot` | `POST` | AI conversation inference & legal reasoning | Rate limit (30/min), prompt ceiling (4000 chars), Groq dual-cascade |
+| `/api/ocr` | `POST` | Vision decoding of administrative documents | Rate limit (20/min), 10 MB limit, magic bytes (JPEG/PNG/PDF), PII masking |
+| `/api/transcribe` | `POST` | Voice note audio transcription to text | Rate limit (30/min), 25 MB limit, audio magic bytes (WebM/OGG/MP3/WAV/M4A/FLAC) |
+| `/api/fiscal-rates`| `GET` | Statutory fiscal stamp and tax rates | 1-hour stale-while-revalidate edge cache, DB fallback |
+| `/api/sessions` | `GET`, `POST` | Cloud session synchronization | Authenticated Supabase session binding |
+| `/api/sessions/[id]` | `PATCH`, `DELETE` | Rename and delete user chat sessions | Supabase RLS row-level protection |
+| `/api/auth/callback` | `GET` | OAuth exchange & session cookie bootstrap | PKCE code exchange via `@supabase/ssr` |
 
 ---
 
@@ -198,6 +216,11 @@ Testing:           Vitest 4.1 (40 automated tests across 9 suites)
    NEXT_PUBLIC_SUPABASE_URL="https://your_project.supabase.co"
    NEXT_PUBLIC_SUPABASE_ANON_KEY="your_anon_key_here"
    SUPABASE_SERVICE_ROLE_KEY="your_service_role_key_here"
+
+   # 4. Upstash Redis (Optional - falls back to serverless in-memory limiter)
+   # Get credentials: https://console.upstash.com
+   UPSTASH_REDIS_REST_URL="https://your_upstash_url.upstash.io"
+   UPSTASH_REDIS_REST_TOKEN="your_upstash_token_here"
    ```
 
 4. **Run development server**:
@@ -206,16 +229,25 @@ Testing:           Vitest 4.1 (40 automated tests across 9 suites)
    ```
    Open **[http://localhost:3000](http://localhost:3000)** in your browser.
 
-5. **Run automated test suite**:
-   ```bash
-   npm test
-   ```
+---
 
-6. **Build for production**:
-   ```bash
-   npm run build
-   npm run start
-   ```
+### 🧪 Verification & Quality Gate
+
+Every release and commit is verified against our strict production gate:
+
+```bash
+# 1. Multilingual coverage scanner (0 errors across fr, ar, derja, en)
+npm run i18n:check
+
+# 2. Strict TypeScript type check
+npm run typecheck
+
+# 3. Automated Vitest suite (100 tests across 16 suites)
+npm test
+
+# 4. Next.js production build (26 static & dynamic routes)
+npm run build
+```
 
 ---
 
@@ -223,10 +255,10 @@ Testing:           Vitest 4.1 (40 automated tests across 9 suites)
 
 - **Zero-Storage Privacy Protocol**: Uploaded documents and personal identity scans are processed ephemerally in RAM and are never persisted or shared.
 - **Automated PII Sanitization**: Regex masking intercepts CIN, RIB, and phone numbers before any third-party AI processing.
-- **Magic-Byte Binary Verification**: Inspects file headers to prevent MIME spoofing attacks on `/api/ocr`.
-- **Serverless-Safe Rate Limiting**: In-memory sliding window rate limiter with lazy GC fallback prevents abuse across serverless lambda instances.
+- **Binary Magic-Byte Verification**: Server-side binary inspection rejects spoofed executable payloads on `/api/ocr` (JPEG, PNG, PDF, GIF, WebP) and `/api/transcribe` (WebM, OGG, MP3, WAV, M4A, FLAC).
+- **Serverless-Safe Rate Limiting**: In-memory sliding window rate limiter with lazy GC fallback prevents abuse across serverless lambda instances, with optional Upstash Redis cloud synchronization.
 - **Hardened HTTP Headers**: Strict `Content-Security-Policy`, `X-Frame-Options: DENY`, and `X-Content-Type-Options: nosniff` configured in `next.config.ts`.
-- **Statutory Alignment**: All fiscal stamps and procedures cross-referenced with the 2026 Tunisian Finance Law and official JORT decrees.
+- **Statutory Alignment**: All fiscal stamps and procedures cross-referenced with the 2026 Tunisian Finance Law and official ministerial decrees.
 
 ---
 
