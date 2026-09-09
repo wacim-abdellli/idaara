@@ -3,6 +3,8 @@
 import { useState, useEffect, useLayoutEffect, useCallback, useRef } from 'react';
 import { ChatMessage } from '../types/chat';
 import { useAuth } from '../context/AuthContext';
+import { SupportedLanguage } from '../data/translations';
+import { summarizePromptToTitle } from '../lib/session-title';
 
 const useIsomorphicLayoutEffect = typeof window !== 'undefined' ? useLayoutEffect : useEffect;
 
@@ -13,6 +15,7 @@ export interface ChatSession {
   messages: ChatMessage[];
   createdAt?: number;
   updatedAt?: number;
+  isCustomTitle?: boolean;
 }
 
 export function generateUUID(): string {
@@ -78,7 +81,10 @@ export function deduplicateSessions(sessions: ChatSession[]): { unique: ChatSess
 const STORAGE_SESSIONS_KEY = 'idaara_copilot_saved_sessions';
 const STORAGE_ACTIVE_ID_KEY = 'idaara_copilot_active_session_id';
 
-export function useCopilotSessions(onAutoQuery?: (query: string) => void) {
+export function useCopilotSessions(
+  onAutoQuery?: (query: string) => void,
+  locale: SupportedLanguage = 'derja'
+) {
   const { user } = useAuth();
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [sessions, setSessions] = useState<ChatSession[]>([]);
@@ -227,8 +233,16 @@ export function useCopilotSessions(onAutoQuery?: (query: string) => void) {
           }
         }
 
-        const firstUserMsg = messages.find((m) => m.sender === 'user')?.content || 'Discussion';
-        const defaultTitle = firstUserMsg.slice(0, 32) + (firstUserMsg.length > 32 ? '...' : '');
+        const firstUserMsg = messages.find((m) => m.sender === 'user')?.content;
+        const defaultTitle = firstUserMsg
+          ? summarizePromptToTitle(firstUserMsg, locale)
+          : locale === 'ar'
+          ? 'استشارة إدارية'
+          : locale === 'en'
+          ? 'Civic Consultation'
+          : locale === 'fr'
+          ? 'Démarche Citoyenne'
+          : 'Consultation Idaria';
 
         let targetTitle = defaultTitle;
 
@@ -238,8 +252,16 @@ export function useCopilotSessions(onAutoQuery?: (query: string) => void) {
           let updated: ChatSession[];
           const now = Date.now();
           if (exists) {
-            targetTitle = exists.title && exists.title !== 'Discussion' ? exists.title : defaultTitle;
-            updated = prev.map((s) => (s.id === currentSessionId ? { ...s, title: targetTitle, messages, updatedAt: now } : s));
+            targetTitle = exists.isCustomTitle
+              ? exists.title
+              : exists.title && exists.title !== 'Discussion' && exists.title !== 'Consultation' && exists.title !== 'Consultation Idaria' && exists.title !== 'استشارة إدارية'
+              ? exists.title
+              : defaultTitle;
+            updated = prev.map((s) =>
+              s.id === currentSessionId
+                ? { ...s, title: targetTitle, messages, updatedAt: now }
+                : s
+            );
           } else {
             updated = [
               {
@@ -249,6 +271,7 @@ export function useCopilotSessions(onAutoQuery?: (query: string) => void) {
                 messages,
                 createdAt: now,
                 updatedAt: now,
+                isCustomTitle: false,
               },
               ...prev.slice(0, 20),
             ];
@@ -369,6 +392,35 @@ export function useCopilotSessions(onAutoQuery?: (query: string) => void) {
     }
   }, [sessions, currentSessionId]);
 
+  const updateSessionTitle = useCallback((sessionId: string, newTitle: string, isCustom = false) => {
+    const trimmed = newTitle.trim();
+    if (!trimmed) return;
+    const now = Date.now();
+    setSessions((prev) => {
+      const target = prev.find((s) => s.id === sessionId);
+      if (target?.isCustomTitle && !isCustom) {
+        return prev;
+      }
+      const updated = prev.map((s) =>
+        s.id === sessionId
+          ? { ...s, title: trimmed, isCustomTitle: isCustom ? true : s.isCustomTitle, updatedAt: now }
+          : s
+      );
+      if (typeof window !== 'undefined') {
+        localStorage.setItem(STORAGE_SESSIONS_KEY, JSON.stringify(updated));
+      }
+      return updated;
+    });
+
+    if (user && isValidUUID(sessionId)) {
+      fetch(`/api/sessions/${sessionId}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ title: trimmed }),
+      }).catch((err) => console.warn('Cloud session rename failed:', err));
+    }
+  }, [user]);
+
   const saveRenamedTitle = useCallback(async (e?: React.FormEvent | React.MouseEvent | React.KeyboardEvent, id?: string) => {
     if (e) e.stopPropagation();
     const targetId = id || editingSessionId;
@@ -376,29 +428,10 @@ export function useCopilotSessions(onAutoQuery?: (query: string) => void) {
 
     const trimmed = editingTitle.trim();
     if (trimmed) {
-      const now = Date.now();
-      setSessions((prev) => {
-        const updated = prev.map((s) => (s.id === targetId ? { ...s, title: trimmed, updatedAt: now } : s));
-        if (typeof window !== 'undefined') {
-          localStorage.setItem(STORAGE_SESSIONS_KEY, JSON.stringify(updated));
-        }
-        return updated;
-      });
-
-      if (user && isValidUUID(targetId)) {
-        try {
-          await fetch(`/api/sessions/${targetId}`, {
-            method: 'PUT',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ title: trimmed }),
-          });
-        } catch (err) {
-          console.warn('Cloud session rename failed:', err);
-        }
-      }
+      updateSessionTitle(targetId, trimmed, true);
     }
     setEditingSessionId(null);
-  }, [editingSessionId, editingTitle, user]);
+  }, [editingSessionId, editingTitle, updateSessionTitle]);
 
   const cancelRenaming = useCallback((e?: React.SyntheticEvent) => {
     if (e) e.stopPropagation();
@@ -424,5 +457,6 @@ export function useCopilotSessions(onAutoQuery?: (query: string) => void) {
     startRenaming,
     saveRenamedTitle,
     cancelRenaming,
+    updateSessionTitle,
   };
 }

@@ -12,6 +12,7 @@ import {
   AUTO_ENTREPRENEUR_RATES,
   FISCAL_YEAR_LABEL,
 } from '../../../data/fiscal-rates';
+import { summarizePromptToTitle } from '../../../lib/session-title';
 
 function getGeminiKey(): string {
   return (process.env.GEMINI_API_KEY || '').trim();
@@ -410,6 +411,7 @@ export async function POST(req: NextRequest) {
               success: true,
               result: {
                 content: reply,
+                sessionTitle: summarizePromptToTitle(prompt, locale),
                 source: 'idaara-gemini-ai',
                 providerName: 'Idaara AI',
               },
@@ -471,6 +473,7 @@ export async function POST(req: NextRequest) {
                   success: true,
                   result: {
                     content: reply,
+                    sessionTitle: summarizePromptToTitle(prompt, locale),
                     source: 'idaara-native-ai',
                     providerName: 'Idaara AI',
                   },
@@ -490,6 +493,7 @@ export async function POST(req: NextRequest) {
       success: true,
       result: {
         ...localResult,
+        sessionTitle: summarizePromptToTitle(prompt, locale),
         source: 'idaara-local-engine',
         providerName: 'Idaara AI',
       },

@@ -26,6 +26,7 @@ import { DeleteSessionModal } from '../../components/copilot/DeleteSessionModal'
 import { LanguageSwitcher } from '../../components/layout/LanguageSwitcher';
 import { BrandIcon } from '../../components/layout/BrandLogo';
 import { AuthModal } from '../../components/auth/AuthModal';
+import { summarizePromptToTitle } from '../../lib/session-title';
 
 export default function CopilotPage() {
   const { locale, isRtl } = useLocale();
@@ -61,11 +62,12 @@ export default function CopilotPage() {
     startRenaming,
     saveRenamedTitle,
     cancelRenaming,
+    updateSessionTitle,
   } = useCopilotSessions((query) => {
     if (autoQueryRef.current) {
       autoQueryRef.current(query);
     }
-  });
+  }, locale);
 
   const handleSendMessage = useCallback(async (textToSend?: string) => {
     const rawQuery = (textToSend ?? inputVal).trim();
@@ -107,6 +109,10 @@ export default function CopilotPage() {
       const data = await res.json();
       const response = data.result || {};
       const fullText = (response.content || '').trim();
+
+      if (response.sessionTitle) {
+        updateSessionTitle(currentSessionId, response.sessionTitle);
+      }
 
       if (!fullText) {
         setIsProcessing(false);
@@ -295,9 +301,10 @@ export default function CopilotPage() {
       : 'Que puis-je faire pour vous ?';
 
   const activeSession = sessions.find((s) => s.id === currentSessionId);
+  const firstUserContent = messages.find((m) => m.sender === 'user')?.content;
   const activeChatTitle =
     activeSession?.title ||
-    (messages[0]?.content ? messages[0].content.slice(0, 36) : 'Consultation');
+    (firstUserContent ? summarizePromptToTitle(firstUserContent, locale) : 'Consultation');
 
   return (
     <div className="fixed inset-0 z-30 flex bg-[#212121] text-[#ececec] overflow-hidden font-sans">
