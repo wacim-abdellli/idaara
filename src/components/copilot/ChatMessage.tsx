@@ -238,9 +238,9 @@ function renderFormattedContent(text: string, locale: string = 'derja', isRTLOve
         <div
           key={`summary-${i}`}
           dir={lineDir}
-          className={`my-3 p-4 rounded-2xl bg-[#2a2a2a] border border-white/10 shadow-sm max-w-2xl ${lineAlign}`}
+          className={`my-3 p-4 rounded-2xl bg-[#0c0c0c] border border-white/[0.08] shadow-sm max-w-2xl ${lineAlign}`}
         >
-          <div className="flex items-center gap-2 pb-2 mb-3 border-b border-white/5 text-xs font-semibold text-zinc-200">
+          <div className="flex items-center gap-2 pb-2 mb-3 border-b border-white/[0.08] text-xs font-semibold text-zinc-200">
             <span>📌</span>
             <span>{summaryLabel}</span>
           </div>
@@ -255,7 +255,7 @@ function renderFormattedContent(text: string, locale: string = 'derja', isRTLOve
                   return (
                     <div
                       key={sIdx}
-                      className="p-2.5 rounded-xl bg-white/[0.03] border border-white/[0.06] flex flex-col justify-between gap-1"
+                      className="p-2.5 rounded-xl bg-[#121212] border border-white/[0.08] flex flex-col justify-between gap-1"
                     >
                       <span className="text-[11px] font-medium text-zinc-400">{label}</span>
                       <span className="text-xs sm:text-[13px] font-semibold text-zinc-100 leading-snug">{renderInlineStyles(val)}</span>
@@ -265,7 +265,7 @@ function renderFormattedContent(text: string, locale: string = 'derja', isRTLOve
                 return (
                   <div
                     key={sIdx}
-                    className="p-2.5 rounded-xl bg-white/[0.02] border border-white/[0.05] flex flex-col gap-1"
+                    className="p-2.5 rounded-xl bg-[#121212] border border-white/[0.08] flex flex-col gap-1"
                   >
                     <div className="text-xs text-zinc-200 leading-relaxed">
                       {renderInlineStyles(item)}
@@ -324,7 +324,7 @@ function renderFormattedContent(text: string, locale: string = 'derja', isRTLOve
           <div
             key={`tip-${i}`}
             dir={lineDir}
-            className={`my-3 p-3.5 sm:p-4 rounded-xl border border-white/5 border-s-2 border-s-amber-400/80 bg-[#2a2a2a] text-zinc-200 text-sm leading-relaxed ${lineAlign}`}
+            className={`my-3 p-3.5 sm:p-4 rounded-xl border border-white/[0.08] border-s-2 border-s-amber-400/80 bg-[#0c0c0c] text-zinc-200 text-sm leading-relaxed ${lineAlign}`}
           >
             <div className="flex items-center gap-1.5 text-xs font-semibold text-amber-400 mb-1.5 select-none">
               <Lightbulb className="w-3.5 h-3.5 shrink-0 text-amber-400" />
@@ -452,7 +452,7 @@ export const ChatMessage: React.FC<ChatMessageProps> = ({ message, onSelectPromp
       <div className="w-full flex justify-end py-2 select-none group animate-fade-in">
         <div
           dir={isArabicScript ? 'rtl' : 'ltr'}
-          className={`max-w-[85%] sm:max-w-[70%] px-5 py-2.5 rounded-[24px] bg-[#2f2f2f] text-[#ececec] text-[15px] leading-relaxed select-text shadow-sm ${
+          className={`max-w-[85%] sm:max-w-[70%] px-5 py-2.5 rounded-[24px] bg-[#121212] border border-white/[0.08] text-[#ededed] text-[15px] leading-relaxed select-text shadow-sm ${
             isArabicScript ? 'text-right font-["Cairo",sans-serif]' : 'text-left'
           }`}
         >
@@ -471,7 +471,7 @@ export const ChatMessage: React.FC<ChatMessageProps> = ({ message, onSelectPromp
     >
       <div
         style={{ unicodeBidi: 'plaintext' }}
-        className={`prose-chat text-[#ececec] leading-relaxed ${isArabicScript ? 'font-["Cairo",sans-serif]' : ''}`}
+        className={`prose-chat text-[#ededed] leading-relaxed ${isArabicScript ? 'font-["Cairo",sans-serif]' : ''}`}
       >
         {renderFormattedContent(message.content, locale, isArabicScript)}
         {message.isStreaming && (
@@ -481,8 +481,8 @@ export const ChatMessage: React.FC<ChatMessageProps> = ({ message, onSelectPromp
 
       {/* Timbre Breakdown Docket (if any) */}
       {!message.isStreaming && message.timbreBreakdown && (
-        <div className="mt-3 p-3.5 rounded-2xl bg-[#2a2a2a] border border-white/5 space-y-2 max-w-md">
-          <div className="flex items-center justify-between font-semibold text-zinc-200 pb-2 border-b border-white/5 text-xs">
+        <div className="mt-3 p-3.5 rounded-2xl bg-[#0c0c0c] border border-white/[0.08] space-y-2 max-w-md">
+          <div className="flex items-center justify-between font-semibold text-zinc-200 pb-2 border-b border-white/[0.08] text-xs">
             <div className="flex items-center gap-1.5">
               <Stamp className="w-3.5 h-3.5 text-emerald-400" />
               <span>
@@ -522,7 +522,7 @@ export const ChatMessage: React.FC<ChatMessageProps> = ({ message, onSelectPromp
               <Link
                 key={idx}
                 href={action.payload}
-                className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-[#2a2a2a] hover:bg-[#333333] border border-white/5 text-zinc-300 hover:text-white text-xs font-medium transition-all"
+                className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-[#0c0c0c] hover:bg-zinc-900 border border-white/[0.08] text-zinc-300 hover:text-white text-xs font-medium transition-all"
               >
                 {action.type === 'pdf_form' && <FileText className="w-3.5 h-3.5 text-zinc-400" />}
                 {action.type === 'calculator_link' && <Calculator className="w-3.5 h-3.5 text-zinc-400" />}

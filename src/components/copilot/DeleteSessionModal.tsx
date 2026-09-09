@@ -21,8 +21,8 @@ export function DeleteSessionModal({
   if (!session) return null;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/75 backdrop-blur-sm animate-fade-in">
-      <div className="w-full max-w-md rounded-2xl bg-[#1c1c1f] border border-white/10 p-6 shadow-2xl space-y-4">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm animate-fade-in">
+      <div className="w-full max-w-md rounded-2xl bg-[#0c0c0c] border border-white/[0.12] p-6 shadow-2xl space-y-4">
         <div className="flex items-center justify-between">
           <h3 className="text-base font-bold text-white">
             {locale === 'ar'

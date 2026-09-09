@@ -58,7 +58,7 @@ export function ChatInput({
 
   return (
     <div className={isDock ? 'w-full max-w-3xl mx-auto' : 'w-full'}>
-      <div className="rounded-[28px] bg-[#2f2f2f] border border-white/[0.08] focus-within:border-white/[0.18] shadow-lg px-4 py-3 transition-colors">
+      <div className="rounded-[28px] bg-[#0c0c0c] border border-white/[0.12] focus-within:border-white/[0.24] shadow-2xl px-4 py-3 transition-colors">
         {/* Auto-growing Textarea */}
         <textarea
           ref={textareaRef}
@@ -69,7 +69,7 @@ export function ChatInput({
           placeholder={placeholder}
           disabled={isTranscribing}
           data-no-focus="true"
-          className="w-full bg-transparent text-[15px] sm:text-base text-[#ececec] placeholder:text-zinc-400 border-0 outline-none ring-0 focus:outline-none focus:ring-0 focus-visible:outline-none focus-visible:ring-0 resize-none max-h-40 leading-relaxed no-focus-ring px-0.5"
+          className="w-full bg-transparent text-[15px] sm:text-base text-[#ededed] placeholder:text-zinc-500 border-0 outline-none ring-0 focus:outline-none focus:ring-0 focus-visible:outline-none focus-visible:ring-0 resize-none max-h-40 leading-relaxed no-focus-ring px-0.5"
         />
 
         {/* Bottom Actions Toolbar */}
@@ -88,7 +88,7 @@ export function ChatInput({
               </button>
 
               {showPlusMenu && (
-                <div className="absolute bottom-full left-0 mb-2.5 w-76 rounded-2xl bg-[#212121] border border-white/10 shadow-2xl p-1.5 z-50 animate-fade-in space-y-0.5">
+                <div className="absolute bottom-full left-0 mb-2.5 w-76 rounded-2xl bg-[#0c0c0c] border border-white/[0.12] shadow-2xl p-1.5 z-50 animate-fade-in space-y-0.5">
                   <div className="px-3 py-1.5 text-[11px] font-semibold text-zinc-400 border-b border-white/5 mb-1">
                     {locale === 'ar' ? 'استشارات وإجراءات شائعة' : locale === 'derja' ? 'Khedmet el Idara' : locale === 'en' ? 'Common procedures' : 'Démarches fréquentes'}
                   </div>
@@ -165,7 +165,7 @@ export function ChatInput({
               className={`w-8 h-8 rounded-full flex items-center justify-center transition-all ${
                 hasText && !isProcessing && !isTranscribing
                   ? 'bg-white text-black hover:bg-zinc-200 cursor-pointer shadow-sm active:scale-95'
-                  : 'bg-[#424242] text-[#8e8e8e] cursor-not-allowed'
+                  : 'bg-zinc-900 text-zinc-600 border border-white/5 cursor-not-allowed'
               }`}
             >
               <ArrowUp className="w-4 h-4 stroke-[2.5]" />

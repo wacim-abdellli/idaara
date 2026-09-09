@@ -307,7 +307,7 @@ export default function CopilotPage() {
     (firstUserContent ? summarizePromptToTitle(firstUserContent, locale) : 'Consultation');
 
   return (
-    <div className="fixed inset-0 z-30 flex bg-[#212121] text-[#ececec] overflow-hidden font-sans">
+    <div className="fixed inset-0 z-30 flex bg-[#000000] text-[#ededed] overflow-hidden font-sans">
       {/* ─── Bespoke Idaara Civic Sidebar ─── */}
       <SessionSidebar
         isOpen={sidebarOpen}
@@ -336,14 +336,14 @@ export default function CopilotPage() {
       />
 
       {/* ─── Main Canvas Area ─── */}
-      <div className="flex-1 flex flex-col bg-[#212121] relative overflow-hidden w-full min-w-0">
+      <div className="flex-1 flex flex-col bg-[#000000] relative overflow-hidden w-full min-w-0">
         {/* Integrated Top Navigation Header */}
-        <header className="shrink-0 h-14 px-3 sm:px-4 flex items-center justify-between bg-[#212121] border-b border-white/5 z-20 transition-all">
+        <header className="shrink-0 h-14 px-3 sm:px-4 flex items-center justify-between bg-[#000000] border-b border-white/[0.08] z-20 transition-all">
           <div className="flex items-center gap-2 min-w-0">
             {!sidebarOpen && (
               <button
                 onClick={() => setSidebarOpen(true)}
-                className="p-2 rounded-lg text-zinc-400 hover:text-white hover:bg-[#2f2f2f] transition-colors cursor-pointer border-0 outline-none flex items-center justify-center shrink-0 min-h-[38px] min-w-[38px]"
+                className="p-2 rounded-lg text-zinc-400 hover:text-white hover:bg-zinc-900 transition-colors cursor-pointer border-0 outline-none flex items-center justify-center shrink-0 min-h-[38px] min-w-[38px]"
                 title={locale === 'ar' ? 'فتح القائمة' : 'Ouvrir le menu'}
                 aria-label={locale === 'ar' ? 'فتح/إغلاق الشريط الجانبي' : locale === 'derja' ? 'Ferma/7el el sidebar' : locale === 'en' ? 'Toggle sidebar' : 'Ouvrir/fermer le panneau'}
               >
@@ -355,7 +355,7 @@ export default function CopilotPage() {
             <button
               type="button"
               onClick={handleNewChat}
-              className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-xl hover:bg-[#2f2f2f] text-zinc-200 hover:text-white transition-colors cursor-pointer border-0 outline-none select-none text-start"
+              className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-xl hover:bg-zinc-900 text-zinc-200 hover:text-white transition-colors cursor-pointer border-0 outline-none select-none text-start"
               title={locale === 'ar' ? 'محادثة جديدة' : locale === 'derja' ? 'Mwa7da jdida' : locale === 'en' ? 'New consultation' : 'Nouvelle démarche'}
             >
               <BrandIcon size={20} className="shrink-0" />
@@ -370,7 +370,7 @@ export default function CopilotPage() {
               <>
                 <button
                   onClick={handleShare}
-                  className="p-2 rounded-lg text-zinc-400 hover:text-white hover:bg-[#2f2f2f] transition-colors cursor-pointer border-0 outline-none flex items-center justify-center min-h-[38px] min-w-[38px]"
+                  className="p-2 rounded-lg text-zinc-400 hover:text-white hover:bg-zinc-900 transition-colors cursor-pointer border-0 outline-none flex items-center justify-center min-h-[38px] min-w-[38px]"
                   title={shareCopied ? 'Copié ✓' : 'Partager'}
                   aria-label={locale === 'ar' ? 'مشاركة المحادثة' : locale === 'derja' ? 'Partagi el conversacion' : locale === 'en' ? 'Share conversation' : 'Partager la conversation'}
                 >
@@ -379,7 +379,7 @@ export default function CopilotPage() {
 
                 <button
                   onClick={handleNewChat}
-                  className="p-2 rounded-lg text-zinc-400 hover:text-white hover:bg-[#2f2f2f] transition-colors cursor-pointer border-0 outline-none flex items-center justify-center min-h-[38px] min-w-[38px]"
+                  className="p-2 rounded-lg text-zinc-400 hover:text-white hover:bg-zinc-900 transition-colors cursor-pointer border-0 outline-none flex items-center justify-center min-h-[38px] min-w-[38px]"
                   title={locale === 'ar' ? 'محادثة جديدة' : 'New chat'}
                   aria-label={locale === 'ar' ? 'محادثة جديدة' : locale === 'derja' ? 'Conversacion jedida' : locale === 'en' ? 'New chat' : 'Nouvelle conversation'}
                 >
@@ -392,7 +392,7 @@ export default function CopilotPage() {
 
             <button
               onClick={() => setAuthModalOpen(true)}
-              className="p-2 rounded-lg text-zinc-400 hover:text-white hover:bg-[#2f2f2f] transition-colors cursor-pointer border-0 outline-none flex items-center justify-center min-h-[38px] min-w-[38px]"
+              className="p-2 rounded-lg text-zinc-400 hover:text-white hover:bg-zinc-900 transition-colors cursor-pointer border-0 outline-none flex items-center justify-center min-h-[38px] min-w-[38px]"
               title={user ? user.email || 'Citizen' : 'Connexion'}
               aria-label={locale === 'ar' ? 'حساب المستخدم' : locale === 'derja' ? 'Compte mte3i' : locale === 'en' ? 'My account' : 'Mon compte'}
             >
@@ -405,7 +405,7 @@ export default function CopilotPage() {
         <Suspense fallback={<Loading />}>
           {/* ─── Mounting placeholder before initialization ─── */}
           {!isInitialized && (
-            <div className="flex-1 bg-[#212121]" />
+            <div className="flex-1 bg-[#000000]" />
           )}
 
           {/* ─── Empty State: Minimalist Landing Experience ─── */}
@@ -489,7 +489,7 @@ export default function CopilotPage() {
               </div>
 
               {/* Sticky Bottom Dock Input (Active Chat Mode) */}
-              <footer className="px-3 sm:px-4 py-2 sm:py-3 bg-[#212121] shrink-0 z-20 pb-safe">
+              <footer className="px-3 sm:px-4 py-2 sm:py-3 bg-[#000000] shrink-0 z-20 pb-safe">
                 <ChatInput
                   locale={locale}
                   inputVal={inputVal}

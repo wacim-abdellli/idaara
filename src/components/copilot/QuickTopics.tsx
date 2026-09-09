@@ -170,7 +170,7 @@ export function QuickTopics({ locale, isRtl, onSelectPrompt }: QuickTopicsProps)
             key={idx}
             type="button"
             onClick={() => onSelectPrompt(card.prompt)}
-            className="flex items-center gap-2 px-3.5 py-2 rounded-full bg-[#2f2f2f] hover:bg-[#383838] border border-white/5 text-xs text-zinc-300 hover:text-white transition-all cursor-pointer shadow-xs active:scale-95"
+            className="flex items-center gap-2 px-3.5 py-2 rounded-full bg-[#0c0c0c] hover:bg-zinc-900 border border-white/[0.1] text-xs text-zinc-300 hover:text-white transition-all cursor-pointer shadow-xs active:scale-95"
           >
             <Icon className="w-3.5 h-3.5 text-zinc-400 shrink-0" />
             <span className="font-medium truncate">{card.title}</span>

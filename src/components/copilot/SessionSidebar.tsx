@@ -213,8 +213,8 @@ export function SessionSidebar({
         onClick={() => !isEditing && onSelectSession(sess)}
         className={`group relative flex items-center justify-between px-2.5 py-2 rounded-lg text-xs transition-colors cursor-pointer ${
           isActive
-            ? 'bg-[#212121] text-white font-medium'
-            : 'text-zinc-400 hover:text-zinc-200 hover:bg-[#212121]/60'
+            ? 'bg-zinc-900 text-white font-medium border border-white/[0.08]'
+            : 'text-zinc-400 hover:text-zinc-200 hover:bg-zinc-900/60'
         }`}
       >
         {isEditing ? (
@@ -228,7 +228,7 @@ export function SessionSidebar({
                 if (e.key === 'Enter') onSaveRenamedTitle(e, sess.id);
                 if (e.key === 'Escape') onCancelRenaming(e);
               }}
-              className="flex-1 bg-[#212121] border border-white/20 rounded-lg px-2 py-1 text-xs text-white outline-none focus:ring-1 focus:ring-white/40"
+              className="flex-1 bg-[#0c0c0c] border border-white/[0.14] rounded-lg px-2 py-1 text-xs text-white outline-none focus:ring-1 focus:ring-white/40"
             />
             <button
               onClick={(e) => onSaveRenamedTitle(e, sess.id)}
@@ -295,17 +295,17 @@ export function SessionSidebar({
 
       {/* ─── PRO WEB IDAARA CIVIC SIDEBAR ─── */}
       <aside
-        className={`fixed lg:static inset-y-0 start-0 z-50 lg:z-20 w-68 shrink-0 bg-[#171717] border-e border-white/5 flex flex-col justify-between select-none shadow-2xl lg:shadow-none transition-transform duration-200 ease-in-out font-sans ${
+        className={`fixed lg:static inset-y-0 start-0 z-50 lg:z-20 w-68 shrink-0 bg-[#000000] border-e border-white/[0.08] flex flex-col justify-between select-none shadow-2xl lg:shadow-none transition-transform duration-200 ease-in-out font-sans ${
           isOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0 lg:hidden'
         }`}
       >
         <div className="flex flex-col flex-1 overflow-hidden">
           {/* Top Brand Header */}
-          <div className="h-14 px-3.5 flex items-center justify-between border-b border-white/5 shrink-0 bg-[#171717]">
+          <div className="h-14 px-3.5 flex items-center justify-between border-b border-white/[0.08] shrink-0 bg-[#000000]">
             <button
               type="button"
               onClick={onNewChat}
-              className="flex items-center gap-2 group cursor-pointer bg-transparent border-0 p-1.5 text-start outline-none rounded-lg hover:bg-[#212121] transition-colors"
+              className="flex items-center gap-2 group cursor-pointer bg-transparent border-0 p-1.5 text-start outline-none rounded-lg hover:bg-zinc-900 transition-colors"
               title={locale === 'ar' ? 'محادثة جديدة' : locale === 'derja' ? 'Mwa7da jdida' : locale === 'en' ? 'New consultation' : 'Nouvelle démarche'}
               aria-label={locale === 'ar' ? 'محادثة جديدة' : locale === 'derja' ? 'Mwa7da jdida' : locale === 'en' ? 'New consultation' : 'Nouvelle démarche'}
             >
@@ -320,7 +320,7 @@ export function SessionSidebar({
 
             <button
               onClick={onClose}
-              className="p-1.5 rounded-lg text-zinc-400 hover:text-white hover:bg-[#212121] transition-colors cursor-pointer border-0 outline-none"
+              className="p-1.5 rounded-lg text-zinc-400 hover:text-white hover:bg-zinc-900 transition-colors cursor-pointer border-0 outline-none"
               title={locale === 'ar' ? 'إغلاق القائمة' : locale === 'derja' ? 'Sker el قائمة' : locale === 'en' ? 'Close sidebar' : 'Fermer le panneau'}
               aria-label={locale === 'ar' ? 'إغلاق اللائحة' : locale === 'derja' ? 'Sker el sidebar' : locale === 'en' ? 'Close sidebar' : 'Fermer le panneau'}
             >
@@ -332,13 +332,13 @@ export function SessionSidebar({
           <div className="p-3 pb-2 shrink-0 space-y-2">
             <button
               onClick={onNewChat}
-              className="w-full flex items-center justify-between px-3 py-2 rounded-lg bg-[#212121] hover:bg-[#2a2a2a] text-zinc-200 hover:text-white text-xs font-medium transition-colors cursor-pointer border border-white/5 group"
+              className="w-full flex items-center justify-between px-3 py-2 rounded-lg bg-zinc-900 hover:bg-zinc-800 text-zinc-200 hover:text-white text-xs font-medium transition-colors cursor-pointer border border-white/[0.08] group"
             >
               <div className="flex items-center gap-2">
                 <Plus className="w-4 h-4 text-zinc-400 group-hover:text-white transition-colors" />
                 <span className="truncate">{labels.newChat}</span>
               </div>
-              <kbd className="hidden sm:inline-block text-[10px] font-mono text-zinc-500 bg-white/5 px-1.5 py-0.5 rounded border border-white/5">
+              <kbd className="hidden sm:inline-block text-[10px] font-mono text-zinc-400 bg-white/5 px-1.5 py-0.5 rounded border border-white/[0.08]">
                 ⌘N
               </kbd>
             </button>
@@ -352,7 +352,7 @@ export function SessionSidebar({
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
                   placeholder={labels.search}
-                  className="w-full bg-[#212121] border border-white/5 rounded-lg ps-8 pe-3 py-1.5 text-xs text-zinc-200 placeholder-zinc-500 outline-none focus:border-white/20 transition-all"
+                  className="w-full bg-[#0c0c0c] border border-white/[0.08] rounded-lg ps-8 pe-3 py-1.5 text-xs text-zinc-200 placeholder-zinc-500 outline-none focus:border-white/20 transition-all"
                 />
               </div>
             )}
@@ -417,7 +417,7 @@ export function SessionSidebar({
           </div>
 
           {/* ─── Refined Civic Tools Hub Drawer ─── */}
-          <div className="p-3 border-t border-white/5 shrink-0 bg-[#171717] space-y-2">
+          <div className="p-3 border-t border-white/[0.08] shrink-0 bg-[#000000] space-y-2">
             <button
               onClick={() => setIsToolsOpen((prev) => !prev)}
               className="w-full flex items-center justify-between px-1 text-[11px] font-medium text-zinc-400 hover:text-zinc-200 transition-colors cursor-pointer border-0 outline-none"
@@ -438,7 +438,7 @@ export function SessionSidebar({
                 <Link
                   href="/fasserli"
                   onClick={onClose}
-                  className="flex items-center gap-2 p-2 rounded-lg bg-[#212121] hover:bg-[#2a2a2a] border border-white/5 text-[11px] text-zinc-300 hover:text-white transition-colors group"
+                  className="flex items-center gap-2 p-2 rounded-lg bg-[#0c0c0c] hover:bg-zinc-900 border border-white/[0.08] text-[11px] text-zinc-300 hover:text-white transition-colors group"
                 >
                   <ScanText className="w-3.5 h-3.5 text-zinc-400 group-hover:text-zinc-200 shrink-0" />
                   <span className="truncate">
@@ -449,7 +449,7 @@ export function SessionSidebar({
                 <Link
                   href="/documents"
                   onClick={onClose}
-                  className="flex items-center gap-2 p-2 rounded-lg bg-[#212121] hover:bg-[#2a2a2a] border border-white/5 text-[11px] text-zinc-300 hover:text-white transition-colors group"
+                  className="flex items-center gap-2 p-2 rounded-lg bg-[#0c0c0c] hover:bg-zinc-900 border border-white/[0.08] text-[11px] text-zinc-300 hover:text-white transition-colors group"
                 >
                   <FileText className="w-3.5 h-3.5 text-zinc-400 group-hover:text-zinc-200 shrink-0" />
                   <span className="truncate">
@@ -460,7 +460,7 @@ export function SessionSidebar({
                 <Link
                   href="/calculator"
                   onClick={onClose}
-                  className="flex items-center gap-2 p-2 rounded-lg bg-[#212121] hover:bg-[#2a2a2a] border border-white/5 text-[11px] text-zinc-300 hover:text-white transition-colors group"
+                  className="flex items-center gap-2 p-2 rounded-lg bg-[#0c0c0c] hover:bg-zinc-900 border border-white/[0.08] text-[11px] text-zinc-300 hover:text-white transition-colors group"
                 >
                   <Calculator className="w-3.5 h-3.5 text-zinc-400 group-hover:text-zinc-200 shrink-0" />
                   <span className="truncate">
@@ -471,7 +471,7 @@ export function SessionSidebar({
                 <Link
                   href="/concours"
                   onClick={onClose}
-                  className="flex items-center gap-2 p-2 rounded-lg bg-[#212121] hover:bg-[#2a2a2a] border border-white/5 text-[11px] text-zinc-300 hover:text-white transition-colors group"
+                  className="flex items-center gap-2 p-2 rounded-lg bg-[#0c0c0c] hover:bg-zinc-900 border border-white/[0.08] text-[11px] text-zinc-300 hover:text-white transition-colors group"
                 >
                   <Briefcase className="w-3.5 h-3.5 text-zinc-400 group-hover:text-zinc-200 shrink-0" />
                   <span className="truncate">
@@ -484,14 +484,14 @@ export function SessionSidebar({
         </div>
 
         {/* ─── Dignified Citizen Account Footer ─── */}
-        <div className="p-3 border-t border-white/5 bg-[#171717]">
+        <div className="p-3 border-t border-white/[0.08] bg-[#000000]">
           <button
             type="button"
             onClick={onOpenAuthModal}
-            className="w-full flex items-center justify-between p-2 rounded-lg hover:bg-[#212121] transition-colors cursor-pointer outline-none text-start group"
+            className="w-full flex items-center justify-between p-2 rounded-lg hover:bg-zinc-900 transition-colors cursor-pointer outline-none text-start group"
           >
             <div className="flex items-center gap-2.5 min-w-0">
-              <div className="w-8 h-8 rounded-full bg-zinc-700 text-zinc-200 flex items-center justify-center font-medium text-xs shrink-0">
+              <div className="w-8 h-8 rounded-full bg-zinc-800 text-zinc-200 flex items-center justify-center font-medium text-xs shrink-0 border border-white/5">
                 {citizenInitial}
               </div>
               <div className="min-w-0 leading-tight">
