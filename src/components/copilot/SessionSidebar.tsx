@@ -300,14 +300,13 @@ export function SessionSidebar({
         }`}
       >
         <div className="flex flex-col flex-1 overflow-hidden">
-          {/* Top Brand Header */}
+          {/* Top Brand Header (Links back to homepage) */}
           <div className="h-14 px-3.5 flex items-center justify-between border-b border-white/[0.08] shrink-0 bg-[#000000]">
-            <button
-              type="button"
-              onClick={onNewChat}
+            <Link
+              href="/"
               className="flex items-center gap-2 group cursor-pointer bg-transparent border-0 p-1.5 text-start outline-none rounded-lg hover:bg-zinc-900 transition-colors"
-              title={locale === 'ar' ? 'محادثة جديدة' : locale === 'derja' ? 'Mwa7da jdida' : locale === 'en' ? 'New consultation' : 'Nouvelle démarche'}
-              aria-label={locale === 'ar' ? 'محادثة جديدة' : locale === 'derja' ? 'Mwa7da jdida' : locale === 'en' ? 'New consultation' : 'Nouvelle démarche'}
+              title={locale === 'ar' ? 'الرجوع إلى الصفحة الرئيسية' : locale === 'derja' ? 'Erja3 lel accueil' : locale === 'en' ? 'Back to homepage' : 'Retour à l\'accueil'}
+              aria-label={locale === 'ar' ? 'الصفحة الرئيسية' : locale === 'derja' ? 'Accueil' : locale === 'en' ? 'Home' : 'Accueil'}
             >
               <BrandIcon size={22} />
               <div className="flex items-center gap-1.5 font-medium text-sm text-zinc-200 group-hover:text-white">
@@ -316,7 +315,7 @@ export function SessionSidebar({
                   AI
                 </span>
               </div>
-            </button>
+            </Link>
 
             <button
               onClick={onClose}

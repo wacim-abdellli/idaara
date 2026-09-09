@@ -15,6 +15,7 @@ import {
   User as UserIcon,
   SquarePen,
   Loader2,
+  Home,
 } from 'lucide-react';
 
 import { useCopilotSessions, ChatSession } from '../../hooks/useCopilotSessions';
@@ -463,21 +464,29 @@ export default function CopilotPage() {
               </button>
             )}
 
-            {/* Model Selector Dropdown Button */}
-            <button
-              type="button"
-              onClick={handleNewChat}
+            {/* Brand Logo & Back to Homepage */}
+            <Link
+              href="/"
               className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-xl hover:bg-zinc-900 text-zinc-200 hover:text-white transition-colors cursor-pointer border-0 outline-none select-none text-start"
-              title={locale === 'ar' ? 'محادثة جديدة' : locale === 'derja' ? 'Mwa7da jdida' : locale === 'en' ? 'New consultation' : 'Nouvelle démarche'}
+              title={locale === 'ar' ? 'الرجوع إلى الصفحة الرئيسية' : locale === 'derja' ? 'Erja3 lel accueil' : locale === 'en' ? 'Back to homepage' : 'Retour à l\'accueil'}
+              aria-label={locale === 'ar' ? 'الصفحة الرئيسية' : locale === 'derja' ? 'Accueil' : locale === 'en' ? 'Home' : 'Accueil'}
             >
               <BrandIcon size={20} className="shrink-0" />
               <span className="font-semibold text-base sm:text-lg tracking-tight text-white">Idaara AI</span>
-              <ChevronDown className="w-4 h-4 text-zinc-400 shrink-0" />
-            </button>
+            </Link>
           </div>
 
           {/* Right Top Header Actions */}
           <div className="flex items-center gap-1">
+            {/* Direct Link to Homepage */}
+            <Link
+              href="/"
+              className="p-2 rounded-lg text-zinc-400 hover:text-white hover:bg-zinc-900 transition-colors cursor-pointer border-0 outline-none flex items-center justify-center min-h-[38px] min-w-[38px]"
+              title={locale === 'ar' ? 'الرجوع إلى الصفحة الرئيسية' : locale === 'derja' ? 'Erja3 lel accueil' : locale === 'en' ? 'Back to homepage' : 'Retour à l\'accueil'}
+              aria-label={locale === 'ar' ? 'الصفحة الرئيسية' : locale === 'derja' ? 'Accueil' : locale === 'en' ? 'Home' : 'Accueil'}
+            >
+              <Home className="w-4 h-4" />
+            </Link>
             {messages.length > 0 && (
               <>
                 <button
