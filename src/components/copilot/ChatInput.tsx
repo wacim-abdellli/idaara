@@ -1,7 +1,7 @@
 'use client';
 
 import React from 'react';
-import { Plus, Mic, MicOff, ArrowUp, Loader2, Scale, Sparkles } from 'lucide-react';
+import { Plus, ArrowUp, Loader2, Scale, Sparkles } from 'lucide-react';
 import { SupportedLanguage } from '../../data/translations';
 import { getQuickTopicsList } from './QuickTopics';
 
@@ -9,8 +9,8 @@ export interface ChatInputProps {
   locale: SupportedLanguage;
   inputVal: string;
   isProcessing: boolean;
-  isRecording: boolean;
-  isTranscribing: boolean;
+  isRecording?: boolean;
+  isTranscribing?: boolean;
   thinkMode: boolean;
   showPlusMenu: boolean;
   placeholder: string;
@@ -19,7 +19,7 @@ export interface ChatInputProps {
   onInputChange: (e: React.ChangeEvent<HTMLTextAreaElement>) => void;
   onKeyDown: (e: React.KeyboardEvent<HTMLTextAreaElement>) => void;
   onSendMessage: (text?: string) => void;
-  onToggleVoice: () => void;
+  onToggleVoice?: () => void;
   onToggleThinkMode: () => void;
   onTogglePlusMenu: () => void;
 }
@@ -127,50 +127,22 @@ export function ChatInput({
             </button>
           </div>
 
-          {/* Right: Mic & ChatGPT Circle Send button */}
-          <div className="flex items-center gap-1.5">
-            {/* Voice Mic Button */}
-            <button
-              type="button"
-              aria-label={isRecording ? "Arrêter l'enregistrement vocal" : "Démarrer la saisie vocale"}
-              aria-pressed={isRecording}
-              onClick={onToggleVoice}
-              disabled={isTranscribing}
-              className={`w-8 h-8 rounded-full transition-colors cursor-pointer border-0 flex items-center justify-center ${
-                isRecording
-                  ? 'bg-red-500 text-white animate-pulse'
-                  : isTranscribing
-                  ? 'text-white bg-white/10'
-                  : 'hover:bg-white/10 text-zinc-400 hover:text-white'
-              }`}
-              title={locale === 'ar' ? 'إملاء صوتي' : 'Dictée vocale'}
-            >
-              {isTranscribing ? (
-                <Loader2 className="w-3.5 h-3.5 animate-spin" />
-              ) : isRecording ? (
-                <MicOff className="w-3.5 h-3.5" />
-              ) : (
-                <Mic className="w-3.5 h-3.5" />
-              )}
-            </button>
-
-            {/* ChatGPT Circle Send Action Button */}
-            <button
-              type="button"
-              aria-label={isProcessing ? "Traitement en cours..." : "Envoyer le message"}
-              aria-busy={isProcessing}
-              aria-disabled={!hasText || isProcessing}
-              onClick={() => onSendMessage()}
-              disabled={!hasText || isProcessing || isTranscribing}
-              className={`w-8 h-8 rounded-full flex items-center justify-center transition-all ${
-                hasText && !isProcessing && !isTranscribing
-                  ? 'bg-white text-black hover:bg-zinc-200 cursor-pointer shadow-sm active:scale-95'
-                  : 'bg-zinc-900 text-zinc-600 border border-white/5 cursor-not-allowed'
-              }`}
-            >
-              <ArrowUp className="w-4 h-4 stroke-[2.5]" />
-            </button>
-          </div>
+          {/* Right: ChatGPT Circle Send button */}
+          <button
+            type="button"
+            aria-label={isProcessing ? "Traitement en cours..." : "Envoyer le message"}
+            aria-busy={isProcessing}
+            aria-disabled={!hasText || isProcessing}
+            onClick={() => onSendMessage()}
+            disabled={!hasText || isProcessing || isTranscribing}
+            className={`w-8 h-8 rounded-full flex items-center justify-center transition-all ${
+              hasText && !isProcessing && !isTranscribing
+                ? 'bg-white text-black hover:bg-zinc-200 cursor-pointer shadow-sm active:scale-95'
+                : 'bg-zinc-900 text-zinc-600 border border-white/5 cursor-not-allowed'
+            }`}
+          >
+            <ArrowUp className="w-4 h-4 stroke-[2.5]" />
+          </button>
         </div>
       </div>
 
