@@ -464,37 +464,37 @@ export const ChatMessage: React.FC<ChatMessageProps> = ({ message, onSelectPromp
     setIsEditing(false);
   };
 
-  // ── USER MESSAGE BUBBLE (Clean Modern ChatGPT Layout) ──
+  // ── USER MESSAGE BUBBLE (Exact ChatGPT Match) ──
   if (!isAssistant) {
     if (isEditing) {
       return (
         <div className="w-full flex justify-end py-1.5 animate-fade-in">
-          <div className="w-full max-w-[85%] sm:max-w-[70%] flex flex-col items-end gap-2">
-            <div className="w-full rounded-2xl bg-[#121212] border border-white/[0.12] focus-within:border-white/[0.24] transition-colors p-3 shadow-lg">
-              <textarea
-                autoFocus
-                value={editedText}
-                onChange={(e) => setEditedText(e.target.value)}
-                onKeyDown={(e) => {
-                  if (e.key === 'Enter' && !e.shiftKey) {
-                    e.preventDefault();
-                    handleSaveEdit();
-                  }
-                  if (e.key === 'Escape') {
-                    e.preventDefault();
-                    handleCancelEdit();
-                  }
-                }}
-                rows={Math.min(6, Math.max(1, editedText.split('\n').length))}
-                className="w-full bg-transparent text-[#ededed] text-[15px] leading-relaxed outline-none border-0 ring-0 focus:outline-none focus:ring-0 resize-none px-0.5"
-                dir={isArabicScript ? 'rtl' : 'ltr'}
-              />
-            </div>
-            <div className="flex items-center gap-2">
+          <div className="w-full max-w-[85%] sm:max-w-[70%] rounded-3xl bg-[#2f2f2f] p-4 flex flex-col justify-between shadow-lg">
+            <textarea
+              autoFocus
+              data-no-focus="true"
+              value={editedText}
+              onChange={(e) => setEditedText(e.target.value)}
+              onKeyDown={(e) => {
+                if (e.key === 'Enter' && !e.shiftKey) {
+                  e.preventDefault();
+                  handleSaveEdit();
+                }
+                if (e.key === 'Escape') {
+                  e.preventDefault();
+                  handleCancelEdit();
+                }
+              }}
+              rows={Math.min(6, Math.max(1, editedText.split('\n').length))}
+              style={{ outline: 'none', boxShadow: 'none', border: 'none' }}
+              className="w-full bg-transparent text-white text-[15px] leading-relaxed resize-none p-0 outline-none! border-0! ring-0! shadow-none! no-focus-ring"
+              dir={isArabicScript ? 'rtl' : 'ltr'}
+            />
+            <div className="flex items-center justify-end gap-2 pt-3 select-none">
               <button
                 type="button"
                 onClick={handleCancelEdit}
-                className="px-3.5 py-1.5 rounded-full text-xs font-medium text-zinc-400 hover:text-white hover:bg-white/[0.08] transition-colors cursor-pointer border-0 outline-none"
+                className="px-3.5 py-1.5 rounded-full text-xs font-medium text-white hover:bg-white/10 transition-colors cursor-pointer border-0 outline-none!"
               >
                 {locale === 'ar' ? 'إلغاء' : locale === 'derja' ? 'Battalt' : locale === 'en' ? 'Cancel' : 'Annuler'}
               </button>
@@ -502,10 +502,10 @@ export const ChatMessage: React.FC<ChatMessageProps> = ({ message, onSelectPromp
                 type="button"
                 onClick={handleSaveEdit}
                 disabled={!editedText.trim()}
-                className={`px-4 py-1.5 rounded-full text-xs font-semibold transition-all cursor-pointer border-0 outline-none ${
+                className={`px-4 py-1.5 rounded-full text-xs font-semibold transition-all cursor-pointer border-0 outline-none! ${
                   editedText.trim()
                     ? 'bg-white text-black hover:bg-zinc-200 active:scale-95 shadow-sm'
-                    : 'bg-zinc-800 text-zinc-500 cursor-not-allowed'
+                    : 'bg-white/20 text-white/50 cursor-not-allowed'
                 }`}
               >
                 {locale === 'ar' ? 'إرسال' : locale === 'derja' ? 'Ab3eth' : locale === 'en' ? 'Send' : 'Envoyer'}
@@ -517,18 +517,18 @@ export const ChatMessage: React.FC<ChatMessageProps> = ({ message, onSelectPromp
     }
 
     return (
-      <div className="w-full flex items-end justify-end gap-1.5 py-1.5 group animate-fade-in relative">
+      <div className="w-full flex items-end justify-end gap-2 py-1.5 group animate-fade-in relative">
         {/* Action Toolbar: Copy & Edit only (no share) - fades in beside the bubble on hover/focus */}
-        <div className="flex items-center gap-0.5 opacity-0 group-hover:opacity-100 group-focus-within:opacity-100 transition-opacity duration-150 select-none pb-0.5 shrink-0">
+        <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100 group-focus-within:opacity-100 transition-opacity duration-150 select-none pb-1 shrink-0">
           <button
             type="button"
             onClick={copyToClipboard}
-            className="p-1.5 rounded-lg text-zinc-500 hover:text-zinc-200 hover:bg-white/[0.08] transition-all cursor-pointer border-0 outline-none flex items-center justify-center min-h-[28px] min-w-[28px]"
+            className="p-1.5 rounded-lg text-zinc-400 hover:text-white hover:bg-white/10 transition-all cursor-pointer border-0 outline-none! flex items-center justify-center min-h-[28px] min-w-[28px]"
             title={copied ? copyLabels[locale] ?? 'Copié' : copyTitleLabels[locale] ?? 'Copier'}
             aria-label={locale === 'ar' ? 'نسخ السؤال' : locale === 'derja' ? 'Copier el sou2al' : locale === 'en' ? 'Copy prompt' : 'Copier le texte'}
           >
             {copied ? (
-              <Check className="w-3.5 h-3.5 text-zinc-300" />
+              <Check className="w-3.5 h-3.5 text-emerald-400" />
             ) : (
               <Copy className="w-3.5 h-3.5" />
             )}
@@ -540,7 +540,7 @@ export const ChatMessage: React.FC<ChatMessageProps> = ({ message, onSelectPromp
               setEditedText(message.content);
               setIsEditing(true);
             }}
-            className="p-1.5 rounded-lg text-zinc-500 hover:text-zinc-200 hover:bg-white/[0.08] transition-all cursor-pointer border-0 outline-none flex items-center justify-center min-h-[28px] min-w-[28px]"
+            className="p-1.5 rounded-lg text-zinc-400 hover:text-white hover:bg-white/10 transition-all cursor-pointer border-0 outline-none! flex items-center justify-center min-h-[28px] min-w-[28px]"
             title={
               locale === 'ar'
                 ? 'تعديل السؤال'
@@ -564,10 +564,10 @@ export const ChatMessage: React.FC<ChatMessageProps> = ({ message, onSelectPromp
           </button>
         </div>
 
-        {/* User message bubble */}
+        {/* User message bubble (ChatGPT matching rounded-3xl bg-[#2f2f2f]) */}
         <div
           dir={isArabicScript ? 'rtl' : 'ltr'}
-          className={`max-w-[85%] sm:max-w-[70%] px-4.5 py-2.5 rounded-[22px] bg-[#18181b] border border-white/[0.06] text-[#ededed] text-[15px] leading-relaxed select-text shadow-sm ${
+          className={`max-w-[85%] sm:max-w-[70%] px-5 py-3 rounded-3xl bg-[#2f2f2f] text-white text-[15px] leading-relaxed select-text shadow-sm ${
             isArabicScript ? 'text-right font-["Cairo",sans-serif]' : 'text-left'
           }`}
         >
