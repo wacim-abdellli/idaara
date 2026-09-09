@@ -192,6 +192,118 @@ export default function CopilotPage() {
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [inputVal, isProcessing, locale, thinkMode, messages]);
 
+  const handleEditMessage = useCallback(async (messageId: string, newContent: string) => {
+    const trimmed = newContent.trim();
+    if (!trimmed || isProcessing) return;
+
+    const msgIndex = messages.findIndex((m) => m.id === messageId);
+    if (msgIndex === -1) return;
+
+    const updatedUserMsg: ChatMessageType = {
+      ...messages[msgIndex],
+      content: trimmed,
+      timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+    };
+
+    const truncatedMessages = [...messages.slice(0, msgIndex), updatedUserMsg];
+    setMessages(truncatedMessages);
+    setIsProcessing(true);
+
+    try {
+      const history = messages.slice(0, msgIndex).slice(-10).map((m) => ({
+        role: m.sender === 'user' ? 'user' : 'assistant',
+        content: m.content,
+      }));
+
+      const res = await fetch('/api/copilot', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ prompt: trimmed, locale, history, think: thinkMode }),
+      });
+
+      const data = await res.json();
+      const response = data.result || {};
+      const fullText = (response.content || '').trim();
+
+      if (response.sessionTitle && msgIndex === 0) {
+        updateSessionTitle(currentSessionId, response.sessionTitle);
+      }
+
+      if (!fullText) {
+        setIsProcessing(false);
+        return;
+      }
+
+      const aiMsgId = `ai-${Date.now()}`;
+
+      setMessages((prev) => [
+        ...prev,
+        {
+          id: aiMsgId,
+          sender: 'assistant',
+          content: '',
+          isStreaming: true,
+          timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+          actions: response.actions,
+          timbreBreakdown: response.timbreBreakdown,
+        },
+      ]);
+      setIsProcessing(false);
+
+      const tokens = fullText.split(/(\s+)/);
+      let currentText = '';
+      const baseDelay = tokens.length > 300 ? 10 : tokens.length > 150 ? 14 : 18;
+
+      for (let i = 0; i < tokens.length; i++) {
+        const token = tokens[i];
+        currentText += token;
+
+        if (token.trim().length > 0 || token.includes('\n')) {
+          const snapshot = currentText;
+          setMessages((prev) =>
+            prev.map((m) => (m.id === aiMsgId ? { ...m, content: snapshot, isStreaming: true } : m))
+          );
+
+          if (messagesContainerRef.current) {
+            const container = messagesContainerRef.current;
+            const isNearBottom = container.scrollHeight - container.scrollTop - container.clientHeight < 180;
+            if (isNearBottom) {
+              container.scrollTop = container.scrollHeight;
+            }
+          }
+
+          const isPunctuation = /[.!?:;\n،؟]/.test(token);
+          const delay = isPunctuation ? baseDelay + 14 : baseDelay;
+          await new Promise((r) => setTimeout(r, delay));
+        }
+      }
+
+      setMessages((prev) =>
+        prev.map((m) => (m.id === aiMsgId ? { ...m, content: fullText, isStreaming: false } : m))
+      );
+    } catch {
+      setMessages((prev) => [
+        ...prev,
+        {
+          id: `ai-err-${Date.now()}`,
+          sender: 'assistant',
+          content:
+            locale === 'ar'
+              ? 'خطأ في الاتصال. أعد المحاولة.'
+              : locale === 'derja'
+              ? 'Kayen mochkel fel connexion. 3awed jarreb.'
+              : locale === 'en'
+              ? 'Connection error. Please try again.'
+              : 'Erreur de connexion. Réessayez.',
+          timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+        },
+      ]);
+    } finally {
+      setIsProcessing(false);
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [messages, isProcessing, locale, thinkMode, currentSessionId, updateSessionTitle, setMessages]);
+
   useEffect(() => {
     autoQueryRef.current = handleSendMessage;
   }, [handleSendMessage]);
@@ -458,7 +570,7 @@ export default function CopilotPage() {
                 <div className="max-w-3xl mx-auto space-y-6">
                   {messages.map((msg) => (
                     <div key={msg.id} id={`msg-${msg.id}`}>
-                      <ChatMessage message={msg} />
+                      <ChatMessage message={msg} onEditMessage={handleEditMessage} />
                     </div>
                   ))}
 

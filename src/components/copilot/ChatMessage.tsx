@@ -15,6 +15,7 @@ import {
   ThumbsUp,
   ThumbsDown,
   RotateCcw,
+  Pencil,
 } from 'lucide-react';
 import { ChatMessage as ChatMessageType } from '../../types/chat';
 import { useLocale } from '../../context/LocaleContext';
@@ -24,6 +25,7 @@ import { BrandIcon } from '../layout/BrandLogo';
 interface ChatMessageProps {
   message: ChatMessageType;
   onSelectPrompt?: (prompt: string) => void;
+  onEditMessage?: (messageId: string, newContent: string) => void;
 }
 
 /** Parses markdown links, bold text, acronyms, and civic tags */
@@ -410,10 +412,12 @@ function renderFormattedContent(text: string, locale: string = 'derja', isRTLOve
   );
 }
 
-export const ChatMessage: React.FC<ChatMessageProps> = ({ message, onSelectPrompt }) => {
+export const ChatMessage: React.FC<ChatMessageProps> = ({ message, onSelectPrompt, onEditMessage }) => {
   const { locale } = useLocale();
   const [copied, setCopied] = useState(false);
   const [feedback, setFeedback] = useState<'up' | 'down' | null>(null);
+  const [isEditing, setIsEditing] = useState(false);
+  const [editedText, setEditedText] = useState(message.content);
 
   const copyLabels: Record<string, string> = {
     ar: 'تم النسخ ✓',
@@ -446,18 +450,124 @@ export const ChatMessage: React.FC<ChatMessageProps> = ({ message, onSelectPromp
     }
   };
 
+  const handleSaveEdit = () => {
+    const trimmed = editedText.trim();
+    if (!trimmed) return;
+    if (trimmed !== message.content && onEditMessage) {
+      onEditMessage(message.id, trimmed);
+    }
+    setIsEditing(false);
+  };
+
+  const handleCancelEdit = () => {
+    setEditedText(message.content);
+    setIsEditing(false);
+  };
+
   // ── USER MESSAGE BUBBLE (Elevated Obsidian Glass) ──
   if (!isAssistant) {
     return (
-      <div className="w-full flex justify-end py-2 select-none group animate-fade-in">
-        <div
-          dir={isArabicScript ? 'rtl' : 'ltr'}
-          className={`max-w-[85%] sm:max-w-[70%] px-5 py-2.5 rounded-[24px] bg-[#121212] border border-white/[0.08] text-[#ededed] text-[15px] leading-relaxed select-text shadow-sm ${
-            isArabicScript ? 'text-right font-["Cairo",sans-serif]' : 'text-left'
-          }`}
-        >
-          {message.content}
-        </div>
+      <div className="w-full flex flex-col items-end py-2 select-none group animate-fade-in">
+        {isEditing ? (
+          <div className="w-full max-w-[85%] sm:max-w-[70%] space-y-2">
+            <textarea
+              autoFocus
+              value={editedText}
+              onChange={(e) => setEditedText(e.target.value)}
+              onKeyDown={(e) => {
+                if (e.key === 'Enter' && !e.shiftKey) {
+                  e.preventDefault();
+                  handleSaveEdit();
+                }
+                if (e.key === 'Escape') {
+                  e.preventDefault();
+                  handleCancelEdit();
+                }
+              }}
+              rows={3}
+              className="w-full p-3.5 rounded-2xl bg-[#0c0c0c] border border-white/[0.14] text-[#ededed] text-[15px] leading-relaxed outline-none focus:border-white/[0.28] resize-none"
+              dir={isArabicScript ? 'rtl' : 'ltr'}
+            />
+            <div className="flex items-center justify-end gap-2">
+              <button
+                type="button"
+                onClick={handleCancelEdit}
+                className="px-3.5 py-1.5 rounded-full text-xs font-medium text-zinc-400 hover:text-white hover:bg-white/10 transition-colors cursor-pointer border-0"
+              >
+                {locale === 'ar' ? 'إلغاء' : locale === 'derja' ? 'Battalt' : locale === 'en' ? 'Cancel' : 'Annuler'}
+              </button>
+              <button
+                type="button"
+                onClick={handleSaveEdit}
+                disabled={!editedText.trim()}
+                className={`px-4 py-1.5 rounded-full text-xs font-semibold transition-all cursor-pointer border-0 ${
+                  editedText.trim()
+                    ? 'bg-white text-black hover:bg-zinc-200 active:scale-95'
+                    : 'bg-zinc-800 text-zinc-500 cursor-not-allowed'
+                }`}
+              >
+                {locale === 'ar' ? 'إرسال' : locale === 'derja' ? 'Ab3eth' : locale === 'en' ? 'Send' : 'Envoyer'}
+              </button>
+            </div>
+          </div>
+        ) : (
+          <>
+            <div
+              dir={isArabicScript ? 'rtl' : 'ltr'}
+              className={`max-w-[85%] sm:max-w-[70%] px-5 py-2.5 rounded-[24px] bg-[#121212] border border-white/[0.08] text-[#ededed] text-[15px] leading-relaxed select-text shadow-sm ${
+                isArabicScript ? 'text-right font-["Cairo",sans-serif]' : 'text-left'
+              }`}
+            >
+              {message.content}
+            </div>
+
+            {/* ChatGPT-style Action Toolbar: Copy & Edit only (no share) */}
+            <div className="flex items-center gap-1 pt-1 opacity-80 sm:opacity-0 sm:group-hover:opacity-100 transition-opacity text-zinc-500 select-none pe-1">
+              <button
+                type="button"
+                onClick={copyToClipboard}
+                className="p-1.5 rounded-md hover:bg-white/5 text-zinc-500 hover:text-zinc-300 transition-colors cursor-pointer border-0 outline-none flex items-center justify-center min-h-[28px] min-w-[28px]"
+                title={copied ? copyLabels[locale] ?? 'Copié' : copyTitleLabels[locale] ?? 'Copier'}
+                aria-label={locale === 'ar' ? 'نسخ السؤال' : locale === 'derja' ? 'Copier el sou2al' : locale === 'en' ? 'Copy prompt' : 'Copier le texte'}
+              >
+                {copied ? (
+                  <Check className="w-3.5 h-3.5 text-zinc-300" />
+                ) : (
+                  <Copy className="w-3.5 h-3.5" />
+                )}
+              </button>
+
+              <button
+                type="button"
+                onClick={() => {
+                  setEditedText(message.content);
+                  setIsEditing(true);
+                }}
+                className="p-1.5 rounded-md hover:bg-white/5 text-zinc-500 hover:text-zinc-300 transition-colors cursor-pointer border-0 outline-none flex items-center justify-center min-h-[28px] min-w-[28px]"
+                title={
+                  locale === 'ar'
+                    ? 'تعديل السؤال'
+                    : locale === 'derja'
+                    ? 'Baddel el sou2al'
+                    : locale === 'en'
+                    ? 'Edit prompt'
+                    : 'Modifier'
+                }
+                aria-label={
+                  locale === 'ar'
+                    ? 'تعديل السؤال'
+                    : locale === 'derja'
+                    ? 'Baddel el sou2al'
+                    : locale === 'en'
+                    ? 'Edit prompt'
+                    : 'Modifier'
+                }
+              >
+                <Pencil className="w-3.5 h-3.5" />
+              </button>
+            </div>
+          </>
+        )}
       </div>
     );
   }
