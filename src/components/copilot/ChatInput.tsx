@@ -49,12 +49,12 @@ export function ChatInput({
 
   const tThinkLabel =
     locale === 'ar'
-      ? 'تدقيق قانوني'
+      ? (thinkMode ? 'تدقيق قانوني معمق 100%' : 'تدقيق قانوني')
       : locale === 'derja'
-      ? 'Ta7lil 9anouni'
+      ? (thinkMode ? 'Audit 9anouni 100%' : 'Ta7lil 9anouni')
       : locale === 'en'
-      ? 'Legal reasoning'
-      : 'Analyse juridique';
+      ? (thinkMode ? 'Deep Legal Audit 100%' : 'Legal reasoning')
+      : (thinkMode ? 'Audit juridique 100%' : 'Analyse juridique');
 
   return (
     <div className={isDock ? 'w-full max-w-3xl mx-auto' : 'w-full'}>
@@ -109,21 +109,21 @@ export function ChatInput({
               )}
             </div>
 
-            {/* Deep JORT Verification Mode Toggle (ChatGPT-style subtle pill) */}
+            {/* Deep JORT Verification Mode Toggle */}
             <button
               type="button"
               aria-label={tThinkLabel}
               aria-pressed={thinkMode}
               onClick={onToggleThinkMode}
-              className={`flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-medium transition-colors cursor-pointer border ${
+              className={`flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-medium transition-all cursor-pointer border ${
                 thinkMode
-                  ? 'bg-white/10 text-white border-white/25 shadow-xs'
+                  ? 'bg-emerald-500/15 text-emerald-300 border-emerald-500/40 shadow-xs'
                   : 'bg-transparent hover:bg-white/5 text-zinc-400 hover:text-zinc-200 border-white/10'
               }`}
             >
-              <Scale className="w-3 h-3 text-zinc-400" />
+              <Scale className={`w-3 h-3 transition-colors ${thinkMode ? 'text-emerald-400' : 'text-zinc-400'}`} />
               <span>{tThinkLabel}</span>
-              {thinkMode && <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 ms-0.5" />}
+              {thinkMode && <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse ms-0.5" />}
             </button>
           </div>
 

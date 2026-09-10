@@ -590,19 +590,19 @@ export default function CopilotPage() {
                       <span className="text-xs text-zinc-400 font-medium">
                         {thinkMode
                           ? (locale === 'ar'
-                              ? 'جارٍ التحليل والتدقيق القانوني...'
+                              ? 'جارٍ التدقيق القانوني المعمق والتحقق من نصوص الرائد الرسمي (JORT)...'
                               : locale === 'derja'
-                              ? 'Ta7lil 9anouni fi nouthous el 9anoun...'
+                              ? 'Audit 9anouni m3ama9 fi nouthous el JORT wel 9anoun...'
                               : locale === 'en'
-                              ? 'Legal reasoning...'
-                              : 'Analyse juridique en cours...')
+                              ? 'Deep statutory legal audit & JORT verification...'
+                              : 'Audit juridique approfondi et vérification JORT...')
                           : (locale === 'ar'
-                              ? 'جارٍ التفكير والتحقق...'
+                              ? 'جارٍ البحث والتحقق من المراجع الرسمية...'
                               : locale === 'derja'
-                              ? 'Nfakkir w nthabbet...'
+                              ? 'Nfakkir w nthabbet fel masader el rasmiya...'
                               : locale === 'en'
-                              ? 'Thinking...'
-                              : 'Recherche en cours...')}
+                              ? 'Verifying official civic sources...'
+                              : 'Vérification des sources officielles en cours...')}
                       </span>
                     </div>
                   )}

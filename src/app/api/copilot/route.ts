@@ -142,6 +142,34 @@ const CIVIC_KNOWLEDGE_TOPICS: Array<{ keywords: string[]; content: string }> = [
 - Authority: شركة نقل تونس (Transtu — transtu.tn) / مكاتب البريد التونسي / الشركات الجهوية للنقل (SRT)
 - 1. الاشتراك المدرسي والجامعي: مطبوعة تسحب من المعهد/الكلية، 2 صور شمسية، نسخة CIN أو مضمون، وصل خلاص البريد. المعلوم: 10 إلى 15 د.ت.
 - 2. الاشتراك العادي للعموم: يسحب من شبابيك الوكالات التجارية (TGM، ساحة برشلونة، باب عليوة، الباساج، سليمان كاهية).`
+  },
+  {
+    keywords: ['legalisation', 'signature', 'conforme', 'تعريف', 'إمضاء', 'مطابقة', 'بلدية', 'tas7i7'],
+    content: `[LÉGALISATION DE SIGNATURE & COPIE CONFORME / التعريف بالإمضاء والمطابقة للأصل]
+- Authority: Daira Municipale (الدائرة البلدية) / Baladiya
+- Fiscal Cost: 3.000 DT par signature ou par document certifié conforme (Loi de Finances 2024/2025/2026)
+- Requirements: Présence physique obligatoire du signataire avec CIN originale valide. Interdiction de légaliser des feuilles blanches ou des actes illicites.`
+  },
+  {
+    keywords: ['kre', 'loyer', 'location', 'contrat', 'كراء', 'عقد كراء', 'تسجيل'],
+    content: `[CONTRAT DE LOCATION / عقد الكراء السكني والتجاري]
+- Authority: Baladiya (Légalisation de signature) + Recette des Finances (Enregistrement fiscal obligatoire)
+- Total Cost: Légalisation 6.000 DT (3 DT x 2 signatures bailleur et locataire) + Enregistrement Recette: 1% du montant total du loyer annuel + 3.000 DT droit fixe par page.
+- Required: 3 exemplaires originaux, CIN bailleur et locataire, justificatif de propriété (titre foncier ou quittance TIB).`
+  },
+  {
+    keywords: ['rne', 'registre', 'commerce', 'سجل', 'مؤسسات', 'شركات', 'extrait'],
+    content: `[RNE — REGISTRE NATIONAL DES ENTREPRISES / السجل الوطني للمؤسسات]
+- Authority: Registre National des Entreprises (www.rne.tn)
+- Online Services: Extrait du registre de commerce (10 DT en ligne / 20 DT au guichet), déclaration des bénéficiaires effectifs, création d'entreprise.
+- Delay: Instantané en ligne (PDF signé électroniquement avec QR Code cachet électronique visible TN-CEV).`
+  },
+  {
+    keywords: ['permis', 'conduire', 'سياقة', 'برمي', 'attt', 'سيارات', 'سياقه'],
+    content: `[PERMIS DE CONDUIRE / رخصة السياقة التونسية]
+- Authority: ATTT (Agence Technique des Transports Terrestres — attt.nat.tn)
+- Costs: Examen théorique (Code) 30 DT | Examen pratique (Conduite) 50 DT | Renouvellement carte permis: 25 DT + Certificat médical d'aptitude (15 à 20 DT).
+- Validity: 10 ans jusqu'à l'âge de 60 ans, 5 ans de 60 à 76 ans, puis 3 ans au-delà.`
   }
 ];
 
@@ -340,10 +368,28 @@ export async function POST(req: NextRequest) {
     const isGreeting = GREETING_REGEX.test(prompt.trim());
 
     const thinkDirective = think
-      ? `\n🧠 DEEP CIVIC THINKING & LEGAL REASONING MODE ACTIVATED:
-- Perform an exhaustive, step-by-step statutory breakdown.
-- Mention specific official decrees, legal deadlines, compound fiscal stamp breakdowns, exemptions, appeal processes, and potential pitfalls.`
-      : '';
+      ? `\n⚖️⚖️ ULTRA-DEEP STATUTORY LEGAL AUDIT & 100% VERIFIED JORT MODE ACTIVATED:
+You are operating in ULTRA-DEEP CIVIC AUDIT & STATUTORY JORT VERIFICATION MODE (مدقق قانوني وإداري معتمد لدى المحكمة الإدارية والرائد الرسمي للجمهورية التونسية).
+Your response MUST BE 100% true, completely verified, exhaustive, and structured with maximum judicial precision:
+1. المرجع القانوني والرسمي (Statutory References):
+   - Explicitly cite the governing official codes and decrees: مجلة الالتزامات والعقود، قانون المالية 2025/2026، مجلة الجباية المحلية، أوامر رئاسة الحكومة، أو مناشير الوزارة المعنية (الداخلية، المالية، النقل، الشؤون الاجتماعية).
+2. تفكيك المصاريف والتنبير بالمليم (Millime-Precision Financial Breakdown):
+   - Provide a granular breakdown of every single tax, administrative stamp, registration duty, and postal delivery fee (e.g. CIN 3 DT / 25 DT, Passeport 80 DT / 25 DT, B3 7.500 DT en ligne, Légalisation 3 DT par signature, Contrat 6 DT, Enregistrement Recette des Finances 1% + 3 DT fixe).
+3. الفخاخ الإدارية وأسباب الرفض (Critical Traps & Rejection Triggers):
+   - Explicitly highlight the exact common mistakes that cause clerks (أعوان الشباك) to reject dossiers:
+     * مضامين ولادة منتهية الصلوحية (> 3 أشهر).
+     * عدم تطابق العنوان مع فاتورة STEG أو عقد الكراء.
+     * نسيان التعريف بالإمضاء أو وصل خلاص القباضة.
+     * إغفال التنابر الجبائية الخاصة.
+4. الآجال القانونية ومسارات الطعن (Deadlines, Prescription & Appeals):
+   - State the statutory timeframes (délais légaux), and if an application is delayed or unlawfully denied, specify the exact appeal channels:
+     * المطلب التظلمي الرئاسي (Recours gracieux / hiérarchique).
+     * دعوى تجاوز السلطة أمام المحكمة الإدارية (Recours pour excès de pouvoir).
+5. الاستثناءات وحالات الإعفاء (Legal Exemptions):
+   - Clarify conditions for students, minors, families of martyrs, pensioners, and Tunisians abroad (TRE / FCR).
+DO NOT guess. DO NOT invent decrees. Every single number and condition must strictly reflect Tunisian law.`
+      : `\n⚖️ MANDATORY STATUTORY ACCURACY BASELINE:
+All administrative fees, document lists, and delays must strictly adhere to the official Tunisian legal framework (${FISCAL_YEAR_LABEL}) and current administrative procedures. Provide clear, accurate, and completely verified answers in authentic Tunisian Derja.`;
 
     const [groundingContext, liveFeed] = await Promise.all([
       buildGroundingContext(prompt, locale),
@@ -376,9 +422,9 @@ export async function POST(req: NextRequest) {
           model: 'gemini-2.5-flash',
           systemInstruction: completeSystemPrompt,
           generationConfig: {
-            temperature: think ? 0.1 : 0.25,
-            maxOutputTokens: think ? 1600 : 1200,
-            topP: 0.95,
+            temperature: think ? 0.0 : 0.12,
+            maxOutputTokens: think ? 2800 : 1400,
+            topP: think ? 0.85 : 0.95,
           },
         });
 
@@ -397,7 +443,7 @@ export async function POST(req: NextRequest) {
 
         const geminiPromise = chat.sendMessage(prompt);
         const timeoutPromise = new Promise<never>((_, reject) =>
-          setTimeout(() => reject(new Error('Gemini request timed out')), 12000)
+          setTimeout(() => reject(new Error('Gemini request timed out')), 16000)
         );
 
         const geminiRes = await Promise.race([geminiPromise, timeoutPromise]);
@@ -443,7 +489,7 @@ export async function POST(req: NextRequest) {
       for (const model of groqModels) {
         try {
           const llmController = new AbortController();
-          const llmTimeout = setTimeout(() => llmController.abort(), 12000);
+          const llmTimeout = setTimeout(() => llmController.abort(), 16000);
 
           const groqRes = await fetch('https://api.groq.com/openai/v1/chat/completions', {
             method: 'POST',
@@ -455,9 +501,9 @@ export async function POST(req: NextRequest) {
             body: JSON.stringify({
               model,
               messages: chatMessages,
-              temperature: think ? 0.08 : 0.15,
-              max_tokens: think ? 1400 : 1100,
-              top_p: 0.95,
+              temperature: think ? 0.0 : 0.1,
+              max_tokens: think ? 2400 : 1300,
+              top_p: think ? 0.85 : 0.95,
             }),
           });
           clearTimeout(llmTimeout);
