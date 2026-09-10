@@ -1,12 +1,11 @@
 'use client';
 
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import Link from 'next/link';
 import {
   Plus,
   PanelLeftClose,
   Search,
-  MessageSquare,
   ScanText,
   FileText,
   Calculator,
@@ -16,8 +15,9 @@ import {
   X,
   Pencil,
   Trash2,
-  User,
-  ChevronDown,
+  Settings,
+  SquarePen,
+  ChevronRight,
   Sparkles,
 } from 'lucide-react';
 import { SupportedLanguage } from '../../data/translations';
@@ -71,7 +71,13 @@ export function SessionSidebar({
   onOpenAuthModal,
 }: SessionSidebarProps) {
   const [searchQuery, setSearchQuery] = useState('');
-  const [isToolsOpen, setIsToolsOpen] = useState(false);
+  const [isMac, setIsMac] = useState(false);
+
+  useEffect(() => {
+    if (typeof window !== 'undefined' && /Mac|iPod|iPhone|iPad/.test(navigator.userAgent || '')) {
+      setIsMac(true);
+    }
+  }, []);
 
   const citizenInitial = (userName.trim()[0] || 'C').toUpperCase();
 
@@ -166,6 +172,46 @@ export function SessionSidebar({
         : locale === 'en'
         ? 'No matching consultations'
         : 'Aucune démarche trouvée',
+    docs:
+      locale === 'ar'
+        ? 'نماذج وعقود إدارية'
+        : locale === 'derja'
+        ? 'Modèles PDF'
+        : locale === 'en'
+        ? 'Legal Templates'
+        : 'Modèles & Actes',
+    ocr:
+      locale === 'ar'
+        ? 'ماسح الوثائق (OCR)'
+        : locale === 'derja'
+        ? 'Scanner OCR'
+        : locale === 'en'
+        ? 'Document Scanner'
+        : 'Scanner OCR',
+    calc:
+      locale === 'ar'
+        ? 'حاسبة الطوابع الجبائية'
+        : locale === 'derja'
+        ? 'Timbres DT & JORT'
+        : locale === 'en'
+        ? 'Fiscal Calculator'
+        : 'Calculateur Timbres',
+    concours:
+      locale === 'ar'
+        ? 'مناظرات الوظيفة العمومية'
+        : locale === 'derja'
+        ? 'Concours 2026'
+        : locale === 'en'
+        ? 'Public Exams'
+        : 'Concours Publics',
+    locator:
+      locale === 'ar'
+        ? 'دليل الإدارات التونسية'
+        : locale === 'derja'
+        ? 'Dalil el Idarat'
+        : locale === 'en'
+        ? 'Office Locator'
+        : 'Annuaire des Idaras',
   };
 
   // Group filtered sessions chronologically
@@ -211,10 +257,10 @@ export function SessionSidebar({
       <div
         key={sess.id}
         onClick={() => !isEditing && onSelectSession(sess)}
-        className={`group relative flex items-center justify-between px-2.5 py-2 rounded-lg text-xs transition-colors cursor-pointer ${
+        className={`group relative flex items-center justify-between px-3 py-2 rounded-xl text-xs transition-all cursor-pointer ${
           isActive
-            ? 'bg-zinc-900 text-white font-medium border border-white/[0.08]'
-            : 'text-zinc-400 hover:text-zinc-200 hover:bg-zinc-900/60'
+            ? 'bg-white/[0.08] text-white font-medium border border-white/[0.06]'
+            : 'text-zinc-400 hover:text-zinc-200 hover:bg-white/[0.04]'
         }`}
       >
         {isEditing ? (
@@ -245,26 +291,21 @@ export function SessionSidebar({
           </div>
         ) : (
           <>
-            <div className="flex items-center gap-2 truncate flex-1 pe-1.5">
-              <MessageSquare
-                className={`w-3.5 h-3.5 shrink-0 transition-colors ${
-                  isActive ? 'text-zinc-200' : 'text-zinc-500 group-hover:text-zinc-400'
-                }`}
-              />
-              <span className="truncate">{sess.title}</span>
+            <div className="flex items-center truncate flex-1 pe-2">
+              <span className="truncate text-[13px] leading-relaxed">{sess.title}</span>
             </div>
 
             <div className="flex items-center gap-0.5 opacity-0 group-hover:opacity-100 transition-opacity shrink-0">
               <button
                 onClick={(e) => onStartRenaming(e, sess)}
-                className="p-1 rounded-md hover:bg-white/10 text-zinc-400 hover:text-white transition-colors"
+                className="p-1.5 rounded-md hover:bg-white/10 text-zinc-400 hover:text-white transition-colors"
                 title={locale === 'ar' ? 'تعديل العنوان' : 'Rename'}
               >
                 <Pencil className="w-3 h-3" />
               </button>
               <button
                 onClick={(e) => onPromptDeleteSession(e, sess)}
-                className="p-1 rounded-md hover:bg-red-500/20 text-zinc-400 hover:text-red-400 transition-colors"
+                className="p-1.5 rounded-md hover:bg-red-500/20 text-zinc-400 hover:text-red-400 transition-colors"
                 title={locale === 'ar' ? 'حذف' : 'Delete'}
               >
                 <Trash2 className="w-3 h-3" />
@@ -304,7 +345,7 @@ export function SessionSidebar({
           <div className="h-14 px-3.5 flex items-center justify-between border-b border-white/[0.08] shrink-0 bg-[#000000]">
             <Link
               href="/"
-              className="flex items-center gap-2 group cursor-pointer bg-transparent border-0 p-1.5 text-start outline-none rounded-lg hover:bg-zinc-900 transition-colors"
+              className="flex items-center gap-2 group cursor-pointer bg-transparent border-0 p-1 text-start outline-none rounded-lg hover:bg-white/[0.06] transition-colors"
               title={locale === 'ar' ? 'الرجوع إلى الصفحة الرئيسية' : locale === 'derja' ? 'Erja3 lel accueil' : locale === 'en' ? 'Back to homepage' : 'Retour à l\'accueil'}
               aria-label={locale === 'ar' ? 'الصفحة الرئيسية' : locale === 'derja' ? 'Accueil' : locale === 'en' ? 'Home' : 'Accueil'}
             >
@@ -317,57 +358,76 @@ export function SessionSidebar({
               </div>
             </Link>
 
-            <button
-              onClick={onClose}
-              className="p-1.5 rounded-lg text-zinc-400 hover:text-white hover:bg-zinc-900 transition-colors cursor-pointer border-0 outline-none"
-              title={locale === 'ar' ? 'إغلاق القائمة' : locale === 'derja' ? 'Sker el قائمة' : locale === 'en' ? 'Close sidebar' : 'Fermer le panneau'}
-              aria-label={locale === 'ar' ? 'إغلاق اللائحة' : locale === 'derja' ? 'Sker el sidebar' : locale === 'en' ? 'Close sidebar' : 'Fermer le panneau'}
-            >
-              <PanelLeftClose className="w-4 h-4" />
-            </button>
+            <div className="flex items-center gap-1">
+              {/* Quick 1-click New Chat Icon */}
+              <button
+                onClick={onNewChat}
+                className="p-1.5 rounded-lg text-zinc-400 hover:text-white hover:bg-white/[0.08] transition-colors cursor-pointer border-0 outline-none"
+                title={labels.newChat}
+                aria-label={labels.newChat}
+              >
+                <SquarePen className="w-4 h-4" />
+              </button>
+
+              {/* Collapse Sidebar Button */}
+              <button
+                onClick={onClose}
+                className="p-1.5 rounded-lg text-zinc-400 hover:text-white hover:bg-white/[0.08] transition-colors cursor-pointer border-0 outline-none"
+                title={locale === 'ar' ? 'إغلاق القائمة' : locale === 'derja' ? 'Sker el قائمة' : locale === 'en' ? 'Close sidebar' : 'Fermer le panneau'}
+                aria-label={locale === 'ar' ? 'إغلاق اللائحة' : locale === 'derja' ? 'Sker el sidebar' : locale === 'en' ? 'Close sidebar' : 'Fermer le panneau'}
+              >
+                <PanelLeftClose className="w-4 h-4" />
+              </button>
+            </div>
           </div>
 
-          {/* Primary Action Button: + New Chat */}
+          {/* Primary Action Button: + New Chat (Sleek pill) */}
           <div className="p-3 pb-2 shrink-0 space-y-2">
             <button
               onClick={onNewChat}
-              className="w-full flex items-center justify-between px-3 py-2 rounded-lg bg-zinc-900 hover:bg-zinc-800 text-zinc-200 hover:text-white text-xs font-medium transition-colors cursor-pointer border border-white/[0.08] group"
+              className="w-full flex items-center justify-between px-3.5 py-2.5 rounded-xl bg-white/[0.05] hover:bg-white/[0.09] text-zinc-200 hover:text-white text-xs font-medium transition-all cursor-pointer border border-white/[0.08] hover:border-white/[0.14] group shadow-xs active:scale-[0.99]"
             >
-              <div className="flex items-center gap-2">
+              <div className="flex items-center gap-2.5">
                 <Plus className="w-4 h-4 text-zinc-400 group-hover:text-white transition-colors" />
                 <span className="truncate">{labels.newChat}</span>
               </div>
-              <kbd className="hidden sm:inline-block text-[10px] font-mono text-zinc-400 bg-white/5 px-1.5 py-0.5 rounded border border-white/[0.08]">
-                ⌘N
+              <kbd className="hidden sm:inline-block text-[10px] font-mono text-zinc-400 bg-white/[0.06] px-1.5 py-0.5 rounded border border-white/[0.08]">
+                {isMac ? '⌘N' : 'Ctrl+N'}
               </kbd>
             </button>
 
-            {/* Quick Live Search Filter */}
+            {/* Quick Live Search Filter with Instant Clear Button */}
             {hasAnySessions && (
               <div className="relative">
-                <Search className="w-3.5 h-3.5 text-zinc-500 absolute start-2.5 top-1/2 -translate-y-1/2 pointer-events-none" />
+                <Search className="w-3.5 h-3.5 text-zinc-500 absolute start-3 top-1/2 -translate-y-1/2 pointer-events-none" />
                 <input
                   type="text"
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
                   placeholder={labels.search}
-                  className="w-full bg-[#0c0c0c] border border-white/[0.08] rounded-lg ps-8 pe-3 py-1.5 text-xs text-zinc-200 placeholder-zinc-500 outline-none focus:border-white/20 transition-all"
+                  className="w-full bg-[#0c0c0c] border border-white/[0.08] focus:border-white/20 rounded-xl ps-8 pe-7 py-2 text-xs text-zinc-200 placeholder-zinc-500 outline-none transition-colors"
                 />
+                {searchQuery && (
+                  <button
+                    type="button"
+                    onClick={() => setSearchQuery('')}
+                    className="absolute end-2.5 top-1/2 -translate-y-1/2 p-1 text-zinc-500 hover:text-white transition-colors"
+                  >
+                    <X className="w-3 h-3" />
+                  </button>
+                )}
               </div>
             )}
           </div>
 
-          {/* Scrollable Main Area (Grouped Sessions) */}
-          <div className="px-2 py-1.5 flex-1 overflow-y-auto space-y-4">
+          {/* Scrollable Main Area (Grouped Sessions + Civic Hub) */}
+          <div className="px-2 py-1.5 flex-1 overflow-y-auto space-y-4 scrollbar-thin scrollbar-thumb-zinc-800">
             {!isInitialized ? null : !hasAnySessions ? (
-              <div className="px-3 py-8 text-center space-y-2">
-                <div className="w-8 h-8 mx-auto rounded-full bg-white/[0.03] border border-white/[0.06] flex items-center justify-center text-zinc-400">
-                  <MessageSquare className="w-4 h-4" />
-                </div>
+              <div className="px-3 py-6 text-center space-y-2">
                 <p className="text-xs text-zinc-400">{labels.empty}</p>
               </div>
             ) : !hasFilteredResults ? (
-              <div className="px-3 py-8 text-center text-xs text-zinc-400">
+              <div className="px-3 py-6 text-center text-xs text-zinc-400">
                 {labels.noResults}
               </div>
             ) : (
@@ -375,7 +435,7 @@ export function SessionSidebar({
                 {/* Today */}
                 {groupedSessions.today.length > 0 && (
                   <div className="space-y-0.5">
-                    <div className="px-2.5 pb-1 text-[10px] uppercase font-bold tracking-wider text-zinc-400">
+                    <div className="px-3 pt-1 pb-1 text-[11px] font-medium text-zinc-400 tracking-normal">
                       {labels.today}
                     </div>
                     {groupedSessions.today.map(renderSessionItem)}
@@ -385,7 +445,7 @@ export function SessionSidebar({
                 {/* Yesterday */}
                 {groupedSessions.yesterday.length > 0 && (
                   <div className="space-y-0.5">
-                    <div className="px-2.5 pb-1 text-[10px] uppercase font-bold tracking-wider text-zinc-400">
+                    <div className="px-3 pt-2 pb-1 text-[11px] font-medium text-zinc-400 tracking-normal">
                       {labels.yesterday}
                     </div>
                     {groupedSessions.yesterday.map(renderSessionItem)}
@@ -395,7 +455,7 @@ export function SessionSidebar({
                 {/* Previous 7 Days */}
                 {groupedSessions.lastWeek.length > 0 && (
                   <div className="space-y-0.5">
-                    <div className="px-2.5 pb-1 text-[10px] uppercase font-bold tracking-wider text-zinc-400">
+                    <div className="px-3 pt-2 pb-1 text-[11px] font-medium text-zinc-400 tracking-normal">
                       {labels.lastWeek}
                     </div>
                     {groupedSessions.lastWeek.map(renderSessionItem)}
@@ -405,7 +465,7 @@ export function SessionSidebar({
                 {/* Older */}
                 {groupedSessions.older.length > 0 && (
                   <div className="space-y-0.5">
-                    <div className="px-2.5 pb-1 text-[10px] uppercase font-bold tracking-wider text-zinc-400">
+                    <div className="px-3 pt-2 pb-1 text-[11px] font-medium text-zinc-400 tracking-normal">
                       {labels.older}
                     </div>
                     {groupedSessions.older.map(renderSessionItem)}
@@ -413,72 +473,78 @@ export function SessionSidebar({
                 )}
               </>
             )}
-          </div>
 
-          {/* ─── Refined Civic Tools Hub Drawer ─── */}
-          <div className="p-3 border-t border-white/[0.08] shrink-0 bg-[#000000] space-y-2">
-            <button
-              onClick={() => setIsToolsOpen((prev) => !prev)}
-              className="w-full flex items-center justify-between px-1 text-[11px] font-medium text-zinc-400 hover:text-zinc-200 transition-colors cursor-pointer border-0 outline-none"
-            >
-              <div className="flex items-center gap-1.5">
-                <Sparkles className="w-3.5 h-3.5 text-zinc-400" />
-                <span>{labels.tools}</span>
+            {/* ─── Integrated Civic Quick Access (Eliminates the empty void) ─── */}
+            <div className="pt-2 px-1 border-t border-white/[0.06] space-y-1">
+              <div className="px-2.5 pb-1.5 flex items-center justify-between text-[11px] font-medium text-zinc-400">
+                <div className="flex items-center gap-1.5">
+                  <Sparkles className="w-3 h-3 text-emerald-400" />
+                  <span>{labels.tools}</span>
+                </div>
               </div>
-              <ChevronDown
-                className={`w-3.5 h-3.5 text-zinc-500 transition-transform duration-200 ${
-                  isToolsOpen ? 'rotate-0' : '-rotate-90'
-                }`}
-              />
-            </button>
 
-            {isToolsOpen && (
-              <div className="grid grid-cols-2 gap-1.5 animate-fade-in pt-0.5">
-                <Link
-                  href="/fasserli"
-                  onClick={onClose}
-                  className="flex items-center gap-2 p-2 rounded-lg bg-[#0c0c0c] hover:bg-zinc-900 border border-white/[0.08] text-[11px] text-zinc-300 hover:text-white transition-colors group"
-                >
-                  <ScanText className="w-3.5 h-3.5 text-zinc-400 group-hover:text-zinc-200 shrink-0" />
-                  <span className="truncate">
-                    {locale === 'ar' ? 'ماسح OCR' : locale === 'derja' ? 'Scanner OCR' : locale === 'en' ? 'OCR Scanner' : 'Scanner OCR'}
-                  </span>
-                </Link>
-
+              <div className="space-y-0.5">
                 <Link
                   href="/documents"
                   onClick={onClose}
-                  className="flex items-center gap-2 p-2 rounded-lg bg-[#0c0c0c] hover:bg-zinc-900 border border-white/[0.08] text-[11px] text-zinc-300 hover:text-white transition-colors group"
+                  className="flex items-center justify-between px-2.5 py-1.5 rounded-lg text-xs text-zinc-400 hover:text-zinc-100 hover:bg-white/[0.04] transition-colors group"
                 >
-                  <FileText className="w-3.5 h-3.5 text-zinc-400 group-hover:text-zinc-200 shrink-0" />
-                  <span className="truncate">
-                    {locale === 'ar' ? 'نماذج PDF' : locale === 'derja' ? 'Modèles PDF' : locale === 'en' ? 'PDF Templates' : 'Modèles PDF'}
-                  </span>
+                  <div className="flex items-center gap-2.5 truncate">
+                    <FileText className="w-3.5 h-3.5 text-zinc-500 group-hover:text-zinc-300 shrink-0" />
+                    <span className="truncate">{labels.docs}</span>
+                  </div>
+                  <ChevronRight className="w-3 h-3 text-zinc-600 group-hover:text-zinc-400 opacity-0 group-hover:opacity-100 transition-opacity" />
+                </Link>
+
+                <Link
+                  href="/fasserli"
+                  onClick={onClose}
+                  className="flex items-center justify-between px-2.5 py-1.5 rounded-lg text-xs text-zinc-400 hover:text-zinc-100 hover:bg-white/[0.04] transition-colors group"
+                >
+                  <div className="flex items-center gap-2.5 truncate">
+                    <ScanText className="w-3.5 h-3.5 text-zinc-500 group-hover:text-zinc-300 shrink-0" />
+                    <span className="truncate">{labels.ocr}</span>
+                  </div>
+                  <ChevronRight className="w-3 h-3 text-zinc-600 group-hover:text-zinc-400 opacity-0 group-hover:opacity-100 transition-opacity" />
                 </Link>
 
                 <Link
                   href="/calculator"
                   onClick={onClose}
-                  className="flex items-center gap-2 p-2 rounded-lg bg-[#0c0c0c] hover:bg-zinc-900 border border-white/[0.08] text-[11px] text-zinc-300 hover:text-white transition-colors group"
+                  className="flex items-center justify-between px-2.5 py-1.5 rounded-lg text-xs text-zinc-400 hover:text-zinc-100 hover:bg-white/[0.04] transition-colors group"
                 >
-                  <Calculator className="w-3.5 h-3.5 text-zinc-400 group-hover:text-zinc-200 shrink-0" />
-                  <span className="truncate">
-                    {locale === 'ar' ? 'الطوابع المالية' : locale === 'derja' ? 'Timbres DT' : locale === 'en' ? 'Fiscal Stamps' : 'Timbres DT'}
-                  </span>
+                  <div className="flex items-center gap-2.5 truncate">
+                    <Calculator className="w-3.5 h-3.5 text-zinc-500 group-hover:text-zinc-300 shrink-0" />
+                    <span className="truncate">{labels.calc}</span>
+                  </div>
+                  <ChevronRight className="w-3 h-3 text-zinc-600 group-hover:text-zinc-400 opacity-0 group-hover:opacity-100 transition-opacity" />
                 </Link>
 
                 <Link
                   href="/concours"
                   onClick={onClose}
-                  className="flex items-center gap-2 p-2 rounded-lg bg-[#0c0c0c] hover:bg-zinc-900 border border-white/[0.08] text-[11px] text-zinc-300 hover:text-white transition-colors group"
+                  className="flex items-center justify-between px-2.5 py-1.5 rounded-lg text-xs text-zinc-400 hover:text-zinc-100 hover:bg-white/[0.04] transition-colors group"
                 >
-                  <Briefcase className="w-3.5 h-3.5 text-zinc-400 group-hover:text-zinc-200 shrink-0" />
-                  <span className="truncate">
-                    {locale === 'ar' ? 'المناظرات 2026' : locale === 'derja' ? 'Concours 2026' : locale === 'en' ? 'Competitions 2026' : 'Concours 2026'}
-                  </span>
+                  <div className="flex items-center gap-2.5 truncate">
+                    <Briefcase className="w-3.5 h-3.5 text-zinc-500 group-hover:text-zinc-300 shrink-0" />
+                    <span className="truncate">{labels.concours}</span>
+                  </div>
+                  <ChevronRight className="w-3 h-3 text-zinc-600 group-hover:text-zinc-400 opacity-0 group-hover:opacity-100 transition-opacity" />
+                </Link>
+
+                <Link
+                  href="/locator"
+                  onClick={onClose}
+                  className="flex items-center justify-between px-2.5 py-1.5 rounded-lg text-xs text-zinc-400 hover:text-zinc-100 hover:bg-white/[0.04] transition-colors group"
+                >
+                  <div className="flex items-center gap-2.5 truncate">
+                    <MapPin className="w-3.5 h-3.5 text-zinc-500 group-hover:text-zinc-300 shrink-0" />
+                    <span className="truncate">{labels.locator}</span>
+                  </div>
+                  <ChevronRight className="w-3 h-3 text-zinc-600 group-hover:text-zinc-400 opacity-0 group-hover:opacity-100 transition-opacity" />
                 </Link>
               </div>
-            )}
+            </div>
           </div>
         </div>
 
@@ -487,23 +553,25 @@ export function SessionSidebar({
           <button
             type="button"
             onClick={onOpenAuthModal}
-            className="w-full flex items-center justify-between p-2 rounded-lg hover:bg-zinc-900 transition-colors cursor-pointer outline-none text-start group"
+            className="w-full flex items-center justify-between p-2 rounded-xl hover:bg-white/[0.06] border border-transparent hover:border-white/[0.06] transition-all cursor-pointer outline-none text-start group"
           >
             <div className="flex items-center gap-2.5 min-w-0">
-              <div className="w-8 h-8 rounded-full bg-zinc-800 text-zinc-200 flex items-center justify-center font-medium text-xs shrink-0 border border-white/5">
+              <div className="relative w-8 h-8 rounded-full bg-gradient-to-tr from-zinc-800 to-zinc-700 text-zinc-100 flex items-center justify-center font-medium text-xs shrink-0 border border-white/10 shadow-xs">
                 {citizenInitial}
+                {/* Active Presence Dot */}
+                <span className="absolute -bottom-0.5 -end-0.5 w-2.5 h-2.5 rounded-full bg-emerald-400 ring-2 ring-black" />
               </div>
               <div className="min-w-0 leading-tight">
-                <div className="text-xs font-medium text-zinc-200 group-hover:text-white truncate">
+                <div className="text-xs font-semibold text-zinc-200 group-hover:text-white truncate">
                   {userName}
                 </div>
-                <div className="text-[10px] text-zinc-500 font-normal pt-0.5">
+                <div className="text-[10px] text-zinc-400 font-normal pt-0.5 flex items-center gap-1">
                   <span>{labels.status}</span>
                 </div>
               </div>
             </div>
 
-            <User className="w-4 h-4 text-zinc-500 group-hover:text-zinc-300 shrink-0" />
+            <Settings className="w-4 h-4 text-zinc-500 group-hover:text-zinc-300 shrink-0 transition-colors" />
           </button>
         </div>
       </aside>
