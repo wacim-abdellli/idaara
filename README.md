@@ -15,7 +15,7 @@
 [![Groq AI](https://img.shields.io/badge/AI-Groq_Llama_3.3_70B-F55036?style=for-the-badge&logo=groq&logoColor=white)](https://groq.com/)
 [![Gemini Vision](https://img.shields.io/badge/Vision-Gemini_2.5_Flash-4285F4?style=for-the-badge&logo=google&logoColor=white)](https://ai.google.dev/)
 [![Whisper Audio](https://img.shields.io/badge/Audio-Whisper_Large_v3_Turbo-10B981?style=for-the-badge&logo=openai&logoColor=white)](https://openai.com/research/whisper)
-[![Vitest](https://img.shields.io/badge/Vitest-100_Tests_Passing-6E9F18?style=for-the-badge&logo=vitest&logoColor=white)](https://vitest.dev/)
+[![Vitest](https://img.shields.io/badge/Vitest-115_Tests_Passing-6E9F18?style=for-the-badge&logo=vitest&logoColor=white)](https://vitest.dev/)
 [![Security](https://img.shields.io/badge/Security-Strict_CSP_%26_INPDP_Compliant-00C07F?style=for-the-badge&logo=shield&logoColor=white)](#-security-privacy--compliance)
 [![Locales](https://img.shields.io/badge/Languages-Derja_%7C_FR_%7C_AR_(RTL)_%7C_EN-EA580C?style=for-the-badge&logo=translate&logoColor=white)](#-multilingual-support)
 
@@ -67,9 +67,11 @@ Navigating public administration in Tunisia (*l'Idara*, *Baladiya*, *Recette des
 
 ### 1. Universal Derja AI Copilot (`/copilot`)
 - **100% Tunisian Derja in Arabic Script**: Formulates all responses strictly in warm, natural Tunisian Arabic Derja (الدارجة التونسية بالحروف العربية), regardless of whether the citizen writes in English, French, Latin Arabizi, or Arabic.
-- **Dual-Model Cascade Inference**: Powered by `llama-3.3-70b-versatile` running on Groq LPU hardware with automatic fallback to `llama-3.1-8b-instant` and local heuristic reasoning.
-- **Deep Legal Reasoning Mode (`[ ⚖️ Legal reasoning ]`)**: In-depth statutory breakdown cross-referenced with exact legal decrees and official tariffs.
-- **Whisper Speech-to-Text (`/api/transcribe`)**: High-precision voice input powered by `whisper-large-v3-turbo` with seamless Web Speech API browser integration. Validates audio magic bytes (WebM, OGG, MP3, WAV, M4A, FLAC) server-side with a 25 MB payload ceiling.
+- **Multi-Tier Model Cascade Inference**: Powered by Google Gemini 2.5 Flash and Groq LPU hardware (`llama-3.3-70b-versatile` with automatic fallback to `llama-3.1-8b-instant`) and local heuristic reasoning.
+- **Mandatory Statutory Rigor by Default**: Every answer is strictly grounded in official Tunisian administrative fees (`src/data/fiscal-rates.ts`), current Loi de Finances, live concours feeds, and official platform requirements.
+- **Ultra-Deep 100% Statutory JORT Audit Mode (`[ ⚖️ Audit juridique 100% ]`)**: Zero-variance (`temperature: 0.0`), 2,800 token budget, exhaustive breakdown across 5 statutory pillars (codes & decrees, compound fiscal stamps down to the millime, administrative traps & counter rejection triggers, formal appeal channels to administrative courts, and exemptions).
+- **ChatGPT & Vercel Pro Dark Interface**: Pitch-black canvas (`#000000`), elevated surfaces (`#0c0c0c` / `#121212`), minimalist input capsule (plus menu, audit toggle, circular send arrow), single-card prompt editing, and instant home return navigation.
+- **Redesigned Civic Sidebar**: Quick 1-click new chat button (`SquarePen`), dynamic OS shortcuts (`Ctrl+N` on Windows, `⌘N` on Mac), instant-clear search bar, text-first conversation items with seamless hover actions (`Pencil` / `Trash2`), integrated Civic Hub navigation, and dignified citizen profile footer with live status indicator.
 - **Cloud Session Sync & Auth**: Save, rename, and synchronize full conversation histories across devices using Supabase SSR Auth with seamless offline fallback to `localStorage`.
 - **Mobile Ergonomics**: Full `.pb-safe` iOS Safari home indicator accommodation, 44px tap targets, and auto-zoom prevention (`text-base`).
 - **Real-Time Dynamic Browser Tab Text**: Tab titles dynamically adapt to the active language (`AR`, `FR`, `EN`, `TN`) in real-time.
@@ -152,14 +154,14 @@ Idaara AI is grounded with verified legislation, decrees, and administrative pro
 
 ```
 Frontend:          Next.js 16.3.1 (App Router, Turbopack), React 19.2, TypeScript 5.7
-Styling & UI:      Tailwind CSS 4.0, Framer Motion, Lucide Icons, Glassmorphism Dark Theme
-AI Copilot:        Groq API (Llama 3.3 70B Versatile, Llama 3.1 8B Instant)
+Styling & UI:      Tailwind CSS 4.0, Framer Motion, Lucide Icons, Pitch-Black Vercel Dark Theme
+AI Copilot:        Google Gemini 2.5 Flash + Groq API (Llama 3.3 70B Versatile, Llama 3.1 8B Instant)
 Vision OCR:        Google Gemini 2.5 Flash Vision + Tesseract.js fallback (Node.js runtime)
 Speech Engine:     Groq Whisper Large v3 Turbo (Phonetic Derja, Arabic, French)
 Auth & Database:   Supabase SSR Auth (@supabase/ssr) & PostgreSQL Sessions Table
 Caching & Limits:  Upstash Redis (@upstash/ratelimit) + Serverless In-Memory Sliding Window
 Document Studio:   jsPDF, html2canvas-pro (High-DPI Vector Legal PDF Engine)
-Testing:           Vitest 4.1.11 (100 automated tests across 16 suites)
+Testing:           Vitest 4.1.11 (115 automated tests across 17 suites)
 ```
 
 ---
@@ -242,7 +244,7 @@ npm run i18n:check
 # 2. Strict TypeScript type check
 npm run typecheck
 
-# 3. Automated Vitest suite (100 tests across 16 suites)
+# 3. Automated Vitest suite (115 tests across 17 suites)
 npm test
 
 # 4. Next.js production build (26 static & dynamic routes)
