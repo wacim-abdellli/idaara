@@ -49,12 +49,14 @@
 
 * { box-sizing: border-box; }
 
-/* Suppress browser default rectangular focus rings on styled inputs */
+/* Suppress browser default rectangular focus rings on styled inputs across all browsers */
 input:focus,
 input:focus-visible,
 textarea:focus,
-textarea:focus-visible {
-  outline: none;
+textarea:focus-visible,
+select:focus,
+select:focus-visible {
+  outline: none !important;
 }
 
 html { scroll-behavior: smooth; }

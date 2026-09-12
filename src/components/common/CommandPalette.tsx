@@ -329,7 +329,8 @@ export const CommandPalette: React.FC = () => {
             }}
             onKeyDown={handleKeyDown}
             placeholder={placeholder}
-            className="flex-1 bg-transparent text-sm sm:text-base text-zinc-100 placeholder-zinc-600 focus:outline-none font-medium"
+            className="flex-1 bg-transparent text-sm sm:text-base text-zinc-100 placeholder-zinc-500 border-none outline-none ring-0 focus:outline-none focus:ring-0 focus-visible:outline-none focus-visible:ring-0 shadow-none font-medium py-1"
+            style={{ outline: 'none', boxShadow: 'none', border: 'none' }}
           />
           {query && (
             <button
