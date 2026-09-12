@@ -25,6 +25,8 @@ import {
   Phone,
   ChevronDown,
   User as UserIcon,
+  LogOut,
+  Shield,
 } from 'lucide-react';
 
 // ── Core Flagship Links (Always visible on desktop lg+) ────────────────────
@@ -50,23 +52,49 @@ const ALL_MOBILE_LINKS = [...PRIMARY_LINKS, ...MORE_LINKS];
 
 export const Navbar: React.FC = () => {
   const { t, locale, isRtl } = useLocale();
-  const { user } = useAuth();
+  const { user, signOut } = useAuth();
   const pathname = usePathname();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [moreOpen, setMoreOpen] = useState(false);
+  const [userDropdownOpen, setUserDropdownOpen] = useState(false);
   const [authModalOpen, setAuthModalOpen] = useState(false);
   const moreRef = useRef<HTMLDivElement>(null);
+  const userDropdownRef = useRef<HTMLDivElement>(null);
 
-  // Close "More" dropdown on outside click
+  // Close dropdowns on outside click
   useEffect(() => {
     const handler = (e: MouseEvent) => {
       if (moreRef.current && !moreRef.current.contains(e.target as Node)) {
         setMoreOpen(false);
       }
+      if (userDropdownRef.current && !userDropdownRef.current.contains(e.target as Node)) {
+        setUserDropdownOpen(false);
+      }
     };
     document.addEventListener('mousedown', handler);
     return () => document.removeEventListener('mousedown', handler);
   }, []);
+
+  // Close all menus on route change
+  useEffect(() => {
+    setUserDropdownOpen(false);
+    setMoreOpen(false);
+    setMobileMenuOpen(false);
+  }, [pathname]);
+
+  // Derived user display details
+  const rawDisplayName =
+    user?.user_metadata?.full_name ||
+    user?.user_metadata?.name ||
+    user?.user_metadata?.user_name ||
+    user?.user_metadata?.preferred_username ||
+    user?.email?.split('@')[0] ||
+    'Citoyen';
+  const displayName =
+    rawDisplayName.charAt(0).toUpperCase() + rawDisplayName.slice(1);
+  const userInitial = displayName.charAt(0).toUpperCase() || 'U';
+  const userAvatarUrl =
+    user?.user_metadata?.avatar_url || user?.user_metadata?.picture;
 
   const copilotLabel =
     locale === 'ar' ? 'المساعد الذكي' : locale === 'derja' ? 'Idaara AI' : locale === 'en' ? 'Idaara AI' : 'Idaara AI';
@@ -253,49 +281,202 @@ export const Navbar: React.FC = () => {
             {/* Language Switcher Dropdown */}
             <LanguageSwitcher />
 
-            {/* Account / Cloud Sync Button */}
-            <motion.button
-              whileHover={{ scale: 1.02 }}
-              whileTap={{ scale: 0.98 }}
-              onClick={() => setAuthModalOpen(true)}
-              className={`flex items-center gap-2 h-8 px-2.5 sm:px-3 rounded-full text-xs font-semibold border transition-all cursor-pointer ${
-                user
-                  ? 'bg-zinc-900/90 hover:bg-zinc-850 text-zinc-200 hover:text-white border-zinc-750 hover:border-emerald-500/50 shadow-xs'
-                  : 'bg-zinc-900/90 text-zinc-300 border-zinc-800 hover:text-white hover:bg-zinc-850 hover:border-zinc-700'
-              }`}
-              title={user ? user.email || 'Mon Compte' : 'Connexion Citoyenne'}
-            >
-              {user ? (
-                <>
-                  <div className="relative flex items-center justify-center">
-                    {user.user_metadata?.avatar_url || user.user_metadata?.picture ? (
-                      // eslint-disable-next-line @next/next/no-img-element
-                      <img
-                        src={user.user_metadata.avatar_url || user.user_metadata.picture}
-                        alt={user.email || 'Avatar'}
-                        className="w-5 h-5 rounded-full object-cover ring-1 ring-emerald-500/50"
-                      />
-                    ) : (
-                      <div className="w-5 h-5 rounded-full bg-emerald-500/20 text-emerald-300 font-bold text-[10px] flex items-center justify-center ring-1 ring-emerald-500/40">
-                        {user.email ? user.email.charAt(0).toUpperCase() : 'U'}
+            {/* Account / User Profile Pill & Dropdown */}
+            <div ref={userDropdownRef} className="relative">
+              <motion.button
+                whileHover={{ scale: 1.02 }}
+                whileTap={{ scale: 0.98 }}
+                onClick={() => {
+                  if (user) {
+                    setUserDropdownOpen((prev) => !prev);
+                  } else {
+                    setAuthModalOpen(true);
+                  }
+                }}
+                className={`group flex items-center gap-2 h-8 sm:h-8.5 rounded-full text-xs font-medium transition-all duration-200 cursor-pointer ${
+                  user
+                    ? 'pl-1.5 pr-2.5 rtl:pl-2.5 rtl:pr-1.5 bg-zinc-900/85 hover:bg-zinc-850/95 text-zinc-200 hover:text-white border border-white/[0.12] hover:border-emerald-500/40 shadow-xs hover:shadow-[0_0_16px_rgba(16,185,129,0.18)]'
+                    : 'px-3 py-1 bg-zinc-900/90 text-zinc-300 border border-zinc-800 hover:text-white hover:bg-zinc-850 hover:border-zinc-700'
+                }`}
+                title={user ? user.email || displayName : 'Connexion Citoyenne'}
+                aria-expanded={user ? userDropdownOpen : undefined}
+                aria-haspopup={user ? 'menu' : undefined}
+              >
+                {user ? (
+                  <>
+                    {/* Polished avatar with cleanly docked online status badge */}
+                    <div className="relative shrink-0 w-6 h-6">
+                      {userAvatarUrl ? (
+                        // eslint-disable-next-line @next/next/no-img-element
+                        <img
+                          src={userAvatarUrl}
+                          alt={displayName}
+                          className="w-6 h-6 rounded-full object-cover ring-1.5 ring-emerald-500/40"
+                        />
+                      ) : (
+                        <div className="w-6 h-6 rounded-full bg-gradient-to-tr from-emerald-500 to-teal-400 text-zinc-950 font-black text-xs flex items-center justify-center shadow-xs ring-1 ring-emerald-400/30">
+                          {userInitial}
+                        </div>
+                      )}
+                      <span className="absolute -bottom-0.5 -right-0.5 rtl:-left-0.5 rtl:right-auto w-2 h-2 rounded-full bg-emerald-400 ring-2 ring-[#0e1015]" />
+                    </div>
+
+                    <span className="hidden sm:inline text-xs font-semibold text-zinc-100 group-hover:text-white max-w-[115px] truncate tracking-tight">
+                      {displayName}
+                    </span>
+
+                    <ChevronDown
+                      className={`w-3.5 h-3.5 text-zinc-400 group-hover:text-emerald-400 transition-transform duration-200 shrink-0 ${
+                        userDropdownOpen ? 'rotate-180 text-emerald-400' : ''
+                      }`}
+                    />
+                  </>
+                ) : (
+                  <>
+                    <UserIcon className="w-3.5 h-3.5 text-zinc-400" />
+                    <span className="hidden sm:inline text-xs font-medium">
+                      {locale === 'ar' ? 'دخول' : 'Connexion'}
+                    </span>
+                  </>
+                )}
+              </motion.button>
+
+              {/* Sleek Floating User Account Dropdown Menu */}
+              <AnimatePresence>
+                {user && userDropdownOpen && (
+                  <motion.div
+                    initial={{ opacity: 0, y: 8, scale: 0.96 }}
+                    animate={{ opacity: 1, y: 0, scale: 1 }}
+                    exit={{ opacity: 0, y: 6, scale: 0.96 }}
+                    transition={{ duration: 0.15, ease: 'easeOut' }}
+                    className={`absolute top-full mt-2 ${
+                      isRtl ? 'left-0' : 'right-0'
+                    } w-64 rounded-2xl bg-[#0e1015]/95 backdrop-blur-xl border border-white/[0.12] shadow-2xl z-50 p-2 overflow-hidden text-left rtl:text-right`}
+                    role="menu"
+                  >
+                    {/* User Card Header */}
+                    <div className="p-2.5 rounded-xl bg-white/[0.04] border border-white/[0.06] mb-1.5 space-y-2">
+                      <div className="flex items-center gap-2.5">
+                        <div className="relative shrink-0 w-8 h-8">
+                          {userAvatarUrl ? (
+                            // eslint-disable-next-line @next/next/no-img-element
+                            <img
+                              src={userAvatarUrl}
+                              alt={displayName}
+                              className="w-8 h-8 rounded-full object-cover ring-1.5 ring-emerald-500/40"
+                            />
+                          ) : (
+                            <div className="w-8 h-8 rounded-full bg-gradient-to-tr from-emerald-500 to-teal-400 text-zinc-950 font-black text-sm flex items-center justify-center shadow-xs">
+                              {userInitial}
+                            </div>
+                          )}
+                          <span className="absolute -bottom-0.5 -right-0.5 rtl:-left-0.5 rtl:right-auto w-2.5 h-2.5 rounded-full bg-emerald-400 ring-2 ring-[#0e1015]" />
+                        </div>
+                        <div className="min-w-0 flex-1">
+                          <p className="text-xs font-bold text-white truncate leading-snug">
+                            {displayName}
+                          </p>
+                          <p className="text-[11px] text-zinc-400 truncate leading-none mt-0.5 font-mono">
+                            {user.email}
+                          </p>
+                        </div>
                       </div>
-                    )}
-                    <span className="absolute -bottom-0.5 -right-0.5 w-1.5 h-1.5 rounded-full bg-emerald-400 ring-1 ring-zinc-950" />
-                  </div>
-                  <span className="hidden sm:inline text-xs font-medium max-w-[110px] truncate text-zinc-200">
-                    {user.user_metadata?.full_name?.split(' ')[0] || user.user_metadata?.name?.split(' ')[0] || user.email?.split('@')[0]}
-                  </span>
-                  <ChevronDown className="w-3 h-3 text-zinc-500 hidden sm:inline shrink-0" />
-                </>
-              ) : (
-                <>
-                  <UserIcon className="w-3.5 h-3.5 text-zinc-400" />
-                  <span className="hidden sm:inline text-xs font-medium">
-                    {locale === 'ar' ? 'دخول' : 'Connexion'}
-                  </span>
-                </>
-              )}
-            </motion.button>
+                      <div className="flex items-center gap-1.5 text-[10px] text-emerald-400 font-medium pt-0.5">
+                        <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
+                        <span>
+                          {locale === 'ar'
+                            ? 'جلسة نشطة · مزامنة سحابية'
+                            : locale === 'derja'
+                            ? 'Session active · Cloud Sync'
+                            : locale === 'en'
+                            ? 'Active Session · Cloud Sync'
+                            : 'Session Active · Cloud Sync'}
+                        </span>
+                      </div>
+                    </div>
+
+                    {/* Quick navigation items */}
+                    <div className="space-y-0.5">
+                      <Link
+                        href="/copilot"
+                        onClick={() => setUserDropdownOpen(false)}
+                        className="flex items-center gap-2.5 px-2.5 py-2 rounded-xl text-xs font-medium text-zinc-300 hover:text-white hover:bg-white/[0.06] transition-colors"
+                      >
+                        <Sparkles className="w-4 h-4 text-emerald-400 shrink-0" />
+                        <span>
+                          {locale === 'ar'
+                            ? 'استشارات المساعد الذكي'
+                            : locale === 'derja'
+                            ? 'Idaara AI'
+                            : locale === 'en'
+                            ? 'Idaara AI Copilot'
+                            : 'Assistant Idaara AI'}
+                        </span>
+                      </Link>
+
+                      <Link
+                        href="/documents"
+                        onClick={() => setUserDropdownOpen(false)}
+                        className="flex items-center gap-2.5 px-2.5 py-2 rounded-xl text-xs font-medium text-zinc-300 hover:text-white hover:bg-white/[0.06] transition-colors"
+                      >
+                        <FileText className="w-4 h-4 text-cyan-400 shrink-0" />
+                        <span>
+                          {locale === 'ar'
+                            ? 'الوثائق والعقود'
+                            : locale === 'derja'
+                            ? 'Awra9ek w 3o9oud'
+                            : locale === 'en'
+                            ? 'Official Documents'
+                            : 'Mes Documents & Contrats'}
+                        </span>
+                      </Link>
+
+                      <button
+                        onClick={() => {
+                          setUserDropdownOpen(false);
+                          setAuthModalOpen(true);
+                        }}
+                        className="w-full flex items-center gap-2.5 px-2.5 py-2 rounded-xl text-xs font-medium text-zinc-300 hover:text-white hover:bg-white/[0.06] transition-colors cursor-pointer"
+                      >
+                        <Shield className="w-4 h-4 text-amber-400 shrink-0" />
+                        <span>
+                          {locale === 'ar'
+                            ? 'إدارة الحساب والأمان'
+                            : locale === 'derja'
+                            ? 'Ma3loumet el 7seb'
+                            : locale === 'en'
+                            ? 'Account & Security'
+                            : 'Détails du Compte'}
+                        </span>
+                      </button>
+                    </div>
+
+                    {/* Divider */}
+                    <div className="my-1.5 border-t border-white/[0.08]" />
+
+                    {/* Sign Out Action */}
+                    <button
+                      onClick={async () => {
+                        setUserDropdownOpen(false);
+                        await signOut();
+                      }}
+                      className="w-full flex items-center gap-2.5 px-2.5 py-2 rounded-xl text-xs font-semibold text-rose-400 hover:text-rose-300 hover:bg-rose-500/10 transition-colors cursor-pointer"
+                    >
+                      <LogOut className="w-4 h-4 shrink-0" />
+                      <span>
+                        {locale === 'ar'
+                          ? 'تسجيل الخروج'
+                          : locale === 'derja'
+                          ? 'Khorouj'
+                          : locale === 'en'
+                          ? 'Sign Out'
+                          : 'Déconnexion'}
+                      </span>
+                    </button>
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            </div>
 
             {/* AI Copilot CTA Button */}
             <motion.div whileHover={{ scale: 1.04 }} whileTap={{ scale: 0.96 }}>
@@ -357,6 +538,56 @@ export const Navbar: React.FC = () => {
                 </kbd>
               </button>
             </div>
+
+            {/* Mobile User Profile Card */}
+            {user ? (
+              <div className="p-2.5 mb-2 rounded-xl bg-zinc-900/90 border border-zinc-800 flex items-center justify-between">
+                <div className="flex items-center gap-2.5 min-w-0">
+                  <div className="relative shrink-0 w-8 h-8">
+                    {userAvatarUrl ? (
+                      // eslint-disable-next-line @next/next/no-img-element
+                      <img
+                        src={userAvatarUrl}
+                        alt={displayName}
+                        className="w-8 h-8 rounded-full object-cover ring-1.5 ring-emerald-500/40"
+                      />
+                    ) : (
+                      <div className="w-8 h-8 rounded-full bg-gradient-to-tr from-emerald-500 to-teal-400 text-zinc-950 font-black text-xs flex items-center justify-center shadow-xs">
+                        {userInitial}
+                      </div>
+                    )}
+                    <span className="absolute -bottom-0.5 -right-0.5 rtl:-left-0.5 rtl:right-auto w-2 h-2 rounded-full bg-emerald-400 ring-2 ring-zinc-900" />
+                  </div>
+                  <div className="min-w-0 flex-1">
+                    <p className="text-xs font-semibold text-white truncate">{displayName}</p>
+                    <p className="text-[10px] text-zinc-400 truncate font-mono">{user.email}</p>
+                  </div>
+                </div>
+                <button
+                  onClick={async () => {
+                    setMobileMenuOpen(false);
+                    await signOut();
+                  }}
+                  className="p-2 text-rose-400 hover:text-rose-300 hover:bg-rose-500/10 rounded-lg transition-colors cursor-pointer"
+                  title="Déconnexion"
+                >
+                  <LogOut className="w-4 h-4" />
+                </button>
+              </div>
+            ) : (
+              <div className="pb-2 mb-2">
+                <button
+                  onClick={() => {
+                    setMobileMenuOpen(false);
+                    setAuthModalOpen(true);
+                  }}
+                  className="w-full flex items-center justify-center gap-2 py-2 px-3 rounded-xl bg-zinc-900 hover:bg-zinc-850 border border-zinc-800 text-xs font-semibold text-zinc-200 cursor-pointer"
+                >
+                  <UserIcon className="w-3.5 h-3.5 text-zinc-400" />
+                  <span>{locale === 'ar' ? 'تسجيل الدخول' : 'Connexion Citoyenne'}</span>
+                </button>
+              </div>
+            )}
 
             {/* Mobile Drawer Links */}
             <div className="grid grid-cols-1 gap-1">
