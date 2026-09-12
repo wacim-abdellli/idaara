@@ -9,9 +9,7 @@ import { ChatMessage } from '../../components/copilot/ChatMessage';
 import { ChatMessage as ChatMessageType } from '../../types/chat';
 import {
   PanelLeft,
-  RotateCcw,
   Share2,
-  ChevronDown,
   User as UserIcon,
   SquarePen,
   Loader2,
@@ -302,7 +300,6 @@ export default function CopilotPage() {
     } finally {
       setIsProcessing(false);
     }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [messages, isProcessing, locale, thinkMode, currentSessionId, updateSessionTitle, setMessages]);
 
   useEffect(() => {
@@ -474,6 +471,11 @@ export default function CopilotPage() {
               <BrandIcon size={20} className="shrink-0" />
               <span className="font-semibold text-base sm:text-lg tracking-tight text-white">Idaara AI</span>
             </Link>
+            {messages.length > 0 && (
+              <span className="hidden md:inline-block text-xs font-normal text-zinc-500 max-w-[220px] truncate border-s border-white/10 ps-3 ms-1 select-none">
+                {activeChatTitle}
+              </span>
+            )}
           </div>
 
           {/* Right Top Header Actions */}

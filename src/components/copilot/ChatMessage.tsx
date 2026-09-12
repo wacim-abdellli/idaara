@@ -14,13 +14,11 @@ import {
   Stamp,
   ThumbsUp,
   ThumbsDown,
-  RotateCcw,
   Pencil,
 } from 'lucide-react';
 import { ChatMessage as ChatMessageType } from '../../types/chat';
 import { useLocale } from '../../context/LocaleContext';
 import { getLocalized } from '../../lib/locale-utils';
-import { BrandIcon } from '../layout/BrandLogo';
 
 interface ChatMessageProps {
   message: ChatMessageType;
@@ -412,7 +410,7 @@ function renderFormattedContent(text: string, locale: string = 'derja', isRTLOve
   );
 }
 
-export const ChatMessage: React.FC<ChatMessageProps> = ({ message, onSelectPrompt, onEditMessage }) => {
+export const ChatMessage: React.FC<ChatMessageProps> = ({ message, onEditMessage }) => {
   const { locale } = useLocale();
   const [copied, setCopied] = useState(false);
   const [feedback, setFeedback] = useState<'up' | 'down' | null>(null);

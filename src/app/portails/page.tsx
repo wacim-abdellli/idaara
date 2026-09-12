@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useMemo, useEffect, useRef } from 'react';
+import React, { useState, useMemo, useEffect, useRef, useCallback } from 'react';
 import Link from 'next/link';
 import {
   Search,
@@ -13,10 +13,8 @@ import {
   Check,
   Sparkles,
   ShieldCheck,
-  SlidersHorizontal,
   X,
   Bot,
-  Layers,
   Fingerprint,
   FileCheck,
   ScrollText,
@@ -43,7 +41,7 @@ import { portailsData, portalCategories, EGovPortal } from '../../data/portails'
 import type { SupportedLanguage } from '../../data/translations';
 
 export default function PortailsPage() {
-  const { locale, isRtl } = useLocale();
+  const { locale } = useLocale();
   const [activeCategory, setActiveCategory] = useState<string>('all');
   const [searchQuery, setSearchQuery] = useState<string>('');
   const [onlyFavorites, setOnlyFavorites] = useState<boolean>(false);
@@ -116,8 +114,11 @@ export default function PortailsPage() {
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, []);
 
-  const getLabel = (obj: Record<string, string>) =>
-    (obj as Record<SupportedLanguage, string>)[locale as SupportedLanguage] ?? obj.fr;
+  const getLabel = useCallback(
+    (obj: Record<string, string>) =>
+      (obj as Record<SupportedLanguage, string>)[locale as SupportedLanguage] ?? obj.fr,
+    [locale]
+  );
 
   const getPortalIcon = (id: string) => {
     switch (id) {
@@ -226,7 +227,7 @@ export default function PortailsPage() {
 
       return true;
     });
-  }, [activeCategory, searchQuery, onlyFavorites, onlyMobile, only24h, favorites, locale]);
+  }, [activeCategory, searchQuery, onlyFavorites, onlyMobile, only24h, favorites, getLabel]);
 
   // Quick Tags with Vector Icons
   const quickSearchTags = [

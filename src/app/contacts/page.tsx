@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useMemo, useRef, useEffect } from 'react';
+import React, { useState, useMemo, useRef, useEffect, useCallback } from 'react';
 import {
   Phone,
   ExternalLink,
@@ -16,7 +16,6 @@ import {
   Sparkles,
   PhoneCall,
   MapPin,
-  Globe,
   Radio,
   LifeBuoy,
   ShieldAlert,
@@ -34,7 +33,7 @@ import { emergencyContacts, ministriesData, EmergencyContact, Ministry } from '.
 import type { SupportedLanguage } from '../../data/translations';
 
 export default function ContactsPage() {
-  const { locale, isRtl } = useLocale();
+  const { locale } = useLocale();
   const [activeCategory, setActiveCategory] = useState<'all' | 'emergency' | 'health' | 'civic' | 'utility'>('all');
   const [searchQuery, setSearchQuery] = useState<string>('');
   const [copiedId, setCopiedId] = useState<string | null>(null);
@@ -42,8 +41,11 @@ export default function ContactsPage() {
 
   const searchInputRef = useRef<HTMLInputElement>(null);
 
-  const getLabel = (obj: Record<string, string>) =>
-    (obj as Record<SupportedLanguage, string>)[locale as SupportedLanguage] ?? obj.fr;
+  const getLabel = useCallback(
+    (obj: Record<string, string>) =>
+      (obj as Record<SupportedLanguage, string>)[locale as SupportedLanguage] ?? obj.fr,
+    [locale]
+  );
 
   const handleCopy = (text: string, id: string) => {
     navigator.clipboard.writeText(text.replace(/\s/g, ''));
@@ -260,7 +262,7 @@ export default function ContactsPage() {
       }
       return true;
     });
-  }, [generalContacts, activeCategory, searchQuery, locale]);
+  }, [generalContacts, activeCategory, searchQuery, getLabel]);
 
   const filteredMinistries = useMemo(() => {
     if (!searchQuery.trim()) return ministriesData;
@@ -271,7 +273,7 @@ export default function ContactsPage() {
       const addrMatch = m.address.toLowerCase().includes(q);
       return nameMatch || phoneMatch || addrMatch;
     });
-  }, [searchQuery, locale]);
+  }, [searchQuery, getLabel]);
 
   const quickTags = [
     { label: 'Police (197)', query: '197', icon: ShieldAlert },

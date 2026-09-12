@@ -1,7 +1,7 @@
 'use client';
 
 import React from 'react';
-import { Plus, ArrowUp, Loader2, Scale, Sparkles } from 'lucide-react';
+import { Plus, ArrowUp, Scale } from 'lucide-react';
 import { SupportedLanguage } from '../../data/translations';
 import { getQuickTopicsList } from './QuickTopics';
 
@@ -28,7 +28,6 @@ export function ChatInput({
   locale,
   inputVal,
   isProcessing,
-  isRecording,
   isTranscribing,
   thinkMode,
   showPlusMenu,
@@ -38,7 +37,6 @@ export function ChatInput({
   onInputChange,
   onKeyDown,
   onSendMessage,
-  onToggleVoice,
   onToggleThinkMode,
   onTogglePlusMenu,
 }: ChatInputProps) {

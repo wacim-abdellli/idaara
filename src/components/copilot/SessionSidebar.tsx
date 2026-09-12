@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useMemo, useEffect } from 'react';
+import React, { useState, useMemo } from 'react';
 import Link from 'next/link';
 import {
   Plus,
@@ -51,6 +51,8 @@ interface GroupedSessions {
   older: ChatSession[];
 }
 
+const emptySubscribe = () => () => {};
+
 export function SessionSidebar({
   isOpen,
   locale,
@@ -71,13 +73,11 @@ export function SessionSidebar({
   onOpenAuthModal,
 }: SessionSidebarProps) {
   const [searchQuery, setSearchQuery] = useState('');
-  const [isMac, setIsMac] = useState(false);
-
-  useEffect(() => {
-    if (typeof window !== 'undefined' && /Mac|iPod|iPhone|iPad/.test(navigator.userAgent || '')) {
-      setIsMac(true);
-    }
-  }, []);
+  const isMac = React.useSyncExternalStore(
+    emptySubscribe,
+    () => (typeof navigator !== 'undefined' ? /Mac|iPod|iPhone|iPad/.test(navigator.userAgent || '') : false),
+    () => false
+  );
 
   const citizenInitial = (userName.trim()[0] || 'C').toUpperCase();
 
