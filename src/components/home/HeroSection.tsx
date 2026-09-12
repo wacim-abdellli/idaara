@@ -175,7 +175,8 @@ export function HeroSection() {
             onBlur={() => setTimeout(() => setIsSearchFocused(false), 200)}
             onChange={(e) => setSearchVal(e.target.value)}
             placeholder={t('voiceSearchBarPlaceholder')}
-            className="flex-1 bg-transparent text-xs sm:text-sm text-white placeholder-zinc-400 focus:outline-none py-2 px-1 min-w-0"
+            className="flex-1 bg-transparent text-sm sm:text-base text-white placeholder-zinc-400 border-none outline-none ring-0 focus:outline-none focus:ring-0 focus-visible:outline-none focus-visible:ring-0 shadow-none py-2 px-1 min-w-0"
+            style={{ outline: 'none', boxShadow: 'none', border: 'none' }}
           />
 
           {searchVal && (
@@ -198,7 +199,15 @@ export function HeroSection() {
             type="submit"
             className="flex items-center gap-1.5 px-4 sm:px-5 py-2.5 rounded-xl sm:rounded-2xl font-extrabold text-xs bg-emerald-500 hover:bg-emerald-400 text-zinc-950 shadow-md shadow-emerald-500/25 transition-all hover:scale-105 cursor-pointer shrink-0"
           >
-            <span>{locale === 'ar' ? 'بحث' : 'Rechercher'}</span>
+            <span>
+              {locale === 'ar'
+                ? 'بحث'
+                : locale === 'derja'
+                ? 'Lawwej'
+                : locale === 'en'
+                ? 'Search'
+                : 'Rechercher'}
+            </span>
             <ArrowRight className="w-3.5 h-3.5 rtl:rotate-180" />
           </button>
         </form>
