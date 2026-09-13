@@ -75,12 +75,14 @@ export const Navbar: React.FC = () => {
     return () => document.removeEventListener('mousedown', handler);
   }, []);
 
-  // Close all menus on route change
-  useEffect(() => {
+  // Close all menus on route change without triggering cascading renders in an effect
+  const [prevPathname, setPrevPathname] = useState(pathname);
+  if (prevPathname !== pathname) {
+    setPrevPathname(pathname);
     setUserDropdownOpen(false);
     setMoreOpen(false);
     setMobileMenuOpen(false);
-  }, [pathname]);
+  }
 
   // Derived user display details
   const rawDisplayName =
@@ -569,7 +571,24 @@ export const Navbar: React.FC = () => {
                     await signOut();
                   }}
                   className="p-2 text-rose-400 hover:text-rose-300 hover:bg-rose-500/10 rounded-lg transition-colors cursor-pointer"
-                  title="Déconnexion"
+                  title={
+                    locale === 'ar'
+                      ? 'تسجيل الخروج'
+                      : locale === 'derja'
+                      ? 'Khorouj'
+                      : locale === 'en'
+                      ? 'Sign Out'
+                      : 'Déconnexion'
+                  }
+                  aria-label={
+                    locale === 'ar'
+                      ? 'تسجيل الخروج'
+                      : locale === 'derja'
+                      ? 'Khorouj'
+                      : locale === 'en'
+                      ? 'Sign Out'
+                      : 'Déconnexion'
+                  }
                 >
                   <LogOut className="w-4 h-4" />
                 </button>

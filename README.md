@@ -3,10 +3,12 @@
 # 🏛️ Idaara.tn · إدارة.تونس
 
 **Tunisia's First AI Civic Copilot, Legal Scanner & Administrative Intelligence Platform**  
-*Awra9ek w 9adhyeitek fi D9i9a — Conquer administrative red tape in seconds.*
+*L'Administration Tunisienne Décodée · Zéro Aller-Retour · Au Millime Près*  
+*Awra9ek w 9adhyeitek fel Idara · Men Ghir 'Arja3 Ghodwa' · Bel Mlim*
 
 <br/>
 
+[![Live Demo](https://img.shields.io/badge/Live_Production-idaara--flame.vercel.app-00C07F?style=for-the-badge&logo=vercel&logoColor=white)](https://idaara-flame.vercel.app)
 [![Next.js](https://img.shields.io/badge/Next.js-16.3-black?style=for-the-badge&logo=next.js&logoColor=white)](https://nextjs.org/)
 [![React](https://img.shields.io/badge/React-19-61DAFB?style=for-the-badge&logo=react&logoColor=black)](https://react.dev/)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.7-3178C6?style=for-the-badge&logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
@@ -18,6 +20,13 @@
 [![Vitest](https://img.shields.io/badge/Vitest-115_Tests_Passing-6E9F18?style=for-the-badge&logo=vitest&logoColor=white)](https://vitest.dev/)
 [![Security](https://img.shields.io/badge/Security-Strict_CSP_%26_INPDP_Compliant-00C07F?style=for-the-badge&logo=shield&logoColor=white)](#-security-privacy--compliance)
 [![Locales](https://img.shields.io/badge/Languages-Derja_%7C_FR_%7C_AR_(RTL)_%7C_EN-EA580C?style=for-the-badge&logo=translate&logoColor=white)](#-multilingual-support)
+
+<p align="center">
+  <a href="https://idaara-flame.vercel.app"><b>🌐 Explore Live Production ↗</b></a> &nbsp;•&nbsp;
+  <a href="#-core-features--modules"><b>✨ Core Modules</b></a> &nbsp;•&nbsp;
+  <a href="#-tech-stack--architecture"><b>💻 Architecture</b></a> &nbsp;•&nbsp;
+  <a href="#-getting-started"><b>🚀 Quickstart</b></a>
+</p>
 
 </div>
 
@@ -38,8 +47,11 @@
   - [8. Emergency Contacts & National Directory (`/contacts`)](#8-emergency-contacts--national-directory-contacts)
   - [9. Freelancer & Entrepreneur Launchpad (`/launchpad`)](#9-freelancer--entrepreneur-launchpad-launchpad)
   - [10. Complete Civic Procedures Directory (`/procedures`)](#10-complete-civic-procedures-directory-procedures)
+  - [11. Instant Omni-Command Palette (`⌘K` / `Ctrl+K`)](#11-instant-omni-command-palette-k--ctrlk)
+  - [12. Citizen Account & Cloud Session Sync](#12-citizen-account--cloud-session-sync)
 - [Deep Tunisian Infrastructure Grounding (38 Legal Frameworks)](#-deep-tunisian-infrastructure-grounding-38-legal-frameworks)
 - [Tech Stack & Architecture](#-tech-stack--architecture)
+  - [Architecture Data Flow](#-architecture-data-flow)
 - [API Routes & Serverless Services](#-api-routes--serverless-services)
 - [Getting Started](#-getting-started)
   - [Prerequisites](#prerequisites)
@@ -132,6 +144,16 @@ Navigating public administration in Tunisia (*l'Idara*, *Baladiya*, *Recette des
 ### 10. Complete Civic Procedures Directory (`/procedures`)
 - **38 Detailed Step-by-Step Guides**: Passports, CIN, Driver's Licenses, Carte Grise transfers, B3 criminal records, marriage contracts, and customs clearances.
 
+### 11. Instant Omni-Command Palette (`⌘K` / `Ctrl+K`)
+- **Global Keystroke Navigation**: Access any civic procedure, statutory stamp calculation, legal contract template, or public office instantly from anywhere in the application.
+- **Full Keyboard Ergonomics**: Smooth `↑` / `↓` arrow key selection, `Enter` to navigate, and `ESC` to dismiss.
+- **Unified Multilingual Indexing**: Searches simultaneously across French, Arabic, and Tunisian Derja keywords with zero intrusive browser focus outlines.
+
+### 12. Citizen Account & Cloud Session Sync
+- **Executive Profile Pill**: Sleek dark glass pill in the top navigation with a docked, high-contrast online indicator (`● En ligne`) and responsive chevron indicator.
+- **Interactive Floating Menu**: Quick view of active cloud session, AES-256 sync status, direct links to personal documents and past copilot consultations, and instant one-click sign out.
+- **Supabase SSR Auth**: Cloud synchronization powered by `@supabase/ssr` supporting Google OAuth and Email Magic Links, with seamless fallback to encrypted local browser storage.
+
 ---
 
 ## 🏛️ Deep Tunisian Infrastructure Grounding (38 Legal Frameworks)
@@ -162,6 +184,36 @@ Auth & Database:   Supabase SSR Auth (@supabase/ssr) & PostgreSQL Sessions Table
 Caching & Limits:  Upstash Redis (@upstash/ratelimit) + Serverless In-Memory Sliding Window
 Document Studio:   jsPDF, html2canvas-pro (High-DPI Vector Legal PDF Engine)
 Testing:           Vitest 4.1.11 (115 automated tests across 17 suites)
+```
+
+### 📐 Architecture Data Flow
+
+```
+┌────────────────────────────────────────────────────────────────────────────────────────┐
+│                              IDAARA.TN CIVIC PLATFORM                                  │
+└───────┬───────────────────────────────────┬────────────────────────────────────┬───────┘
+        │                                   │                                    │
+        ▼                                   ▼                                    ▼
+ [ Omni-Command & Search ]        [ Multimodal OCR Scanner ]          [ Multi-Turn AI Copilot ]
+  • Global ⌘K / Ctrl+K Palette     • Gemini 2.5 Flash Vision           • Dual-Tier Groq Engine
+  • Unified 3-Locale Index         • Magic-Byte Header Sniffer         • Llama 3.3 70B & 3.1 8B
+  • Instant Route Navigation       • Regex PII Masking (CIN/RIB)       • 100% Derja in Arabic Script
+        │                                   │                                    │
+        └───────────────────────────────────┼────────────────────────────────────┘
+                                            │
+                                            ▼
+                          [ Deep Tunisian Statutory Grounding ]
+                           • JORT & Finance Law 2026 Directives
+                           • Exact Stamp Tariffs (3, 25, 80 DT)
+                           • 38 Official Administrative Procedures
+                           • 130+ Public Desks Across 24 Wilayas
+                                            │
+                                            ▼
+                          [ Infrastructure & Security Layer ]
+                           • Next.js 16.3 App Router (Turbopack)
+                           • Supabase SSR Auth & PostgreSQL Sessions
+                           • Upstash Redis Sliding Window Rate Limiting
+                           • High-DPI Vector jsPDF Document Studio
 ```
 
 ---
@@ -241,13 +293,16 @@ Every release and commit is verified against our strict production gate:
 # 1. Multilingual coverage scanner (0 errors across fr, ar, derja, en)
 npm run i18n:check
 
-# 2. Strict TypeScript type check
+# 2. Strict TypeScript type check (0 errors)
 npm run typecheck
 
-# 3. Automated Vitest suite (115 tests across 17 suites)
+# 3. Next.js ESLint linting (0 errors, 0 warnings)
+npm run lint
+
+# 4. Automated Vitest suite (115 tests passing across 17 suites)
 npm test
 
-# 4. Next.js production build (26 static & dynamic routes)
+# 5. Next.js Turbopack production build (26 static & dynamic routes in < 1s)
 npm run build
 ```
 
