@@ -14,7 +14,7 @@ export function filterConcours(
     locale?: string;
   }
 ): ConcoursItem[] {
-  const { category = 'all', educationLevel = 'all', searchQuery = '', locale = 'fr' } = filters;
+  const { category = 'all', educationLevel = 'all', searchQuery = '' } = filters;
   const q = searchQuery.toLowerCase().trim();
 
   return items.filter((item) => {

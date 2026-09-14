@@ -107,7 +107,6 @@ export function useCopilotSessions(
       let hasLocal = false;
       try {
         const savedSessions = localStorage.getItem(STORAGE_SESSIONS_KEY);
-        const savedActiveId = localStorage.getItem(STORAGE_ACTIVE_ID_KEY);
         if (savedSessions) {
           const parsed = JSON.parse(savedSessions);
           if (Array.isArray(parsed) && parsed.length > 0) {
@@ -215,7 +214,6 @@ export function useCopilotSessions(
     return () => {
       isMounted = false;
     };
-  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user]);
 
   // ── Persist Active Messages & Sessions (Dual: Cloud + Local) ──
@@ -325,7 +323,7 @@ export function useCopilotSessions(
     return () => {
       if (saveTimeoutRef.current) clearTimeout(saveTimeoutRef.current);
     };
-  }, [messages, isInitialized, currentSessionId, user]);
+  }, [messages, isInitialized, currentSessionId, user, locale]);
 
   const handleNewChat = useCallback(() => {
     const newId = generateUUID();

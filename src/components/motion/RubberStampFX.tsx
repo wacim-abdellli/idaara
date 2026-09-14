@@ -3,7 +3,6 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import confetti from 'canvas-confetti';
-import { Stamp, CheckCircle2 } from 'lucide-react';
 
 interface RubberStampFXProps {
   label?: string;

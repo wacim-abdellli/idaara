@@ -3,7 +3,7 @@
 import React from 'react';
 import { sampleDocumentsList, SampleDocItem } from '../../data/sampleDocuments';
 import { useLocale } from '../../context/LocaleContext';
-import { FileText, AlertCircle, Sparkles, Building2, Clock, CheckCircle2, ArrowRight } from 'lucide-react';
+import { Sparkles, Clock, ArrowRight } from 'lucide-react';
 import { getLocalized } from '../../lib/locale-utils';
 
 interface SampleDocsPickerProps {

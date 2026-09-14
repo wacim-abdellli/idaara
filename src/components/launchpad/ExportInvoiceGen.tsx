@@ -1,14 +1,14 @@
 'use client';
 
 import React, { useState } from 'react';
-import { FileText, Download, Sparkles, ShieldCheck, Loader2 } from 'lucide-react';
+import { FileText, Download, Loader2 } from 'lucide-react';
 import { generatePDFFromElement, printElement } from '../../lib/pdf-generator';
 import { triggerConfetti, formatNumber } from '../../lib/utils';
 import { useLocale } from '../../context/LocaleContext';
 
 export const ExportInvoiceGen: React.FC = () => {
   const { locale } = useLocale();
-  const [invoiceNumber, setInvoiceNumber] = useState('INV-2026-001');
+  const [invoiceNumber] = useState('INV-2026-001');
   const [clientName, setClientName] = useState('Acme Corp SAS (Paris, France)');
   const [description, setDescription] = useState('Fullstack Software Engineering & AI Integration Services');
   const [amountEUR, setAmountEUR] = useState(2500);

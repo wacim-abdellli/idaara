@@ -982,7 +982,8 @@ export const TUNISIAN_CIVIC_KNOWLEDGE: CivicProcedureKnowledge[] = [
   }
 ];
 
-export function queryCivicKnowledge(prompt: string, locale: string): string {
+export function queryCivicKnowledge(prompt: string, locale?: string): string {
+  void locale;
   const q = prompt.toLowerCase();
   
   const matched = TUNISIAN_CIVIC_KNOWLEDGE.filter((item) => {
