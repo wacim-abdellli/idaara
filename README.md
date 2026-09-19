@@ -320,6 +320,20 @@ npm run build
 
 ---
 
+## 🆕 Recent Improvements
+
+### v0.9 · RTL Polish & Quality Gate (September 2026)
+
+| Area | Change |
+|---|---|
+| **DocumentCard RTL** | Action arrow now mirrors via `rtlFlip` utility and translates in the correct direction on hover for both LTR (`fr`/`en`) and RTL (`ar`/`derja`) locales |
+| **ESLint Zero-Warnings** | Entire codebase audited and refactored to **0 warnings** with strict React 19 hooks hygiene — no bare `setState` inside `useEffect`, exhaustive deps satisfied throughout |
+| **Hooks Architecture** | All async side-effects now follow the mount-guard pattern to eliminate hydration flash and React 19 double-invoke false positives |
+| **i18n Completeness** | All 4 locales (`fr`, `ar`, `derja`, `en`) verified — 0 missing keys across 327 translation entries |
+| **Test Suite** | 115 Vitest tests passing across 17 suites with zero skips or pending |
+
+---
+
 ## 📄 License
 
 Proprietary Software · © 2026 Idaara.tn Team. All rights reserved.  
